@@ -359,6 +359,37 @@ body{background:var(--bodybg);color:var(--ink)}
 .user-top-badge{font-size:13px;font-weight:800;color:var(--ink,#0b1722);display:flex;align-items:center;gap:6px;}
 .user-top-actions{display:flex;align-items:center;gap:6px;}
 
+
+/* Google Maps Stadium Pill */
+.map-pill{display:inline-flex;align-items:center;gap:4px;background:#e8f0fe;color:#1a73e8;border:1px solid #c2e7ff;border-radius:14px;padding:2px 8px;font-size:11px;font-weight:800;text-decoration:none;margin-inline-start:6px;transition:0.15s;}
+.map-pill:hover{background:#d2e3fc;color:#174ea6;}
+.stad-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;}
+.stad-tag{background:var(--field,#f6f8fa);border:1px solid var(--line,#d5dce4);border-radius:6px;padding:3px 7px;font-size:11px;font-weight:700;cursor:pointer;color:var(--muted,#5d6b7a);}
+.stad-tag:hover{background:var(--panel,#fff);color:#1f5a34;border-color:#1f5a34;}
+
+/* Match Poster Button & Modal */
+.poster-btn-main{width:100%;background:linear-gradient(135deg,#0b4fb3,#1a3be0);color:#fff;border:0;border-radius:12px;padding:12px;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 12px rgba(11,79,179,0.25);transition:0.15s;}
+.poster-btn-main:active{transform:scale(0.98);}
+.poster-preview-box{text-align:center;margin:12px 0;background:#000;border-radius:12px;padding:8px;overflow:hidden;}
+.poster-preview-box img{max-width:100%;height:auto;border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,0.4);}
+.poster-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+.btn-poster-share{background:#25d366;color:#fff;border:0;border-radius:10px;padding:10px;font-family:inherit;font-weight:800;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;}
+.btn-poster-dl{background:#1f5a34;color:#fff;border:0;border-radius:10px;padding:10px;font-family:inherit;font-weight:800;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;}
+
+/* Double Confirmation System */
+.conf-badge{margin-top:8px;padding:8px 12px;border-radius:10px;font-size:12px;font-weight:800;text-align:center;display:flex;align-items:center;justify-content:center;gap:6px;}
+.conf-badge.confirmed{background:rgba(31,157,85,0.12);border:1px solid #1f9d55;color:#155724;}
+.conf-badge.disputed{background:rgba(200,32,47,0.12);border:1px solid #c8202f;color:#721c24;}
+.conf-badge.pending{background:rgba(242,182,50,0.15);border:1px solid #f2b632;color:#856404;}
+.conf-box{background:var(--field,#f6f8fa);border:1px solid var(--line,#d5dce4);border-radius:12px;padding:10px 12px;margin-top:8px;font-size:12px;}
+.conf-box.confirm-prompt{border-color:#f2b632;background:rgba(242,182,50,0.08);}
+.conf-prompt-txt{font-weight:800;display:block;margin-bottom:8px;color:var(--ink,#0b1722);text-align:center;}
+.conf-actions{display:flex;gap:8px;justify-content:center;}
+.conf-btn{border:0;border-radius:8px;padding:7px 14px;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:4px;}
+.conf-btn.yes{background:#1f9d55;color:#fff;}
+.conf-btn.no{background:#c8202f;color:#fff;}
+.conf-btn.admin-approve{background:#0b4fb3;color:#fff;margin-top:6px;width:100%;justify-content:center;}
+
 </style>
 
 <link rel="manifest" href="manifest.json">
@@ -695,6 +726,26 @@ body{background:var(--bodybg);color:var(--ink)}
   </div>
  </div>
 </div>
+
+
+<!-- نافذة صانع بوستر المباراة التلقائي -->
+<div id="posterModal" class="modal-bg" style="display:none;">
+ <div class="modal-card">
+  <div class="modal-head">
+   <h3>🎨 بوستر المباراة الرسمي (HD)</h3>
+   <button id="posterModalClose" class="modal-close" type="button">&times;</button>
+  </div>
+  <p class="auth-note">تم توليد البوستر بدقة عالية وجاهز للنشر المباشر على فيسبوك، إنستغرام، ومجموعات واتساب.</p>
+  <div class="poster-preview-box" id="posterPreviewBox">
+   <!-- يعرض البوستر هنا -->
+  </div>
+  <div class="poster-actions">
+   <button id="btnPosterShare" class="btn-poster-share" type="button"><span class="ic">📲</span>مشاركة مباشرة</button>
+   <button id="btnPosterDownload" class="btn-poster-dl" type="button"><span class="ic">💾</span>تحميل البوستر</button>
+  </div>
+ </div>
+</div>
+
 </main>
 
 <script>
@@ -750,19 +801,73 @@ function card(r){
  '<details><summary>تعديل التاريخ والملعب والنتيجة</summary><div class="form">'+
  '<div><label>التاريخ</label><input type="date" data-f="date"></div>'+
  '<div><label>الساعة</label><input type="time" data-f="time"></div>'+
- '<div class="w"><label>الملعب</label><input type="text" data-f="stad" placeholder="اسم الملعب"></div>'+
+ '<div class="w"><label>الملعب</label><input type="text" data-f="stad" placeholder="اسم الملعب">'+
+'<div class="stad-tags"><span style="font-size:11px;color:var(--muted);align-self:center;">اقتراح:</span>'+
+['مسلمون','حجوط','قوراية','سيدي عمر','بوجبرون','مراد','الداموس','القليعة','فجانة'].map(s=>'<button type="button" class="stad-tag" data-fill-stad="'+s+'">'+s+'</button>').join('')+
+'</div></div>'+
  '<div><label>أهداف '+T[m.h]+'</label><input type="number" min="0" inputmode="numeric" data-f="sh"></div>'+
  '<div><label>أهداف '+T[m.a]+'</label><input type="number" min="0" inputmode="numeric" data-f="sa"></div>'+lg(m.h)+lg(m.a)+'</div></details>'
  ):(currentUser?'<div class="no-perm-msg">🔒 تعديل هذه المباراة متاح فقط لمسؤول ('+T[m.h]+') أو ('+T[m.a]+')</div>':''));
  const paint=()=>{const v=store[key]||{};
   el.querySelector('[data-k=dt]').textContent=(fmtDate(v.date||defDate(r))+' '+(v.time||DT[cat])).trim()||'التاريخ / الساعة';
-  el.querySelector('[data-k=st]').textContent=v.stad||'الملعب';
+  const curStad = v.stad || 'الملعب البلدي';
+  const stEl = el.querySelector('[data-k=st]');
+  if (stEl) {
+    const qMaps = encodeURIComponent('الملعب البلدي ' + curStad + ' تيبازة');
+    stEl.innerHTML = '<span>📍 ' + curStad + '</span> <a href="https://www.google.com/maps/search/?api=1&query=' + qMaps + '" target="_blank" rel="noopener" class="map-pill" title="فتح موقع الملعب على خرائط جوجل">🗺️ الخريطة</a>';
+  }
   const sh=el.querySelector('[data-k=sh]');if(sh){sh.textContent=v.sh||0;el.querySelector('[data-k=sa]').textContent=v.sa||0}
   const vs=el.querySelector('[data-k=vs]');if(vs)vs.textContent=(v.sh||v.sa)?(v.sh||0)+'-'+(v.sa||0):'VS';};
  el.querySelectorAll('[data-f]').forEach(i=>{i.value=d[i.dataset.f]||(i.dataset.f==='date'?defDate(r):i.dataset.f==='time'?DT[cat]:'');
-  i.addEventListener('input',()=>{store[key]=Object.assign(store[key]||{},{[i.dataset.f]:i.value});if(i.dataset.f==='date'||i.dataset.f==='stad')CATS.forEach(ct=>{const kk=K2(ct,r,m.h,m.a);store[kk]=Object.assign(store[kk]||{},{[i.dataset.f]:i.value})});save();paint()})});
+  i.addEventListener('input',()=>{
+   const f=i.dataset.f;
+   const updateObj = {[f]:i.value};
+   if(f==='sh'||f==='sa'){
+     if(currentUser && currentUser.role==='admin'){
+       updateObj.status='confirmed';
+       updateObj.enteredBy='admin';
+     } else if(currentUser && currentUser.role==='official'){
+       updateObj.status='pending_confirm';
+       updateObj.enteredBy=currentUser.teamId;
+       updateObj.enteredByName=currentUser.name;
+     }
+   }
+   store[key]=Object.assign(store[key]||{},updateObj);
+   if(f==='date'||f==='stad')CATS.forEach(ct=>{const kk=K2(ct,r,m.h,m.a);store[kk]=Object.assign(store[kk]||{},{[f]:i.value})});
+   save();
+   paint();
+   if(typeof renderConfUI==='function')renderConfUI();
+ })});
  el.querySelectorAll('[data-up]').forEach(i=>i.addEventListener('change',()=>{const f=i.files[0];if(f)setLogo(i.dataset.up,f)}));
  el.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>{delete store.logos[b.dataset.del];save();paintLogos(b.dataset.del)}));
+ // زر صانع البوستر الاحترافي
+ const pb=document.createElement('button');
+ pb.type='button';
+ pb.className='poster-btn-main';
+ pb.innerHTML='<span class="ic">🎨</span>صانع بوستر اللقاء (HD للفيسبوك والواتساب)';
+ pb.onclick=()=>openPosterModal(r);
+ el.appendChild(pb);
+
+ // حاوية اعتماد النتيجة والتحكيم المزدوج
+ const confBox=document.createElement('div');
+ confBox.className='conf-wrap';
+ el.appendChild(confBox);
+ const renderConfUI=()=>{
+   confBox.innerHTML=getConfirmationUI(key, m.h, m.a);
+   confBox.querySelectorAll('[data-act]').forEach(btn=>{
+     btn.addEventListener('click',()=>handleConfirmAction(btn.dataset.act, key, m.h, m.a));
+   });
+ };
+ renderConfUI();
+
+ // الاقتراحات السريعة لاسم الملعب
+ el.querySelectorAll('[data-fill-stad]').forEach(b=>{
+   b.addEventListener('click',()=>{
+     const inp=el.querySelector('input[data-f=stad]');
+     if(inp){inp.value=b.dataset.fillStad;inp.dispatchEvent(new Event('input'))}
+   });
+ });
+
  const sb=document.createElement('button');sb.className='shot';sb.textContent='📷 حفظ كصورة';sb.onclick=()=>shot('m',r);el.appendChild(sb);
  const tb=document.createElement('button');tb.className='shot';tb.textContent='📊 نتائج الفئات الثلاث';const tp=document.createElement('div');tp.className='tri';tp.hidden=true;tb.onclick=()=>{if(tp.hidden){tp.innerHTML=triHTML(r,m.h,m.a)+'<button class="shot" data-tri="1">⬇ تحميل نتائج الفئات الثلاث</button>';const d=tp.querySelector('[data-tri]');if(d)d.onclick=()=>shot('x',r)}tp.hidden=!tp.hidden};el.appendChild(tb);el.appendChild(tp);
  const pb=document.createElement('button');pb.className='shot';pb.textContent='🖼 ملصق يوم المباراة';pb.onclick=()=>shot('p',r);el.appendChild(pb);
@@ -1851,6 +1956,151 @@ if (btnDisconnectCloud) {
 
 // Initial start
 initFirebaseSync(getStoredFbConfig());
+
+
+
+// ================= Double Confirmation (اعتماد النتائج والتحكيم المزدوج) =================
+function getConfirmationUI(key, h, a) {
+  const v = store[key] || {};
+  if (v.sh === undefined || v.sa === undefined || v.sh === '' || v.sa === '') return '';
+
+  if (v.status === 'confirmed') {
+    return '<div class="conf-badge confirmed">✅ نتيجة معتمدة ومؤكدة رسمياً (' + (v.confirmedBy==='admin'?'من الإدارة':'من مسؤولي الفريقين') + ')</div>';
+  }
+  if (v.status === 'disputed') {
+    let out = '<div class="conf-badge disputed">⚠️ النتيجة محل اعتراض وفي انتظار قرار المشرف العام</div>';
+    if (currentUser && currentUser.role === 'admin') {
+      out += '<button type="button" class="conf-btn admin-approve" data-act="adm_confirm">👑 اعتماد النتيجة نهائياً كإدارة</button>';
+    }
+    return out;
+  }
+  if (v.status === 'pending_confirm') {
+    if (currentUser && currentUser.role === 'admin') {
+      return '<div class="conf-box"><span>⚽ أدخلها مسؤول <b>' + (T[v.enteredBy]||'الفريق') + '</b> (' + v.sh + ' - ' + v.sa + ')</span>' +
+        '<button type="button" class="conf-btn admin-approve" data-act="adm_confirm">👑 اعتماد رسمي للإدارة</button></div>';
+    }
+    if (currentUser && currentUser.role === 'official') {
+      if (currentUser.teamId != v.enteredBy) {
+        return '<div class="conf-box confirm-prompt">' +
+          '<span class="conf-prompt-txt">⚽ أدخل مسؤول <b>' + (T[v.enteredBy]||'المنافس') + '</b> النتيجة: <b>' + v.sh + ' - ' + v.sa + '</b></span>' +
+          '<div class="conf-actions">' +
+          '<button type="button" class="conf-btn yes" data-act="confirm_res">✅ تأكيد واعتماد النتيجة</button>' +
+          '<button type="button" class="conf-btn no" data-act="dispute_res">❌ اعتراض</button>' +
+          '</div></div>';
+      } else {
+        const otherId = (h == currentUser.teamId) ? a : h;
+        return '<div class="conf-badge pending">⏳ في انتظار تأكيد واعتماد مسؤول (' + T[otherId] + ')</div>';
+      }
+    }
+  }
+  return '';
+}
+
+function handleConfirmAction(act, key, h, a) {
+  store[key] = store[key] || {};
+  if (act === 'confirm_res') {
+    store[key].status = 'confirmed';
+    store[key].confirmedBy = currentUser ? currentUser.teamId : 'official';
+    save();
+    if (typeof render === 'function') render();
+    showToast('✅ تم تأكيد واعتماد نتيجة المباراة بنجاح!');
+  } else if (act === 'dispute_res') {
+    store[key].status = 'disputed';
+    store[key].disputedBy = currentUser ? currentUser.teamId : 'official';
+    save();
+    if (typeof render === 'function') render();
+    showToast('⚠️ تم تسجيل اعتراضك وسيراجع المشرف العام النتيجة.');
+  } else if (act === 'adm_confirm') {
+    store[key].status = 'confirmed';
+    store[key].confirmedBy = 'admin';
+    save();
+    if (typeof render === 'function') render();
+    showToast('👑 تم اعتماد النتيجة نهائياً من المشرف العام!');
+  }
+}
+
+// ================= Match Poster Generator (صانع بوستر اللقاء) =================
+let currentPosterBlob = null;
+let currentPosterCanvas = null;
+let currentPosterTitle = '';
+
+async function openPosterModal(r) {
+  const modal = document.getElementById('posterModal');
+  const previewBox = document.getElementById('posterPreviewBox');
+  if (!modal || !previewBox) return;
+
+  previewBox.innerHTML = '<div style="color:#fff;padding:20px;font-weight:700;">⏳ جاري تجهيز وتصميم البوستر...</div>';
+  modal.style.display = 'flex';
+
+  try {
+    const cv = await (style === 'red' ? imgMatch(r) : imgMatchUC(r));
+    if (!cv) {
+      previewBox.innerHTML = '<div style="color:#fff;padding:20px;">تعذر إنشاء البوستر (الفريق معفى في هذه الجولة)</div>';
+      return;
+    }
+    currentPosterCanvas = cv;
+    const m = matchFor(team, r);
+    currentPosterTitle = 'مباراة ' + (T[m.h]||'') + ' ضد ' + (T[m.a]||'') + ' · الجولة ' + r;
+
+    cv.toBlob(blob => {
+      currentPosterBlob = blob;
+      previewBox.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = URL.createObjectURL(blob);
+      previewBox.appendChild(img);
+    }, 'image/png');
+
+  } catch(e) {
+    previewBox.innerHTML = '<div style="color:#fff;padding:20px;">خطأ: ' + e.message + '</div>';
+  }
+}
+
+const posterModalClose = document.getElementById('posterModalClose');
+if (posterModalClose) {
+  posterModalClose.addEventListener('click', () => {
+    document.getElementById('posterModal').style.display = 'none';
+  });
+}
+const posterModal = document.getElementById('posterModal');
+if (posterModal) {
+  posterModal.addEventListener('click', (e) => {
+    if (e.target === posterModal) posterModal.style.display = 'none';
+  });
+}
+
+const btnPosterShare = document.getElementById('btnPosterShare');
+if (btnPosterShare) {
+  btnPosterShare.addEventListener('click', async () => {
+    if (!currentPosterBlob) return;
+    const file = new File([currentPosterBlob], 'match_poster.png', { type: 'image/png' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          title: currentPosterTitle,
+          text: '⚽ ' + currentPosterTitle + '\n🏆 بطولة رابطة تيبازة 2026/2027\nتابع كل التفاصيل عبر التطبيق:',
+          files: [file]
+        });
+      } catch(e) {}
+    } else {
+      btnPosterDownload.click();
+      showToast('تم تحميل الصورة! يمكنك مشاركتها الآن على واتساب وفيسبوك');
+    }
+  });
+}
+
+const btnPosterDownload = document.getElementById('btnPosterDownload');
+if (btnPosterDownload) {
+  btnPosterDownload.addEventListener('click', () => {
+    if (!currentPosterCanvas) return;
+    const a = document.createElement('a');
+    a.download = 'poster_' + new Date().toISOString().slice(0,10) + '.png';
+    a.href = currentPosterCanvas.toDataURL('image/png');
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    showToast('✅ تم تحميل البوستر بجودة عالية!');
+  });
+}
 
 </script>
 </body>
