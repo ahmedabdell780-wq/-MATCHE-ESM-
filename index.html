@@ -300,6 +300,46 @@ body{background:var(--bodybg);color:var(--ink)}
 .btn-save-cloud{background:#1f5a34;color:#fff}
 .btn-cancel-cloud{background:var(--field,#f6f8fa);color:var(--ink,#0b1722);border:1px solid var(--line,#d5dce4)!important}
 
+
+/* Auth and Team Officials Styles */
+.auth-section{margin:22px 0 10px;text-align:center}
+.auth-box{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.auth-btn-main{background:linear-gradient(135deg,#1f5a34,#133e23);color:#fff;border:0;border-radius:12px;padding:12px 18px;font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(31,90,52,0.25)}
+.auth-btn-sub{background:var(--field,#f6f8fa);border:1px solid var(--line,#d5dce4);border-radius:12px;padding:12px 16px;font-family:inherit;font-weight:800;font-size:13px;color:var(--ink,#0b1722);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.user-info-card{background:var(--panel,#fff);border:2px solid var(--gold,#f2b632);border-radius:14px;padding:12px 16px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;width:100%;max-width:540px;margin:0 auto;box-shadow:0 4px 14px rgba(0,0,0,0.06)}
+.user-badge{font-size:14px;font-weight:800;color:var(--ink,#0b1722);display:flex;align-items:center;gap:6px}
+.user-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.btn-mgr-action{background:#0b4fb3;color:#fff;border:0;border-radius:10px;padding:8px 12px;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.badge-count{background:#c8202f;color:#fff;border-radius:20px;padding:1px 6px;font-size:11px;font-weight:900}
+.btn-logout{background:var(--field,#f6f8fa);border:1px solid var(--line,#d5dce4);border-radius:10px;padding:8px 12px;font-family:inherit;font-size:12px;font-weight:800;color:var(--red,#c8202f);cursor:pointer}
+
+.auth-tabs{display:flex;gap:4px;background:var(--field,#f6f8fa);border-radius:10px;padding:3px}
+.auth-tab-btn{background:none;border:0;padding:6px 14px;font-family:inherit;font-size:13px;font-weight:800;border-radius:8px;cursor:pointer;color:var(--muted,#5d6b7a)}
+.auth-tab-btn.active{background:var(--panel,#fff);color:var(--ink,#0b1722);box-shadow:0 2px 6px rgba(0,0,0,0.1)}
+.auth-note{font-size:12px;color:var(--muted,#5d6b7a);line-height:1.6;margin:0 0 12px;background:var(--field,#f6f8fa);padding:10px;border-radius:10px}
+.btn-primary-auth{width:100%;background:#1f5a34;color:#fff;border:0;border-radius:10px;padding:12px;font-family:inherit;font-weight:800;font-size:14px;margin-top:14px;cursor:pointer}
+.btn-primary-auth:active{transform:scale(0.98)}
+.auth-error-msg{margin-top:10px;padding:8px 12px;background:rgba(200,32,47,0.1);border:1px solid #c8202f;color:#c8202f;border-radius:8px;font-size:12px;font-weight:700;text-align:center}
+
+.officials-list{display:grid;gap:10px;margin-top:12px;max-height:60vh;overflow-y:auto}
+.official-card{background:var(--field,#f6f8fa);border:1px solid var(--line,#d5dce4);border-radius:12px;padding:12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
+.off-info{display:flex;align-items:center;gap:10px}
+.off-logo{width:36px;height:36px;border-radius:8px;background:var(--panel,#fff);padding:4px;box-shadow:0 1px 3px rgba(0,0,0,0.1);display:grid;place-items:center}
+.off-details strong{display:block;font-size:14px;color:var(--ink,#0b1722)}
+.off-details small{display:block;font-size:12px;color:var(--muted,#5d6b7a);margin-top:2px}
+.off-status{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:800}
+.off-status.pending{background:#fff3cd;color:#856404;border:1px solid #ffeeba}
+.off-status.approved{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
+.off-status.suspended{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}
+.off-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.off-btn{border:0;border-radius:8px;padding:6px 10px;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer}
+.off-btn.approve{background:#1f9d55;color:#fff}
+.off-btn.suspend{background:#e07a10;color:#fff}
+.off-btn.delete{background:#c8202f;color:#fff}
+
+.no-perm-msg{background:var(--field,#f6f8fa);border:1px dashed var(--line,#d5dce4);border-radius:10px;padding:10px;margin-top:8px;text-align:center;font-size:12px;font-weight:700;color:var(--muted,#5d6b7a)}
+.radm-disabled{grid-column:1/-1;text-align:center;font-size:12px;font-weight:700;color:var(--muted,#5d6b7a);padding:4px;background:rgba(0,0,0,0.03);border-radius:6px;margin-top:4px}
+
 </style>
 
 <link rel="manifest" href="manifest.json">
@@ -445,8 +485,110 @@ body{background:var(--bodybg);color:var(--ink)}
 </div>
 
 <p class="note">الفريق المكتوب أولًا يظهر كمستضيف. جولات الإياب (12 إلى 22) تعكس جولات الذهاب. التاريخ والملعب والنتائج والشعارات تُحفظ على هذا الجهاز فقط.</p>
-<div class="admin"><button id="lock" aria-label="دخول المشرف">🔐 دخول المشرف</button></div>
-<div id="lockBox" hidden class="lockBox"><input id="pin" type="password" inputmode="numeric" placeholder="رمز المشرف"><button id="pinGo">دخول</button><span id="pinMsg"></span></div>
+<!-- قسم تسجيل الدخول والحسابات للمشرف ومسؤولي الفرق -->
+<section class="auth-section">
+ <div id="authGuestBox" class="auth-box">
+  <button id="btnOpenAuth" class="auth-btn-main" type="button"><span class="ic">🔐</span>تسجيل الدخول (مشرف / مسؤول فريق)</button>
+  <button id="btnOpenRegister" class="auth-btn-sub" type="button"><span class="ic">📝</span>طلب حساب مسؤول فريق جديد</button>
+ </div>
+ <div id="authLoggedBox" class="auth-box auth-logged" style="display:none;">
+  <div class="user-info-card">
+   <div id="userBadge" class="user-badge"></div>
+   <div class="user-actions">
+    <button id="btnOfficialsMgr" class="btn-mgr-action" style="display:none;" type="button">👥 إدارة مسؤولي الفرق <span id="pendingBadge" class="badge-count">0</span></button>
+    <button id="btnLogout" class="btn-logout" type="button">🚪 تسجيل الخروج</button>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- نافذة الدخول وإنشاء حساب -->
+<div id="authModal" class="modal-bg" style="display:none;">
+ <div class="modal-card">
+  <div class="modal-head">
+   <div class="auth-tabs">
+    <button id="tabLoginBtn" class="auth-tab-btn active" type="button">تسجيل الدخول</button>
+    <button id="tabRegisterBtn" class="auth-tab-btn" type="button">طلب حساب مسؤول</button>
+   </div>
+   <button id="authModalClose" class="modal-close" type="button">&times;</button>
+  </div>
+  
+  <!-- تبويب تسجيل الدخول -->
+  <div id="tabLoginView" class="auth-tab-content">
+   <div class="field" style="margin-bottom:8px;">
+    <label>نوع الحساب</label>
+    <div class="seg two" id="loginTypeSeg">
+     <button type="button" id="typeOfficialBtn" aria-pressed="true">👤 مسؤول فريق</button>
+     <button type="button" id="typeAdminBtn" aria-pressed="false">👑 المشرف العام</button>
+    </div>
+   </div>
+   
+   <!-- نموذج دخول المشرف العام -->
+   <div id="formAdminLogin" style="display:none;">
+    <div class="field" style="margin-top:10px;">
+     <label>رمز المشرف العام (PIN):</label>
+     <input id="adminPinInput" type="password" inputmode="numeric" placeholder="أدخل رمز المشرف العام">
+    </div>
+    <button id="btnAdminLoginGo" class="btn-primary-auth" type="button">دخول المشرف العام ⚡</button>
+   </div>
+
+   <!-- نموذج دخول مسؤول الفريق -->
+   <div id="formOfficialLogin">
+    <div class="field" style="margin-top:10px;">
+     <label>رقم الهاتف أو اسم المستخدم:</label>
+     <input id="loginPhoneInput" type="text" placeholder="مثال: 0555123456" dir="ltr">
+    </div>
+    <div class="field">
+     <label>كلمة المرور:</label>
+     <input id="loginPassInput" type="password" placeholder="أدخل كلمة المرور">
+    </div>
+    <button id="btnOfficialLoginGo" class="btn-primary-auth" type="button">دخول مسؤول الفريق ⚽</button>
+   </div>
+   <div id="loginErrorMsg" class="auth-error-msg" style="display:none;"></div>
+  </div>
+
+  <!-- تبويب إنشاء حساب مسؤول فريق -->
+  <div id="tabRegisterView" class="auth-tab-content" style="display:none;">
+   <p class="auth-note">قم بملء بياناتك واختيار فريقك. سيتم إرسال الطلب للمشرف العام للموافقة عليه، وبعد قبوله ستتمكن من تسجيل الدخول وإدارة مباريات فريقه حصراً.</p>
+   <div class="field">
+    <label>الاسم الكامل للمسؤول:</label>
+    <input id="regNameInput" type="text" placeholder="اسم ولقب المسؤول">
+   </div>
+   <div class="field">
+    <label>رقم الهاتف (يُستخدم للدخول):</label>
+    <input id="regPhoneInput" type="tel" placeholder="05XXXXXXXX / 06XXXXXXXX" dir="ltr">
+   </div>
+   <div class="field">
+    <label>الفريق التابع له:</label>
+    <select id="regTeamSelect"></select>
+   </div>
+   <div class="field">
+    <label>كلمة المرور:</label>
+    <input id="regPassInput" type="password" placeholder="كلمة المرور">
+   </div>
+   <div class="field">
+    <label>تأكيد كلمة المرور:</label>
+    <input id="regPassConfirmInput" type="password" placeholder="أعد كتابة كلمة المرور">
+   </div>
+   <button id="btnRegisterGo" class="btn-primary-auth" type="button">إرسال طلب الحساب 📩</button>
+   <div id="regErrorMsg" class="auth-error-msg" style="display:none;"></div>
+  </div>
+ </div>
+</div>
+
+<!-- نافذة إدارة مسؤولي الفرق (خاصة بالمشرف العام فقط) -->
+<div id="officialsModal" class="modal-bg" style="display:none;">
+ <div class="modal-card modal-wide">
+  <div class="modal-head">
+   <h3>👥 إدارة طلبات وحسابات مسؤولي الفرق</h3>
+   <button id="officialsModalClose" class="modal-close" type="button">&times;</button>
+  </div>
+  <p class="auth-note">من هنا يمكنك قبول طلبات مسؤولي الأندية الأخرى أو تجميدها. بمجرد تفعيل الحساب، يُسمح للمسؤول بإدخال وتعديل نتائج ومباريات فريقه فقط دون باقي الفرق.</p>
+  <div id="officialsListContainer" class="officials-list">
+   <!-- يتم ملؤها ديناميكياً -->
+  </div>
+ </div>
+</div>
 </main>
 
 <script>
@@ -498,12 +640,14 @@ function card(r){
  if(m.bye){el.innerHTML=head+'<div class="bye">'+T[team]+' معفى من هذه الجولة</div>';return el}
  const key=K(r,m.h,m.a),d=store[key]||{};
  el.innerHTML=head+board(m)+
+ (canEditMatch(m.h,m.a)?(
  '<details><summary>تعديل التاريخ والملعب والنتيجة</summary><div class="form">'+
  '<div><label>التاريخ</label><input type="date" data-f="date"></div>'+
  '<div><label>الساعة</label><input type="time" data-f="time"></div>'+
  '<div class="w"><label>الملعب</label><input type="text" data-f="stad" placeholder="اسم الملعب"></div>'+
  '<div><label>أهداف '+T[m.h]+'</label><input type="number" min="0" inputmode="numeric" data-f="sh"></div>'+
- '<div><label>أهداف '+T[m.a]+'</label><input type="number" min="0" inputmode="numeric" data-f="sa"></div>'+lg(m.h)+lg(m.a)+'</div></details>';
+ '<div><label>أهداف '+T[m.a]+'</label><input type="number" min="0" inputmode="numeric" data-f="sa"></div>'+lg(m.h)+lg(m.a)+'</div></details>'
+ ):(currentUser?'<div class="no-perm-msg">🔒 تعديل هذه المباراة متاح فقط لمسؤول ('+T[m.h]+') أو ('+T[m.a]+')</div>':''));
  const paint=()=>{const v=store[key]||{};
   el.querySelector('[data-k=dt]').textContent=(fmtDate(v.date||defDate(r))+' '+(v.time||DT[cat])).trim()||'التاريخ / الساعة';
   el.querySelector('[data-k=st]').textContent=v.stad||'الملعب';
@@ -543,17 +687,350 @@ document.querySelectorAll('#styleSeg button').forEach(b=>{b.setAttribute('aria-p
 
 function h53(s){let h1=0xdeadbeef,h2=0x41c6ce57;for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677)}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return 4294967296*(2097151&h2)+(h1>>>0)}
 const HASH=7543435611185347;
-function setAdmin(on){document.body.classList.toggle('admin',on);$('#lock').textContent=on?'🔓':'🔒';try{on?localStorage.setItem('wifaq-admin','1'):localStorage.removeItem('wifaq-admin')}catch(e){}}
-$('#lock').onclick=()=>{
- if(document.body.classList.contains('admin')){setAdmin(false);return}
- const b=$('#lockBox');b.hidden=!b.hidden;if(!b.hidden)$('#pin').focus();
-};
-$('#pinGo').onclick=()=>{
- if(h53($('#pin').value.trim())===HASH){setAdmin(true);$('#lockBox').hidden=true;$('#pin').value='';$('#pinMsg').textContent=''}
- else $('#pinMsg').textContent='الرمز غير صحيح'
-};
-$('#pin').addEventListener('keydown',e=>{if(e.key==='Enter')$('#pinGo').click()});
-try{if(localStorage.getItem('wifaq-admin')==='1')setAdmin(true)}catch(e){}
+// ================= Auth & Team Officials System =================
+store.officials = store.officials || [];
+let currentUser = null;
+try {
+  const savedUser = localStorage.getItem('esm_current_user');
+  if (savedUser) currentUser = JSON.parse(savedUser);
+} catch(e) {}
+
+function canEditMatch(h, a) {
+  if (!currentUser) return false;
+  if (currentUser.role === 'admin') return true;
+  if (currentUser.role === 'official') {
+    return h == currentUser.teamId || a == currentUser.teamId;
+  }
+  return false;
+}
+
+function updateAuthUI() {
+  const guestBox = document.getElementById('authGuestBox');
+  const loggedBox = document.getElementById('authLoggedBox');
+  const badge = document.getElementById('userBadge');
+  const mgrBtn = document.getElementById('btnOfficialsMgr');
+  const pendingBadge = document.getElementById('pendingBadge');
+
+  if (currentUser) {
+    document.body.classList.add('admin');
+    if (guestBox) guestBox.style.display = 'none';
+    if (loggedBox) loggedBox.style.display = 'flex';
+
+    if (currentUser.role === 'admin') {
+      badge.innerHTML = '👑 <span><b>المشرف العام</b> (كامل الصلاحيات)</span>';
+      if (mgrBtn) {
+        mgrBtn.style.display = 'inline-flex';
+        const pCount = (store.officials || []).filter(o => o.status === 'pending').length;
+        if (pendingBadge) {
+          pendingBadge.textContent = pCount;
+          pendingBadge.style.display = pCount > 0 ? 'inline-block' : 'none';
+        }
+      }
+    } else if (currentUser.role === 'official') {
+      const teamName = T[currentUser.teamId] || 'فريقك';
+      badge.innerHTML = '👤 <span><b>' + currentUser.name + '</b> (مسؤول ' + teamName + ')</span>';
+      if (mgrBtn) mgrBtn.style.display = 'none';
+    }
+  } else {
+    document.body.classList.remove('admin');
+    if (guestBox) guestBox.style.display = 'flex';
+    if (loggedBox) loggedBox.style.display = 'none';
+  }
+}
+
+function setAdminUser(user) {
+  currentUser = user;
+  try {
+    if (user) localStorage.setItem('esm_current_user', JSON.stringify(user));
+    else localStorage.removeItem('esm_current_user');
+  } catch(e) {}
+  updateAuthUI();
+  if (typeof render === 'function') render();
+  const resT = document.querySelector('[data-t="2"]');
+  if (resT && resT.getAttribute('aria-pressed') === 'true' && typeof renderRes === 'function') renderRes();
+}
+
+// UI Handlers for Auth
+const authModal = document.getElementById('authModal');
+const officialsModal = document.getElementById('officialsModal');
+const btnOpenAuth = document.getElementById('btnOpenAuth');
+const btnOpenRegister = document.getElementById('btnOpenRegister');
+const authModalClose = document.getElementById('authModalClose');
+const officialsModalClose = document.getElementById('officialsModalClose');
+const btnLogout = document.getElementById('btnLogout');
+const btnOfficialsMgr = document.getElementById('btnOfficialsMgr');
+
+const tabLoginBtn = document.getElementById('tabLoginBtn');
+const tabRegisterBtn = document.getElementById('tabRegisterBtn');
+const tabLoginView = document.getElementById('tabLoginView');
+const tabRegisterView = document.getElementById('tabRegisterView');
+
+const typeOfficialBtn = document.getElementById('typeOfficialBtn');
+const typeAdminBtn = document.getElementById('typeAdminBtn');
+const formOfficialLogin = document.getElementById('formOfficialLogin');
+const formAdminLogin = document.getElementById('formAdminLogin');
+
+function switchAuthTab(isRegister) {
+  tabLoginBtn.classList.toggle('active', !isRegister);
+  tabRegisterBtn.classList.toggle('active', isRegister);
+  tabLoginView.style.display = isRegister ? 'none' : 'block';
+  tabRegisterView.style.display = isRegister ? 'block' : 'none';
+  document.getElementById('loginErrorMsg').style.display = 'none';
+  document.getElementById('regErrorMsg').style.display = 'none';
+}
+
+if (btnOpenAuth) {
+  btnOpenAuth.addEventListener('click', () => {
+    authModal.style.display = 'flex';
+    switchAuthTab(false);
+  });
+}
+if (btnOpenRegister) {
+  btnOpenRegister.addEventListener('click', () => {
+    authModal.style.display = 'flex';
+    switchAuthTab(true);
+  });
+}
+if (authModalClose) {
+  authModalClose.addEventListener('click', () => { authModal.style.display = 'none'; });
+}
+if (authModal) {
+  authModal.addEventListener('click', (e) => { if (e.target === authModal) authModal.style.display = 'none'; });
+}
+
+tabLoginBtn.addEventListener('click', () => switchAuthTab(false));
+tabRegisterBtn.addEventListener('click', () => switchAuthTab(true));
+
+typeOfficialBtn.addEventListener('click', () => {
+  typeOfficialBtn.setAttribute('aria-pressed', 'true');
+  typeAdminBtn.setAttribute('aria-pressed', 'false');
+  formOfficialLogin.style.display = 'block';
+  formAdminLogin.style.display = 'none';
+  document.getElementById('loginErrorMsg').style.display = 'none';
+});
+typeAdminBtn.addEventListener('click', () => {
+  typeAdminBtn.setAttribute('aria-pressed', 'true');
+  typeOfficialBtn.setAttribute('aria-pressed', 'false');
+  formOfficialLogin.style.display = 'none';
+  formAdminLogin.style.display = 'block';
+  document.getElementById('loginErrorMsg').style.display = 'none';
+});
+
+// Admin Login
+document.getElementById('btnAdminLoginGo').addEventListener('click', () => {
+  const pinVal = document.getElementById('adminPinInput').value.trim();
+  const err = document.getElementById('loginErrorMsg');
+  if (h53(pinVal) === HASH) {
+    setAdminUser({ role: 'admin', name: 'المشرف العام' });
+    authModal.style.display = 'none';
+    document.getElementById('adminPinInput').value = '';
+    showToast('👑 مرحباً بك أيها المشرف العام!');
+  } else {
+    err.textContent = '❌ رمز المشرف غير صحيح.';
+    err.style.display = 'block';
+  }
+});
+document.getElementById('adminPinInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('btnAdminLoginGo').click();
+});
+
+// Official Login
+document.getElementById('btnOfficialLoginGo').addEventListener('click', () => {
+  const phone = document.getElementById('loginPhoneInput').value.trim();
+  const pass = document.getElementById('loginPassInput').value.trim();
+  const err = document.getElementById('loginErrorMsg');
+
+  if (!phone || !pass) {
+    err.textContent = 'يرجى إدخال رقم الهاتف وكلمة المرور.';
+    err.style.display = 'block';
+    return;
+  }
+
+  const officials = store.officials || [];
+  const found = officials.find(o => o.phone === phone && o.pass === pass);
+
+  if (!found) {
+    err.textContent = '❌ رقم الهاتف أو كلمة المرور غير صحيحة.';
+    err.style.display = 'block';
+    return;
+  }
+
+  if (found.status === 'pending') {
+    err.textContent = '⏳ حسابك لا يزال قيد المراجعة في انتظار موافقة المشرف العام.';
+    err.style.display = 'block';
+    return;
+  }
+
+  if (found.status === 'suspended') {
+    err.textContent = '⛔ هذا الحساب معطل حالياً من قِبل المشرف العام.';
+    err.style.display = 'block';
+    return;
+  }
+
+  // Approved!
+  setAdminUser({
+    role: 'official',
+    id: found.id,
+    name: found.name,
+    phone: found.phone,
+    teamId: found.teamId
+  });
+
+  // Switch team selector to their team
+  team = found.teamId;
+  const tsel = document.getElementById('team');
+  if (tsel) tsel.value = team;
+
+  authModal.style.display = 'none';
+  document.getElementById('loginPhoneInput').value = '';
+  document.getElementById('loginPassInput').value = '';
+  showToast('⚽ مرحباً بك: ' + found.name + ' - مسؤول ' + T[found.teamId]);
+});
+
+// Populate team selection in registration
+const regTeamSelect = document.getElementById('regTeamSelect');
+if (regTeamSelect) {
+  Object.keys(T).forEach(id => {
+    regTeamSelect.add(new Option(T[id], id, false, id === '5'));
+  });
+}
+
+// Official Register
+document.getElementById('btnRegisterGo').addEventListener('click', () => {
+  const name = document.getElementById('regNameInput').value.trim();
+  const phone = document.getElementById('regPhoneInput').value.trim();
+  const teamId = +document.getElementById('regTeamSelect').value;
+  const pass = document.getElementById('regPassInput').value.trim();
+  const passConfirm = document.getElementById('regPassConfirmInput').value.trim();
+  const err = document.getElementById('regErrorMsg');
+
+  if (!name || !phone || !pass) {
+    err.textContent = 'يرجى ملء جميع الحقول المطلوبة.';
+    err.style.display = 'block';
+    return;
+  }
+  if (pass !== passConfirm) {
+    err.textContent = 'كلمة المرور غير متطابقة.';
+    err.style.display = 'block';
+    return;
+  }
+
+  store.officials = store.officials || [];
+  if (store.officials.some(o => o.phone === phone)) {
+    err.textContent = 'رقم الهاتف هذا مسجل بالفعل. يُرجى تسجيل الدخول.';
+    err.style.display = 'block';
+    return;
+  }
+
+  const newOfficial = {
+    id: 'off_' + Date.now(),
+    name: name,
+    phone: phone,
+    teamId: teamId,
+    pass: pass,
+    status: 'pending',
+    date: new Date().toISOString().slice(0, 10)
+  };
+
+  store.officials.push(newOfficial);
+  save(); // Sync to Firestore and LocalStorage!
+
+  // Reset inputs
+  document.getElementById('regNameInput').value = '';
+  document.getElementById('regPhoneInput').value = '';
+  document.getElementById('regPassInput').value = '';
+  document.getElementById('regPassConfirmInput').value = '';
+
+  alert('✅ تم إرسال طلب تسجيلك بنجاح!\n\nحسابك الآن قيد المراجعة في انتظار موافقة المشرف العام. بمجرد تفعيله، ستتمكن من الدخول وإدارة مباريات فريقك (' + T[teamId] + ').');
+  switchAuthTab(false);
+  document.getElementById('loginPhoneInput').value = phone;
+});
+
+// Logout
+if (btnLogout) {
+  btnLogout.addEventListener('click', () => {
+    setAdminUser(null);
+    showToast('تم تسجيل الخروج بنجاح.');
+  });
+}
+
+// Super Admin Officials Management
+if (btnOfficialsMgr) {
+  btnOfficialsMgr.addEventListener('click', () => {
+    renderOfficialsList();
+    officialsModal.style.display = 'flex';
+  });
+}
+if (officialsModalClose) {
+  officialsModalClose.addEventListener('click', () => { officialsModal.style.display = 'none'; });
+}
+if (officialsModal) {
+  officialsModal.addEventListener('click', (e) => { if (e.target === officialsModal) officialsModal.style.display = 'none'; });
+}
+
+function renderOfficialsList() {
+  const container = document.getElementById('officialsListContainer');
+  const officials = store.officials || [];
+
+  if (!officials.length) {
+    container.innerHTML = '<div class="bye">لا توجد طلبات أو حسابات مسؤولي فرق مسجلة حتى الآن.</div>';
+    return;
+  }
+
+  container.innerHTML = '';
+  officials.forEach((off, idx) => {
+    const card = document.createElement('div');
+    card.className = 'official-card';
+    const statusText = off.status === 'approved' ? '🟢 مفعل' : (off.status === 'suspended' ? '⛔ معطل' : '⏳ قيد الانتظار');
+    const statusClass = off.status === 'approved' ? 'approved' : (off.status === 'suspended' ? 'suspended' : 'pending');
+
+    card.innerHTML = `
+      <div class="off-info">
+        <span class="off-logo">${logoInner(off.teamId)}</span>
+        <div class="off-details">
+          <strong>${off.name} <span class="off-status ${statusClass}">${statusText}</span></strong>
+          <small>الفريق: <b>${T[off.teamId]}</b> · الهاتف: <span dir="ltr">${off.phone}</span> · التاريخ: ${off.date || ''}</small>
+        </div>
+      </div>
+      <div class="off-actions">
+        ${off.status !== 'approved' ? `<button class="off-btn approve" data-act="approve" data-id="${off.id}">✅ قبول وتفعيل</button>` : ''}
+        ${off.status === 'approved' ? `<button class="off-btn suspend" data-act="suspend" data-id="${off.id}">⏸️ تجميد</button>` : ''}
+        <button class="off-btn delete" data-act="delete" data-id="${off.id}">🗑️ حذف</button>
+      </div>
+    `;
+
+    card.querySelectorAll('[data-act]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const act = btn.dataset.act;
+        const id = btn.dataset.id;
+        const target = store.officials.find(o => o.id === id);
+        if (!target) return;
+
+        if (act === 'approve') {
+          target.status = 'approved';
+          showToast('✅ تم قبول وتفعيل حساب ' + target.name);
+        } else if (act === 'suspend') {
+          target.status = 'suspended';
+          showToast('⏸️ تم تجميد حساب ' + target.name);
+        } else if (act === 'delete') {
+          if (confirm('هل أنت متأكد من حذف حساب ' + target.name + '؟')) {
+            store.officials = store.officials.filter(o => o.id !== id);
+            showToast('تم حذف الحساب بنجاح.');
+          }
+        }
+        save();
+        updateAuthUI();
+        renderOfficialsList();
+      });
+    });
+
+    container.appendChild(card);
+  });
+}
+
+// Initial UI Auth state on page load
+updateAuthUI();
+
 
 function pairsOf(r){const row=R[(r-1)%11];return{bye:row[0],m:row[1].map(p=>r>11?[p[1],p[0]]:[p[0],p[1]])}}
 function res(r,h,a){const v=store[K(r,h,a)]||{};const ok=!v.pp&&!v.ex&&v.sh!==undefined&&v.sh!==''&&v.sa!==undefined&&v.sa!==''&&!isNaN(+v.sh)&&!isNaN(+v.sa);return{v,ok,sh:+v.sh,sa:+v.sa}}
@@ -565,7 +1042,9 @@ function standings(u){const t={};Object.keys(T).forEach(i=>t[i]={id:+i,p:0,w:0,d
 function resRow(r,h,a){
  const key=K(r,h,a),el=document.createElement('div');el.className='rrow'+((h==team||a==team)?' mine':'');
  el.innerHTML='<div class="rt"><span class="lgs" data-logo="'+h+'">'+logoInner(h)+'</span><span>'+T[h]+'</span></div><div class="rs"></div><div class="rt l"><span>'+T[a]+'</span><span class="lgs" data-logo="'+a+'">'+logoInner(a)+'</span></div>'+
- '<div class="adm radm"><input type="number" min="0" inputmode="numeric" data-f="sh" aria-label="أهداف '+T[h]+'"><span>-</span><input type="number" min="0" inputmode="numeric" data-f="sa" aria-label="أهداف '+T[a]+'"><label><input type="checkbox" data-f="pp"> مؤجلة</label><label><input type="checkbox" data-f="ex"> معفاة</label></div>'+xf(h,a);
+ (canEditMatch(h,a)?(
+ '<div class="adm radm"><input type="number" min="0" inputmode="numeric" data-f="sh" aria-label="أهداف '+T[h]+'"><span>-</span><input type="number" min="0" inputmode="numeric" data-f="sa" aria-label="أهداف '+T[a]+'"><label><input type="checkbox" data-f="pp"> مؤجلة</label><label><input type="checkbox" data-f="ex"> معفاة</label></div>'+xf(h,a)
+ ):(currentUser?'<div class="adm radm-disabled">🔒 التعديل متاح لمسؤول '+T[h]+' أو '+T[a]+' فقط</div>':''));
  const paint=()=>{const x=res(r,h,a);el.querySelector('.rs').textContent=x.v.ex?'معفاة':x.v.pp?'مؤجلة':(x.ok?x.v.sh+' - '+x.v.sa:'VS')};
  const d=store[key]||{};
  el.querySelectorAll('[data-f]').forEach(i=>{const f=i.dataset.f;if(f==='pp'||f==='ex')i.checked=!!d[f];else i.value=d[f]!==undefined?d[f]:'';markRoster(i);
