@@ -848,7 +848,7 @@ function card(r){
 
  const sb=document.createElement('button');sb.className='shot';sb.textContent='📷 حفظ كصورة';sb.onclick=()=>shot('m',r);el.appendChild(sb);
  const tb=document.createElement('button');tb.className='shot';tb.textContent='📊 نتائج الفئات الثلاث';const tp=document.createElement('div');tp.className='tri';tp.hidden=true;tb.onclick=()=>{if(tp.hidden){tp.innerHTML=triHTML(r,m.h,m.a)+'<button class="shot" data-tri="1">⬇ تحميل نتائج الفئات الثلاث</button>';const d=tp.querySelector('[data-tri]');if(d)d.onclick=()=>shot('x',r)}tp.hidden=!tp.hidden};el.appendChild(tb);el.appendChild(tp);
- const pb2=document.createElement('button');pb2.className='shot';pb2.textContent='🖼 ملصق يوم المباراة';pb2.onclick=()=>shot('p',r);el.appendChild(pb2);
+ const pb=document.createElement('button');pb.className='shot';pb.textContent='🖼 ملصق يوم المباراة';pb.onclick=()=>shot('p',r);el.appendChild(pb);
  const gd=document.createElement('div');gd.className='adm gl';
  gd.innerHTML='<div class="g6"><div><label>الهداف</label><select class="pk" data-gpick="1"><option value="">＋ اختر لاعبًا من القائمة</option>'+rosterList().map(n=>'<option value="'+n+'">'+n+'</option>').join('')+'</select><input type="text" data-g="n" placeholder="أو اكتب الاسم ولقبه"></div><div><label>الدقيقة</label><select class="pk" data-g="m"><option value="">اختر الدقيقة</option>'+minOpts()+'</select></div><div class="w"><label>الفريق المسجل</label><select data-g="s"><option value="h">'+T[m.h]+'</option><option value="a">'+T[m.a]+'</option></select></div><div class="w"><label>صورة اللاعب (اختياري)</label><input type="file" accept="image/*" data-g="p"></div></div>';
  gd.querySelector('[data-g=s]').value=m.a==team?'a':'h';
