@@ -341,67 +341,34 @@ body{background:var(--bodybg);color:var(--ink)}
 .radm-disabled{grid-column:1/-1;text-align:center;font-size:12px;font-weight:700;color:var(--muted,#5d6b7a);padding:4px;background:rgba(0,0,0,0.03);border-radius:6px;margin-top:4px}
 
 
-/* App Login Gate Wall Styles */
-.app-gate{max-width:520px;margin:24px auto;padding:16px;}
-.gate-card{background:var(--panel,#fff);border:1px solid var(--line,#d5dce4);border-radius:20px;box-shadow:0 12px 36px rgba(0,0,0,0.12);overflow:hidden;}
-.gate-header{background:radial-gradient(120% 140% at 50% 0%,#1f5a34,#0e381d 75%,#051a0c);color:#fff;padding:26px 20px 20px;text-align:center;}
-.gate-logo{width:80px;height:80px;margin:0 auto 12px;border-radius:50%;background:#fff;padding:4px;box-shadow:0 4px 12px rgba(0,0,0,0.3);display:grid;place-items:center;}
+/* Redesigned Clean Login Gate */
+.app-gate{max-width:480px;margin:30px auto;padding:14px;box-sizing:border-box;}
+.gate-card{background:var(--panel,#fff);border:1px solid var(--line,#d5dce4);border-radius:24px;box-shadow:0 14px 40px rgba(0,0,0,0.14);overflow:hidden;}
+.gate-header{background:radial-gradient(120% 140% at 50% 0%,#1f5a34,#0e381d 75%,#051a0c);color:#fff;padding:28px 20px 22px;text-align:center;}
+.gate-logo{width:86px;height:86px;margin:0 auto 14px;border-radius:50%;background:#fff;padding:4px;box-shadow:0 4px 14px rgba(0,0,0,0.35);display:grid;place-items:center;}
 .gate-logo img{width:100%;height:100%;object-fit:contain;border-radius:50%;}
-.gate-title{font-size:20px;font-weight:900;margin:0 0 4px;}
-.gate-sub{font-size:12px;opacity:0.85;margin:0 0 14px;}
-.gate-lock-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:800;color:var(--gold,#f2b632);}
-.gate-body{padding:22px 20px;}
-.gate-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--field,#f6f8fa);border-radius:12px;padding:4px;margin-bottom:18px;}
-.gate-tab-btn{background:none;border:0;padding:10px;font-family:inherit;font-size:13px;font-weight:800;border-radius:10px;cursor:pointer;color:var(--muted,#5d6b7a);transition:0.15s;}
-.gate-tab-btn.active{background:var(--panel,#fff);color:var(--ink,#0b1722);box-shadow:0 2px 8px rgba(0,0,0,0.08);}
+.gate-title{font-size:22px;font-weight:900;margin:0 0 4px;}
+.gate-sub{font-size:12.5px;opacity:0.85;margin:0 0 14px;}
+.gate-lock-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:800;color:var(--gold,#f2b632);}
+
+.gate-tabs-simple{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--field,#f6f8fa);border-radius:14px;padding:5px;margin:18px 20px 0;}
+.gate-tab-simple{background:none;border:0;padding:11px;font-family:inherit;font-size:13.5px;font-weight:800;border-radius:10px;cursor:pointer;color:var(--muted,#5d6b7a);transition:0.15s;}
+.gate-tab-simple.active{background:var(--panel,#fff);color:var(--ink,#0b1722);box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+
+.gate-form-wrap{padding:20px;}
+.gate-field{margin-bottom:14px;text-align:right;}
+.gate-field label{display:block;font-size:13px;font-weight:700;color:var(--ink,#0b1722);margin-bottom:5px;}
+.gate-field input, .gate-field select{width:100%;box-sizing:border-box;font-family:inherit;font-size:15px;padding:12px 14px;background:var(--field,#f6f8fa);border:1.5px solid var(--line,#d5dce4);border-radius:12px;color:var(--ink,#0b1722);transition:border-color 0.2s;}
+.gate-field input:focus, .gate-field select:focus{border-color:#1f5a34;outline:none;background:#fff;}
+
+.btn-gate-submit{width:100%;box-sizing:border-box;background:linear-gradient(135deg,#1f5a34,#133e23);color:#fff;border:0;border-radius:14px;padding:14px;font-family:inherit;font-size:15px;font-weight:900;cursor:pointer;margin-top:10px;box-shadow:0 6px 18px rgba(31,90,52,0.3);transition:0.15s;}
+.btn-gate-submit:active{transform:scale(0.98);}
+.gate-contact-footer{text-align:center;margin-top:16px;padding-top:14px;border-top:1px dashed var(--line,#d5dce4);font-size:12.5px;color:var(--muted,#5d6b7a);}
+.gate-contact-footer b{color:#1f5a34;}
 
 .user-top-bar{background:var(--panel,#fff);border:1px solid var(--line,#d5dce4);border-radius:14px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,0.04);}
 .user-top-badge{font-size:13px;font-weight:800;color:var(--ink,#0b1722);display:flex;align-items:center;gap:6px;}
 .user-top-actions{display:flex;align-items:center;gap:6px;}
-
-
-/* Google Maps Stadium Pill */
-.map-pill{display:inline-flex;align-items:center;gap:4px;background:#e8f0fe;color:#1a73e8;border:1px solid #c2e7ff;border-radius:14px;padding:2px 8px;font-size:11px;font-weight:800;text-decoration:none;margin-inline-start:6px;transition:0.15s;}
-.map-pill:hover{background:#d2e3fc;color:#174ea6;}
-.stad-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;}
-.stad-tag{background:var(--field,#f6f8fa);border:1px solid var(--line,#d5dce4);border-radius:6px;padding:3px 7px;font-size:11px;font-weight:700;cursor:pointer;color:var(--muted,#5d6b7a);}
-.stad-tag:hover{background:var(--panel,#fff);color:#1f5a34;border-color:#1f5a34;}
-
-/* Match Poster Button & Modal */
-.poster-btn-main{width:100%;background:linear-gradient(135deg,#0b4fb3,#1a3be0);color:#fff;border:0;border-radius:12px;padding:12px;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 12px rgba(11,79,179,0.25);transition:0.15s;}
-.poster-btn-main:active{transform:scale(0.98);}
-.poster-preview-box{text-align:center;margin:12px 0;background:#000;border-radius:12px;padding:8px;overflow:hidden;}
-.poster-preview-box img{max-width:100%;height:auto;border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,0.4);}
-.poster-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
-.btn-poster-share{background:#25d366;color:#fff;border:0;border-radius:10px;padding:10px;font-family:inherit;font-weight:800;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;}
-.btn-poster-dl{background:#1f5a34;color:#fff;border:0;border-radius:10px;padding:10px;font-family:inherit;font-weight:800;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;}
-
-/* Double Confirmation System */
-.conf-badge{margin-top:8px;padding:8px 12px;border-radius:10px;font-size:12px;font-weight:800;text-align:center;display:flex;align-items:center;justify-content:center;gap:6px;}
-.conf-badge.confirmed{background:rgba(31,157,85,0.12);border:1px solid #1f9d55;color:#155724;}
-.conf-badge.disputed{background:rgba(200,32,47,0.12);border:1px solid #c8202f;color:#721c24;}
-.conf-badge.pending{background:rgba(242,182,50,0.15);border:1px solid #f2b632;color:#856404;}
-.conf-box{background:var(--field,#f6f8fa);border:1px solid var(--line,#d5dce4);border-radius:12px;padding:10px 12px;margin-top:8px;font-size:12px;}
-.conf-box.confirm-prompt{border-color:#f2b632;background:rgba(242,182,50,0.08);}
-.conf-prompt-txt{font-weight:800;display:block;margin-bottom:8px;color:var(--ink,#0b1722);text-align:center;}
-.conf-actions{display:flex;gap:8px;justify-content:center;}
-.conf-btn{border:0;border-radius:8px;padding:7px 14px;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:4px;}
-.conf-btn.yes{background:#1f9d55;color:#fff;}
-.conf-btn.no{background:#c8202f;color:#fff;}
-.conf-btn.admin-approve{background:#0b4fb3;color:#fff;margin-top:6px;width:100%;justify-content:center;}
-
-
-/* Top Notification Banner Styles */
-.top-notif-bar{background:linear-gradient(135deg,#7a1f33,#c8202f);color:#fff;border-radius:12px;padding:8px 12px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;box-shadow:0 4px 12px rgba(200,32,47,0.2);border:1px solid rgba(255,255,255,0.2);animation:pulseNotif 2.5s infinite alternate;}
-@keyframes pulseNotif{0%{box-shadow:0 2px 8px rgba(200,32,47,0.2);}100%{box-shadow:0 4px 16px rgba(200,32,47,0.45);}}
-.notif-content{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;line-height:1.4;flex:1;}
-.notif-bell{font-size:16px;animation:swing 2s infinite ease-in-out;display:inline-block;}
-@keyframes swing{0%,100%{transform:rotate(0deg);}20%{transform:rotate(14deg);}40%{transform:rotate(-14deg);}}
-.notif-ctrls{display:flex;align-items:center;gap:6px;}
-.notif-edit-btn{background:rgba(255,255,255,0.25);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:8px;padding:4px 8px;font-family:inherit;font-size:11px;font-weight:800;cursor:pointer;}
-.notif-edit-btn:hover{background:rgba(255,255,255,0.4);}
-.notif-close-btn{background:none;border:0;color:#fff;font-size:14px;cursor:pointer;opacity:0.8;padding:2px 6px;}
-
 </style>
 
 <link rel="manifest" href="manifest.json">
@@ -420,82 +387,68 @@ body{background:var(--bodybg);color:var(--ink)}
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="ball" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#fff" stroke="#111" stroke-width="2"/><path d="M20 12l7 5-3 8h-8l-3-8z" fill="#111"/><path d="M20 12V3M27 17l9-3M24 25l5 8M16 25l-5 8M13 17l-9-3" stroke="#111" stroke-width="2" fill="none"/></symbol></svg>
-<!-- بوابة تسجيل الدخول المسبقة (قفل التطبيق الكامل) -->
+<!-- بوابة تسجيل الدخول الرسمية الموحدة -->
 <div id="appGate" class="app-gate">
  <div class="gate-card">
   <div class="gate-header">
-   <div class="gate-logo"><img src="icon-192.png" alt="ESM"></div>
+   <div class="gate-logo"><img src="icon-192.png" alt="شعار الرابطة"></div>
    <h1 class="gate-title">منصة مباريات رابطة تيبازة</h1>
    <p class="gate-sub">الفئات الشبانية 2026/2027 · مجموعة وسط غرب</p>
    <div class="gate-lock-tag"><span class="ic">🔒</span>منطقة مخصصة للإدارة ومسؤولي الأندية فقط</div>
   </div>
-  
-  <div class="gate-body">
-   <div class="gate-tabs">
-    <button id="gateTabLogin" class="gate-tab-btn active" type="button">🔐 تسجيل الدخول</button>
-    <button id="gateTabReg" class="gate-tab-btn" type="button">📝 طلب حساب مسؤول</button>
+
+  <div class="gate-tabs-simple">
+   <button id="gateTabLogin" class="gate-tab-simple active" type="button">🔐 تسجيل الدخول</button>
+   <button id="gateTabReg" class="gate-tab-simple" type="button">📝 طلب حساب مسؤول</button>
+  </div>
+
+  <!-- نموذج الدخول الموحد البسيط -->
+  <div id="gateLoginSection" class="gate-form-wrap">
+   <div class="gate-field">
+    <label for="gatePhoneInput">رقم الهاتف أو اسم المستخدم:</label>
+    <input id="gatePhoneInput" type="text" placeholder="مثال: 0676108460" dir="ltr">
    </div>
-
-   <!-- نموذج الدخول -->
-   <div id="gateLoginSection">
-    <div class="field" style="margin-bottom:12px;">
-     <label>نوع الحساب:</label>
-     <div class="seg two" id="gateTypeSeg">
-      <button type="button" id="gateTypeOfficial" aria-pressed="true"><span class="ic">👤</span><span>مسؤول فريق</span></button>
-      <button type="button" id="gateTypeAdmin" aria-pressed="false"><span class="ic">👑</span><span>المشرف العام</span></button>
-     </div>
-    </div>
-
-    <!-- دخول المشرف العام -->
-    <div id="gateAdminForm" style="display:none;">
-     <div class="field">
-      <label>رمز المشرف العام (PIN):</label>
-      <input id="gateAdminPin" type="password" inputmode="numeric" placeholder="أدخل رمز المشرف العام">
-     </div>
-     <button id="btnGateAdminLogin" class="btn-primary-auth" type="button">دخول المشرف العام ⚡</button>
-    </div>
-
-    <!-- دخول مسؤول الفريق -->
-    <div id="gateOfficialForm">
-     <div class="field">
-      <label>رقم الهاتف المسجل:</label>
-      <input id="gatePhoneInput" type="tel" placeholder="05XXXXXXXX / 06XXXXXXXX" dir="ltr">
-     </div>
-     <div class="field">
-      <label>كلمة المرور:</label>
-      <input id="gatePassInput" type="password" placeholder="أدخل كلمة المرور">
-     </div>
-     <button id="btnGateOfficialLogin" class="btn-primary-auth" type="button">دخول مسؤول الفريق ⚽</button>
-    </div>
-    <div id="gateLoginError" class="auth-error-msg" style="display:none;"></div>
-    <div style="margin-top:14px;text-align:center;font-size:12px;color:var(--muted);"><span class="ic">📞</span>رقم المشرف العام للاستفسار واعتماد الحسابات: <b dir="ltr" style="color:var(--ink);">0676108460</b></div>
+   <div class="gate-field">
+    <label for="gatePassInput">كلمة المرور / الرمز السري:</label>
+    <input id="gatePassInput" type="password" placeholder="أدخل كلمة المرور أو الرمز">
    </div>
+   
+   <button id="btnUnifiedLogin" class="btn-gate-submit" type="button">🚀 تسجيل الدخول إلى التطبيق</button>
+   <div id="gateLoginError" class="auth-error-msg" style="display:none;"></div>
 
-   <!-- نموذج طلب الحساب -->
-   <div id="gateRegSection" style="display:none;">
-    <p class="auth-note">قم بتقديم طلب حسابك باختيار ناديك وبياناتك. بعد مراجعة الطلب والموافقة عليه من الإدارة، ستتمكن من الدخول لإدارة مباريات ناديك حصراً.</p>
-    <div class="field">
-     <label>الاسم واللقب:</label>
-     <input id="gateRegName" type="text" placeholder="اسم مسؤول الفريق">
-    </div>
-    <div class="field">
-     <label>رقم الهاتف (يُستخدم كاسم مستخدم):</label>
-     <input id="gateRegPhone" type="tel" placeholder="05XXXXXXXX / 06XXXXXXXX" dir="ltr">
-    </div>
-    <div class="field">
-     <label>الفريق / النادي التابع له:</label>
-     <select id="gateRegTeam"></select>
-    </div>
-    <div class="field">
-     <label>كلمة المرور:</label>
-     <input id="gateRegPass" type="password" placeholder="كلمة المرور">
-    </div>
-    <div class="field">
-     <label>تأكيد كلمة المرور:</label>
-     <input id="gateRegPassConfirm" type="password" placeholder="أعد إدخال كلمة المرور">
-    </div>
-    <button id="btnGateRegister" class="btn-primary-auth" type="button">إرسال طلب الانضمام 📩</button>
-    <div id="gateRegError" class="auth-error-msg" style="display:none;"></div>
+   <div class="gate-contact-footer">
+    <p>📞 هاتف المشرف العام للاستفسار واعتماد الحسابات: <b dir="ltr">0676108460</b></p>
+   </div>
+  </div>
+
+  <!-- نموذج طلب حساب مسؤول فريق جديد -->
+  <div id="gateRegSection" class="gate-form-wrap" style="display:none;">
+   <p class="auth-note">قم باختيار ناديك وملء بياناتك لطلب حساب مسؤول جديد. سيصل طلبك للمشرف العام لاعتماده لتتمكن من الدخول.</p>
+   <div class="gate-field">
+    <label for="gateRegName">اسم ولقب المسؤول:</label>
+    <input id="gateRegName" type="text" placeholder="الاسم الكامل للمسؤول">
+   </div>
+   <div class="gate-field">
+    <label for="gateRegPhone">رقم الهاتف (يُستخدم للدخول):</label>
+    <input id="gateRegPhone" type="tel" placeholder="05XXXXXXXX / 06XXXXXXXX" dir="ltr">
+   </div>
+   <div class="gate-field">
+    <label for="gateRegTeam">النادي / الفريق:</label>
+    <select id="gateRegTeam"></select>
+   </div>
+   <div class="gate-field">
+    <label for="gateRegPass">كلمة المرور:</label>
+    <input id="gateRegPass" type="password" placeholder="كلمة المرور">
+   </div>
+   <div class="gate-field">
+    <label for="gateRegPassConfirm">تأكيد كلمة المرور:</label>
+    <input id="gateRegPassConfirm" type="password" placeholder="أعد إدخال كلمة المرور">
+   </div>
+   <button id="btnGateRegister" class="btn-gate-submit" type="button">📩 إرسال طلب الحساب للإدارة</button>
+   <div id="gateRegError" class="auth-error-msg" style="display:none;"></div>
+
+   <div class="gate-contact-footer">
+    <p>👑 المشرف العام: <b dir="ltr">0676108460</b></p>
    </div>
   </div>
  </div>
@@ -1004,7 +957,7 @@ function updateAuthUI() {
   updateTeamDropdown();
 }
 
-// Gate Tab Switching
+// Gate Tab Switching (تسجيل الدخول / طلب حساب)
 const gateTabLogin = document.getElementById('gateTabLogin');
 const gateTabReg = document.getElementById('gateTabReg');
 const gateLoginSection = document.getElementById('gateLoginSection');
@@ -1016,116 +969,75 @@ if (gateTabLogin && gateTabReg) {
     gateTabReg.classList.remove('active');
     gateLoginSection.style.display = 'block';
     gateRegSection.style.display = 'none';
-    document.getElementById('gateLoginError').style.display = 'none';
+    const err = document.getElementById('gateLoginError');
+    if (err) err.style.display = 'none';
   });
   gateTabReg.addEventListener('click', () => {
     gateTabReg.classList.add('active');
     gateTabLogin.classList.remove('active');
     gateRegSection.style.display = 'block';
     gateLoginSection.style.display = 'none';
-    document.getElementById('gateRegError').style.display = 'none';
-  });
-}
-
-// Gate Type Toggle
-const gateTypeOfficial = document.getElementById('gateTypeOfficial');
-const gateTypeAdmin = document.getElementById('gateTypeAdmin');
-const gateOfficialForm = document.getElementById('gateOfficialForm');
-const gateAdminForm = document.getElementById('gateAdminForm');
-
-if (gateTypeOfficial && gateTypeAdmin) {
-  gateTypeOfficial.addEventListener('click', () => {
-    gateTypeOfficial.setAttribute('aria-pressed', 'true');
-    gateTypeAdmin.setAttribute('aria-pressed', 'false');
-    gateOfficialForm.style.display = 'block';
-    gateAdminForm.style.display = 'none';
-    document.getElementById('gateLoginError').style.display = 'none';
-  });
-  gateTypeAdmin.addEventListener('click', () => {
-    gateTypeAdmin.setAttribute('aria-pressed', 'true');
-    gateTypeOfficial.setAttribute('aria-pressed', 'false');
-    gateOfficialForm.style.display = 'none';
-    gateAdminForm.style.display = 'block';
-    document.getElementById('gateLoginError').style.display = 'none';
+    const err = document.getElementById('gateRegError');
+    if (err) err.style.display = 'none';
   });
 }
 
 // Populate Gate Team Select
 const gateRegTeam = document.getElementById('gateRegTeam');
 if (gateRegTeam) {
+  gateRegTeam.innerHTML = '';
   Object.keys(T).forEach(id => {
     gateRegTeam.add(new Option(T[id], id, false, id === '5'));
   });
 }
 
-// Gate Admin Login
-const btnGateAdminLogin = document.getElementById('btnGateAdminLogin');
-if (btnGateAdminLogin) {
-  btnGateAdminLogin.addEventListener('click', () => {
-    const pin = document.getElementById('gateAdminPin').value.trim();
-    const err = document.getElementById('gateLoginError');
-    if (h53(pin) === HASH || pin === '481927' || pin === '2026' || pin === 'admin' || (store.customAdminPin && pin === store.customAdminPin)) {
-      setAdminUser({ role: 'admin', name: 'المشرف العام' });
-      document.getElementById('gateAdminPin').value = '';
-      showToast('👑 مرحباً بك أيها المشرف العام!');
-    } else {
-      err.textContent = '❌ رمز المشرف العام غير صحيح.';
+// UNIFIED SMART LOGIN (حل مشكلة الدخول نهائياً)
+function executeUnifiedLogin() {
+  const phone = (document.getElementById('gatePhoneInput').value || '').trim();
+  const pass = (document.getElementById('gatePassInput').value || '').trim();
+  const err = document.getElementById('gateLoginError');
+  if (err) err.style.display = 'none';
+
+  if (!pass) {
+    if (err) {
+      err.textContent = '⚠️ يرجى إدخال كلمة المرور أو الرمز السري.';
       err.style.display = 'block';
     }
-  });
-  document.getElementById('gateAdminPin').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') btnGateAdminLogin.click();
-  });
-}
+    return;
+  }
 
-// Gate Official Login
-const btnGateOfficialLogin = document.getElementById('btnGateOfficialLogin');
-if (btnGateOfficialLogin) {
-  btnGateOfficialLogin.addEventListener('click', () => {
-    const phone = document.getElementById('gatePhoneInput').value.trim();
-    const pass = document.getElementById('gatePassInput').value.trim();
-    const err = document.getElementById('gateLoginError');
+  // 1. Super Admin Validation
+  const isMasterPass = (pass === '481927' || pass === '2026' || pass === 'admin' || h53(pass) === HASH);
+  const isMasterPhone = (phone === '0676108460' || phone === '676108460' || phone === 'admin');
 
-    // Smart Check for Super Admin (Phone: 0676108460 / PIN: 481927 or 2026)
-    const isAdminPhone = (phone === '0676108460' || phone === '676108460' || phone === 'admin');
-    const isAdminPass = (pass === '481927' || pass === '2026' || pass === 'admin' || h53(pass) === HASH);
+  if (isMasterPass || (isMasterPhone && pass === '481927')) {
+    setAdminUser({ role: 'admin', name: 'المشرف العام', phone: '0676108460' });
+    document.getElementById('gatePhoneInput').value = '';
+    document.getElementById('gatePassInput').value = '';
+    showToast('👑 مرحباً بك أيها المشرف العام!');
+    return;
+  }
 
-    if ((isAdminPhone && isAdminPass) || (!phone && isAdminPass) || (isAdminPhone && pass === '481927') || (isAdminPhone && !pass)) {
-      setAdminUser({ role: 'admin', name: 'المشرف العام', phone: '0676108460' });
-      document.getElementById('gatePhoneInput').value = '';
-      document.getElementById('gatePassInput').value = '';
-      showToast('👑 مرحباً بك أيها المشرف العام!');
-      return;
-    }
+  // 2. Team Official Validation
+  const officials = store.officials || [];
+  const found = officials.find(o => o.phone === phone && o.pass === pass);
 
-    if (!phone || !pass) {
-      err.textContent = 'يرجى إدخال رقم الهاتف وكلمة المرور (أو رمز المشرف).';
-      err.style.display = 'block';
-      return;
-    }
-
-    const officials = store.officials || [];
-    const found = officials.find(o => o.phone === phone && o.pass === pass);
-
-    if (!found) {
-      err.textContent = '❌ البيانات غير صحيحة. تأكد من رقم الهاتف وكلمة المرور.';
-      err.style.display = 'block';
-      return;
-    }
-
+  if (found) {
     if (found.status === 'pending') {
-      err.textContent = '⏳ حسابك لا يزال قيد المراجعة في انتظار موافقة المشرف العام.';
-      err.style.display = 'block';
+      if (err) {
+        err.textContent = '⏳ حسابك لا يزال قيد المراجعة في انتظار موافقة المشرف العام (0676108460).';
+        err.style.display = 'block';
+      }
       return;
     }
-
     if (found.status === 'suspended') {
-      err.textContent = '⛔ هذا الحساب معطل حالياً من قِبل المشرف العام.';
-      err.style.display = 'block';
+      if (err) {
+        err.textContent = '⛔ هذا الحساب معطل حالياً من قِبل المشرف العام.';
+        err.style.display = 'block';
+      }
       return;
     }
 
-    // Approved official
     setAdminUser({
       role: 'official',
       id: found.id,
@@ -1137,11 +1049,31 @@ if (btnGateOfficialLogin) {
     document.getElementById('gatePhoneInput').value = '';
     document.getElementById('gatePassInput').value = '';
     showToast('⚽ مرحباً بك: ' + found.name + ' - مسؤول ' + T[found.teamId]);
+    return;
   }
 
-    document.getElementById('gatePhoneInput').value = '';
-    document.getElementById('gatePassInput').value = '';
-    showToast('⚽ مرحباً بك: ' + found.name + ' - مسؤول ' + T[found.teamId]);
+  // Failed
+  if (err) {
+    err.textContent = '❌ رقم الهاتف أو كلمة المرور غير صحيحة. للتواصل مع المشرف العام: 0676108460';
+    err.style.display = 'block';
+  }
+}
+
+const btnUnifiedLogin = document.getElementById('btnUnifiedLogin');
+if (btnUnifiedLogin) {
+  btnUnifiedLogin.addEventListener('click', executeUnifiedLogin);
+}
+
+const gatePassInput = document.getElementById('gatePassInput');
+if (gatePassInput) {
+  gatePassInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') executeUnifiedLogin();
+  });
+}
+const gatePhoneInput = document.getElementById('gatePhoneInput');
+if (gatePhoneInput) {
+  gatePhoneInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') executeUnifiedLogin();
   });
 }
 
@@ -1192,13 +1124,12 @@ if (btnGateRegister) {
     document.getElementById('gateRegPass').value = '';
     document.getElementById('gateRegPassConfirm').value = '';
 
-    alert('✅ تم إرسال طلب تسجيلك بنجاح!\n\nحسابك الآن قيد المراجعة في انتظار موافقة المشرف العام. بمجرد تفعيله، ستتمكن من تسجيل الدخول وإدارة مباريات فريقك (' + T[teamId] + ').');
+    alert('✅ تم إرسال طلب تسجيلك بنجاح!\n\nحسابك الآن قيد المراجعة لدى المشرف العام (0676108460). بعد تفعيله ستتمكن من تسجيل الدخول وإدارة مباريات فريقك (' + T[teamId] + ').');
     if (gateTabLogin) gateTabLogin.click();
     document.getElementById('gatePhoneInput').value = phone;
   });
 }
 
-// Top bar events
 const btnTopLogout = document.getElementById('btnTopLogout');
 if (btnTopLogout) {
   btnTopLogout.addEventListener('click', () => {
