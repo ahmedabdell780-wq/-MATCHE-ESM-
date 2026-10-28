@@ -789,6 +789,35 @@ const CATS=['U15','U17','U20'];
 const DT={U20:'09:00',U17:'10:30',U15:'14:00'};
 function K2(ct,r,h,a){return(ct==='U15'?'':ct+'|')+r+':'+h+'-'+a}
 
+const STADIUM_MAPS = {
+  'بوجبرون': 'https://maps.app.goo.gl/NLPLsuVvrt8i6ag99',
+  'وفاق بوجبرون': 'https://maps.app.goo.gl/NLPLsuVvrt8i6ag99',
+  'وئام بوجبرون': 'https://maps.app.goo.gl/NLPLsuVvrt8i6ag99',
+  'ملعب بوجبرون': 'https://maps.app.goo.gl/NLPLsuVvrt8i6ag99',
+  'ملعب وفاق بوجبرون': 'https://maps.app.goo.gl/NLPLsuVvrt8i6ag99',
+  'team_3': 'https://maps.app.goo.gl/NLPLsuVvrt8i6ag99',
+};
+
+function getStadiumMapUrl(stad, teamId) {
+  if (store && store.customStadiumMaps) {
+    if (stad && store.customStadiumMaps[stad]) return store.customStadiumMaps[stad];
+    if (teamId && store.customStadiumMaps['team_' + teamId]) return store.customStadiumMaps['team_' + teamId];
+  }
+  const s = (stad || '').trim();
+  if (s) {
+    for (const [k, url] of Object.entries(STADIUM_MAPS)) {
+      if (k.startsWith('team_')) continue;
+      if (s === k || s.includes(k) || k.includes(s)) return url;
+    }
+  }
+  if (teamId && STADIUM_MAPS['team_' + teamId]) {
+    return STADIUM_MAPS['team_' + teamId];
+  }
+  const q = encodeURIComponent('الملعب البلدي ' + (s || 'مسلمون') + ' تيبازة');
+  return 'https://www.google.com/maps/search/?api=1&query=' + q;
+}
+
+
 const KEY='wifaq-fixtures-v1';
 let store={};try{store=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){store={}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}}
@@ -837,11 +866,11 @@ function card(r){
  ):(currentUser?'<div class="no-perm-msg">🔒 تعديل هذه المباراة متاح فقط لمسؤول ('+T[m.h]+') أو ('+T[m.a]+')</div>':''));
  const paint=()=>{const v=store[key]||{};
   el.querySelector('[data-k=dt]').textContent=(fmtDate(v.date||defDate(r))+' '+(v.time||DT[cat])).trim()||'التاريخ / الساعة';
-  const curStad = v.stad || 'الملعب البلدي';
+  const curStad = v.stad || (m.h === 3 ? 'ملعب وفاق بوجبرون' : (m.h === 5 ? 'الملعب البلدي مسلمون' : 'الملعب البلدي'));
+  const mapUrl = getStadiumMapUrl(curStad, m.h);
   const stEl = el.querySelector('[data-k=st]');
   if (stEl) {
-    const qMaps = encodeURIComponent('الملعب البلدي ' + curStad + ' تيبازة');
-    stEl.innerHTML = '<span>📍 ' + curStad + '</span> <a href="https://www.google.com/maps/search/?api=1&query=' + qMaps + '" target="_blank" rel="noopener" class="map-pill" title="فتح موقع الملعب على خرائط جوجل">🗺️ الخريطة</a>';
+    stEl.innerHTML = '<span>📍 ' + curStad + '</span> <a href="' + mapUrl + '" target="_blank" rel="noopener" class="map-pill" title="فتح موقع الملعب على خرائط جوجل (GPS)">🗺️ الخريطة</a>';
   }
   const sh=el.querySelector('[data-k=sh]');if(sh){sh.textContent=v.sh||0;el.querySelector('[data-k=sa]').textContent=v.sa||0}
   const vs=el.querySelector('[data-k=vs]');if(vs)vs.textContent=(v.sh||v.sa)?(v.sh||0)+'-'+(v.sa||0):'VS';};
@@ -1321,14 +1350,14 @@ function renderNext(){const b=$('#nextBox'),n=nextMatch();
  let dates;if(n.nt){const e=new Date(n.dt+'T12:00');e.setDate(e.getDate()+1);dates=n.dt.replace(/-/g,'')+'/'+ymd(e).replace(/-/g,'')}else dates=f(n.t)+'/'+f(n.t+72e5);
  const url='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(T[n.m.h]+' × '+T[n.m.a]+' ('+cat+')')+'&dates='+dates+'&location='+encodeURIComponent(n.v.stad||'');
  const wd=new Date(n.dt+'T12:00').toLocaleDateString('ar-DZ',{weekday:'long'});
- const curStad = n.v.stad || 'الملعب البلدي';
- const qMaps = encodeURIComponent('الملعب البلدي ' + curStad + ' تيبازة');
+ const curStad = n.v.stad || (n.m.h === 3 ? 'ملعب وفاق بوجبرون' : (n.m.h === 5 ? 'الملعب البلدي مسلمون' : 'الملعب البلدي'));
+ const mapUrl = getStadiumMapUrl(curStad, n.m.h);
  b.innerHTML='<b>المباراة القادمة · الجولة '+n.r+'</b>'+
    '<div>'+T[n.m.h]+' × '+T[n.m.a]+'</div>'+
    '<div>'+wd+' '+fmtDate(n.dt)+' · '+(n.v.time||DT[cat])+'</div>'+
    '<div style="margin-top:5px;display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;">'+
      '<span>📍 '+curStad+'</span>'+
-     '<a href="https://www.google.com/maps/search/?api=1&query='+qMaps+'" target="_blank" rel="noopener" class="map-pill" title="فتح موقع الملعب على خرائط جوجل">🗺️ الخريطة</a>'+
+     '<a href="'+mapUrl+'" target="_blank" rel="noopener" class="map-pill" title="فتح موقع الملعب على خرائط جوجل (GPS)">🗺️ الخريطة</a>'+
    '</div>'+
    '<div class="cd">'+txt+'</div>'+
    '<div style="display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap;">'+
