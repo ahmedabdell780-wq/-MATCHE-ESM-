@@ -371,8 +371,6 @@ body{background:var(--bodybg);color:var(--ink)}
 .user-top-actions{display:flex;align-items:center;gap:6px;}
 
 /* Google Maps Stadium Pin & Pill */
-.map-pill{display:inline-flex;align-items:center;gap:4px;background:#1a73e8;color:#fff!important;text-decoration:none;font-size:11px;font-weight:800;padding:3px 10px;border-radius:12px;margin-right:6px;box-shadow:0 2px 6px rgba(26,115,232,0.35);transition:transform 0.15s,background 0.15s;vertical-align:middle;}
-.map-pill:hover{background:#1557b0;transform:scale(1.05);}
 
 /* Stadium Suggestions */
 .stad-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
@@ -803,109 +801,6 @@ const CATS=['U15','U17','U20'];
 const DT={U20:'09:00',U17:'10:30',U15:'14:00'};
 function K2(ct,r,h,a){return(ct==='U15'?'':ct+'|')+r+':'+h+'-'+a}
 
-const STADIUM_MAPS = {
-  // مسلمون
-  'مسلمون': 'https://maps.app.goo.gl/emJ7Q6onrgNK3Y2H6',
-  'ملعب مسلمون': 'https://maps.app.goo.gl/emJ7Q6onrgNK3Y2H6',
-  'الوفاق مسلمون': 'https://maps.app.goo.gl/emJ7Q6onrgNK3Y2H6',
-  'team_5': 'https://maps.app.goo.gl/emJ7Q6onrgNK3Y2H6',
-
-  // حجوط (يضم وفاق حجوط، شبيبة حجوط، نجمة حجوط)
-  'حجوط': 'https://maps.app.goo.gl/YAwdEmiUmuHYEMFa7',
-  'ملعب حجوط': 'https://maps.app.goo.gl/YAwdEmiUmuHYEMFa7',
-  'وفاق حجوط': 'https://maps.app.goo.gl/YAwdEmiUmuHYEMFa7',
-  'شبيبة حجوط': 'https://maps.app.goo.gl/YAwdEmiUmuHYEMFa7',
-  'نجمة حجوط': 'https://maps.app.goo.gl/YAwdEmiUmuHYEMFa7',
-  'team_1': 'https://maps.app.goo.gl/YAwdEmiUmuHYEMFa7',
-  'team_8': 'https://maps.app.goo.gl/YAwdEmiUmuHYEMFa7',
-  'team_11': 'https://maps.app.goo.gl/YAwdEmiUmuHYEMFa7',
-
-  // القليعة
-  'القليعة': 'https://maps.app.goo.gl/j2oiBNgN8fuvtcXq8',
-  'ملعب القليعة': 'https://maps.app.goo.gl/j2oiBNgN8fuvtcXq8',
-  'إتحاد القليعة': 'https://maps.app.goo.gl/j2oiBNgN8fuvtcXq8',
-  'اتحاد القليعة': 'https://maps.app.goo.gl/j2oiBNgN8fuvtcXq8',
-  'team_9': 'https://maps.app.goo.gl/j2oiBNgN8fuvtcXq8',
-
-  // الداموس
-  'الداموس': 'https://maps.app.goo.gl/vJKgwz2idxx4fP8eA',
-  'ملعب الداموس': 'https://maps.app.goo.gl/vJKgwz2idxx4fP8eA',
-  'التحدي الداموس': 'https://maps.app.goo.gl/vJKgwz2idxx4fP8eA',
-  'team_6': 'https://maps.app.goo.gl/vJKgwz2idxx4fP8eA',
-
-  // قوراية
-  'قوراية': 'https://maps.app.goo.gl/XbARt7V2KCs6rfBK7',
-  'ملعب قوراية': 'https://maps.app.goo.gl/XbARt7V2KCs6rfBK7',
-  'مولودية قوراية': 'https://maps.app.goo.gl/XbARt7V2KCs6rfBK7',
-  'team_7': 'https://maps.app.goo.gl/XbARt7V2KCs6rfBK7',
-
-  // مراد
-  'مراد': 'https://maps.app.goo.gl/C4CF2VmkfEBcQv4ZA',
-  'ملعب مراد': 'https://maps.app.goo.gl/C4CF2VmkfEBcQv4ZA',
-  'مولودية مراد': 'https://maps.app.goo.gl/C4CF2VmkfEBcQv4ZA',
-  'team_4': 'https://maps.app.goo.gl/C4CF2VmkfEBcQv4ZA',
-
-  // سيدي عمر
-  'سيدي عمر': 'https://maps.app.goo.gl/rZwYKvsTKP5d7Mp27',
-  'ملعب سيدي عمر': 'https://maps.app.goo.gl/rZwYKvsTKP5d7Mp27',
-  'أمل سيدي عمر': 'https://maps.app.goo.gl/rZwYKvsTKP5d7Mp27',
-  'team_2': 'https://maps.app.goo.gl/rZwYKvsTKP5d7Mp27',
-
-  // بوجبرون
-  'بوجبرون': 'https://maps.app.goo.gl/NLPLsuVvrt8i6ag99',
-  'ملعب بوجبرون': 'https://maps.app.goo.gl/NLPLsuVvrt8i6ag99',
-  'وفاق بوجبرون': 'https://maps.app.goo.gl/NLPLsuVvrt8i6ag99',
-  'وئام بوجبرون': 'https://maps.app.goo.gl/NLPLsuVvrt8i6ag99',
-  'ملعب وفاق بوجبرون': 'https://maps.app.goo.gl/NLPLsuVvrt8i6ag99',
-  'ملعب وئام بوجبرون': 'https://maps.app.goo.gl/NLPLsuVvrt8i6ag99',
-  'team_3': 'https://maps.app.goo.gl/NLPLsuVvrt8i6ag99',
-};
-
-const TEAM_HOME_STADIUMS = {
-  1: 'ملعب حجوط',
-  2: 'ملعب سيدي عمر',
-  3: 'ملعب وفاق بوجبرون',
-  4: 'ملعب مراد',
-  5: 'ملعب مسلمون',
-  6: 'ملعب الداموس',
-  7: 'ملعب قوراية',
-  8: 'ملعب حجوط',
-  9: 'ملعب القليعة',
-  10: 'ملعب فجانة',
-  11: 'ملعب حجوط'
-};
-
-function defStad(h) {
-  return TEAM_HOME_STADIUMS[h] || 'الملعب البلدي';
-}
-
-function getStadiumMapUrl(stad, teamId) {
-  if (store && store.customStadiumMaps) {
-    if (stad && store.customStadiumMaps[stad]) return store.customStadiumMaps[stad];
-    if (teamId && store.customStadiumMaps['team_' + teamId]) return store.customStadiumMaps['team_' + teamId];
-  }
-  const s = (stad || '').trim();
-  if (s) {
-    for (const [k, url] of Object.entries(STADIUM_MAPS)) {
-      if (k.startsWith('team_')) continue;
-      if (s === k || s.includes(k) || k.includes(s)) return url;
-    }
-  }
-  if (teamId && STADIUM_MAPS['team_' + teamId]) {
-    return STADIUM_MAPS['team_' + teamId];
-  }
-  const q = encodeURIComponent('الملعب البلدي ' + (s || 'مسلمون') + ' تيبازة');
-  return 'https://www.google.com/maps/search/?api=1&query=' + q;
-}
-  }
-  if (teamId && STADIUM_MAPS['team_' + teamId]) {
-    return STADIUM_MAPS['team_' + teamId];
-  }
-  const q = encodeURIComponent('الملعب البلدي ' + (s || 'مسلمون') + ' تيبازة');
-  return 'https://www.google.com/maps/search/?api=1&query=' + q;
-}
-
-
 const KEY='wifaq-fixtures-v1';
 let store={};try{store=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){store={}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}}
@@ -954,12 +849,9 @@ function card(r){
  ):(currentUser?'<div class="no-perm-msg">🔒 تعديل هذه المباراة متاح فقط لمسؤول ('+T[m.h]+') أو ('+T[m.a]+')</div>':''));
  const paint=()=>{const v=store[key]||{};
   el.querySelector('[data-k=dt]').textContent=(fmtDate(v.date||defDate(r))+' '+(v.time||DT[cat])).trim()||'التاريخ / الساعة';
-  const curStad = v.stad || defStad(m.h);
-  const mapUrl = getStadiumMapUrl(curStad, m.h);
+  const curStad = v.stad || 'الملعب البلدي';
   const stEl = el.querySelector('[data-k=st]');
-  if (stEl) {
-    stEl.innerHTML = '<span>📍 ' + curStad + '</span> <a href="' + mapUrl + '" target="_blank" rel="noopener" class="map-pill" title="فتح موقع الملعب على خرائط جوجل (GPS)">🗺️ الخريطة</a>';
-  }
+  if (stEl) stEl.textContent = curStad;
   const sh=el.querySelector('[data-k=sh]');if(sh){sh.textContent=v.sh||0;el.querySelector('[data-k=sa]').textContent=v.sa||0}
   const vs=el.querySelector('[data-k=vs]');if(vs)vs.textContent=(v.sh||v.sa)?(v.sh||0)+'-'+(v.sa||0):'VS';};
  el.querySelectorAll('[data-f]').forEach(i=>{i.value=d[i.dataset.f]||(i.dataset.f==='date'?defDate(r):i.dataset.f==='time'?DT[cat]:'');
@@ -1483,15 +1375,11 @@ function renderNext(){const b=$('#nextBox'),n=nextMatch();
  let dates;if(n.nt){const e=new Date(n.dt+'T12:00');e.setDate(e.getDate()+1);dates=n.dt.replace(/-/g,'')+'/'+ymd(e).replace(/-/g,'')}else dates=f(n.t)+'/'+f(n.t+72e5);
  const url='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(T[n.m.h]+' × '+T[n.m.a]+' ('+cat+')')+'&dates='+dates+'&location='+encodeURIComponent(n.v.stad||'');
  const wd=new Date(n.dt+'T12:00').toLocaleDateString('ar-DZ',{weekday:'long'});
- const curStad = n.v.stad || defStad(n.m.h);
- const mapUrl = getStadiumMapUrl(curStad, n.m.h);
+ const curStad = n.v.stad || 'الملعب البلدي';
  b.innerHTML='<b>المباراة القادمة · الجولة '+n.r+'</b>'+
    '<div>'+T[n.m.h]+' × '+T[n.m.a]+'</div>'+
    '<div>'+wd+' '+fmtDate(n.dt)+' · '+(n.v.time||DT[cat])+'</div>'+
-   '<div style="margin-top:5px;display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;">'+
-     '<span>📍 '+curStad+'</span>'+
-     '<a href="'+mapUrl+'" target="_blank" rel="noopener" class="map-pill" title="فتح موقع الملعب على خرائط جوجل (GPS)">🗺️ الخريطة</a>'+
-   '</div>'+
+   '<div>'+curStad+'</div>'+
    '<div class="cd">'+txt+'</div>'+
    '<div style="display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap;">'+
      '<a href="'+url+'" target="_blank" rel="noopener" style="padding:6px 12px;border-radius:10px;background:rgba(255,255,255,0.15);color:#fff;text-decoration:none;font-size:12px;font-weight:800;">➕ التقويم</a>'+
