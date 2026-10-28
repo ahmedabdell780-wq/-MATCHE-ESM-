@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
@@ -739,6 +740,10 @@ const R=[
 [3,[[9,8],[7,10],[5,2],[11,6],[1,4]]],
 [11,[[8,7],[6,9],[10,5],[2,4],[3,1]]],
 [9,[[7,6],[5,8],[11,3],[4,10],[1,2]]]];
+const CATS=['U15','U17','U20'];
+const DT={U20:'09:00',U17:'10:30',U15:'14:00'};
+function K2(ct,r,h,a){return(ct==='U15'?'':ct+'|')+r+':'+h+'-'+a}
+
 const KEY='wifaq-fixtures-v1';
 let store={};try{store=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){store={}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}}
@@ -818,12 +823,12 @@ function card(r){
  el.querySelectorAll('[data-up]').forEach(i=>i.addEventListener('change',()=>{const f=i.files[0];if(f)setLogo(i.dataset.up,f)}));
  el.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>{delete store.logos[b.dataset.del];save();paintLogos(b.dataset.del)}));
  // زر صانع البوستر الاحترافي
- const pb=document.createElement('button');
- pb.type='button';
- pb.className='poster-btn-main';
- pb.innerHTML='<span class="ic">🎨</span>صانع بوستر اللقاء (HD للفيسبوك والواتساب)';
- pb.onclick=()=>openPosterModal(r);
- el.appendChild(pb);
+ const posterBtn=document.createElement('button');
+ posterBtn.type='button';
+ posterBtn.className='poster-btn-main';
+ posterBtn.innerHTML='<span class="ic">🎨</span>صانع بوستر اللقاء (HD للفيسبوك والواتساب)';
+ posterBtn.onclick=()=>openPosterModal(r);
+ el.appendChild(posterBtn);
 
  // حاوية اعتماد النتيجة والتحكيم المزدوج
  const confBox=document.createElement('div');
@@ -1340,9 +1345,7 @@ async function dayBg(c,W,H,dim){const i=await head2(),IH=1080,y0=215,t=document.
  g=p.createLinearGradient(0,0,0,IH);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(.02,'#000');g.addColorStop(.96,'#000');g.addColorStop(1,'rgba(0,0,0,0)');p.fillStyle=g;p.fillRect(0,0,W,IH);
  c.save();c.globalAlpha=dim?.5:1;c.drawImage(o,0,y0);c.restore();
  g=c.createRadialGradient(W/2,H/2,H*.38,W/2,H/2,H*.8);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.35)');c.fillStyle=g;c.fillRect(0,0,W,H)}
-const CATS=['U15','U17','U20'];
-const DT={U20:'09:00',U17:'10:30',U15:'14:00'};
-function K2(ct,r,h,a){return(ct==='U15'?'':ct+'|')+r+':'+h+'-'+a}
+// CATS, DT, K2 moved to top
 function info(ct,r,h,a){const v=store[K2(ct,r,h,a)]||{},ok=!v.pp&&!v.ex&&v.sh!==undefined&&v.sh!==''&&v.sa!==undefined&&v.sa!==''&&!isNaN(+v.sh)&&!isNaN(+v.sa);return{v,ok,ex:!!v.ex,pp:!!v.pp,date:v.date||defDate(r,ct),time:v.time||DT[ct]}}
 function cs(r,h,a){return CATS.map(ct=>{const x=info(ct,r,h,a);return[ct,x.ex?'معفاة':x.pp?'مؤجلة':(x.ok?x.v.sh+'-'+x.v.sa:'—')]})}
 function dline(r,h,a){const xs=CATS.map(ct=>info(ct,r,h,a)),f=xs.find(x=>!x.ex&&!x.pp)||xs[0];return[fmtDate(f.date),f.v.stad].filter(Boolean).join(' | ')}
