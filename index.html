@@ -468,6 +468,7 @@ body{background:var(--bodybg);color:var(--ink)}
      <button id="btnGateOfficialLogin" class="btn-primary-auth" type="button">دخول مسؤول الفريق ⚽</button>
     </div>
     <div id="gateLoginError" class="auth-error-msg" style="display:none;"></div>
+    <div style="margin-top:14px;text-align:center;font-size:12px;color:var(--muted);"><span class="ic">📞</span>رقم المشرف العام للاستفسار واعتماد الحسابات: <b dir="ltr" style="color:var(--ink);">0676108460</b></div>
    </div>
 
    <!-- نموذج طلب الحساب -->
@@ -1085,9 +1086,12 @@ if (btnGateOfficialLogin) {
     const pass = document.getElementById('gatePassInput').value.trim();
     const err = document.getElementById('gateLoginError');
 
-    // Smart Check: If user entered Admin PIN in password field, log in as Super Admin!
-    if (pass === '481927' || pass === '2026' || pass === 'admin' || h53(pass) === HASH) {
-      setAdminUser({ role: 'admin', name: 'المشرف العام' });
+    // Smart Check for Super Admin (Phone: 0676108460 / PIN: 481927 or 2026)
+    const isAdminPhone = (phone === '0676108460' || phone === '676108460' || phone === 'admin');
+    const isAdminPass = (pass === '481927' || pass === '2026' || pass === 'admin' || h53(pass) === HASH);
+
+    if ((isAdminPhone && isAdminPass) || (!phone && isAdminPass) || (isAdminPhone && pass === '481927') || (isAdminPhone && !pass)) {
+      setAdminUser({ role: 'admin', name: 'المشرف العام', phone: '0676108460' });
       document.getElementById('gatePhoneInput').value = '';
       document.getElementById('gatePassInput').value = '';
       showToast('👑 مرحباً بك أيها المشرف العام!');
