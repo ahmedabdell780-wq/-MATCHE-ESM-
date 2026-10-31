@@ -407,6 +407,179 @@ body{background:var(--bodybg);color:var(--ink)}
 .conf-btn.no{background:#dc2626;color:#fff;}
 .conf-btn.admin-approve{background:linear-gradient(135deg,#d97706,#b45309);color:#fff;width:100%;padding:9px;font-size:12.5px;margin-top:4px;}
 .conf-btn:hover{filter:brightness(1.1);}
+
+/* --- نمط إدارة اللاعبين والتشكيلة وحفظ الأهداف --- */
+.btn-manage-squad {
+  background: linear-gradient(135deg, #1f5a34, #0f2a1c);
+  color: #f2d27a;
+  border: 1px solid rgba(242, 210, 122, 0.4);
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  transition: transform 0.15s, filter 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-manage-squad:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+.btn-manage-squad-mini {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px dashed #166534;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-manage-squad-mini:hover {
+  background: #dcfce7;
+}
+.card-scorers-box {
+  background: rgba(15, 107, 58, 0.08);
+  border: 1px solid rgba(15, 107, 58, 0.22);
+  border-radius: 12px;
+  padding: 8px 12px;
+  margin: 8px 0;
+  font-size: 12.5px;
+  text-align: right;
+  line-height: 1.6;
+}
+.sc-goals-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.sc-g-line {
+  color: #0f2a1c;
+}
+.sc-g-line b {
+  color: #1f5a34;
+}
+.sc-cards-grid {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed rgba(0,0,0,0.12);
+}
+.sc-card-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+}
+.sc-card-badge.y {
+  background: #fef9c3;
+  color: #854d0e;
+  border: 1px solid #fef08a;
+}
+.sc-card-badge.r {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+.players-cat-tab {
+  flex: 1;
+  padding: 8px 4px;
+  border: 0;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  background: transparent;
+  color: var(--muted, #64748b);
+  transition: 0.15s;
+}
+.players-cat-tab.active {
+  background: #fff;
+  color: #1f5a34;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+.player-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 10px;
+  padding: 8px 12px;
+  gap: 8px;
+  transition: background 0.15s;
+}
+.player-item-row:hover {
+  background: #f8fafc;
+}
+.player-row-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+.player-row-idx {
+  background: var(--field, #f1f5f9);
+  color: var(--muted, #64748b);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 6px;
+  min-width: 24px;
+  text-align: center;
+}
+.player-row-name {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--text, #1e293b);
+}
+.player-row-actions {
+  display: flex;
+  gap: 6px;
+}
+.player-btn-edit {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.player-btn-edit:hover {
+  background: #dbeafe;
+}
+.player-btn-del {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.player-btn-del:hover {
+  background: #fee2e2;
+}
+.save-goal-btn {
+  background: linear-gradient(135deg, #1f5a34, #15803d) !important;
+  color: #fff !important;
+  font-weight: 800 !important;
+  margin-top: 6px;
+}
+
 </style>
 
 <link rel="manifest" href="manifest.json">
@@ -512,6 +685,7 @@ body{background:var(--bodybg);color:var(--ink)}
  <div class="user-top-bar" id="userTopBar">
   <div class="user-top-badge" id="userTopBadge"></div>
   <div class="user-top-actions">
+   <button id="btnTopPlayersMgr" class="btn-mgr-action" type="button" onclick="openPlayersModal(cat)"><span class="ic">👥</span> إدارة اللاعبين</button>
    <button id="btnTopOfficialsMgr" class="btn-mgr-action" style="display:none;" type="button">👥 مسؤولو الفرق <span id="topPendingBadge" class="badge-count">0</span></button>
    <button id="btnTopLogout" class="btn-logout" type="button">🚪 خروج</button>
   </div>
@@ -600,6 +774,11 @@ body{background:var(--bodybg);color:var(--ink)}
   <button data-c="U15" aria-pressed="true"><span class="ic">🧒</span>U15</button>
   <button data-c="U17" aria-pressed="false"><span class="ic">🧑</span>U17</button>
   <button data-c="U20" aria-pressed="false"><span class="ic">🧔</span>U20</button>
+ </div>
+ <div style="margin-top:10px;text-align:center;">
+  <button type="button" class="btn-manage-squad" id="btnManageSquad" onclick="openPlayersModal(cat)">
+   <span class="ic">👥</span> إدارة تشكيلة اللاعبين (<span id="catSquadBadge">U15</span>) · إضافة / تعديل / حذف
+  </button>
  </div>
 </section>
 
@@ -747,6 +926,43 @@ body{background:var(--bodybg);color:var(--ink)}
  </div>
 </div>
 
+
+
+<!-- نافذة إدارة وتشكيلة اللاعبين (إضافة / تعديل / حذف لكل فئة) -->
+<div id="playersModal" class="modal-bg" style="display:none;">
+ <div class="modal-card modal-wide" style="max-width:620px;">
+  <div class="modal-head">
+   <h3>👥 إدارة وتشكيلة اللاعبين</h3>
+   <button id="playersModalClose" class="modal-close" type="button">&times;</button>
+  </div>
+  <p class="auth-note">يمكنك هنا إضافة لاعبين جدد، أو تعديل أسمائهم، أو حذفهم لكل فئة (U15, U17, U20) وتبقى كل التعديلات محفوظة بشكل دائم في التطبيق.</p>
+  
+  <div class="players-cat-tabs" style="display:flex;gap:6px;margin:8px 0;background:var(--field,#f0f4f8);padding:4px;border-radius:12px;">
+   <button type="button" class="players-cat-tab active" data-pcat="U15" onclick="switchPlayerModalCat('U15')">🧒 U15 (<span id="countBadgeU15">0</span>)</button>
+   <button type="button" class="players-cat-tab" data-pcat="U17" onclick="switchPlayerModalCat('U17')">🧑 U17 (<span id="countBadgeU17">0</span>)</button>
+   <button type="button" class="players-cat-tab" data-pcat="U20" onclick="switchPlayerModalCat('U20')">🧔 U20 (<span id="countBadgeU20">0</span>)</button>
+  </div>
+
+  <div class="player-add-box" style="display:flex;gap:8px;margin:10px 0;flex-wrap:wrap;">
+   <input type="text" id="newPlayerInput" placeholder="اكتب اسم ولقب اللاعب الجديد (أو عدة أسماء مفصولة بفاصلة)..." style="flex:1;min-width:220px;padding:9px 12px;border:1.5px solid var(--line,#cbd5e1);border-radius:10px;font-family:inherit;font-size:13px;">
+   <button type="button" class="btn-add-p" onclick="addPlayerFromModal()" style="background:#1f5a34;color:#fff;border:0;padding:9px 16px;border-radius:10px;font-family:inherit;font-weight:800;font-size:13px;cursor:pointer;">➕ إضافة لاعب</button>
+  </div>
+
+  <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
+   <input type="search" id="searchPlayerInput" oninput="renderPlayersModalList()" placeholder="🔍 بحث سريع في قائمة اللاعبين..." style="flex:1;padding:8px 12px;border:1px solid var(--line,#cbd5e1);border-radius:8px;font-family:inherit;font-size:12.5px;">
+   <span id="playersCategoryLabel" style="font-size:12px;font-weight:800;color:var(--muted,#64748b);"></span>
+  </div>
+
+  <div id="playersListContainer" class="players-list-scroll" style="max-height:360px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding:4px 2px;">
+   <!-- يتم ملؤها ديناميكياً -->
+  </div>
+
+  <div style="display:flex;gap:8px;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--line,#e2e8f0);flex-wrap:wrap;">
+   <button type="button" onclick="restoreDefaultRosterConfirm()" style="background:transparent;border:1px dashed #ef4444;color:#dc2626;padding:6px 12px;border-radius:8px;font-family:inherit;font-size:12px;cursor:pointer;font-weight:700;">🔄 استعادة القائمة الأصلية للفئة</button>
+   <button type="button" onclick="closePlayersModal()" style="background:#0f2a1c;color:#fff;border:0;padding:8px 20px;border-radius:10px;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;">💾 تم وحفظ</button>
+  </div>
+ </div>
+</div>
 
 <!-- نافذة صانع بوستر المباراة التلقائي -->
 <div id="posterModal" class="modal-bg" style="display:none;">
@@ -1311,12 +1527,173 @@ function setTab(n){
  if(n===3){if(!upSel)upS.value=lastRound()||1;renderTable()}}
 document.querySelectorAll('#tabSeg button').forEach(b=>b.onclick=()=>setTab(+b.dataset.t));
 document.querySelectorAll('#catSeg button').forEach(b=>{b.setAttribute('aria-pressed',b.dataset.c===cat);b.onclick=()=>{cat=b.dataset.c;store.cat=cat;save();document.querySelectorAll('#catSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b));if(window.syncStart)syncStart();if(window.renderSquad)renderSquad();rrSel=0;upSel=0;setTab(+document.querySelector('#tabSeg [aria-pressed=true]').dataset.t)}});
-const ROSTER={U15:['بلعيدي جلول شمس الدين','بلعيدي عبد الحفيظ','بن حدوش هشام','حساين إياد','حموني وائل','دهيلي ضياء الدين إسماعيل','رياض أنيس','رياض زكرياء','زيبوش أحمد صهيب','زيبوش ياسين','سداوي فارس','سليماني لؤي عبد المنعم','سليماني وسيم','شامي محمد ضياء الدين','عبد اللاوي بدر الدين','عبيدات محمد أكرم','عمروش محمد','عمورة أنس','عمورة محمد ضياء الدين','مسكي عبد الحق','موساوي يحيى','يحياوي مهدي','يمناين قيس عبد المعين'],
+const DEFAULT_ROSTER={U15:['بلعيدي جلول شمس الدين','بلعيدي عبد الحفيظ','بن حدوش هشام','حساين إياد','حموني وائل','دهيلي ضياء الدين إسماعيل','رياض أنيس','رياض زكرياء','زيبوش أحمد صهيب','زيبوش ياسين','سداوي فارس','سليماني لؤي عبد المنعم','سليماني وسيم','شامي محمد ضياء الدين','عبد اللاوي بدر الدين','عبيدات محمد أكرم','عمروش محمد','عمورة أنس','عمورة محمد ضياء الدين','مسكي عبد الحق','موساوي يحيى','يحياوي مهدي','يمناين قيس عبد المعين'],
 U17:['بلجيلالي باسل','بلعيدي عبد الباسط','بن سعيداني عبد المالك','بوحدي عبد العالي','جدوّر عبد الرزاق','جدوّر محمد شريف','حدوش محمد','داهل إياد','شرفاوي محمد أمين','صبان عبد المالك','عبداللاوي يحيى','عشودة عبد الرؤوف','عشودة محمد','عماري محمد أمين','عمروش عبد النور','عمروش لخضر يوسف','غانم عبد الباسط','غانم عبد الجليل','غانم هارون','لعرب رفيق','مختاري عبد الصمد','مسيلتي عبد الجليل','موساوي عامر','نذير أيمن'],
 U20:['بسكري سيف الدين','بلجوهرة نجم الدين','بلجيلالي عبد الوهاب','بلعيدي إدريس','بهيلي محمد سعيد','بوزيان محمد ياسين','حموني عبد الرحمن','داهل ياسر','داود كريم','عطاف شيب','عمروش حسين','عمروش عبد الصمد','عوايجية عبد الرحيم','غانم محمد أمين','لنتري غيث','لنتري محمد عامر','مامو هيثم','مختاري سيد أحمد','مختاري عبد الصمد','مسيلتي محمد','موساوي المهدي','موساوي محمد زكرياء']};
-function rosterList(){return ROSTER[cat]||[]}
-function refreshRoster(){let dl=document.getElementById('rosterDL');if(!dl){dl=document.createElement('datalist');dl.id='rosterDL';document.body.appendChild(dl)}dl.innerHTML=rosterList().map(n=>'<option value="'+n+'">').join('')}
-function markRoster(i){if(!i.dataset.roster)return;const ok=!i.value.trim()||parseNames(i.value).every(([n])=>rosterList().includes(n));i.style.borderColor=ok?'':'#c8202f';i.style.borderWidth=ok?'':'2px'}
+
+if (!store.customRosters) store.customRosters = {};
+CATS.forEach(c => {
+  if (!store.customRosters[c] || !Array.isArray(store.customRosters[c]) || store.customRosters[c].length === 0) {
+    store.customRosters[c] = [...(DEFAULT_ROSTER[c] || [])];
+  }
+});
+
+function rosterList(c){
+  const targetCat = c || cat;
+  if (store.customRosters && store.customRosters[targetCat] && store.customRosters[targetCat].length) {
+    return store.customRosters[targetCat];
+  }
+  return DEFAULT_ROSTER[targetCat] || [];
+}
+
+function refreshRoster(){
+  let dl=document.getElementById('rosterDL');
+  if(!dl){dl=document.createElement('datalist');dl.id='rosterDL';document.body.appendChild(dl)}
+  dl.innerHTML=rosterList().map(n=>'<option value="'+n+'">').join('');
+  const badge=document.getElementById('catSquadBadge');
+  if(badge) badge.textContent = cat + ' (' + rosterList().length + ' لاعب)';
+}
+
+function markRoster(i){
+  if(!i.dataset.roster)return;
+  i.style.borderColor='';
+  i.style.borderWidth='';
+}
+
+/* --- إدارة اللاعبين (نافذة، إضافة، تعديل، حذف) --- */
+window.activePlayerModalCat = 'U15';
+
+function openPlayersModal(c){
+  window.activePlayerModalCat = c || cat || 'U15';
+  const modal = document.getElementById('playersModal');
+  if(!modal) return;
+  modal.style.display = 'flex';
+  switchPlayerModalCat(window.activePlayerModalCat);
+}
+
+function closePlayersModal(){
+  const modal = document.getElementById('playersModal');
+  if(modal) modal.style.display = 'none';
+  refreshRoster();
+  if (typeof render === 'function') render();
+  if (typeof renderRes === 'function') renderRes();
+  if (typeof renderSc === 'function') renderSc();
+}
+
+function switchPlayerModalCat(c){
+  window.activePlayerModalCat = c;
+  document.querySelectorAll('.players-cat-tab').forEach(b => {
+    b.classList.toggle('active', b.dataset.pcat === c);
+  });
+  renderPlayersModalList();
+}
+
+function renderPlayersModalList(){
+  const c = window.activePlayerModalCat || cat || 'U15';
+  const list = rosterList(c);
+  
+  const b15 = document.getElementById('countBadgeU15'); if(b15) b15.textContent = rosterList('U15').length;
+  const b17 = document.getElementById('countBadgeU17'); if(b17) b17.textContent = rosterList('U17').length;
+  const b20 = document.getElementById('countBadgeU20'); if(b20) b20.textContent = rosterList('U20').length;
+  
+  const lbl = document.getElementById('playersCategoryLabel');
+  if(lbl) lbl.textContent = 'إجمالي لاعبي فئة ' + c + ': ' + list.length + ' لاعب';
+  
+  const query = (document.getElementById('searchPlayerInput')?.value || '').trim().toLowerCase();
+  const box = document.getElementById('playersListContainer');
+  if(!box) return;
+  
+  let html = '';
+  list.forEach((name, idx) => {
+    if(query && !name.toLowerCase().includes(query)) return;
+    html += '<div class="player-item-row">' +
+      '<div class="player-row-info">' +
+        '<span class="player-row-idx">#' + (idx + 1) + '</span>' +
+        '<span class="player-row-name">' + name + '</span>' +
+      '</div>' +
+      '<div class="player-row-actions">' +
+        '<button type="button" class="player-btn-edit" onclick="editPlayerFromModal(' + idx + ')">✏️ تعديل</button>' +
+        '<button type="button" class="player-btn-del" onclick="deletePlayerFromModal(' + idx + ')">🗑️ حذف</button>' +
+      '</div>' +
+    '</div>';
+  });
+  
+  if(!html){
+    html = '<p class="note" style="text-align:center;padding:16px;">' + (query ? 'لا توجد نتائج مطابقة لبحثك.' : 'لا يوجد لاعبون مسجلون في هذه الفئة حالياً.') + '</p>';
+  }
+  box.innerHTML = html;
+}
+
+function addPlayerFromModal(){
+  const input = document.getElementById('newPlayerInput');
+  if(!input) return;
+  const val = input.value.trim();
+  if(!val){
+    alert('يرجى كتابة اسم ولقب اللاعب أولاً');
+    return;
+  }
+  const c = window.activePlayerModalCat || cat || 'U15';
+  if(!store.customRosters[c]) store.customRosters[c] = [...(DEFAULT_ROSTER[c]||[])];
+  
+  const newNames = val.split(/[,،\n]+/).map(x => x.trim()).filter(Boolean);
+  let addedCount = 0;
+  newNames.forEach(n => {
+    if(!store.customRosters[c].includes(n)){
+      store.customRosters[c].push(n);
+      addedCount++;
+    }
+  });
+  
+  save();
+  refreshRoster();
+  input.value = '';
+  renderPlayersModalList();
+  alert('✅ تم حفظ وإضافة (' + addedCount + ') لاعب لفئة ' + c + ' بنجاح!');
+}
+
+function editPlayerFromModal(idx){
+  const c = window.activePlayerModalCat || cat || 'U15';
+  const list = store.customRosters[c] || [];
+  if(idx < 0 || idx >= list.length) return;
+  const oldName = list[idx];
+  const newName = prompt('تعديل اسم ولقب اللاعب:', oldName);
+  if(newName === null) return;
+  const trimmed = newName.trim();
+  if(!trimmed){
+    alert('اسم اللاعب لا يمكن أن يكون فارغاً');
+    return;
+  }
+  list[idx] = trimmed;
+  save();
+  refreshRoster();
+  renderPlayersModalList();
+}
+
+function deletePlayerFromModal(idx){
+  const c = window.activePlayerModalCat || cat || 'U15';
+  const list = store.customRosters[c] || [];
+  if(idx < 0 || idx >= list.length) return;
+  const pName = list[idx];
+  if(!confirm('هل أنت متأكد من حذف اللاعب (' + pName + ') من قائمة فئة ' + c + '؟')){
+    return;
+  }
+  list.splice(idx, 1);
+  save();
+  refreshRoster();
+  renderPlayersModalList();
+}
+
+function restoreDefaultRosterConfirm(){
+  const c = window.activePlayerModalCat || cat || 'U15';
+  if(!confirm('هل أنت متأكد من استعادة القائمة الأصلية لفئة ' + c + '؟ سيتم إلغاء أي تعديلات خاصة بلاعبي هذه الفئة.')){
+    return;
+  }
+  store.customRosters[c] = [...(DEFAULT_ROSTER[c] || [])];
+  save();
+  refreshRoster();
+  renderPlayersModalList();
+  alert('✅ تم استعادة القائمة الأصلية لفئة ' + c + ' بنجاح!');
+}
 function minOpts(){let o='';for(let i=1;i<=120;i++)o+='<option value="'+i+'">'+i+' د</option>';return o}
 function setMin(str,mn){const parts=(str||'').split(/[,،]/).map(x=>x.trim()).filter(Boolean);if(!parts.length)return str||'';const last=parts.pop().replace(/(\s+د\s*\d{1,3}|\s+\d{1,3}|د\s*\d{1,3})\s*['’]?\s*$/,'').trim();parts.push((last?last+' ':'')+'د'+mn);return parts.join('، ')}
 function xf(h,a){refreshRoster();const opts=rosterList().map(n=>'<option value="'+n+'">'+n+'</option>').join('');
@@ -2361,6 +2738,13 @@ function renderOfficialsList() {
 
     container.appendChild(card);
   });
+}
+
+const playersModal = document.getElementById('playersModal');
+const playersModalClose = document.getElementById('playersModalClose');
+if (playersModalClose && playersModal) {
+  playersModalClose.addEventListener('click', closePlayersModal);
+  playersModal.addEventListener('click', (e) => { if (e.target === playersModal) closePlayersModal(); });
 }
 
 const officialsModal = document.getElementById('officialsModal');
