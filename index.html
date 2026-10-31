@@ -713,35 +713,34 @@ body{background:var(--bodybg);color:var(--ink)}
  </button>
 </div>
 
-<!-- نافذة إعداد Firebase للمزامنة الفورية -->
+<!-- نافذة حالة المزامنة السحابية الفورية -->
 <div id="cloudModal" class="modal-bg" style="display:none;">
  <div class="modal-card">
   <div class="modal-head">
-   <h3>☁️ إعداد المزامنة السحابية المباشرة (Firebase)</h3>
+   <h3>☁️ المزامنة السحابية الفورية (Live Cloud Sync)</h3>
    <button id="modalCloseBtn" class="modal-close" type="button">&times;</button>
   </div>
   <div class="modal-body">
-   <p style="font-size:13px;margin:0 0 8px;line-height:1.5;">عند ربط Firebase، أي نتيجة أو موعد مباراة تسجله في هاتفك سيظهر فوراً وبشكل تلقائي في هواتف جميع الأصدقاء والمشجعين!</p>
-   <label style="font-size:12px;font-weight:700;display:block;">بيانات إعداد Firebase (JSON أو Config):</label>
-   <textarea id="firebaseConfigInput" placeholder='{
-  "apiKey": "AIzaSy...",
-  "projectId": "esm-messelmoun",
-  "appId": "1:..."
-}'></textarea>
-   <div class="modal-help">
-    <strong>📌 كيف تحصل على هذا الإعداد مجاناً؟</strong>
-    <ol style="margin:6px 0 0;padding-inline-start:18px;">
-     <li>ادخل إلى <a href="https://console.firebase.google.com" target="_blank" style="color:#1f5a34;font-weight:700;">Firebase Console</a> وسجل بحساب Google.</li>
-     <li>اضغط "Add project" وسمّه مثلاً <b>esm-messelmoun</b>.</li>
-     <li>أنشئ <b>Firestore Database</b> (في وضع Test mode).</li>
-     <li>أضف Web App واحصل على <b>firebaseConfig</b> وانسخه والصقه هنا.</li>
-    </ol>
+   <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px;margin-bottom:12px;text-align:center;">
+    <div style="font-weight:900;color:#166534;font-size:14px;margin-bottom:4px;">🟢 المزامنة الفورية نشطة تلقائياً</div>
+    <div style="font-size:12.5px;color:#15803d;line-height:1.5;">أي تعديل من أي فريق يظهر فوراً في كل جهاز مفتوح فيه الموقع، لتسهيل المتابعة المباشرة للبطولة بدون أي خطوات إضافية!</div>
    </div>
-   <div class="modal-actions">
-    <button id="btnSaveFirebase" class="btn-save-cloud" type="button">حفظ وتفعيل المزامنة ⚡</button>
-    <button id="btnPushCloud" class="btn-save-cloud" style="background:#0b4fb3;display:none;" type="button">رفع البيانات الحالية للسحابة ⬆️</button>
-    <button id="btnDisconnectCloud" class="btn-cancel-cloud" style="color:#c8202f;display:none;" type="button">إلغاء الربط ❌</button>
+
+   <div class="modal-actions" style="display:flex;flex-direction:column;gap:8px;">
+    <button id="btnPullCloudNow" class="btn-save-cloud" style="background:#1f5a34;" type="button">🔄 مزامنة وسحب آخر النتائج فوراً</button>
+    <button id="btnPushCloudNow" class="btn-save-cloud" style="background:#0b4fb3;" type="button">🚀 رفع وتحديث كل البيانات الحالية لجميع الأجهزة</button>
    </div>
+
+   <details style="margin-top:14px;border:1px dashed var(--line,#cbd5e1);border-radius:8px;padding:8px 12px;font-size:12px;">
+    <summary style="font-weight:800;color:var(--muted,#64748b);cursor:pointer;">⚙️ إعدادات Firebase مخصصة (اختياري للمشرف المتقدم)</summary>
+    <div style="margin-top:8px;">
+     <textarea id="firebaseConfigInput" style="width:100%;min-height:70px;font-size:11px;" placeholder='{"apiKey": "...", "projectId": "..."}'></textarea>
+     <div style="display:flex;gap:6px;margin-top:6px;">
+      <button id="btnSaveFirebase" class="btn-save-cloud" style="padding:6px 12px;font-size:12px;" type="button">حفظ Firebase مخصص</button>
+      <button id="btnDisconnectCloud" class="btn-cancel-cloud" style="color:#c8202f;padding:6px 12px;font-size:12px;" type="button">إلغاء المخصص</button>
+     </div>
+    </div>
+   </details>
   </div>
  </div>
 </div>
@@ -2266,7 +2265,130 @@ if (importDataFile) {
 
 
 
-// ================= Firebase Live Cloud Sync =================
+// ================= Central Realtime Cloud Sync (Zero-Config) =================
+const CLOUD_OBJECT_ID = 'ff808181a09d98f701a193b4de2b7991';
+const CLOUD_API_URL = 'https://api.restful-api.dev/objects/' + CLOUD_OBJECT_ID;
+let cloudSyncBusy = false;
+let lastCloudTimestamp = 0;
+let cloudPollTimer = null;
+
+// Multi-tab instant sync on same device
+try {
+  window.esmBroadcast = new BroadcastChannel('esm_fixtures_sync_v1');
+  window.esmBroadcast.onmessage = (e) => {
+    if (e.data && e.data.type === 'sync') {
+      try {
+        const local = localStorage.getItem(KEY);
+        if (local) {
+          Object.assign(store, JSON.parse(local));
+          applyStoreUpdates();
+        }
+      } catch(e) {}
+    }
+  };
+} catch(e) {}
+
+function applyStoreUpdates() {
+  if (typeof render === 'function') render();
+  if (typeof renderRes === 'function') renderRes();
+  if (typeof renderSc === 'function') renderSc();
+  if (typeof renderTable === 'function') renderTable();
+  if (typeof refreshRoster === 'function') refreshRoster();
+  if (typeof renderNext === 'function') renderNext();
+  if (typeof renderConfUI === 'function') renderConfUI();
+}
+
+function updateCloudPill(isOnline, text) {
+  const pill = document.getElementById('cloudPillBtn');
+  const txt = document.getElementById('cloudPillText');
+  if (!pill || !txt) return;
+  pill.classList.remove('online', 'offline');
+  if (isOnline) {
+    pill.classList.add('online');
+    txt.textContent = text || '🟢 متصل بالسحابة (مزامنة فورية لكل الأجهزة)';
+  } else {
+    pill.classList.add('offline');
+    txt.textContent = text || '📡 وضع غير متصل (تصفح محلي)';
+  }
+}
+
+async function pullFromCloud(silent = false) {
+  if (cloudSyncBusy || !navigator.onLine) return;
+  try {
+    const res = await fetch(CLOUD_API_URL, { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const result = await res.json();
+    const cloudStore = result.data;
+    if (cloudStore && cloudStore.lastUpdated) {
+      const localUpdated = store.lastUpdated || 0;
+      if (cloudStore.lastUpdated > localUpdated) {
+        console.log('⚡ تم استلام تحديث جديد من السحابة:', cloudStore.lastUpdated);
+        Object.assign(store, cloudStore);
+        try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
+        lastCloudTimestamp = cloudStore.lastUpdated;
+        applyStoreUpdates();
+        updateCloudPill(true, '🟢 متصل بالسحابة (مزامنة فورية لكل الأجهزة)');
+        if (!silent && typeof showToast === 'function') {
+          showToast('⚡ تم تحديث النتائج فورياً من السحابة!');
+        }
+      } else {
+        updateCloudPill(true, '🟢 متصل بالسحابة (مزامنة فورية لكل الأجهزة)');
+      }
+    }
+  } catch(err) {
+    console.warn('Cloud pull error:', err);
+    if (!navigator.onLine) {
+      updateCloudPill(false, '📡 وضع غير متصل (تصفح محلي)');
+    }
+  }
+}
+
+async function pushToCloud() {
+  if (!navigator.onLine) return;
+  try {
+    cloudSyncBusy = true;
+    store.lastUpdated = Date.now();
+    try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
+    
+    if (window.esmBroadcast) {
+      window.esmBroadcast.postMessage({ type: 'sync', lastUpdated: store.lastUpdated });
+    }
+    
+    const res = await fetch(CLOUD_API_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: 'esm_fixtures_2026',
+        data: store
+      })
+    });
+    
+    if (res.ok) {
+      lastCloudTimestamp = store.lastUpdated;
+      updateCloudPill(true, '🟢 متصل بالسحابة (تم الحفظ لجميع الأجهزة)');
+      if (typeof showToast === 'function') {
+        showToast('☁️ تم نشر التعديل لجميع الأجهزة فورياً!');
+      }
+    }
+  } catch(err) {
+    console.warn('Cloud push error:', err);
+  } finally {
+    cloudSyncBusy = false;
+  }
+}
+
+// Background smart heartbeat polling every 4 seconds when tab is active
+clearInterval(cloudPollTimer);
+cloudPollTimer = setInterval(() => {
+  if (!document.hidden && navigator.onLine) {
+    pullFromCloud(true);
+  }
+}, 4000);
+
+window.addEventListener('focus', () => { if (navigator.onLine) pullFromCloud(false); });
+window.addEventListener('online', () => { pullFromCloud(false); });
+
+// Also keep Firebase support if custom config was added
 let fbApp = null;
 let fbDb = null;
 let fbDocRef = null;
@@ -2279,80 +2401,65 @@ function getStoredFbConfig() {
   } catch(e) { return null; }
 }
 
-function updateCloudPill(isOnline, text) {
-  const pill = document.getElementById('cloudPillBtn');
-  const txt = document.getElementById('cloudPillText');
-  if (!pill || !txt) return;
-  pill.classList.remove('online', 'offline');
-  if (isOnline) {
-    pill.classList.add('online');
-    txt.textContent = text || '🟢 متصل بالسحابة (مزامنة مباشرة)';
-  } else {
-    pill.classList.add('offline');
-    txt.textContent = text || '☁️ غير متصل بالسحابة (انقر للإعداد)';
-  }
-}
-
 function initFirebaseSync(cfg) {
-  if (!cfg || !cfg.apiKey || !cfg.projectId) {
-    updateCloudPill(false, '☁️ إعداد المزامنة المباشرة (Firebase)');
-    return;
-  }
+  if (!cfg || !cfg.apiKey || !cfg.projectId) return;
   try {
-    if (!firebase.apps.length) {
-      fbApp = firebase.initializeApp(cfg);
-    } else {
-      fbApp = firebase.app();
-    }
+    if (!firebase.apps.length) fbApp = firebase.initializeApp(cfg);
+    else fbApp = firebase.app();
     fbDb = firebase.firestore();
     fbDocRef = fbDb.collection('esm_championship').doc('data_2026');
-
-    updateCloudPill(true, '🟢 متصل بالسحابة (مزامنة فورية)');
-
-    // Real-time listener for all fans and friends
     fbDocRef.onSnapshot(docSnap => {
       if (docSnap.exists) {
         const cloudData = docSnap.data();
         if (cloudData && cloudData.store) {
-          // Merge store smoothly
           Object.assign(store, cloudData.store);
           try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
-          if (typeof render === 'function') render();
-          console.log('⚡ تم تحديث البيانات فورياً من السحابة!');
+          applyStoreUpdates();
         }
       }
-    }, err => {
-      console.warn('Firestore snapshot error:', err);
-      updateCloudPill(false, '⚠️ تعذر المزامنة (تحقق من الصلاحيات)');
-    });
-
+    }, err => console.warn('Firestore snapshot error:', err));
   } catch (err) {
     console.error('Firebase init error:', err);
-    updateCloudPill(false, '❌ خطأ في إعداد Firebase');
   }
 }
 
-// Hook into save() so admin changes automatically sync to Firestore
+// Hook into save() so any modification automatically syncs to cloud
 const origSave = typeof save === 'function' ? save : null;
 window.save = function() {
   if (origSave) origSave();
+  pushToCloud();
   if (fbDocRef) {
     fbDocRef.set({
       store: store,
       updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      updatedBy: 'admin'
-    }, { merge: true }).then(() => {
-      showToast('☁️ تم تحديث النتائج لجميع الأصدقاء فورياً!');
-    }).catch(err => {
-      console.warn('Save to cloud failed:', err);
-    });
+      updatedBy: (currentUser && currentUser.name) || 'admin'
+    }, { merge: true }).catch(err => console.warn('Firebase save failed:', err));
   }
 };
+
+// Initial cloud pull
+pullFromCloud(false);
+initFirebaseSync(getStoredFbConfig());
 
 // Modal events
 const cloudPillBtn = document.getElementById('cloudPillBtn');
 const cloudModal = document.getElementById('cloudModal');
 const modalCloseBtn = document.getElementById('modalCloseBtn');
+const btnPullCloudNow = document.getElementById('btnPullCloudNow');
+const btnPushCloudNow = document.getElementById('btnPushCloudNow');
+if (btnPullCloudNow) {
+  btnPullCloudNow.addEventListener('click', () => {
+    pullFromCloud(false);
+    if (cloudModal) cloudModal.style.display = 'none';
+  });
+}
+if (btnPushCloudNow) {
+  btnPushCloudNow.addEventListener('click', () => {
+    pushToCloud();
+    if (cloudModal) cloudModal.style.display = 'none';
+  });
+}
+
 const btnSaveFirebase = document.getElementById('btnSaveFirebase');
 const btnPushCloud = document.getElementById('btnPushCloud');
 const btnDisconnectCloud = document.getElementById('btnDisconnectCloud');
