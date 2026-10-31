@@ -444,29 +444,19 @@ body{background:var(--bodybg);color:var(--ink)}
   <div id="gateLoginSection" class="gate-form-wrap">
    <div class="gate-field">
     <label for="gatePhoneInput">رقم الهاتف أو اسم المستخدم:</label>
-    <input id="gatePhoneInput" type="text" placeholder="مثال: 0676108460 أو admin" dir="ltr" autocomplete="username">
+    <input id="gatePhoneInput" type="text" placeholder="أدخل رقم الهاتف أو اسم المستخدم" dir="ltr" autocomplete="username">
    </div>
    <div class="gate-field" style="position:relative;">
     <label for="gatePassInput">كلمة المرور / الرمز السري:</label>
     <div style="position:relative;display:flex;align-items:center;">
-      <input id="gatePassInput" type="password" placeholder="أدخل كلمة المرور (مثال: 481927 أو 2026)" autocomplete="current-password" style="width:100%;box-sizing:border-box;padding-left:44px;">
+      <input id="gatePassInput" type="password" placeholder="أدخل كلمة المرور" autocomplete="current-password" style="width:100%;box-sizing:border-box;padding-left:44px;">
       <button type="button" id="btnToggleGatePass" style="position:absolute;left:10px;background:none;border:0;cursor:pointer;font-size:16px;color:var(--muted,#5d6b7a);padding:4px;" title="إظهار/إخفاء كلمة المرور">👁️</button>
     </div>
    </div>
    
    <button id="btnUnifiedLogin" class="btn-gate-submit" type="button">🚀 تسجيل الدخول إلى التطبيق</button>
-   
-   <button id="btnQuickAdminLogin" type="button" style="width:100%;box-sizing:border-box;background:linear-gradient(135deg,#f2b632,#d49a1e);color:#111;border:0;border-radius:12px;padding:12px;font-family:inherit;font-size:14px;font-weight:900;cursor:pointer;margin-top:10px;box-shadow:0 4px 12px rgba(242,182,50,0.35);display:flex;align-items:center;justify-content:center;gap:6px;transition:0.15s;">
-    👑 دخول مباشر وفوري للمشرف العام (بنقرة واحدة)
-   </button>
 
    <div id="gateLoginError" class="auth-error-msg" style="display:none;margin-top:10px;"></div>
-
-   <div style="background:var(--field,#f0f4f8);border:1px dashed var(--line,#d0d7de);border-radius:12px;padding:10px 14px;margin-top:12px;font-size:12px;color:var(--ink,#111);text-align:right;">
-    <div style="font-weight:900;color:#1f5a34;margin-bottom:4px;">💡 بيانات دخول المشرف العام المعتمدة:</div>
-    <div>• رقم الهاتف أو اسم المستخدم: <b dir="ltr">0676108460</b> (أو <b>admin</b>)</div>
-    <div>• كلمة المرور: <b dir="ltr">481927</b> (أو <b>2026</b> أو <b>0676108460</b>)</div>
-   </div>
 
    <div class="gate-contact-footer">
     <p>📞 هاتف المشرف العام للاستفسار واعتماد الحسابات: <b dir="ltr">0676108460</b></p>
@@ -1133,8 +1123,7 @@ function executeUnifiedLogin() {
 
   // Failed
   if (err) {
-    err.innerHTML = '❌ بيانات الدخول غير صحيحة.<br>' +
-      '<small style="display:block;margin-top:6px;font-size:12px;color:#1f5a34;font-weight:800;">👑 للمشرف العام: اكتب <b>0676108460</b> في الهاتف و <b>481927</b> في كلمة المرور، أو اضغط زر الدخول المباشر أدناه.</small>';
+    err.textContent = '❌ رقم الهاتف أو كلمة المرور غير صحيحة. يرجى التأكد والمحاولة مجدداً.';
     err.style.display = 'block';
   }
 }
@@ -1142,14 +1131,6 @@ function executeUnifiedLogin() {
 const btnUnifiedLogin = document.getElementById('btnUnifiedLogin');
 if (btnUnifiedLogin) {
   btnUnifiedLogin.addEventListener('click', executeUnifiedLogin);
-}
-
-const btnQuickAdminLogin = document.getElementById('btnQuickAdminLogin');
-if (btnQuickAdminLogin) {
-  btnQuickAdminLogin.addEventListener('click', () => {
-    setAdminUser({ role: 'admin', name: 'المشرف العام', phone: '0676108460' });
-    showToast('👑 تم تسجيل الدخول المباشر للمشرف العام بنجاح!');
-  });
 }
 
 const btnToggleGatePass = document.getElementById('btnToggleGatePass');
