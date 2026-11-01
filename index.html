@@ -1320,6 +1320,9 @@ body.th-dark .off-item-sub { color: #94a3b8 !important; }
     <button type="button" class="btn-off-add" onclick="toggleAddOfficialForm()">
      <span>➕ إضافة مسؤول جديد يدوياً</span>
     </button>
+    <button type="button" class="btn-off-refresh" onclick="generateSmartSyncLink()" title="نسخ رابط لمزامنة الحسابات فوراً مع الهاتف أو أي حاسوب">
+     <span>📲 مزامنة مع الهاتف (رابط ذكي)</span>
+    </button>
     <button type="button" class="btn-off-refresh" onclick="catchupCloudState(false)">
      <span>🔄 فحص السحابة</span>
     </button>
@@ -1461,17 +1464,41 @@ const DEFAULT_OFFICIALS = [
     phone: "0776702581",
     teamId: 10,
     pass: "Efm@2025",
-    status: "pending",
+    status: "approved",
+    perm: "full",
+    date: "2026-11-01"
+  },
+  {
+    id: "off_1793549118204",
+    name: "Bouceta brahim",
+    phone: "0665079130",
+    teamId: 5,
+    pass: "bobra",
+    status: "approved",
     perm: "full",
     date: "2026-11-01"
   }
 ];
+
+// Helper to normalize phone for deduplication
+function cleanPhone(p) { return (p || '').toString().replace(/\D/g, '').slice(-9); }
+
 store.officials = store.officials || [];
 DEFAULT_OFFICIALS.forEach(defOff => {
-  if (!store.officials.some(o => (o.phone && o.phone.replace(/\D/g,'').endsWith('776702581')) || o.id === defOff.id)) {
-    store.officials.push(defOff);
+  const defClean = cleanPhone(defOff.phone);
+  let existing = store.officials.find(o => cleanPhone(o.phone) === defClean || o.id === defOff.id);
+  if (!existing) {
+    store.officials.push(Object.assign({}, defOff));
+  } else {
+    // Sync approved status and details across devices
+    if (defOff.status === 'approved') existing.status = 'approved';
+    if (defOff.pass && (!existing.pass || existing.pass === '***')) existing.pass = defOff.pass;
+    if (defOff.name) existing.name = defOff.name;
+    if (defOff.teamId) existing.teamId = defOff.teamId;
+    if (defOff.perm) existing.perm = defOff.perm;
   }
 });
+save();
 
 if(store._seedVer!==SEED_VER){
   Object.assign(store,SEED);
@@ -3652,6 +3679,63 @@ if (officialsModalClose && officialsModal) {
   officialsModalClose.addEventListener('click', () => { officialsModal.style.display = 'none'; });
   officialsModal.addEventListener('click', (e) => { if (e.target === officialsModal) officialsModal.style.display = 'none'; });
 }
+
+
+// ================= Smart Sync via URL Hash (مزامنة فورية مضمونة 100% بين الهاتف والحاسوب) =================
+function generateSmartSyncLink() {
+  const officials = store.officials || [];
+  try {
+    const jsonStr = JSON.stringify(officials);
+    const b64 = btoa(unescape(encodeURIComponent(jsonStr)));
+    const baseUrl = window.location.origin + window.location.pathname;
+    const syncUrl = baseUrl + '#sync_off=' + b64;
+    
+    // Copy to clipboard
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(syncUrl).then(() => {
+        showToast('📋 تم نسخ رابط المزامنة! افتحه على هاتفك لتظهر كل الحسابات فوراً.');
+      }).catch(() => fallbackPromptSync(syncUrl));
+    } else {
+      fallbackPromptSync(syncUrl);
+    }
+  } catch(e) {
+    alert('حدث خطأ أثناء إنشاء الرابط: ' + e.message);
+  }
+}
+window.generateSmartSyncLink = generateSmartSyncLink;
+
+function fallbackPromptSync(url) {
+  prompt('انسخ هذا الرابط وافتحه على الهاتف أو أي جهاز آخر لمزامنة الحسابات فوراً:', url);
+}
+
+// Check hash on startup
+(function checkUrlHashSync() {
+  try {
+    const hash = window.location.hash;
+    if (hash && hash.includes('sync_off=')) {
+      const raw = hash.split('sync_off=')[1];
+      if (raw) {
+        const decoded = JSON.parse(decodeURIComponent(escape(atob(raw))));
+        if (Array.isArray(decoded) && decoded.length) {
+          store.officials = store.officials || [];
+          decoded.forEach(off => {
+            const cleanP = (off.phone || '').toString().replace(/\D/g, '').slice(-9);
+            const ex = store.officials.find(o => (o.phone && (o.phone.toString().replace(/\D/g, '').slice(-9) === cleanP)) || o.id === off.id);
+            if (ex) Object.assign(ex, off);
+            else store.officials.push(off);
+          });
+          save();
+          if (typeof renderOfficialsList === 'function') renderOfficialsList();
+          if (typeof updateAuthUI === 'function') updateAuthUI();
+          showToast('🚀 تم استيراد ومزامنة مسؤولي الفرق بنجاح!');
+          window.history.replaceState(null, null, window.location.pathname);
+        }
+      }
+    }
+  } catch(e) {
+    console.warn('URL Hash Sync Error:', e);
+  }
+})();
 
 </script>
 </body>
