@@ -1098,6 +1098,12 @@ const CATS=['U15','U17','U20'];
 const DT={U20:'09:00',U17:'10:30',U15:'14:00'};
 function K2(ct,r,h,a){return(ct==='U15'?'':ct+'|')+r+':'+h+'-'+a}
 
+var currentUser = null;
+try {
+  const savedUser = localStorage.getItem('esm_current_user');
+  if (savedUser) currentUser = JSON.parse(savedUser);
+} catch(e) {}
+
 const KEY='wifaq-fixtures-v1';
 let store={};try{store=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){store={}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}if(typeof broadcastLiveChange==='function'){broadcastLiveChange();}}
@@ -1260,11 +1266,7 @@ function h53(s){let h1=0xdeadbeef,h2=0x41c6ce57;for(let i=0;i<s.length;i++){cons
 const HASH=7543435611185347;
 // ================= Auth & Team Officials System =================
 store.officials = store.officials || [];
-let currentUser = null;
-try {
-  const savedUser = localStorage.getItem('esm_current_user');
-  if (savedUser) currentUser = JSON.parse(savedUser);
-} catch(e) {}
+// currentUser is already initialized at top
 
 function canEditMatch(h, a) {
   if (!currentUser) return false;
@@ -2524,9 +2526,7 @@ async function catchupCloudState(silent = false) {
     const res = await fetch(CLOUD_SYNC_URL + '/json?poll=1&since=all', { cache: 'no-store' });
     if (!res.ok) return;
     const text = await res.text();
-    const lines = text.trim().split(/
-?
-/).filter(Boolean);
+    const lines = text.trim().split(/\r?\n/).filter(Boolean);
     if (!lines.length) return;
     
     let updatedAny = false;
@@ -2806,8 +2806,7 @@ if (btnDisconnectCloud) {
   });
 }
 
-// Initial start
-initFirebaseSync(getStoredFbConfig());
+// Cloud sync initialized via live stream
 
 
 
