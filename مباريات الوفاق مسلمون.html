@@ -2265,12 +2265,12 @@ if (importDataFile) {
 
 
 
-// ================= Central Realtime Cloud Sync (Zero-Config) =================
-const CLOUD_OBJECT_ID = 'ff808181a09d98f701a193b4de2b7991';
-const CLOUD_API_URL = 'https://api.restful-api.dev/objects/' + CLOUD_OBJECT_ID;
-let cloudSyncBusy = false;
-let lastCloudTimestamp = 0;
-let cloudPollTimer = null;
+// ================= Live Real-Time Multi-Device Cloud Sync =================
+const CLOUD_SYNC_TOPIC = 'esm_championship_tipaza_2026_wifaq';
+const CLOUD_SYNC_URL = 'https://ntfy.sh/' + CLOUD_SYNC_TOPIC;
+let liveSseSource = null;
+let liveSyncBusy = false;
+let sseReconnectTimer = null;
 
 // Multi-tab instant sync on same device
 try {
@@ -2305,143 +2305,164 @@ function updateCloudPill(isOnline, text) {
   pill.classList.remove('online', 'offline');
   if (isOnline) {
     pill.classList.add('online');
-    txt.textContent = text || '🟢 متصل بالسحابة (مزامنة فورية لكل الأجهزة)';
+    txt.textContent = text || '🟢 متصل بالمزامنة الحية (أي تعديل يظهر فوراً على كل الأجهزة)';
   } else {
     pill.classList.add('offline');
     txt.textContent = text || '📡 وضع غير متصل (تصفح محلي)';
   }
 }
 
-async function pullFromCloud(silent = false) {
-  if (cloudSyncBusy || !navigator.onLine) return;
+// 1. Live Real-Time Listener via Server-Sent Events (SSE)
+function startLiveCloudStream() {
+  if (liveSseSource) {
+    try { liveSseSource.close(); } catch(e) {}
+  }
+  
   try {
-    const res = await fetch(CLOUD_API_URL, { cache: 'no-store' });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const result = await res.json();
-    const cloudStore = result.data;
-    if (cloudStore && cloudStore.lastUpdated) {
-      const localUpdated = store.lastUpdated || 0;
-      if (cloudStore.lastUpdated > localUpdated) {
-        console.log('⚡ تم استلام تحديث جديد من السحابة:', cloudStore.lastUpdated);
-        Object.assign(store, cloudStore);
-        try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
-        lastCloudTimestamp = cloudStore.lastUpdated;
-        applyStoreUpdates();
-        updateCloudPill(true, '🟢 متصل بالسحابة (مزامنة فورية لكل الأجهزة)');
-        if (!silent && typeof showToast === 'function') {
-          showToast('⚡ تم تحديث النتائج فورياً من السحابة!');
+    liveSseSource = new EventSource(CLOUD_SYNC_URL + '/sse');
+    
+    liveSseSource.onopen = () => {
+      console.log('⚡ متصل بقناة البث السحابي المباشر!');
+      updateCloudPill(true, '🟢 متصل بالمزامنة الحية (أي تعديل يظهر فوراً على كل الأجهزة)');
+    };
+    
+    liveSseSource.onmessage = (event) => {
+      try {
+        const msgObj = JSON.parse(event.data);
+        if (msgObj.event === 'message' && msgObj.message) {
+          const payload = JSON.parse(msgObj.message);
+          if (payload && payload.lastUpdated) {
+            const localUpdated = store.lastUpdated || 0;
+            if (payload.lastUpdated > localUpdated) {
+              console.log('⚡ تم استلام تحديث مباشر من جهاز آخر في نفس اللحظة!');
+              const incomingStore = payload.store || payload;
+              Object.assign(store, incomingStore);
+              try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
+              applyStoreUpdates();
+              updateCloudPill(true, '🟢 متصل بالمزامنة الحية (تم التحديث للتو)');
+              if (typeof showToast === 'function') {
+                showToast('⚡ تم تحديث النتيجة مباشرة من هاتف آخر!');
+              }
+            }
+          }
         }
-      } else {
-        updateCloudPill(true, '🟢 متصل بالسحابة (مزامنة فورية لكل الأجهزة)');
+      } catch(err) {
+        console.warn('Error parsing incoming live message:', err);
       }
-    }
-  } catch(err) {
-    console.warn('Cloud pull error:', err);
-    if (!navigator.onLine) {
-      updateCloudPill(false, '📡 وضع غير متصل (تصفح محلي)');
-    }
+    };
+    
+    liveSseSource.onerror = (err) => {
+      console.warn('Live stream disconnected, reconnecting in 5s...', err);
+      if (!navigator.onLine) {
+        updateCloudPill(false, '📡 وضع غير متصل (تصفح محلي)');
+      }
+      try { liveSseSource.close(); } catch(e) {}
+      clearTimeout(sseReconnectTimer);
+      sseReconnectTimer = setTimeout(startLiveCloudStream, 5000);
+    };
+  } catch(e) {
+    console.warn('Failed to start EventSource:', e);
   }
 }
 
-async function pushToCloud() {
+// 2. Poll initial / catchup cloud state
+async function catchupCloudState(silent = false) {
   if (!navigator.onLine) return;
   try {
-    cloudSyncBusy = true;
-    store.lastUpdated = Date.now();
-    try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
+    const res = await fetch(CLOUD_SYNC_URL + '/json?poll=1&since=all', { cache: 'no-store' });
+    if (!res.ok) return;
+    const text = await res.text();
+    const lines = text.trim().split(/\r?\n/).filter(Boolean);
+    if (!lines.length) return;
     
-    if (window.esmBroadcast) {
-      window.esmBroadcast.postMessage({ type: 'sync', lastUpdated: store.lastUpdated });
-    }
-    
-    const res = await fetch(CLOUD_API_URL, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: 'esm_fixtures_2026',
-        data: store
-      })
-    });
-    
-    if (res.ok) {
-      lastCloudTimestamp = store.lastUpdated;
-      updateCloudPill(true, '🟢 متصل بالسحابة (تم الحفظ لجميع الأجهزة)');
-      if (typeof showToast === 'function') {
-        showToast('☁️ تم نشر التعديل لجميع الأجهزة فورياً!');
-      }
+    // Look at the latest message
+    for (let i = lines.length - 1; i >= 0; i--) {
+      try {
+        const item = JSON.parse(lines[i]);
+        if (item.event === 'message' && item.message) {
+          const payload = JSON.parse(item.message);
+          if (payload && payload.lastUpdated) {
+            const localUpdated = store.lastUpdated || 0;
+            if (payload.lastUpdated > localUpdated) {
+              const incomingStore = payload.store || payload;
+              Object.assign(store, incomingStore);
+              try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
+              applyStoreUpdates();
+              console.log('📥 تم مزامنة أحدث النتائج من السحابة!');
+              if (!silent && typeof showToast === 'function') {
+                showToast('⚡ تم مزامنة أحدث النتائج من السحابة!');
+              }
+            }
+            break;
+          }
+        }
+      } catch(e) {}
     }
   } catch(err) {
-    console.warn('Cloud push error:', err);
-  } finally {
-    cloudSyncBusy = false;
+    console.warn('Catchup error:', err);
   }
 }
 
-// Background smart heartbeat polling every 4 seconds when tab is active
-clearInterval(cloudPollTimer);
-cloudPollTimer = setInterval(() => {
-  if (!document.hidden && navigator.onLine) {
-    pullFromCloud(true);
+// 3. Broadcast modification to ALL open devices worldwide in real-time
+async function broadcastLiveChange() {
+  store.lastUpdated = Date.now();
+  try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
+  
+  if (window.esmBroadcast) {
+    window.esmBroadcast.postMessage({ type: 'sync', lastUpdated: store.lastUpdated });
   }
-}, 4000);
-
-window.addEventListener('focus', () => { if (navigator.onLine) pullFromCloud(false); });
-window.addEventListener('online', () => { pullFromCloud(false); });
-
-// Also keep Firebase support if custom config was added
-let fbApp = null;
-let fbDb = null;
-let fbDocRef = null;
-const CLOUD_CONFIG_KEY = 'esm_fb_config_v1';
-
-function getStoredFbConfig() {
+  
+  if (!navigator.onLine) return;
+  
   try {
-    const raw = localStorage.getItem(CLOUD_CONFIG_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch(e) { return null; }
-}
-
-function initFirebaseSync(cfg) {
-  if (!cfg || !cfg.apiKey || !cfg.projectId) return;
-  try {
-    if (!firebase.apps.length) fbApp = firebase.initializeApp(cfg);
-    else fbApp = firebase.app();
-    fbDb = firebase.firestore();
-    fbDocRef = fbDb.collection('esm_championship').doc('data_2026');
-    fbDocRef.onSnapshot(docSnap => {
-      if (docSnap.exists) {
-        const cloudData = docSnap.data();
-        if (cloudData && cloudData.store) {
-          Object.assign(store, cloudData.store);
-          try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
-          applyStoreUpdates();
-        }
-      }
-    }, err => console.warn('Firestore snapshot error:', err));
-  } catch (err) {
-    console.error('Firebase init error:', err);
+    const payload = {
+      sender: (currentUser && currentUser.name) || 'official',
+      lastUpdated: store.lastUpdated,
+      store: store
+    };
+    
+    await fetch(CLOUD_SYNC_URL, {
+      method: 'POST',
+      headers: {
+        'X-Cache': 'yes',
+        'Title': 'Match Live Update',
+        'Priority': 'urgent'
+      },
+      body: JSON.stringify(payload)
+    });
+    
+    updateCloudPill(true, '🟢 متصل بالسحابة (تم البث لجميع الأجهزة)');
+    if (typeof showToast === 'function') {
+      showToast('☁️ تم بث التعديل لجميع الأجهزة المفتوحة فوراً!');
+    }
+  } catch(err) {
+    console.warn('Broadcast error:', err);
   }
 }
 
-// Hook into save() so any modification automatically syncs to cloud
+// Hook into save() so ANY change anywhere pushes to all devices immediately
 const origSave = typeof save === 'function' ? save : null;
 window.save = function() {
   if (origSave) origSave();
-  pushToCloud();
-  if (fbDocRef) {
-    fbDocRef.set({
-      store: store,
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      updatedBy: (currentUser && currentUser.name) || 'admin'
-    }, { merge: true }).catch(err => console.warn('Firebase save failed:', err));
-  }
+  broadcastLiveChange();
 };
 
-// Initial cloud pull
-pullFromCloud(false);
-initFirebaseSync(getStoredFbConfig());
+// Listen to network status & focus
+window.addEventListener('focus', () => { if (navigator.onLine) catchupCloudState(true); });
+window.addEventListener('online', () => {
+  updateCloudPill(true, '🟢 متصل بالمزامنة الحية');
+  startLiveCloudStream();
+  catchupCloudState(false);
+});
+window.addEventListener('offline', () => {
+  updateCloudPill(false, '📡 وضع غير متصل (تصفح محلي)');
+});
 
-// Modal events
+// Start Live Stream & Catchup on load
+startLiveCloudStream();
+catchupCloudState(false);
+
+
 const cloudPillBtn = document.getElementById('cloudPillBtn');
 const cloudModal = document.getElementById('cloudModal');
 const modalCloseBtn = document.getElementById('modalCloseBtn');
@@ -2449,13 +2470,13 @@ const btnPullCloudNow = document.getElementById('btnPullCloudNow');
 const btnPushCloudNow = document.getElementById('btnPushCloudNow');
 if (btnPullCloudNow) {
   btnPullCloudNow.addEventListener('click', () => {
-    pullFromCloud(false);
+    catchupCloudState(false);
     if (cloudModal) cloudModal.style.display = 'none';
   });
 }
 if (btnPushCloudNow) {
   btnPushCloudNow.addEventListener('click', () => {
-    pushToCloud();
+    broadcastLiveChange();
     if (cloudModal) cloudModal.style.display = 'none';
   });
 }
