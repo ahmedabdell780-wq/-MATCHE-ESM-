@@ -1778,6 +1778,22 @@ body.th-dark .off-item-sub { color: #94a3b8 !important; }
   </div>
   <p class="auth-note">يمكنك هنا إضافة لاعبين جدد، أو تعديل أسمائهم، أو حذفهم لكل فئة (U15, U17, U20) وتبقى كل التعديلات محفوظة بشكل دائم في التطبيق.</p>
   
+  <!-- شريط تعريف النادي والعزل الأمني لقائمة اللاعبين -->
+  <div id="playersModalTeamBanner" style="display:flex;align-items:center;justify-content:space-between;gap:10px;background:#f8fafc;border:1.5px solid var(--line,#cbd5e1);border-radius:12px;padding:8px 12px;margin:8px 0;flex-wrap:wrap;">
+   <div style="display:flex;align-items:center;gap:10px;">
+    <div id="playersModalTeamLogo" style="width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:50%;border:1px solid #e2e8f0;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);"></div>
+    <div>
+     <div id="playersModalTeamName" style="font-weight:900;font-size:14px;color:#0f2a1c;">اسم النادي</div>
+     <div id="playersModalTeamRoleBadge" style="font-size:11px;font-weight:700;color:#16a34a;">🔒 قائمة خاصة بناديك حصراً</div>
+    </div>
+   </div>
+   <div id="playersModalAdminSelectBox" style="display:none;">
+    <label style="font-size:11.5px;font-weight:800;display:block;margin-bottom:2px;color:#475569;">تبديل النادي (المشرف):</label>
+    <select id="adminPlayersTeamSelect" onchange="switchPlayerModalTeam(this.value)" style="padding:6px 10px;border-radius:8px;border:1.5px solid #0f2a1c;font-family:inherit;font-weight:700;font-size:12px;background:#fff;">
+    </select>
+   </div>
+  </div>
+
   <div class="players-cat-tabs" style="display:flex;gap:6px;margin:8px 0;background:var(--field,#f0f4f8);padding:4px;border-radius:12px;">
    <button type="button" class="players-cat-tab active" data-pcat="U15" onclick="switchPlayerModalCat('U15')">🧒 U15 (<span id="countBadgeU15">0</span>)</button>
    <button type="button" class="players-cat-tab" data-pcat="U17" onclick="switchPlayerModalCat('U17')">🧑 U17 (<span id="countBadgeU17">0</span>)</button>
@@ -1799,7 +1815,7 @@ body.th-dark .off-item-sub { color: #94a3b8 !important; }
   </div>
 
   <div style="display:flex;gap:8px;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--line,#e2e8f0);flex-wrap:wrap;">
-   <button type="button" onclick="restoreDefaultRosterConfirm()" style="background:transparent;border:1px dashed #ef4444;color:#dc2626;padding:6px 12px;border-radius:8px;font-family:inherit;font-size:12px;cursor:pointer;font-weight:700;">🔄 استعادة القائمة الأصلية للفئة</button>
+   <button type="button" id="btnRestoreDefaultRoster" onclick="restoreDefaultRosterConfirm()" style="background:transparent;border:1px dashed #ef4444;color:#dc2626;padding:6px 12px;border-radius:8px;font-family:inherit;font-size:12px;cursor:pointer;font-weight:700;">🔄 استعادة القائمة الأصلية للفئة</button>
    <button type="button" onclick="closePlayersModal()" style="background:#0f2a1c;color:#fff;border:0;padding:8px 20px;border-radius:10px;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;">💾 تم وحفظ</button>
   </div>
  </div>
@@ -2406,10 +2422,18 @@ function updateAuthUI() {
           topPendingBadge.style.display = pCount > 0 ? 'inline-block' : 'none';
         }
       }
+      const topPlayersBtn = document.getElementById('btnTopPlayersMgr');
+      if (topPlayersBtn) {
+        topPlayersBtn.innerHTML = '<span class="ic">👥</span> إدارة تشكيلات الأندية';
+      }
     } else if (currentUser.role === 'official') {
       const teamName = T[currentUser.teamId] || 'فريقك';
       if (topBadge) topBadge.innerHTML = '👤 <span><b>' + currentUser.name + '</b> (مسؤول ' + teamName + ')</span>';
       if (topMgrBtn) topMgrBtn.style.display = 'none';
+      const topPlayersBtn = document.getElementById('btnTopPlayersMgr');
+      if (topPlayersBtn) {
+        topPlayersBtn.innerHTML = '<span class="ic">👥</span> إدارة لاعبي ' + teamName;
+      }
     }
   } else {
     if (appGate) appGate.style.display = 'block';
@@ -2790,27 +2814,65 @@ const DEFAULT_ROSTER={U15:['بلعيدي جلول شمس الدين','بلعيد
 U17:['بلجيلالي باسل','بلعيدي عبد الباسط','بن سعيداني عبد المالك','بوحدي عبد العالي','جدوّر عبد الرزاق','جدوّر محمد شريف','حدوش محمد','داهل إياد','شرفاوي محمد أمين','صبان عبد المالك','عبداللاوي يحيى','عشودة عبد الرؤوف','عشودة محمد','عماري محمد أمين','عمروش عبد النور','عمروش لخضر يوسف','غانم عبد الباسط','غانم عبد الجليل','غانم هارون','لعرب رفيق','مختاري عبد الصمد','مسيلتي عبد الجليل','موساوي عامر','نذير أيمن'],
 U20:['بسكري سيف الدين','بلجوهرة نجم الدين','بلجيلالي عبد الوهاب','بلعيدي إدريس','بهيلي محمد سعيد','بوزيان محمد ياسين','حموني عبد الرحمن','داهل ياسر','داود كريم','عطاف شيب','عمروش حسين','عمروش عبد الصمد','عوايجية عبد الرحيم','غانم محمد أمين','لنتري غيث','لنتري محمد عامر','مامو هيثم','مختاري سيد أحمد','مختاري عبد الصمد','مسيلتي محمد','موساوي المهدي','موساوي محمد زكرياء']};
 
-if (!store.customRosters) store.customRosters = {};
+// --- نظام عزل قوائم وتشكيلات اللاعبين لكل نادٍ على حدة ---
+if (!store.teamRosters) store.teamRosters = {};
+for (let tId = 1; tId <= 11; tId++) {
+  if (!store.teamRosters[tId]) store.teamRosters[tId] = { U15: [], U17: [], U20: [] };
+}
+
+// دمج وترحيل تشكيلة وفاق مسلمون (فريق 5) الأصلية لضمان عدم ضياع أي لاعب مسجل
 CATS.forEach(c => {
-  if (!store.customRosters[c] || !Array.isArray(store.customRosters[c]) || store.customRosters[c].length === 0) {
-    store.customRosters[c] = [...(DEFAULT_ROSTER[c] || [])];
+  if (!store.teamRosters[5][c] || !Array.isArray(store.teamRosters[5][c]) || store.teamRosters[5][c].length === 0) {
+    store.teamRosters[5][c] = (store.customRosters && store.customRosters[c] && store.customRosters[c].length)
+      ? [...store.customRosters[c]]
+      : [...(DEFAULT_ROSTER[c] || [])];
   }
 });
 
-function rosterList(c){
-  const targetCat = c || cat;
-  if (store.customRosters && store.customRosters[targetCat] && store.customRosters[targetCat].length) {
-    return store.customRosters[targetCat];
+// فحص الصلاحيات الصارم: المشرف العام (admin) يدير كل الفرق، بينما مسؤول الفريق (official) يدير ناديه فقط
+function canManageTeamRoster(targetTeamId) {
+  if (!currentUser) return false;
+  if (currentUser.role === 'admin') return true;
+  if (currentUser.role === 'official') {
+    return currentUser.teamId == targetTeamId;
   }
-  return DEFAULT_ROSTER[targetCat] || [];
+  return false;
+}
+
+// جلب قائمة لاعبي فئة محددة لنادٍ محدد
+function rosterList(c, targetTeam){
+  const targetCat = c || cat || 'U15';
+  let tId = targetTeam;
+  if (tId === undefined || tId === null) {
+    if (typeof window !== 'undefined' && window.activePlayerModalTeam) {
+      tId = window.activePlayerModalTeam;
+    } else if (currentUser && currentUser.role === 'official') {
+      tId = currentUser.teamId;
+    } else {
+      tId = (typeof team !== 'undefined' ? team : 5);
+    }
+  }
+
+  if (store.teamRosters && store.teamRosters[tId] && store.teamRosters[tId][targetCat] && store.teamRosters[tId][targetCat].length) {
+    return store.teamRosters[tId][targetCat];
+  }
+  if (tId == 5 && DEFAULT_ROSTER[targetCat]) {
+    return DEFAULT_ROSTER[targetCat];
+  }
+  return [];
 }
 
 function refreshRoster(){
-  let dl=document.getElementById('rosterDL');
-  if(!dl){dl=document.createElement('datalist');dl.id='rosterDL';document.body.appendChild(dl)}
-  dl.innerHTML=rosterList().map(n=>'<option value="'+n+'">').join('');
-  const badge=document.getElementById('catSquadBadge');
-  if(badge) badge.textContent = cat + ' (' + rosterList().length + ' لاعب)';
+  let dl = document.getElementById('rosterDL');
+  if(!dl){
+    dl = document.createElement('datalist');
+    dl.id = 'rosterDL';
+    document.body.appendChild(dl);
+  }
+  const myTeam = (currentUser && currentUser.role === 'official') ? currentUser.teamId : (typeof team !== 'undefined' ? team : 5);
+  dl.innerHTML = rosterList(cat, myTeam).map(n => '<option value="' + n + '">').join('');
+  const badge = document.getElementById('catSquadBadge');
+  if(badge) badge.textContent = cat + ' (' + rosterList(cat, myTeam).length + ' لاعب)';
 }
 
 function markRoster(i){
@@ -2819,15 +2881,75 @@ function markRoster(i){
   i.style.borderWidth='';
 }
 
-/* --- إدارة اللاعبين (نافذة، إضافة، تعديل، حذف) --- */
+/* --- إدارة اللاعبين المعزولة لكل نادٍ --- */
 window.activePlayerModalCat = 'U15';
+window.activePlayerModalTeam = 5;
 
-function openPlayersModal(c){
+function openPlayersModal(c, tId){
+  // تطبيق قفل الأمان: مسؤول النادي مقفول حصراً على ناديه
+  if (currentUser && currentUser.role === 'official') {
+    window.activePlayerModalTeam = currentUser.teamId;
+  } else if (currentUser && currentUser.role === 'admin') {
+    window.activePlayerModalTeam = parseInt(tId || (typeof team !== 'undefined' ? team : 5), 10);
+  } else {
+    window.activePlayerModalTeam = parseInt((typeof team !== 'undefined' ? team : 5), 10);
+  }
+
   window.activePlayerModalCat = c || cat || 'U15';
   const modal = document.getElementById('playersModal');
   if(!modal) return;
+
+  // تهيئة خيارات المشرف العام لتبديل الأندية
+  const adminSelectBox = document.getElementById('playersModalAdminSelectBox');
+  const adminSelect = document.getElementById('adminPlayersTeamSelect');
+  if (currentUser && currentUser.role === 'admin') {
+    if (adminSelectBox) adminSelectBox.style.display = 'block';
+    if (adminSelect) {
+      let opts = '';
+      for (let id = 1; id <= 11; id++) {
+        opts += `<option value="${id}" ${id == window.activePlayerModalTeam ? 'selected' : ''}>${T[id]}</option>`;
+      }
+      adminSelect.innerHTML = opts;
+    }
+  } else {
+    if (adminSelectBox) adminSelectBox.style.display = 'none';
+  }
+
+  updatePlayerModalTeamHeader();
   modal.style.display = 'flex';
   switchPlayerModalCat(window.activePlayerModalCat);
+}
+
+function updatePlayerModalTeamHeader(){
+  const tId = window.activePlayerModalTeam || 5;
+  const logoEl = document.getElementById('playersModalTeamLogo');
+  const nameEl = document.getElementById('playersModalTeamName');
+  const badgeEl = document.getElementById('playersModalTeamRoleBadge');
+  
+  if (logoEl) logoEl.innerHTML = logoInner(tId);
+  if (nameEl) nameEl.textContent = T[tId] || 'النادي';
+  if (badgeEl) {
+    if (currentUser && currentUser.role === 'official') {
+      badgeEl.innerHTML = '🔒 قائمة خاصة بناديك حصراً (مسؤول معتمد)';
+      badgeEl.style.color = '#16a34a';
+    } else if (currentUser && currentUser.role === 'admin') {
+      badgeEl.innerHTML = '👑 إدارة لاعبي النادي (المشرف العام)';
+      badgeEl.style.color = '#ca8a04';
+    } else {
+      badgeEl.innerHTML = '👁️ عرض تشكيلة لاعبي النادي';
+      badgeEl.style.color = '#64748b';
+    }
+  }
+}
+
+function switchPlayerModalTeam(newTeamId){
+  if (currentUser && currentUser.role === 'official' && currentUser.teamId != newTeamId) {
+    alert('⛔ لا يمكنك الانتقال لإدارة لاعبي نادٍ آخر!');
+    return;
+  }
+  window.activePlayerModalTeam = parseInt(newTeamId, 10);
+  updatePlayerModalTeamHeader();
+  renderPlayersModalList();
 }
 
 function closePlayersModal(){
@@ -2848,19 +2970,22 @@ function switchPlayerModalCat(c){
 }
 
 function renderPlayersModalList(){
+  const tId = window.activePlayerModalTeam || (currentUser && currentUser.role === 'official' ? currentUser.teamId : (typeof team !== 'undefined' ? team : 5));
   const c = window.activePlayerModalCat || cat || 'U15';
-  const list = rosterList(c);
+  const list = rosterList(c, tId);
   
-  const b15 = document.getElementById('countBadgeU15'); if(b15) b15.textContent = rosterList('U15').length;
-  const b17 = document.getElementById('countBadgeU17'); if(b17) b17.textContent = rosterList('U17').length;
-  const b20 = document.getElementById('countBadgeU20'); if(b20) b20.textContent = rosterList('U20').length;
+  const b15 = document.getElementById('countBadgeU15'); if(b15) b15.textContent = rosterList('U15', tId).length;
+  const b17 = document.getElementById('countBadgeU17'); if(b17) b17.textContent = rosterList('U17', tId).length;
+  const b20 = document.getElementById('countBadgeU20'); if(b20) b20.textContent = rosterList('U20', tId).length;
   
   const lbl = document.getElementById('playersCategoryLabel');
-  if(lbl) lbl.textContent = 'إجمالي لاعبي فئة ' + c + ': ' + list.length + ' لاعب';
+  if(lbl) lbl.textContent = (T[tId] ? T[tId] + ' · ' : '') + 'إجمالي فئة ' + c + ': ' + list.length + ' لاعب';
   
   const query = (document.getElementById('searchPlayerInput')?.value || '').trim().toLowerCase();
   const box = document.getElementById('playersListContainer');
   if(!box) return;
+
+  const canEdit = canManageTeamRoster(tId);
   
   let html = '';
   list.forEach((name, idx) => {
@@ -2870,20 +2995,32 @@ function renderPlayersModalList(){
         '<span class="player-row-idx">#' + (idx + 1) + '</span>' +
         '<span class="player-row-name">' + name + '</span>' +
       '</div>' +
-      '<div class="player-row-actions">' +
-        '<button type="button" class="player-btn-edit" onclick="editPlayerFromModal(' + idx + ')">✏️ تعديل</button>' +
-        '<button type="button" class="player-btn-del" onclick="deletePlayerFromModal(' + idx + ')">🗑️ حذف</button>' +
-      '</div>' +
+      (canEdit ? (
+        '<div class="player-row-actions">' +
+          '<button type="button" class="player-btn-edit" onclick="editPlayerFromModal(' + idx + ')">✏️ تعديل</button>' +
+          '<button type="button" class="player-btn-del" onclick="deletePlayerFromModal(' + idx + ')">🗑️ حذف</button>' +
+        '</div>'
+      ) : '<span style="font-size:11px;color:#94a3b8;font-weight:700;">🔒 للقراءة فقط</span>') +
     '</div>';
   });
   
   if(!html){
-    html = '<p class="note" style="text-align:center;padding:16px;">' + (query ? 'لا توجد نتائج مطابقة لبحثك.' : 'لا يوجد لاعبون مسجلون في هذه الفئة حالياً.') + '</p>';
+    html = '<p class="note" style="text-align:center;padding:16px;">' + (query ? 'لا توجد نتائج مطابقة لبحثك.' : 'لا يوجد لاعبون مسجلون في هذه الفئة لنادي ' + (T[tId] || '') + ' حالياً.') + '</p>';
   }
   box.innerHTML = html;
+
+  const addBox = document.querySelector('.player-add-box');
+  const restoreBtn = document.getElementById('btnRestoreDefaultRoster');
+  if (addBox) addBox.style.display = canEdit ? 'flex' : 'none';
+  if (restoreBtn) restoreBtn.style.display = canEdit ? 'inline-block' : 'none';
 }
 
 function addPlayerFromModal(){
+  const tId = window.activePlayerModalTeam || (currentUser && currentUser.role === 'official' ? currentUser.teamId : (typeof team !== 'undefined' ? team : 5));
+  if (!canManageTeamRoster(tId)) {
+    alert('⛔ عذراً، لا تملك صلاحية إضافة لاعبين لنادي ' + (T[tId] || '') + '. كل مسؤول يدير لاعبي ناديه فقط.');
+    return;
+  }
   const input = document.getElementById('newPlayerInput');
   if(!input) return;
   const val = input.value.trim();
@@ -2892,30 +3029,43 @@ function addPlayerFromModal(){
     return;
   }
   const c = window.activePlayerModalCat || cat || 'U15';
-  if(!store.customRosters[c]) store.customRosters[c] = [...(DEFAULT_ROSTER[c]||[])];
+  
+  if (!store.teamRosters) store.teamRosters = {};
+  if (!store.teamRosters[tId]) store.teamRosters[tId] = { U15: [], U17: [], U20: [] };
+  if (!store.teamRosters[tId][c]) store.teamRosters[tId][c] = [];
   
   const newNames = val.split(/[,،\n]+/).map(x => x.trim()).filter(Boolean);
   let addedCount = 0;
   newNames.forEach(n => {
-    if(!store.customRosters[c].includes(n)){
-      store.customRosters[c].push(n);
+    if(!store.teamRosters[tId][c].includes(n)){
+      store.teamRosters[tId][c].push(n);
       addedCount++;
     }
   });
+
+  if (tId == 5) {
+    store.customRosters = store.customRosters || {};
+    store.customRosters[c] = [...store.teamRosters[5][c]];
+  }
   
   save();
   refreshRoster();
   input.value = '';
   renderPlayersModalList();
-  alert('✅ تم حفظ وإضافة (' + addedCount + ') لاعب لفئة ' + c + ' بنجاح!');
+  alert('✅ تم حفظ وإضافة (' + addedCount + ') لاعب لفئة ' + c + ' لنادي (' + T[tId] + ') بنجاح!');
 }
 
 function editPlayerFromModal(idx){
+  const tId = window.activePlayerModalTeam || (currentUser && currentUser.role === 'official' ? currentUser.teamId : (typeof team !== 'undefined' ? team : 5));
+  if (!canManageTeamRoster(tId)) {
+    alert('⛔ عذراً، لا تملك صلاحية تعديل تشكيلة هذا النادي.');
+    return;
+  }
   const c = window.activePlayerModalCat || cat || 'U15';
-  const list = store.customRosters[c] || [];
+  const list = (store.teamRosters && store.teamRosters[tId] && store.teamRosters[tId][c]) ? store.teamRosters[tId][c] : [];
   if(idx < 0 || idx >= list.length) return;
   const oldName = list[idx];
-  const newName = prompt('تعديل اسم ولقب اللاعب:', oldName);
+  const newName = prompt('تعديل اسم ولقب اللاعب لنادي ' + T[tId] + ':', oldName);
   if(newName === null) return;
   const trimmed = newName.trim();
   if(!trimmed){
@@ -2923,36 +3073,66 @@ function editPlayerFromModal(idx){
     return;
   }
   list[idx] = trimmed;
+  if (tId == 5) {
+    store.customRosters = store.customRosters || {};
+    store.customRosters[c] = [...list];
+  }
   save();
   refreshRoster();
   renderPlayersModalList();
 }
 
 function deletePlayerFromModal(idx){
+  const tId = window.activePlayerModalTeam || (currentUser && currentUser.role === 'official' ? currentUser.teamId : (typeof team !== 'undefined' ? team : 5));
+  if (!canManageTeamRoster(tId)) {
+    alert('⛔ عذراً، لا تملك صلاحية حذف لاعبين من هذا النادي.');
+    return;
+  }
   const c = window.activePlayerModalCat || cat || 'U15';
-  const list = store.customRosters[c] || [];
+  const list = (store.teamRosters && store.teamRosters[tId] && store.teamRosters[tId][c]) ? store.teamRosters[tId][c] : [];
   if(idx < 0 || idx >= list.length) return;
   const pName = list[idx];
-  if(!confirm('هل أنت متأكد من حذف اللاعب (' + pName + ') من قائمة فئة ' + c + '؟')){
+  if(!confirm('هل أنت متأكد من حذف اللاعب (' + pName + ') من قائمة فئة ' + c + ' لنادي ' + T[tId] + '؟')){
     return;
   }
   list.splice(idx, 1);
+  if (tId == 5) {
+    store.customRosters = store.customRosters || {};
+    store.customRosters[c] = [...list];
+  }
   save();
   refreshRoster();
   renderPlayersModalList();
 }
 
 function restoreDefaultRosterConfirm(){
-  const c = window.activePlayerModalCat || cat || 'U15';
-  if(!confirm('هل أنت متأكد من استعادة القائمة الأصلية لفئة ' + c + '؟ سيتم إلغاء أي تعديلات خاصة بلاعبي هذه الفئة.')){
+  const tId = window.activePlayerModalTeam || (currentUser && currentUser.role === 'official' ? currentUser.teamId : (typeof team !== 'undefined' ? team : 5));
+  if (!canManageTeamRoster(tId)) {
+    alert('⛔ عذراً، لا تملك هذه الصلاحية.');
     return;
   }
-  store.customRosters[c] = [...(DEFAULT_ROSTER[c] || [])];
+  const c = window.activePlayerModalCat || cat || 'U15';
+  if (tId == 5) {
+    if(!confirm('هل أنت متأكد من استعادة القائمة الأصلية لفئة ' + c + ' للوفاق مسلمون؟ سيتم إلغاء أي تعديلات مخصصة.')){
+      return;
+    }
+    store.teamRosters[5][c] = [...(DEFAULT_ROSTER[c] || [])];
+    store.customRosters = store.customRosters || {};
+    store.customRosters[c] = [...(DEFAULT_ROSTER[c] || [])];
+  } else {
+    if(!confirm('هل أنت متأكد من تفريغ قائمة لاعبي فئة ' + c + ' لنادي ' + T[tId] + '؟')){
+      return;
+    }
+    if (store.teamRosters && store.teamRosters[tId]) {
+      store.teamRosters[tId][c] = [];
+    }
+  }
   save();
   refreshRoster();
   renderPlayersModalList();
-  alert('✅ تم استعادة القائمة الأصلية لفئة ' + c + ' بنجاح!');
+  alert('✅ تم تنفيذ العملية بنجاح لفئة ' + c + '!');
 }
+
 function minOpts(){let o='';for(let i=1;i<=120;i++)o+='<option value="'+i+'">'+i+' د</option>';return o}
 function setMin(str,mn){const parts=(str||'').split(/[,،]/).map(x=>x.trim()).filter(Boolean);if(!parts.length)return str||'';const last=parts.pop().replace(/(\s+د\s*\d{1,3}|\s+\d{1,3}|د\s*\d{1,3})\s*['’]?\s*$/,'').trim();parts.push((last?last+' ':'')+'د'+mn);return parts.join('، ')}
 function xf(h,a){refreshRoster();const opts=rosterList().map(n=>'<option value="'+n+'">'+n+'</option>').join('');
