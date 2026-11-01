@@ -1,4 +1,4 @@
-const CACHE_NAME = 'esm-messelmoun-v16';
+const CACHE_NAME = 'esm-messelmoun-v17';
 const ASSETS = [
   './',
   './index.html',

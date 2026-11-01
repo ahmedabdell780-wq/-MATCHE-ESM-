@@ -321,21 +321,360 @@ body{background:var(--bodybg);color:var(--ink)}
 .btn-primary-auth:active{transform:scale(0.98)}
 .auth-error-msg{margin-top:10px;padding:8px 12px;background:rgba(200,32,47,0.1);border:1px solid #c8202f;color:#c8202f;border-radius:8px;font-size:12px;font-weight:700;text-align:center}
 
-.officials-list{display:grid;gap:10px;margin-top:12px;max-height:60vh;overflow-y:auto}
-.official-card{background:var(--field,#f6f8fa);border:1px solid var(--line,#d5dce4);border-radius:12px;padding:12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
-.off-info{display:flex;align-items:center;gap:10px}
-.off-logo{width:36px;height:36px;border-radius:8px;background:var(--panel,#fff);padding:4px;box-shadow:0 1px 3px rgba(0,0,0,0.1);display:grid;place-items:center}
-.off-details strong{display:block;font-size:14px;color:var(--ink,#0b1722)}
-.off-details small{display:block;font-size:12px;color:var(--muted,#5d6b7a);margin-top:2px}
-.off-status{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:800}
-.off-status.pending{background:#fff3cd;color:#856404;border:1px solid #ffeeba}
-.off-status.approved{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
-.off-status.suspended{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}
-.off-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.off-btn{border:0;border-radius:8px;padding:6px 10px;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer}
-.off-btn.approve{background:#1f9d55;color:#fff}
-.off-btn.suspend{background:#e07a10;color:#fff}
-.off-btn.delete{background:#c8202f;color:#fff}
+/* Officials Management - Ultra Clean Modern Dashboard */
+#officialsModal .modal-card {
+  max-width: 820px;
+  width: 95%;
+  max-height: 88vh;
+  padding: 0 !important;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 22px;
+  background: var(--panel, #ffffff);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+  border: 1.5px solid var(--line, #cbd5e1);
+  color: var(--ink, #0f172a);
+}
+.off-modal-head {
+  padding: 16px 22px;
+  background: linear-gradient(135deg, #1f5a34, #123e22);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  border-bottom: 2px solid #144626;
+}
+.off-modal-head-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.off-modal-head-title h3 {
+  margin: 0;
+  font-size: 17.5px;
+  font-weight: 900;
+  color: #fff;
+}
+.off-modal-head-title p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #a7f3d0;
+  font-weight: 600;
+}
+.off-modal-close-btn {
+  background: rgba(255,255,255,0.15);
+  border: 0;
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.off-modal-close-btn:hover {
+  background: rgba(255,255,255,0.3);
+}
+.off-modal-scrollable {
+  padding: 18px 22px;
+  overflow-y: auto;
+  flex: 1;
+  background: var(--bg, #f8fafc);
+  color: var(--ink, #0f172a);
+}
+.off-stats-bar-clean {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.off-stat-card {
+  background: var(--panel, #ffffff);
+  border: 1.5px solid var(--line, #e2e8f0);
+  border-radius: 14px;
+  padding: 10px 8px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+}
+.off-stat-card.alert {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.12);
+}
+.off-stat-num {
+  font-size: 21px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+.off-stat-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--muted, #64748b);
+  margin-top: 2px;
+}
+.off-ctrl-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.btn-off-add {
+  flex: 1;
+  min-width: 200px;
+  background: #1f5a34;
+  color: #fff;
+  border: 0;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 3px 10px rgba(31,90,52,0.22);
+}
+.btn-off-refresh {
+  background: var(--panel, #fff);
+  border: 1.5px solid var(--line, #cbd5e1);
+  color: var(--ink, #1e293b);
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Official Card Container */
+.officials-list-clean {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.official-card-item {
+  background: var(--panel, #ffffff);
+  border: 1.5px solid var(--line, #e2e8f0);
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 7px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.official-card-item:hover {
+  border-color: #1f5a34;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+.official-card-item.is-pending {
+  border-color: #f59e0b;
+}
+.official-card-item.is-suspended {
+  border-color: #ef4444;
+}
+.off-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.off-item-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.off-item-logo {
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  max-width: 48px !important;
+  max-height: 48px !important;
+  border-radius: 12px;
+  background: #ffffff !important;
+  border: 1.5px solid var(--line, #e2e8f0);
+  padding: 3px;
+  box-sizing: border-box;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden !important;
+  flex-shrink: 0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.off-item-logo img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 42px !important;
+  max-height: 42px !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+.off-item-logo svg {
+  width: 28px !important;
+  height: 28px !important;
+}
+.off-item-title {
+  font-size: 15.5px;
+  font-weight: 900;
+  color: var(--ink, #0f172a);
+}
+.off-item-sub {
+  font-size: 12.5px;
+  color: var(--muted, #64748b);
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.off-meta-phone {
+  font-family: monospace;
+  font-weight: 700;
+  color: var(--ink, #334155);
+  background: var(--field, #f1f5f9);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+.off-badge-status {
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+.off-badge-status.approved {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #86efac;
+}
+.off-badge-status.view-only {
+  background: #ede9fe;
+  color: #6d28d9;
+  border: 1px solid #c4b5fd;
+}
+.off-badge-status.pending {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fcd34d;
+}
+.off-badge-status.suspended {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+}
+.off-item-infobar {
+  background: var(--field, #f8fafc);
+  border: 1px solid var(--line, #edf2f7);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  color: var(--ink, #0f172a);
+}
+.off-item-pass-tag {
+  font-family: monospace;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ink, #0f172a);
+  background: var(--panel, #e2e8f0);
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--line, #cbd5e1);
+  letter-spacing: 0.5px;
+}
+.off-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding-top: 6px;
+  border-top: 1px dashed var(--line, #e2e8f0);
+}
+.off-act-btn {
+  border: 0;
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.off-act-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+.off-act-btn.btn-approve {
+  background: #16a34a;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(22,163,74,0.3);
+}
+.off-act-btn.btn-pass {
+  background: #0284c7;
+  color: #fff;
+}
+.off-act-btn.btn-perm {
+  background: #6366f1;
+  color: #fff;
+}
+.off-act-btn.btn-suspend {
+  background: #ea580c;
+  color: #fff;
+}
+.off-act-btn.btn-loginas {
+  background: #0f766e;
+  color: #fff;
+}
+.off-act-btn.btn-delete {
+  background: #dc2626;
+  color: #fff;
+  margin-right: auto;
+}
+/* Dark & Green theme overrides for Officials modal */
+body.th-green .off-stat-card:nth-child(1) .off-stat-num,
+body.th-dark .off-stat-card:nth-child(1) .off-stat-num { color: #6ee7b7 !important; }
+body.th-green .off-stat-card:nth-child(2) .off-stat-num,
+body.th-dark .off-stat-card:nth-child(2) .off-stat-num { color: #4ade80 !important; }
+body.th-green .off-stat-card:nth-child(3) .off-stat-num,
+body.th-dark .off-stat-card:nth-child(3) .off-stat-num { color: #fbbf24 !important; }
+body.th-green .off-stat-label,
+body.th-dark .off-stat-label { color: #cbd5e1 !important; }
+body.th-green .off-note-text,
+body.th-dark .off-note-text { color: #93c5fd !important; }
+body.th-green .off-item-infobar,
+body.th-dark .off-item-infobar { background: rgba(0,0,0,0.25) !important; border-color: rgba(255,255,255,0.1) !important; color: #e2e8f0 !important; }
+body.th-green .off-item-pass-tag,
+body.th-dark .off-item-pass-tag { background: #14532d !important; color: #f0fdf4 !important; border: 1px solid #22c55e !important; }
+body.th-green .off-meta-phone,
+body.th-dark .off-meta-phone { background: rgba(0,0,0,0.3) !important; color: #f8fafc !important; }
+body.th-green .off-item-title,
+body.th-dark .off-item-title { color: #ffffff !important; }
+body.th-green .off-item-sub,
+body.th-dark .off-item-sub { color: #94a3b8 !important; }
+
 
 .no-perm-msg{background:var(--field,#f6f8fa);border:1px dashed var(--line,#d5dce4);border-radius:10px;padding:10px;margin-top:8px;text-align:center;font-size:12px;font-weight:700;color:var(--muted,#5d6b7a)}
 .radm-disabled{grid-column:1/-1;text-align:center;font-size:12px;font-weight:700;color:var(--muted,#5d6b7a);padding:4px;background:rgba(0,0,0,0.03);border-radius:6px;margin-top:4px}
@@ -947,74 +1286,79 @@ body{background:var(--bodybg);color:var(--ink)}
 
 <!-- نافذة إدارة مسؤولي الفرق (خاصة بالمشرف العام فقط) -->
 <div id="officialsModal" class="modal-bg" style="display:none;">
- <div class="modal-card modal-wide" style="max-width:700px;width:95%;">
-  <div class="modal-head">
-   <div style="display:flex;align-items:center;gap:8px;">
+ <div class="modal-card">
+  <div class="off-modal-head">
+   <div class="off-modal-head-title">
     <span style="font-size:22px;">👑</span>
-    <h3 style="margin:0;font-size:17px;font-weight:900;">لوحة إدارة واعتماد مسؤولي الفرق</h3>
+    <div>
+     <h3>لوحة إدارة واعتماد مسؤولي الفرق</h3>
+     <p>المشرف العام (كامل الصلاحيات) · تيبازة 2026/2027</p>
+    </div>
    </div>
-   <button id="officialsModalClose" class="modal-close" type="button" onclick="closeOfficialsModal()">&times;</button>
+   <button id="officialsModalClose" class="off-modal-close-btn" type="button" onclick="closeOfficialsModal()">&times;</button>
   </div>
   
-  <!-- إحصائيات الحسابات -->
-  <div class="off-stats-bar" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0;text-align:center;">
-   <div style="background:var(--field,#f0f4f8);border:1px solid var(--line,#cbd5e1);border-radius:12px;padding:8px 4px;">
-    <div style="font-size:18px;font-weight:900;color:#1f5a34;" id="statTotalOfficials">0</div>
-    <div style="font-size:11.5px;font-weight:700;color:var(--muted,#64748b);">إجمالي الحسابات</div>
+  <div class="off-modal-scrollable">
+   <!-- إحصائيات الحسابات المنظمة -->
+   <div class="off-stats-bar-clean">
+    <div class="off-stat-card">
+     <div class="off-stat-num num-total" id="statTotalOfficials">0</div>
+     <div class="off-stat-label">إجمالي الحسابات</div>
+    </div>
+    <div class="off-stat-card">
+     <div class="off-stat-num num-app" id="statApprovedOfficials">0</div>
+     <div class="off-stat-label">المعتمدة والنشطة</div>
+    </div>
+    <div class="off-stat-card alert">
+     <div class="off-stat-num num-pend" id="statPendingOfficials">0</div>
+     <div class="off-stat-label" style="color:#b45309;font-weight:800;">بانتظار موافقتك</div>
+    </div>
    </div>
-   <div style="background:var(--field,#f0f4f8);border:1px solid var(--line,#cbd5e1);border-radius:12px;padding:8px 4px;">
-    <div style="font-size:18px;font-weight:900;color:#16a34a;" id="statApprovedOfficials">0</div>
-    <div style="font-size:11.5px;font-weight:700;color:var(--muted,#64748b);">المعتمدة والنشطة</div>
-   </div>
-   <div style="background:rgba(245,158,11,0.12);border:1.5px solid #f59e0b;border-radius:12px;padding:8px 4px;">
-    <div style="font-size:18px;font-weight:900;color:#d97706;" id="statPendingOfficials">0</div>
-    <div style="font-size:11.5px;font-weight:800;color:#b45309;">بانتظار موافقتك</div>
-   </div>
-  </div>
 
-  <!-- أزرار الإجراءات السريعة للمشرف -->
-  <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
-   <button type="button" onclick="toggleAddOfficialForm()" style="flex:1;min-width:180px;background:#1f5a34;color:#fff;border:0;padding:10px 14px;border-radius:10px;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 3px 10px rgba(31,90,52,0.25);">
-    <span>➕ إضافة مسؤول جديد يدوياً</span>
-   </button>
-   <button type="button" onclick="catchupCloudState(false)" style="background:var(--field,#f0f4f8);border:1.5px solid var(--line,#cbd5e1);color:var(--ink,#1f2937);padding:10px 14px;border-radius:10px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;">
-    <span>🔄 فحص السحابة</span>
-   </button>
-  </div>
+   <!-- أزرار الإجراءات السريعة للمشرف -->
+   <div class="off-ctrl-row">
+    <button type="button" class="btn-off-add" onclick="toggleAddOfficialForm()">
+     <span>➕ إضافة مسؤول جديد يدوياً</span>
+    </button>
+    <button type="button" class="btn-off-refresh" onclick="catchupCloudState(false)">
+     <span>🔄 فحص السحابة</span>
+    </button>
+   </div>
 
-  <!-- نموذج إضافة مسؤول جديد يدوياً للمشرف العام -->
-  <div id="addOfficialManualForm" style="display:none;background:var(--field,#f6f8fa);border:1.5px dashed #1f5a34;border-radius:14px;padding:14px;margin-bottom:14px;">
-   <h4 style="margin:0 0 10px;font-size:14px;font-weight:800;color:#1f5a34;">➕ إنشاء وتفعيل حساب مسؤول جديد مباشرة</h4>
-   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-    <div>
-     <label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px;">اسم ولقب المسؤول:</label>
-     <input type="text" id="manOffName" placeholder="الاسم الكامل" style="width:100%;box-sizing:border-box;padding:8px 10px;border-radius:8px;border:1px solid var(--line,#cbd5e1);font-family:inherit;font-size:13px;">
+   <!-- نموذج إضافة مسؤول جديد يدوياً للمشرف العام -->
+   <div id="addOfficialManualForm" style="display:none;background:#ffffff;border:1.5px solid #1f5a34;border-radius:16px;padding:16px;margin-bottom:16px;box-shadow:0 4px 14px rgba(0,0,0,0.06);">
+    <h4 style="margin:0 0 10px;font-size:14px;font-weight:800;color:#1f5a34;">➕ إنشاء وتفعيل حساب مسؤول جديد مباشرة</h4>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+     <div>
+      <label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px;color:#334155;">اسم ولقب المسؤول:</label>
+      <input type="text" id="manOffName" placeholder="الاسم الكامل للمسؤول" style="width:100%;box-sizing:border-box;padding:9px 12px;border-radius:8px;border:1.5px solid #cbd5e1;font-family:inherit;font-size:13px;">
+     </div>
+     <div>
+      <label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px;color:#334155;">رقم الهاتف (للدخول):</label>
+      <input type="tel" id="manOffPhone" placeholder="05XXXXXXXX / 07XXXXXXXX" dir="ltr" style="width:100%;box-sizing:border-box;padding:9px 12px;border-radius:8px;border:1.5px solid #cbd5e1;font-family:inherit;font-size:13px;">
+     </div>
     </div>
-    <div>
-     <label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px;">رقم الهاتف (للدخول):</label>
-     <input type="tel" id="manOffPhone" placeholder="05XXXXXXXX / 07XXXXXXXX" dir="ltr" style="width:100%;box-sizing:border-box;padding:8px 10px;border-radius:8px;border:1px solid var(--line,#cbd5e1);font-family:inherit;font-size:13px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
+     <div>
+      <label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px;color:#334155;">الفريق / النادي:</label>
+      <select id="manOffTeam" style="width:100%;box-sizing:border-box;padding:9px 12px;border-radius:8px;border:1.5px solid #cbd5e1;font-family:inherit;font-size:13px;"></select>
+     </div>
+     <div>
+      <label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px;color:#334155;">كلمة المرور:</label>
+      <input type="text" id="manOffPass" placeholder="كلمة المرور" style="width:100%;box-sizing:border-box;padding:9px 12px;border-radius:8px;border:1.5px solid #cbd5e1;font-family:inherit;font-size:13px;">
+     </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end;">
+     <button type="button" onclick="toggleAddOfficialForm()" style="background:transparent;border:0;color:#64748b;padding:8px 16px;border-radius:8px;font-family:inherit;font-weight:700;cursor:pointer;">إلغاء</button>
+     <button type="button" onclick="saveManualOfficial()" style="background:#1f5a34;color:#fff;border:0;padding:9px 20px;border-radius:8px;font-family:inherit;font-weight:800;font-size:13px;cursor:pointer;box-shadow:0 2px 8px rgba(31,90,52,0.25);">💾 حفظ وتفعيل الحساب فوراً</button>
     </div>
    </div>
-   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
-    <div>
-     <label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px;">الفريق / النادي:</label>
-     <select id="manOffTeam" style="width:100%;box-sizing:border-box;padding:8px 10px;border-radius:8px;border:1px solid var(--line,#cbd5e1);font-family:inherit;font-size:13px;"></select>
-    </div>
-    <div>
-     <label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px;">كلمة المرور:</label>
-     <input type="text" id="manOffPass" placeholder="كلمة المرور" style="width:100%;box-sizing:border-box;padding:8px 10px;border-radius:8px;border:1px solid var(--line,#cbd5e1);font-family:inherit;font-size:13px;">
-    </div>
-   </div>
-   <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end;">
-    <button type="button" onclick="toggleAddOfficialForm()" style="background:transparent;border:0;color:var(--muted,#64748b);padding:8px 14px;border-radius:8px;font-family:inherit;font-weight:700;cursor:pointer;">إلغاء</button>
-    <button type="button" onclick="saveManualOfficial()" style="background:#1f5a34;color:#fff;border:0;padding:8px 18px;border-radius:8px;font-family:inherit;font-weight:800;cursor:pointer;">💾 حفظ وتفعيل الحساب فوراً</button>
-   </div>
-  </div>
 
-  <p class="auth-note" style="margin-top:2px;margin-bottom:12px;font-size:12px;color:var(--muted,#5d6b7a);">لديك كامل الصلاحيات: قبول واعتماد الطلبات الجديدة، تغيير كلمة المرور في حالة النسيان، تقييد أو سحب الصلاحيات، أو الحذف النهائي.</p>
-  
-  <div id="officialsListContainer" class="officials-list" style="max-height:55vh;overflow-y:auto;display:flex;flex-direction:column;gap:10px;">
-   <!-- يتم ملؤها ديناميكياً -->
+   <p class="off-note-text" style="margin:0 0 12px;font-size:12px;color:var(--muted,#64748b);line-height:1.5;">لديك كامل الصلاحيات: قبول واعتماد الطلبات الجديدة، تغيير كلمة المرور في حالة النسيان، تقييد أو سحب الصلاحيات، أو الحذف النهائي.</p>
+   
+   <div id="officialsListContainer" class="officials-list-clean">
+    <!-- يتم ملؤها ديناميكياً -->
+   </div>
   </div>
  </div>
 </div>
@@ -3157,65 +3501,62 @@ function renderOfficialsList() {
   container.innerHTML = bannerHtml;
   officials.forEach((off) => {
     const card = document.createElement('div');
-    card.className = 'official-card';
-    card.style.cssText = 'background:var(--field,#f6f8fa);border:1.5px solid var(--line,#cbd5e1);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;';
-
     const isPending = (off.status === 'pending');
     const isApproved = (off.status === 'approved');
     const isSuspended = (off.status === 'suspended');
     const isViewOnly = (off.perm === 'view_only');
 
-    let statusText = '⏳ قيد الانتظار (طلب جديد)';
-    let statusStyle = 'background:#fef3c7;color:#b45309;border:1px solid #f59e0b;';
-    if (isApproved) {
-      if (isViewOnly) {
-        statusText = '👁️ مشاهدة فقط (صلاحيات مقيدة)';
-        statusStyle = 'background:#e0e7ff;color:#4338ca;border:1px solid #6366f1;';
-      } else {
-        statusText = '🟢 مفعل ومعتمد (كامل الصلاحيات)';
-        statusStyle = 'background:#dcfce7;color:#15803d;border:1px solid #22c55e;';
-      }
+    card.className = 'official-card-item' + (isPending ? ' is-pending' : '') + (isSuspended ? ' is-suspended' : '');
+
+    let badgeClass = 'approved';
+    let statusText = '🟢 مفعل ومعتمد (كامل الصلاحيات)';
+    if (isPending) {
+      badgeClass = 'pending';
+      statusText = '⏳ قيد الانتظار (طلب جديد)';
     } else if (isSuspended) {
+      badgeClass = 'suspended';
       statusText = '⛔ معطل / مسحوب الصلاحيات';
-      statusStyle = 'background:#fee2e2;color:#b91c1c;border:1px solid #ef4444;';
+    } else if (isViewOnly) {
+      badgeClass = 'view-only';
+      statusText = '👁️ مشاهدة فقط (صلاحيات مقيدة)';
     }
 
     card.innerHTML = `
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-        <div style="display:flex;align-items:center;gap:10px;">
-          <span class="off-logo" style="width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;">${logoInner(off.teamId)}</span>
+      <div class="off-item-header">
+        <div class="off-item-user">
+          <div class="off-item-logo">${logoInner(off.teamId)}</div>
           <div>
-            <div style="font-size:15px;font-weight:900;color:var(--ink,#0b1722);">${off.name}</div>
-            <div style="font-size:12.5px;color:var(--muted,#64748b);">النادي: <b style="color:var(--ink,#0b1722);">${T[off.teamId] || ''}</b> · الهاتف: <span dir="ltr"><b>${off.phone}</b></span></div>
+            <div class="off-item-title">${off.name}</div>
+            <div class="off-item-sub">النادي: <b style="color:#1f5a34;">${T[off.teamId] || ''}</b> · الهاتف: <span class="off-meta-phone" dir="ltr"><b>${off.phone}</b></span></div>
           </div>
         </div>
-        <span style="font-size:11.5px;font-weight:800;padding:3px 10px;border-radius:20px;${statusStyle}">${statusText}</span>
+        <span class="off-badge-status ${badgeClass}">${statusText}</span>
       </div>
 
       <!-- تفاصيل كلمة المرور والصلاحيات -->
-      <div style="background:var(--panel,#fff);border:1px solid var(--line,#e2e8f0);border-radius:10px;padding:8px 12px;font-size:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <div class="off-item-infobar">
         <div>
-          🔑 كلمة المرور الحالية: <b dir="ltr" style="background:#f1f5f9;padding:2px 8px;border-radius:6px;font-family:monospace;font-size:13px;color:#0f172a;">${off.pass || '***'}</b>
+          🔑 كلمة المرور الحالية: <span class="off-item-pass-tag" dir="ltr">${off.pass || '***'}</span>
         </div>
         <div style="color:var(--muted,#64748b);">
-          تاريخ التسجيل: ${off.date || '2026-11-01'}
+          📅 تاريخ التسجيل: <b>${off.date || '2026-11-01'}</b>
         </div>
       </div>
 
       <!-- أزرار الصلاحيات والإدارة الكاملة للمشرف -->
-      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
-        ${isPending ? `<button type="button" style="background:#1f9d55;color:#fff;border:0;border-radius:8px;padding:7px 14px;font-family:inherit;font-size:12.5px;font-weight:800;cursor:pointer;box-shadow:0 2px 8px rgba(31,157,85,0.3);" data-act="approve" data-id="${off.id}">✅ موافقة وتفعيل الحساب</button>` : ''}
+      <div class="off-item-actions">
+        ${isPending ? `<button type="button" class="off-act-btn btn-approve" data-act="approve" data-id="${off.id}">✅ موافقة وتفعيل الحساب</button>` : ''}
         
-        <button type="button" style="background:#0284c7;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;" data-act="changePass" data-id="${off.id}">✏️ تغيير كلمة المرور</button>
+        <button type="button" class="off-act-btn btn-pass" data-act="changePass" data-id="${off.id}">✏️ تغيير كلمة المرور</button>
 
-        <button type="button" style="background:#6366f1;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;" data-act="togglePerm" data-id="${off.id}" title="تبديل بين كامل الصلاحيات ومشاهدة فقط">⚙️ ${isViewOnly ? 'منح صلاحية التعديل' : 'إنقاص الصلاحيات (مشاهدة فقط)'}</button>
+        <button type="button" class="off-act-btn btn-perm" data-act="togglePerm" data-id="${off.id}" title="تبديل بين كامل الصلاحيات ومشاهدة فقط">⚙️ ${isViewOnly ? 'منح صلاحية التعديل' : 'إنقاص الصلاحيات (مشاهدة فقط)'}</button>
 
-        ${isApproved ? `<button type="button" style="background:#e07a10;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;" data-act="suspend" data-id="${off.id}">⏸️ تجميد الحساب</button>` : ''}
-        ${isSuspended ? `<button type="button" style="background:#1f9d55;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;" data-act="approve" data-id="${off.id}">🟢 رفع التجميد</button>` : ''}
+        ${isApproved ? `<button type="button" class="off-act-btn btn-suspend" data-act="suspend" data-id="${off.id}">⏸️ تجميد الحساب</button>` : ''}
+        ${isSuspended ? `<button type="button" class="off-act-btn btn-approve" data-act="approve" data-id="${off.id}">🟢 رفع التجميد</button>` : ''}
 
-        <button type="button" style="background:#1f5a34;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;" data-act="loginAs" data-id="${off.id}">🚀 معاينة كـ المسؤول</button>
+        <button type="button" class="off-act-btn btn-loginas" data-act="loginAs" data-id="${off.id}">🚀 معاينة كـ المسؤول</button>
 
-        <button type="button" style="background:#ef4444;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;margin-right:auto;" data-act="delete" data-id="${off.id}">🗑️ حذف نهائياً</button>
+        <button type="button" class="off-act-btn btn-delete" data-act="delete" data-id="${off.id}">🗑️ حذف نهائياً</button>
       </div>
     `;
 
