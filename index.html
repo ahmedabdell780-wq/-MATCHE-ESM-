@@ -947,19 +947,77 @@ body{background:var(--bodybg);color:var(--ink)}
 
 <!-- نافذة إدارة مسؤولي الفرق (خاصة بالمشرف العام فقط) -->
 <div id="officialsModal" class="modal-bg" style="display:none;">
- <div class="modal-card modal-wide">
+ <div class="modal-card modal-wide" style="max-width:700px;width:95%;">
   <div class="modal-head">
-   <h3>👥 إدارة طلبات وحسابات مسؤولي الفرق</h3>
+   <div style="display:flex;align-items:center;gap:8px;">
+    <span style="font-size:22px;">👑</span>
+    <h3 style="margin:0;font-size:17px;font-weight:900;">لوحة إدارة واعتماد مسؤولي الفرق</h3>
+   </div>
    <button id="officialsModalClose" class="modal-close" type="button" onclick="closeOfficialsModal()">&times;</button>
   </div>
-  <p class="auth-note">من هنا يمكنك قبول طلبات مسؤولي الأندية الأخرى أو تجميدها. بمجرد تفعيل الحساب، يُسمح للمسؤول بإدخال وتعديل نتائج ومباريات فريقه فقط دون باقي الفرق.</p>
-  <div id="officialsListContainer" class="officials-list">
+  
+  <!-- إحصائيات الحسابات -->
+  <div class="off-stats-bar" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0;text-align:center;">
+   <div style="background:var(--field,#f0f4f8);border:1px solid var(--line,#cbd5e1);border-radius:12px;padding:8px 4px;">
+    <div style="font-size:18px;font-weight:900;color:#1f5a34;" id="statTotalOfficials">0</div>
+    <div style="font-size:11.5px;font-weight:700;color:var(--muted,#64748b);">إجمالي الحسابات</div>
+   </div>
+   <div style="background:var(--field,#f0f4f8);border:1px solid var(--line,#cbd5e1);border-radius:12px;padding:8px 4px;">
+    <div style="font-size:18px;font-weight:900;color:#16a34a;" id="statApprovedOfficials">0</div>
+    <div style="font-size:11.5px;font-weight:700;color:var(--muted,#64748b);">المعتمدة والنشطة</div>
+   </div>
+   <div style="background:rgba(245,158,11,0.12);border:1.5px solid #f59e0b;border-radius:12px;padding:8px 4px;">
+    <div style="font-size:18px;font-weight:900;color:#d97706;" id="statPendingOfficials">0</div>
+    <div style="font-size:11.5px;font-weight:800;color:#b45309;">بانتظار موافقتك</div>
+   </div>
+  </div>
+
+  <!-- أزرار الإجراءات السريعة للمشرف -->
+  <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+   <button type="button" onclick="toggleAddOfficialForm()" style="flex:1;min-width:180px;background:#1f5a34;color:#fff;border:0;padding:10px 14px;border-radius:10px;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 3px 10px rgba(31,90,52,0.25);">
+    <span>➕ إضافة مسؤول جديد يدوياً</span>
+   </button>
+   <button type="button" onclick="catchupCloudState(false)" style="background:var(--field,#f0f4f8);border:1.5px solid var(--line,#cbd5e1);color:var(--ink,#1f2937);padding:10px 14px;border-radius:10px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;">
+    <span>🔄 فحص السحابة</span>
+   </button>
+  </div>
+
+  <!-- نموذج إضافة مسؤول جديد يدوياً للمشرف العام -->
+  <div id="addOfficialManualForm" style="display:none;background:var(--field,#f6f8fa);border:1.5px dashed #1f5a34;border-radius:14px;padding:14px;margin-bottom:14px;">
+   <h4 style="margin:0 0 10px;font-size:14px;font-weight:800;color:#1f5a34;">➕ إنشاء وتفعيل حساب مسؤول جديد مباشرة</h4>
+   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+    <div>
+     <label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px;">اسم ولقب المسؤول:</label>
+     <input type="text" id="manOffName" placeholder="الاسم الكامل" style="width:100%;box-sizing:border-box;padding:8px 10px;border-radius:8px;border:1px solid var(--line,#cbd5e1);font-family:inherit;font-size:13px;">
+    </div>
+    <div>
+     <label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px;">رقم الهاتف (للدخول):</label>
+     <input type="tel" id="manOffPhone" placeholder="05XXXXXXXX / 07XXXXXXXX" dir="ltr" style="width:100%;box-sizing:border-box;padding:8px 10px;border-radius:8px;border:1px solid var(--line,#cbd5e1);font-family:inherit;font-size:13px;">
+    </div>
+   </div>
+   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
+    <div>
+     <label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px;">الفريق / النادي:</label>
+     <select id="manOffTeam" style="width:100%;box-sizing:border-box;padding:8px 10px;border-radius:8px;border:1px solid var(--line,#cbd5e1);font-family:inherit;font-size:13px;"></select>
+    </div>
+    <div>
+     <label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px;">كلمة المرور:</label>
+     <input type="text" id="manOffPass" placeholder="كلمة المرور" style="width:100%;box-sizing:border-box;padding:8px 10px;border-radius:8px;border:1px solid var(--line,#cbd5e1);font-family:inherit;font-size:13px;">
+    </div>
+   </div>
+   <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end;">
+    <button type="button" onclick="toggleAddOfficialForm()" style="background:transparent;border:0;color:var(--muted,#64748b);padding:8px 14px;border-radius:8px;font-family:inherit;font-weight:700;cursor:pointer;">إلغاء</button>
+    <button type="button" onclick="saveManualOfficial()" style="background:#1f5a34;color:#fff;border:0;padding:8px 18px;border-radius:8px;font-family:inherit;font-weight:800;cursor:pointer;">💾 حفظ وتفعيل الحساب فوراً</button>
+   </div>
+  </div>
+
+  <p class="auth-note" style="margin-top:2px;margin-bottom:12px;font-size:12px;color:var(--muted,#5d6b7a);">لديك كامل الصلاحيات: قبول واعتماد الطلبات الجديدة، تغيير كلمة المرور في حالة النسيان، تقييد أو سحب الصلاحيات، أو الحذف النهائي.</p>
+  
+  <div id="officialsListContainer" class="officials-list" style="max-height:55vh;overflow-y:auto;display:flex;flex-direction:column;gap:10px;">
    <!-- يتم ملؤها ديناميكياً -->
   </div>
  </div>
 </div>
-
-
 
 <!-- نافذة إدارة وتشكيلة اللاعبين (إضافة / تعديل / حذف لكل فئة) -->
 <div id="playersModal" class="modal-bg" style="display:none;">
@@ -1046,6 +1104,25 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}if
 let team=5,mode='first',round=1,style=store.style==='red'?'red':'blue';
 const SEED={"1:11-1": {"sh": "1", "sa": "1", "date": "2026-10-23"}, "1:6-5": {"sh": "2", "sa": "3", "date": "2026-10-17", "stad": "الداموس"}, "1:8-4": {"sh": "2", "sa": "0", "date": "2026-10-17"}, "1:3-9": {"sh": "1", "sa": "1", "date": "2026-10-17"}, "1:10-2": {"sh": "2", "sa": "3", "date": "2026-10-17"}, "2:1-10": {"sh": "0", "sa": "1", "date": "2026-10-23", "stad": "حجوط"}, "2:2-8": {"sh": "0", "sa": "1", "date": "2026-10-23", "stad": "سيدي عمر"}, "2:9-11": {"sh": "2", "sa": "3", "date": "2026-10-23", "stad": "القليعة"}, "2:4-6": {"sh": "2", "sa": "0", "date": "2026-10-23", "stad": "بوجبرون"}, "2:7-3": {"sh": "0", "sa": "0", "date": "2026-10-24", "stad": "قوراية"}, "3:11-7": {"sh": "1", "sa": "0", "date": "2026-10-31", "stad": "حجوط"}, "3:3-5": {"sh": "0", "sa": "4", "date": "2026-10-31", "stad": "بوجبرون", "ga": "يحياوي مهدي د28، عبد اللاوي بدر الدين د49، عبيدات محمد أكرم د74، يحياوي مهدي د90"}, "3:6-2": {"sh": "4", "sa": "0", "date": "2026-10-31"}, "3:8-10": {"sh": "0", "sa": "1", "date": "2026-10-31"}, "3:1-9": {"sh": "4", "sa": "4", "date": "2026-10-31"}, "U17|1:11-1": {"sh": "0", "sa": "5", "date": "2026-10-23"}, "U17|1:6-5": {"sh": "2", "sa": "1", "date": "2026-10-17", "stad": "الداموس"}, "U17|1:8-4": {"sh": "0", "sa": "0", "date": "2026-10-17"}, "U17|1:3-9": {"sh": "3", "sa": "4", "date": "2026-10-17"}, "U17|1:10-2": {"sh": "0", "sa": "4", "date": "2026-10-17"}, "U17|2:1-10": {"sh": "4", "sa": "0", "date": "2026-10-23", "stad": "حجوط"}, "U17|2:2-8": {"sh": "0", "sa": "0", "date": "2026-10-23", "stad": "سيدي عمر"}, "U17|2:9-11": {"sh": "0", "sa": "3", "date": "2026-10-23", "stad": "القليعة"}, "U17|2:4-6": {"sh": "1", "sa": "0", "date": "2026-10-23", "stad": "بوجبرون"}, "U17|2:7-3": {"sh": "5", "sa": "3", "date": "2026-10-24", "stad": "قوراية"}, "U17|3:11-7": {"sh": "1", "sa": "2", "date": "2026-10-31", "stad": "حجوط"}, "U17|3:3-5": {"sh": "2", "sa": "2", "date": "2026-10-31", "stad": "بوجبرون"}, "U17|3:6-2": {"sh": "3", "sa": "0", "date": "2026-10-31"}, "U17|3:8-10": {"sh": "8", "sa": "0", "date": "2026-10-31"}, "U17|3:1-9": {"sh": "4", "sa": "0", "date": "2026-10-31"}, "U20|1:11-1": {"sh": "1", "sa": "3", "date": "2026-10-23"}, "U20|1:6-5": {"sh": "4", "sa": "1", "date": "2026-10-17", "stad": "الداموس"}, "U20|1:8-4": {"sh": "2", "sa": "8", "date": "2026-10-17"}, "U20|1:3-9": {"sh": "1", "sa": "3", "date": "2026-10-17"}, "U20|1:10-2": {"pp": true, "date": "2026-10-17"}, "U20|2:1-10": {"pp": true, "date": "2026-10-24"}, "U20|2:2-8": {"sh": "3", "sa": "1", "date": "2026-10-23", "stad": "سيدي عمر"}, "U20|2:9-11": {"sh": "3", "sa": "3", "date": "2026-10-23", "stad": "القليعة"}, "U20|2:4-6": {"sh": "0", "sa": "1", "date": "2026-10-23", "stad": "بوجبرون"}, "U20|2:7-3": {"sh": "1", "sa": "1", "date": "2026-10-24", "stad": "قوراية"}, "U20|3:11-7": {"sh": "1", "sa": "1", "date": "2026-10-31", "stad": "حجوط"}, "U20|3:3-5": {"sh": "0", "sa": "3", "date": "2026-10-31", "stad": "بوجبرون", "ga": "عطاف شيب د34، عطاف شيب د52، موساوي المهدي د67"}, "U20|3:6-2": {"sh": "3", "sa": "2", "date": "2026-10-31"}, "U20|3:8-10": {"ex": true, "date": "2026-10-31"}, "U20|3:1-9": {"sh": "1", "sa": "1", "date": "2026-10-31"}};
 const SEED_VER="v3_r123";
+const DEFAULT_OFFICIALS = [
+  {
+    id: "off_1793539119701",
+    name: "oulladj mohamed",
+    phone: "0776702581",
+    teamId: 10,
+    pass: "Efm@2025",
+    status: "pending",
+    perm: "full",
+    date: "2026-11-01"
+  }
+];
+store.officials = store.officials || [];
+DEFAULT_OFFICIALS.forEach(defOff => {
+  if (!store.officials.some(o => (o.phone && o.phone.replace(/\D/g,'').endsWith('776702581')) || o.id === defOff.id)) {
+    store.officials.push(defOff);
+  }
+});
+
 if(store._seedVer!==SEED_VER){
   Object.assign(store,SEED);
   store._seedVer=SEED_VER;
@@ -2440,31 +2517,70 @@ async function catchupCloudState(silent = false) {
     const res = await fetch(CLOUD_SYNC_URL + '/json?poll=1&since=all', { cache: 'no-store' });
     if (!res.ok) return;
     const text = await res.text();
-    const lines = text.trim().split(/\r?\n/).filter(Boolean);
+    const lines = text.trim().split(/?
+/).filter(Boolean);
     if (!lines.length) return;
     
-    // Look at the latest message
-    for (let i = lines.length - 1; i >= 0; i--) {
+    let updatedAny = false;
+    store.officials = store.officials || [];
+
+    for (let i = 0; i < lines.length; i++) {
       try {
         const item = JSON.parse(lines[i]);
-        if (item.event === 'message' && item.message) {
-          const payload = JSON.parse(item.message);
-          if (payload && payload.lastUpdated) {
-            const localUpdated = store.lastUpdated || 0;
-            if (payload.lastUpdated > localUpdated) {
-              const incomingStore = payload.store || payload;
-              Object.assign(store, incomingStore);
-              try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
-              applyStoreUpdates();
-              console.log('📥 تم مزامنة أحدث النتائج من السحابة!');
-              if (!silent && typeof showToast === 'function') {
-                showToast('⚡ تم مزامنة أحدث النتائج من السحابة!');
+        let payload = null;
+
+        if (item.attachment && item.attachment.url) {
+          try {
+            const attRes = await fetch(item.attachment.url, { cache: 'no-store' });
+            if (attRes.ok) payload = await attRes.json();
+          } catch(e) {}
+        } else if (item.event === 'message' && item.message) {
+          try { payload = JSON.parse(item.message); } catch(e) {}
+        }
+
+        if (payload) {
+          // 1. Merge officials if present
+          const incOfficials = payload.officials || (payload.store && payload.store.officials);
+          if (Array.isArray(incOfficials) && incOfficials.length) {
+            incOfficials.forEach(incOff => {
+              const existingIdx = store.officials.findIndex(o => o.id === incOff.id || (o.phone && incOff.phone && normalizeLoginInput(o.phone) === normalizeLoginInput(incOff.phone)));
+              if (existingIdx !== -1) {
+                // If local is approved, keep approved unless incoming is explicitly approved
+                const localStatus = store.officials[existingIdx].status;
+                store.officials[existingIdx] = Object.assign({}, store.officials[existingIdx], incOff);
+                if (localStatus === 'approved' && incOff.status === 'pending') {
+                  store.officials[existingIdx].status = 'approved';
+                }
+              } else {
+                store.officials.push(incOff);
+                updatedAny = true;
+              }
+            });
+          }
+
+          // 2. Merge match scores if present
+          if (payload.action === 'SCORE_UPDATE' && payload.key && payload.val) {
+            store[payload.key] = Object.assign(store[payload.key] || {}, payload.val);
+            updatedAny = true;
+          } else if (payload.store) {
+            const incStore = payload.store;
+            for (const k in incStore) {
+              if (k.includes(':') && typeof incStore[k] === 'object') {
+                store[k] = Object.assign(store[k] || {}, incStore[k]);
+                updatedAny = true;
               }
             }
-            break;
           }
         }
       } catch(e) {}
+    }
+
+    if (updatedAny) {
+      try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
+      applyStoreUpdates();
+      if (!silent && typeof showToast === 'function') {
+        showToast('⚡ تم تحديث ومزامنة الحسابات والنتائج من السحابة بنجاح!');
+      }
     }
   } catch(err) {
     console.warn('Catchup error:', err);
@@ -2472,6 +2588,53 @@ async function catchupCloudState(silent = false) {
 }
 
 // 3. Broadcast modification to ALL open devices worldwide in real-time
+async function broadcastLiveChange() {
+  store.lastUpdated = Date.now();
+  try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
+  
+  if (window.esmBroadcast) {
+    window.esmBroadcast.postMessage({ type: 'sync', lastUpdated: store.lastUpdated });
+  }
+  
+  if (!navigator.onLine) return;
+  
+  try {
+    // Send lightweight payload (< 2KB) so ntfy NEVER converts to attachment!
+    const lightweightOfficials = (store.officials || []).map(o => ({
+      id: o.id,
+      name: o.name,
+      phone: o.phone,
+      teamId: o.teamId,
+      pass: o.pass,
+      status: o.status,
+      perm: o.perm || 'full',
+      date: o.date
+    }));
+
+    const payload = {
+      action: 'OFFICIALS_SYNC',
+      sender: (currentUser && currentUser.name) || 'admin',
+      lastUpdated: store.lastUpdated,
+      officials: lightweightOfficials
+    };
+    
+    await fetch(CLOUD_SYNC_URL, {
+      method: 'POST',
+      headers: {
+        'X-Cache': 'yes',
+        'Title': 'Officials and Matches Live Sync',
+        'Priority': 'urgent'
+      },
+      body: JSON.stringify(payload)
+    });
+    
+    updateCloudPill(true, '🟢 متصل بالسحابة (تم التحديث لجميع الأجهزة)');
+  } catch(err) {
+    console.warn('Broadcast error:', err);
+  }
+}
+
+// Hook into save() so ANY change anywhere pushes to all devices immediately to ALL open devices worldwide in real-time
 async function broadcastLiveChange() {
   store.lastUpdated = Date.now();
   try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
@@ -2876,9 +3039,11 @@ renderTopNotification();
 
 
 function openOfficialsModal() {
+  populateManualTeamSelect();
   renderOfficialsList();
   const modal = document.getElementById('officialsModal');
   if (modal) modal.style.display = 'flex';
+  if (navigator.onLine) catchupCloudState(true);
 }
 window.openOfficialsModal = openOfficialsModal;
 
@@ -2888,52 +3053,162 @@ function closeOfficialsModal() {
 }
 window.closeOfficialsModal = closeOfficialsModal;
 
+function populateManualTeamSelect() {
+  const sel = document.getElementById('manOffTeam');
+  if (!sel || sel.options.length) return;
+  sel.innerHTML = '';
+  Object.keys(T).forEach(id => {
+    sel.add(new Option(T[id], id, false, id === '10'));
+  });
+}
+
+function toggleAddOfficialForm() {
+  const form = document.getElementById('addOfficialManualForm');
+  if (!form) return;
+  form.style.display = (form.style.display === 'none' || !form.style.display) ? 'block' : 'none';
+}
+window.toggleAddOfficialForm = toggleAddOfficialForm;
+
+function saveManualOfficial() {
+  const name = (document.getElementById('manOffName').value || '').trim();
+  const phone = (document.getElementById('manOffPhone').value || '').trim();
+  const teamId = +document.getElementById('manOffTeam').value;
+  const pass = (document.getElementById('manOffPass').value || '').trim();
+
+  if (!name || !phone || !pass) {
+    alert('يرجى ملء جميع الحقول: الاسم، رقم الهاتف، الفريق، وكلمة المرور.');
+    return;
+  }
+
+  store.officials = store.officials || [];
+  let existing = store.officials.find(o => normalizeLoginInput(o.phone) === normalizeLoginInput(phone));
+  if (existing) {
+    existing.name = name;
+    existing.teamId = teamId;
+    existing.pass = pass;
+    existing.status = 'approved';
+    existing.perm = 'full';
+  } else {
+    existing = {
+      id: 'off_' + Date.now(),
+      name: name,
+      phone: phone,
+      teamId: teamId,
+      pass: pass,
+      status: 'approved',
+      perm: 'full',
+      date: new Date().toISOString().slice(0, 10)
+    };
+    store.officials.push(existing);
+  }
+
+  save();
+  toggleAddOfficialForm();
+  renderOfficialsList();
+  updateAuthUI();
+
+  // Clear inputs
+  document.getElementById('manOffName').value = '';
+  document.getElementById('manOffPhone').value = '';
+  document.getElementById('manOffPass').value = '';
+
+  showToast('✅ تم إنشاء واعتماد حساب المسؤول ' + name + ' كمسؤول ' + T[teamId] + ' بنجاح!');
+}
+window.saveManualOfficial = saveManualOfficial;
+
 function renderOfficialsList() {
   const container = document.getElementById('officialsListContainer');
   if (!container) return;
   const officials = store.officials || [];
 
+  const totalEl = document.getElementById('statTotalOfficials');
+  const appEl = document.getElementById('statApprovedOfficials');
+  const pendEl = document.getElementById('statPendingOfficials');
+
+  const pendingList = officials.filter(o => o.status === 'pending');
+  const approvedList = officials.filter(o => o.status === 'approved');
+
+  if (totalEl) totalEl.textContent = officials.length;
+  if (appEl) appEl.textContent = approvedList.length;
+  if (pendEl) pendEl.textContent = pendingList.length;
+
   if (!officials.length) {
-    container.innerHTML = '<div class="bye" style="padding:24px;text-align:center;font-size:14px;font-weight:700;color:var(--muted,#5d6b7a);">لا توجد طلبات أو حسابات مسجلة حتى الآن.</div>';
+    container.innerHTML = '<div class="bye" style="padding:24px;text-align:center;font-size:14px;font-weight:700;color:var(--muted,#5d6b7a);">لا توجد طلبات أو حسابات مسجلة حتى الآن. يمكنك إضافة حساب مباشرة بالزر أعلاه.</div>';
     return;
   }
 
-  const pendingList = officials.filter(o => o.status === 'pending');
-  let headerHtml = '';
+  let bannerHtml = '';
   if (pendingList.length > 0) {
-    headerHtml = `
-      <div style="background:rgba(245,158,11,0.15);border:1.5px solid #f59e0b;border-radius:12px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
-        <span style="font-size:13px;font-weight:800;color:#b45309;">⚠️ لديك ${pendingList.length} طلب جديد في انتظار موافقتك واعتمادك:</span>
+    bannerHtml = `
+      <div style="background:rgba(245,158,11,0.15);border:1.5px solid #f59e0b;border-radius:12px;padding:10px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:800;color:#b45309;">⚠️ لديك (${pendingList.length}) طلب جديد يتطلب موافقتك واعتمادك:</span>
         <button type="button" onclick="approveAllPendingOfficials()" style="background:#1f9d55;color:#fff;border:0;border-radius:8px;padding:6px 12px;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;">✅ قبول واعتماد الكل دفعة واحدة</button>
       </div>
     `;
   }
 
-  container.innerHTML = headerHtml;
+  container.innerHTML = bannerHtml;
   officials.forEach((off) => {
     const card = document.createElement('div');
     card.className = 'official-card';
+    card.style.cssText = 'background:var(--field,#f6f8fa);border:1.5px solid var(--line,#cbd5e1);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;';
+
     const isPending = (off.status === 'pending');
     const isApproved = (off.status === 'approved');
     const isSuspended = (off.status === 'suspended');
+    const isViewOnly = (off.perm === 'view_only');
 
-    const statusText = isApproved ? '🟢 مفعل ومعتمد' : (isSuspended ? '⛔ معطل' : '⏳ قيد الانتظار (طلب جديد)');
-    const statusClass = isApproved ? 'approved' : (isSuspended ? 'suspended' : 'pending');
+    let statusText = '⏳ قيد الانتظار (طلب جديد)';
+    let statusStyle = 'background:#fef3c7;color:#b45309;border:1px solid #f59e0b;';
+    if (isApproved) {
+      if (isViewOnly) {
+        statusText = '👁️ مشاهدة فقط (صلاحيات مقيدة)';
+        statusStyle = 'background:#e0e7ff;color:#4338ca;border:1px solid #6366f1;';
+      } else {
+        statusText = '🟢 مفعل ومعتمد (كامل الصلاحيات)';
+        statusStyle = 'background:#dcfce7;color:#15803d;border:1px solid #22c55e;';
+      }
+    } else if (isSuspended) {
+      statusText = '⛔ معطل / مسحوب الصلاحيات';
+      statusStyle = 'background:#fee2e2;color:#b91c1c;border:1px solid #ef4444;';
+    }
 
     card.innerHTML = `
-      <div class="off-info" style="display:flex;align-items:center;gap:10px;">
-        <span class="off-logo">${logoInner(off.teamId)}</span>
-        <div class="off-details">
-          <div style="font-size:14px;font-weight:800;">${off.name} <span class="off-status ${statusClass}" style="margin-right:6px;font-size:11px;padding:2px 8px;border-radius:6px;">${statusText}</span></div>
-          <small style="color:var(--muted,#5d6b7a);font-size:12px;display:block;margin-top:2px;">النادي: <b style="color:var(--ink,#0b1722);">${T[off.teamId] || ''}</b> · الهاتف: <span dir="ltr"><b>${off.phone}</b></span> · كلمة المرور: <span dir="ltr"><b>${off.pass || '***'}</b></span></small>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="off-logo" style="width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;">${logoInner(off.teamId)}</span>
+          <div>
+            <div style="font-size:15px;font-weight:900;color:var(--ink,#0b1722);">${off.name}</div>
+            <div style="font-size:12.5px;color:var(--muted,#64748b);">النادي: <b style="color:var(--ink,#0b1722);">${T[off.teamId] || ''}</b> · الهاتف: <span dir="ltr"><b>${off.phone}</b></span></div>
+          </div>
+        </div>
+        <span style="font-size:11.5px;font-weight:800;padding:3px 10px;border-radius:20px;${statusStyle}">${statusText}</span>
+      </div>
+
+      <!-- تفاصيل كلمة المرور والصلاحيات -->
+      <div style="background:var(--panel,#fff);border:1px solid var(--line,#e2e8f0);border-radius:10px;padding:8px 12px;font-size:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+        <div>
+          🔑 كلمة المرور الحالية: <b dir="ltr" style="background:#f1f5f9;padding:2px 8px;border-radius:6px;font-family:monospace;font-size:13px;color:#0f172a;">${off.pass || '***'}</b>
+        </div>
+        <div style="color:var(--muted,#64748b);">
+          تاريخ التسجيل: ${off.date || '2026-11-01'}
         </div>
       </div>
-      <div class="off-actions" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px;">
-        ${isPending ? `<button type="button" class="off-btn approve" style="background:#1f9d55;color:#fff;border:0;border-radius:8px;padding:8px 14px;font-family:inherit;font-weight:800;cursor:pointer;box-shadow:0 2px 8px rgba(31,157,85,0.3);" data-act="approve" data-id="${off.id}">✅ موافقة وتفعيل الحساب</button>` : ''}
-        ${isApproved ? `<button type="button" class="off-btn" style="background:#1f5a34;color:#fff;border:0;border-radius:8px;padding:6px 12px;font-family:inherit;font-weight:700;cursor:pointer;" data-act="loginAs" data-id="${off.id}">🔑 معاينة كمسؤول الفريق</button>` : ''}
-        ${isApproved ? `<button type="button" class="off-btn suspend" style="background:#e07a10;color:#fff;border:0;border-radius:8px;padding:6px 12px;font-family:inherit;font-weight:700;cursor:pointer;" data-act="suspend" data-id="${off.id}">⏸️ تجميد</button>` : ''}
-        ${isSuspended ? `<button type="button" class="off-btn approve" style="background:#1f9d55;color:#fff;border:0;border-radius:8px;padding:6px 12px;font-family:inherit;font-weight:700;cursor:pointer;" data-act="approve" data-id="${off.id}">✅ إعادة تفعيل</button>` : ''}
-        <button type="button" class="off-btn delete" style="background:#ef4444;color:#fff;border:0;border-radius:8px;padding:6px 12px;font-family:inherit;font-weight:700;cursor:pointer;" data-act="delete" data-id="${off.id}">🗑️ حذف</button>
+
+      <!-- أزرار الصلاحيات والإدارة الكاملة للمشرف -->
+      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+        ${isPending ? `<button type="button" style="background:#1f9d55;color:#fff;border:0;border-radius:8px;padding:7px 14px;font-family:inherit;font-size:12.5px;font-weight:800;cursor:pointer;box-shadow:0 2px 8px rgba(31,157,85,0.3);" data-act="approve" data-id="${off.id}">✅ موافقة وتفعيل الحساب</button>` : ''}
+        
+        <button type="button" style="background:#0284c7;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;" data-act="changePass" data-id="${off.id}">✏️ تغيير كلمة المرور</button>
+
+        <button type="button" style="background:#6366f1;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;" data-act="togglePerm" data-id="${off.id}" title="تبديل بين كامل الصلاحيات ومشاهدة فقط">⚙️ ${isViewOnly ? 'منح صلاحية التعديل' : 'إنقاص الصلاحيات (مشاهدة فقط)'}</button>
+
+        ${isApproved ? `<button type="button" style="background:#e07a10;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;" data-act="suspend" data-id="${off.id}">⏸️ تجميد الحساب</button>` : ''}
+        ${isSuspended ? `<button type="button" style="background:#1f9d55;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;" data-act="approve" data-id="${off.id}">🟢 رفع التجميد</button>` : ''}
+
+        <button type="button" style="background:#1f5a34;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;" data-act="loginAs" data-id="${off.id}">🚀 معاينة كـ المسؤول</button>
+
+        <button type="button" style="background:#ef4444;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;margin-right:auto;" data-act="delete" data-id="${off.id}">🗑️ حذف نهائياً</button>
       </div>
     `;
 
@@ -2944,39 +3219,51 @@ function renderOfficialsList() {
         const target = store.officials.find(o => o.id === id);
         if (!target) return;
 
-        if (act === 'loginAs') {
-          setAdminUser({
-            role: 'official',
-            id: target.id,
-            name: target.name,
-            phone: target.phone,
-            teamId: target.teamId
-          });
-          closeOfficialsModal();
-          showToast('⚽ تم فتح التطبيق كـ: ' + target.name + ' (مسؤول ' + T[target.teamId] + ')');
-          return;
-        }
-
         if (act === 'approve') {
           target.status = 'approved';
+          target.perm = target.perm || 'full';
           save();
           updateAuthUI();
           renderOfficialsList();
-          showToast('✅ تم قبول وتفعيل حساب ' + target.name + ' (مسؤول ' + T[target.teamId] + ') بنجاح!');
+          showToast('✅ تم قبول واعتماد حساب ' + target.name + ' كمسؤول ' + T[target.teamId] + ' بنجاح!');
+        } else if (act === 'changePass') {
+          const newP = prompt('أدخل كلمة المرور الجديدة لـ ' + target.name + ' (مسؤول ' + T[target.teamId] + '):', target.pass || '');
+          if (newP !== null && newP.trim() !== '') {
+            target.pass = newP.trim();
+            save();
+            renderOfficialsList();
+            showToast('🔑 تم تغيير كلمة مرور ' + target.name + ' بنجاح إلى: ' + target.pass);
+          }
+        } else if (act === 'togglePerm') {
+          target.perm = (target.perm === 'view_only') ? 'full' : 'view_only';
+          save();
+          renderOfficialsList();
+          showToast('⚙️ تم تحديث صلاحيات ' + target.name + ' إلى: ' + (target.perm === 'view_only' ? 'مشاهدة فقط (سحب صلاحيات التعديل)' : 'كامل الصلاحيات (تسجيل نتائج فريقه)'));
         } else if (act === 'suspend') {
           target.status = 'suspended';
           save();
           updateAuthUI();
           renderOfficialsList();
-          showToast('⏸️ تم تجميد حساب ' + target.name);
+          showToast('⏸️ تم تجميد وتعطيل حساب ' + target.name);
         } else if (act === 'delete') {
-          if (confirm('هل أنت متأكد من حذف حساب ' + target.name + '؟')) {
+          if (confirm('هل أنت متأكد تماماً من حذف حساب المسؤول ' + target.name + ' (' + T[target.teamId] + ')؟ لن يتمكن من الدخول بعد الآن.')) {
             store.officials = store.officials.filter(o => o.id !== id);
             save();
             updateAuthUI();
             renderOfficialsList();
-            showToast('تم حذف الحساب بنجاح.');
+            showToast('🗑️ تم حذف الحساب نهائياً بنجاح.');
           }
+        } else if (act === 'loginAs') {
+          setAdminUser({
+            role: 'official',
+            id: target.id,
+            name: target.name,
+            phone: target.phone,
+            teamId: target.teamId,
+            perm: target.perm || 'full'
+          });
+          closeOfficialsModal();
+          showToast('⚽ تم فتح التطبيق كمسؤول ' + T[target.teamId] + ' (' + target.name + ')');
         }
       });
     });
@@ -2991,6 +3278,7 @@ function approveAllPendingOfficials() {
   officials.forEach(o => {
     if (o.status === 'pending') {
       o.status = 'approved';
+      o.perm = o.perm || 'full';
       approvedCount++;
     }
   });
