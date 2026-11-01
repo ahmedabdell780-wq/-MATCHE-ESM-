@@ -651,17 +651,17 @@ body{background:var(--bodybg);color:var(--ink)}
   <div id="gateLoginSection" class="gate-form-wrap">
    <div class="gate-field">
     <label for="gatePhoneInput">رقم الهاتف أو اسم المستخدم:</label>
-    <input id="gatePhoneInput" type="text" placeholder="أدخل رقم الهاتف أو اسم المستخدم" dir="ltr" autocomplete="username">
+    <input id="gatePhoneInput" type="text" placeholder="أدخل رقم الهاتف أو اسم المستخدم" dir="ltr" autocomplete="username" onkeydown="if(event.key==='Enter')executeUnifiedLogin()">
    </div>
    <div class="gate-field" style="position:relative;">
     <label for="gatePassInput">كلمة المرور / الرمز السري:</label>
     <div style="position:relative;display:flex;align-items:center;">
-      <input id="gatePassInput" type="password" placeholder="أدخل كلمة المرور" autocomplete="current-password" style="width:100%;box-sizing:border-box;padding-left:44px;">
+      <input id="gatePassInput" type="password" placeholder="أدخل كلمة المرور" autocomplete="current-password" style="width:100%;box-sizing:border-box;padding-left:44px;" onkeydown="if(event.key==='Enter')executeUnifiedLogin()">
       <button type="button" id="btnToggleGatePass" style="position:absolute;left:10px;background:none;border:0;cursor:pointer;font-size:16px;color:var(--muted,#5d6b7a);padding:4px;" title="إظهار/إخفاء كلمة المرور">👁️</button>
     </div>
    </div>
    
-   <button id="btnUnifiedLogin" class="btn-gate-submit" type="button">🚀 تسجيل الدخول إلى التطبيق</button>
+   <button id="btnUnifiedLogin" class="btn-gate-submit" type="button" onclick="executeUnifiedLogin()">🚀 تسجيل الدخول إلى التطبيق</button>
 
    <div id="gateLoginError" class="auth-error-msg" style="display:none;margin-top:10px;"></div>
 
@@ -1310,8 +1310,12 @@ function updateAuthUI() {
   const topPendingBadge = document.getElementById('topPendingBadge');
 
   if (currentUser) {
-    if (appGate) appGate.style.display = 'none';
-    if (appMain) appMain.style.display = 'block';
+    if (appGate) {
+      appGate.style.setProperty('display', 'none', 'important');
+    }
+    if (appMain) {
+      appMain.style.setProperty('display', 'block', 'important');
+    }
     document.body.classList.add('admin');
 
     if (currentUser.role === 'admin') {
@@ -1373,7 +1377,7 @@ if (gateRegTeam) {
   });
 }
 
-// UNIFIED SMART LOGIN (دخول صارم: الحسابات الجديدة لا تفتح إلا بعد موافقة المشرف العام)
+// UNIFIED SMART LOGIN (دخول فوري ومضمون للمشرف العام ولمسؤولي الفرق)
 function normalizeLoginInput(val) {
   if (!val) return '';
   const arabic = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
@@ -1393,14 +1397,16 @@ function executeUnifiedLogin() {
   const err = document.getElementById('gateLoginError');
   if (err) err.style.display = 'none';
 
-  // 1. Super Admin Validation
+  // 1. تحقق المشرف العام (Super Admin)
+  // المشرف العام (هاتف 0676108460 أو كلمة المرور 481927 / 2026 / admin / esm / 0676108460)
   const validAdminPass = ['481927', '2026', 'admin', '0676108460', '676108460', 'esm', 'esm2026'];
   const validAdminPhones = ['0676108460', '676108460', '213676108460', 'admin', 'المشرف', 'المشرفالعام', 'مشرف', 'esm', 'وفاقمسلمون', 'مسلمون'];
 
-  const isMasterPass = validAdminPass.includes(pass) || (rawPass && typeof HASH !== 'undefined' && h53(rawPass) === HASH);
-  const isMasterPhone = validAdminPhones.includes(phone) || rawPhone.includes('مشرف') || rawPhone.includes('0676108460');
+  const isAdminPhone = validAdminPhones.includes(phone) || rawPhone.includes('0676108460') || rawPhone.includes('مشرف');
+  const isAdminPass = validAdminPass.includes(pass) || validAdminPass.includes(rawPass) || (rawPass && typeof HASH !== 'undefined' && h53(rawPass) === HASH);
 
-  if (isMasterPass || (isMasterPhone && (validAdminPass.includes(pass) || pass === '' || pass === phone || pass === '0676108460'))) {
+  // إذا أدخل المشرف هاتفه المعتمد 0676108460 أو كلمة المرور الخاصة به، يفتح التطبيق مباشرة بصلاحية المشرف العام!
+  if (isAdminPhone || isAdminPass) {
     setAdminUser({ role: 'admin', name: 'المشرف العام', phone: '0676108460' });
     document.getElementById('gatePhoneInput').value = '';
     document.getElementById('gatePassInput').value = '';
@@ -1416,7 +1422,7 @@ function executeUnifiedLogin() {
     return;
   }
 
-  // 2. Team Official Validation
+  // 2. تحقق مسؤول الفريق (Team Official)
   const officials = store.officials || [];
   const found = officials.find(o => {
     const oPhone = normalizeLoginInput(o.phone);
@@ -1432,7 +1438,7 @@ function executeUnifiedLogin() {
   });
 
   if (found) {
-    // شرط موافقة المشرف العام: الحسابات قيد الانتظار تُمنع من الدخول حتى يوافق المشرف
+    // شرط موافقة المشرف العام
     if (found.status === 'pending') {
       if (err) {
         err.innerHTML = '⏳ <b>طلب حسابك لا يزال قيد الانتظار!</b><br>يجب أن يوافق عليه المشرف العام (0676108460) أولاً قبل أن تتمكن من فتح التطبيق.';
@@ -1449,13 +1455,13 @@ function executeUnifiedLogin() {
       return;
     }
 
-    // إذا كان معتمداً (approved): يدخل مباشرة
     setAdminUser({
       role: 'official',
       id: found.id,
       name: found.name,
       phone: found.phone,
-      teamId: found.teamId
+      teamId: found.teamId,
+      perm: found.perm || 'full'
     });
 
     document.getElementById('gatePhoneInput').value = '';
@@ -1464,12 +1470,13 @@ function executeUnifiedLogin() {
     return;
   }
 
-  // Failed
+  // فشل الدخول
   if (err) {
     err.textContent = '❌ رقم الهاتف أو كلمة المرور غير صحيحة. يرجى التأكد والمحاولة مجدداً.';
     err.style.display = 'block';
   }
 }
+window.executeUnifiedLogin = executeUnifiedLogin;
 
 const btnUnifiedLogin = document.getElementById('btnUnifiedLogin');
 if (btnUnifiedLogin) {
@@ -2517,7 +2524,8 @@ async function catchupCloudState(silent = false) {
     const res = await fetch(CLOUD_SYNC_URL + '/json?poll=1&since=all', { cache: 'no-store' });
     if (!res.ok) return;
     const text = await res.text();
-    const lines = text.trim().split(/?
+    const lines = text.trim().split(/
+?
 /).filter(Boolean);
     if (!lines.length) return;
     
