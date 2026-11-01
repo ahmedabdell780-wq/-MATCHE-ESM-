@@ -1682,19 +1682,43 @@ body.th-dark .off-item-sub { color: #94a3b8 !important; }
 
 </main>
 
-<!-- نافذة تأكيد تسجيل الحساب وإرسال طلب الاعتماد للمشرف العام عبر واتساب -->
+<!-- نافذة تأكيد تسجيل الحساب وإرسال طلب الاعتماد للمشرف العام عبر واتساب أو SMS أو الهاتف -->
 <div id="gateRegSuccessModal" class="modal-bg" style="display:none; z-index:999999;">
- <div class="modal-card" style="max-width:440px; background:#ffffff !important; color:#1e293b !important; text-align:center; padding:26px 22px; border-radius:22px; box-shadow:0 25px 50px rgba(0,0,0,0.4); border:2px solid #22c55e;">
-  <div style="font-size:52px; margin-bottom:8px;">🎉</div>
-  <h3 style="color:#15803d; font-size:22px; font-weight:800; margin-bottom:8px;">تم تسجيل طلب حسابك بنجاح!</h3>
-  <div id="gateRegSuccessDetails" style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:14px; padding:12px; margin-bottom:16px; text-align:right; font-size:14px; line-height:1.8; color:#166534;">
+ <div class="modal-card" style="max-width:440px; background:#ffffff !important; color:#1e293b !important; text-align:center; padding:26px 20px; border-radius:22px; box-shadow:0 25px 50px rgba(0,0,0,0.4); border:2px solid #22c55e;">
+  <div style="font-size:48px; margin-bottom:6px;">🎉</div>
+  <h3 style="color:#15803d; font-size:22px; font-weight:800; margin-bottom:6px;">تم تسجيل طلب حسابك بنجاح!</h3>
+  
+  <div id="gateRegSuccessDetails" style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:14px; padding:12px; margin-bottom:14px; text-align:right; font-size:14px; line-height:1.8; color:#166534;">
   </div>
-  <p style="font-size:14px; color:#334155 !important; font-weight:700; line-height:1.6; margin-bottom:18px;">
-   بقي خطوة واحدة: اضغط على الزر الأخضر أدناه لإرسال طلب الاعتماد مباشرة إلى <strong>واتساب المشرف العام (0676108460)</strong> لاعتماده وتفعيله فوراً بنقرة واحدة:
-  </p>
-  <a id="btnGateRegWhatsapp" href="#" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:10px; background:#25d366; color:#ffffff; padding:14px 18px; border-radius:12px; text-decoration:none; font-weight:800; font-size:16px; box-shadow:0 6px 16px rgba(37,211,102,0.4); margin-bottom:12px; transition:all 0.2s;">
-   <span style="font-size:24px;">💬</span> إرسال طلب الاعتماد لواتساب المشرف الآن
-  </a>
+
+  <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:10px; margin-bottom:14px; font-size:13px; color:#334155; line-height:1.6; font-weight:700;">
+   💡 تم حفظ طلبك سحابياً. لإشعار المشرف العام (<b dir="ltr">0676108460</b>) واعتماده فوراً، اختر الوسيلة المناسبة لك (واتساب، رسالة SMS، أو اتصال):
+  </div>
+
+  <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:14px;">
+   <!-- 1. واتساب -->
+   <a id="btnGateRegWhatsapp" href="#" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:8px; background:#25d366; color:#ffffff; padding:12px; border-radius:12px; text-decoration:none; font-weight:800; font-size:15px; box-shadow:0 4px 12px rgba(37,211,102,0.35);">
+    <span style="font-size:20px;">💬</span> إرسال طلب الاعتماد عبر واتساب
+   </a>
+
+   <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+    <!-- 2. رسالة SMS عادية -->
+    <a id="btnGateRegSms" href="#" style="display:flex; align-items:center; justify-content:center; gap:6px; background:#0284c7; color:#ffffff; padding:11px 8px; border-radius:10px; text-decoration:none; font-weight:800; font-size:13px; box-shadow:0 3px 8px rgba(2,132,199,0.3);">
+     <span style="font-size:16px;">📩</span> رسالة SMS عادية
+    </a>
+
+    <!-- 3. اتصال هاتفي مباشر -->
+    <a href="tel:0676108460" style="display:flex; align-items:center; justify-content:center; gap:6px; background:#059669; color:#ffffff; padding:11px 8px; border-radius:10px; text-decoration:none; font-weight:800; font-size:13px; box-shadow:0 3px 8px rgba(5,150,105,0.3);">
+     <span style="font-size:16px;">📞</span> اتصال هاتفي مباشر
+    </a>
+   </div>
+
+   <!-- 4. نسخ بيانات الطلب -->
+   <button type="button" onclick="copyApplicantRequestDetails()" style="display:flex; align-items:center; justify-content:center; gap:6px; background:#475569; color:#ffffff; border:none; padding:10px; border-radius:10px; font-weight:800; font-size:13px; cursor:pointer;">
+    <span style="font-size:16px;">📋</span> نسخ بيانات الطلب ورابط الاعتماد
+   </button>
+  </div>
+
   <button type="button" onclick="closeGateRegSuccessModal()" class="btn-cancel" style="width:100%; padding:10px; border-radius:10px; border:1px solid #cbd5e1; background:#f8fafc; font-size:14px; font-weight:bold; cursor:pointer;">
    إغلاق والعودة لتسجيل الدخول
   </button>
@@ -1720,20 +1744,44 @@ body.th-dark .off-item-sub { color: #94a3b8 !important; }
    </button>
   </div>
 
-  <div id="adminApprovalSuccess" style="display:none; margin-top:12px;">
-   <div style="background:#f0fdf4; border:1px solid #86efac; color:#15803d; border-radius:12px; padding:12px; font-weight:bold; margin-bottom:14px; font-size:15px;">
+  <div id="adminApprovalSuccess" style="display:none; margin-top:14px;">
+   <div style="background:#f0fdf4; border:1px solid #86efac; color:#15803d; border-radius:12px; padding:12px; font-weight:800; margin-bottom:12px; font-size:15px;">
     🎉 تم اعتماد وتفعيل الحساب بنجاح في المنظومة!
    </div>
-   <a id="btnAdminSendWhatsappSuccess" href="#" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:8px; background:#25d366; color:#ffffff; padding:12px 16px; border-radius:12px; text-decoration:none; font-weight:bold; font-size:15px; margin-bottom:12px;">
-    <span style="font-size:20px;">💬</span> إرسال تأكيد التفعيل للمسؤول على واتساب
-   </a>
-   <button type="button" onclick="closeAdminApprovalModal()" style="width:100%; padding:10px; border-radius:10px; border:1px solid #cbd5e1; background:#f1f5f9; font-weight:bold; cursor:pointer;">
+
+   <div style="background:#eff6ff; border:1px solid #bfdbfe; color:#1e40af; border-radius:10px; padding:10px; font-size:13px; font-weight:700; margin-bottom:12px; line-height:1.6;">
+    ✅ الحساب مفعل وجاهز للدخول فوراً في النظام حتى لو لم يملك المسؤول واتساب!
+    <br>اختر وسيلة إبلاغ المسؤول:
+   </div>
+
+   <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
+    <!-- 1. واتساب -->
+    <a id="btnAdminSendWhatsappSuccess" href="#" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:6px; background:#25d366; color:#ffffff; padding:11px 8px; border-radius:10px; text-decoration:none; font-weight:800; font-size:13px; box-shadow:0 3px 8px rgba(37,211,102,0.3);">
+     <span style="font-size:17px;">💬</span> عبر واتساب
+    </a>
+
+    <!-- 2. رسالة SMS عادية -->
+    <a id="btnAdminSendSmsSuccess" href="#" style="display:flex; align-items:center; justify-content:center; gap:6px; background:#0284c7; color:#ffffff; padding:11px 8px; border-radius:10px; text-decoration:none; font-weight:800; font-size:13px; box-shadow:0 3px 8px rgba(2,132,199,0.3);">
+     <span style="font-size:17px;">📩</span> رسالة SMS عادية
+    </a>
+
+    <!-- 3. اتصال هاتفي مباشر -->
+    <a id="btnAdminCallSuccess" href="#" style="display:flex; align-items:center; justify-content:center; gap:6px; background:#059669; color:#ffffff; padding:11px 8px; border-radius:10px; text-decoration:none; font-weight:800; font-size:13px; box-shadow:0 3px 8px rgba(5,150,105,0.3);">
+     <span style="font-size:17px;">📞</span> اتصال هاتفي
+    </a>
+
+    <!-- 4. نسخ رسالة وبيانات التفعيل -->
+    <button id="btnAdminCopySuccess" type="button" onclick="copyAdminActivationMessage()" style="display:flex; align-items:center; justify-content:center; gap:6px; background:#475569; color:#ffffff; border:none; padding:11px 8px; border-radius:10px; font-weight:800; font-size:13px; cursor:pointer; box-shadow:0 3px 8px rgba(71,85,105,0.3);">
+     <span style="font-size:17px;">📋</span> نسخ الرسالة
+    </button>
+   </div>
+
+   <button type="button" onclick="closeAdminApprovalModal()" style="width:100%; padding:10px; border-radius:10px; border:1px solid #cbd5e1; background:#f1f5f9; font-weight:bold; cursor:pointer; font-size:14px;">
     إغلاق
    </button>
   </div>
  </div>
 </div>
-
 <script>
 const T={1:'وفاق حجوط',2:'أمل سيدي عمر',3:'وئام بوجبرون',4:'مولودية مراد',5:'الوفاق مسلمون',6:'التحدي الداموس',7:'مولودية قوراية',8:'شبيبة حجوط',9:'اتحاد القليعة',10:'نخبة فجانة',11:'نجمة حجوط'};
 const R=[
@@ -3931,6 +3979,23 @@ function renderOfficialsList() {
         </div>
       </div>
 
+      <!-- خيارات التواصل المباشر مع المسؤول (واتساب، SMS، اتصال، نسخ) -->
+      <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; align-items:center;">
+        <span style="font-size:11.5px; font-weight:bold; color:var(--muted,#64748b);">تواصل:</span>
+        <a href="https://wa.me/213${cleanPhone(off.phone)}" target="_blank" style="display:inline-flex; align-items:center; gap:4px; background:#25d366; color:#ffffff; padding:4px 8px; border-radius:6px; text-decoration:none; font-size:11.5px; font-weight:bold;" title="مراسلة عبر واتساب">
+          💬 واتساب
+        </a>
+        <a href="sms:${off.phone}" style="display:inline-flex; align-items:center; gap:4px; background:#0284c7; color:#ffffff; padding:4px 8px; border-radius:6px; text-decoration:none; font-size:11.5px; font-weight:bold;" title="إرسال رسالة نصية قصيرة SMS">
+          📩 SMS
+        </a>
+        <a href="tel:${off.phone}" style="display:inline-flex; align-items:center; gap:4px; background:#059669; color:#ffffff; padding:4px 8px; border-radius:6px; text-decoration:none; font-size:11.5px; font-weight:bold;" title="اتصال هاتفي مباشر">
+          📞 اتصال
+        </a>
+        <button type="button" class="off-act-btn" data-act="copyCreds" data-id="${off.id}" style="padding:4px 8px; font-size:11.5px; font-weight:bold; background:#e2e8f0; color:#1e293b; border:1px solid #cbd5e1; border-radius:6px; cursor:pointer;" title="نسخ بيانات الدخول للمسؤول">
+          📋 نسخ البيانات
+        </button>
+      </div>
+
       <!-- أزرار الصلاحيات والإدارة الكاملة للمشرف -->
       <div class="off-item-actions">
         ${isPending ? `<button type="button" class="off-act-btn btn-approve" data-act="approve" data-id="${off.id}">✅ موافقة وتفعيل الحساب</button>` : ''}
@@ -3988,6 +4053,15 @@ function renderOfficialsList() {
             updateAuthUI();
             renderOfficialsList();
             showToast('🗑️ تم حذف الحساب نهائياً بنجاح.');
+          }
+        } else if (act === 'copyCreds') {
+          const creds = `بيانات الدخول لمنظومة ESM 2026\n👤 المسؤول: ${target.name} (${T[target.teamId] || ''})\n📱 الهاتف: ${target.phone}\n🔑 كلمة المرور: ${target.pass}\n🔗 رابط الدخول: https://esm-matches.onrender.com/`;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(creds).then(() => {
+              showToast('📋 تم نسخ بيانات الدخول للمسؤول ' + target.name + ' بنجاح!');
+            }).catch(() => fallbackPromptCopy(creds));
+          } else {
+            fallbackPromptCopy(creds);
           }
         } else if (act === 'loginAs') {
           setAdminUser({
@@ -4102,12 +4176,26 @@ function playNotificationAlertSound() {
 }
 window.playNotificationAlertSound = playNotificationAlertSound;
 
-// WhatsApp Registration Dispatch Modal for Applicant
+// Multi-channel Registration Dispatch Modal for Applicant
+let currentApplicantRequestMsg = '';
+function copyApplicantRequestDetails() {
+  if (!currentApplicantRequestMsg) return;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(currentApplicantRequestMsg).then(() => {
+      showToast('📋 تم نسخ بيانات طلب الاعتماد بنجاح! يمكنك إرسالها للمشرف عبر SMS أو فايبر.');
+    }).catch(() => fallbackPromptCopy(currentApplicantRequestMsg));
+  } else {
+    fallbackPromptCopy(currentApplicantRequestMsg);
+  }
+}
+window.copyApplicantRequestDetails = copyApplicantRequestDetails;
+
 function showGateRegSuccessModal(off) {
   const modal = document.getElementById('gateRegSuccessModal');
   const details = document.getElementById('gateRegSuccessDetails');
   const btnWa = document.getElementById('btnGateRegWhatsapp');
-  if (!modal || !details || !btnWa) return;
+  const btnSms = document.getElementById('btnGateRegSms');
+  if (!modal || !details) return;
 
   const teamName = (typeof T !== 'undefined' && T[off.teamId]) ? T[off.teamId] : ('فريق ' + off.teamId);
   details.innerHTML = `
@@ -4124,8 +4212,25 @@ function showGateRegSuccessModal(off) {
   const payloadB64 = btoa(unescape(encodeURIComponent(JSON.stringify(off))));
   const approveUrl = host + path + '#approve_off=' + encodeURIComponent(payloadB64);
 
-  const waMsg = `السلام عليكم المشرف العام لمنظومة ESM تيبازة 2026 🏆\nطلب اعتماد حساب مسؤول جديد:\n👤 الاسم: ${off.name}\n⚽ النادي: ${teamName}\n📱 الهاتف: ${off.phone}\n🔑 كلمة المرور: ${off.pass}\n\n🔗 رابط الاعتماد الفوري بنقرة واحدة:\n${approveUrl}`;
-  btnWa.href = 'https://wa.me/213676108460?text=' + encodeURIComponent(waMsg);
+  const reqMsg = `السلام عليكم المشرف العام لمنظومة ESM تيبازة 2026 🏆
+طلب اعتماد حساب مسؤول جديد:
+👤 الاسم: ${off.name}
+⚽ النادي: ${teamName}
+📱 الهاتف: ${off.phone}
+🔑 كلمة المرور: ${off.pass}
+
+🔗 رابط الاعتماد الفوري بنقرة واحدة:
+${approveUrl}`;
+  currentApplicantRequestMsg = reqMsg;
+
+  if (btnWa) {
+    btnWa.href = 'https://wa.me/213676108460?text=' + encodeURIComponent(reqMsg);
+  }
+  if (btnSms) {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const sep = isIOS ? '&body=' : '?body=';
+    btnSms.href = 'sms:0676108460' + sep + encodeURIComponent(reqMsg);
+  }
 
   modal.style.display = 'flex';
 }
@@ -4138,8 +4243,26 @@ function closeGateRegSuccessModal() {
 }
 window.closeGateRegSuccessModal = closeGateRegSuccessModal;
 
-// Admin Quick Approval Modal
+// Admin Quick Approval Modal & Multi-channel Notification
 let activeAdminApprovalOff = null;
+let currentAdminReplyMsg = '';
+
+function copyAdminActivationMessage() {
+  if (!currentAdminReplyMsg) return;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(currentAdminReplyMsg).then(() => {
+      showToast('📋 تم نسخ رسالة التفعيل بنجاح! يمكنك إرسالها للمسؤول عبر SMS أو فايبر.');
+    }).catch(() => fallbackPromptCopy(currentAdminReplyMsg));
+  } else {
+    fallbackPromptCopy(currentAdminReplyMsg);
+  }
+}
+window.copyAdminActivationMessage = copyAdminActivationMessage;
+
+function fallbackPromptCopy(text) {
+  prompt('انسخ الرسالة أدناه:', text);
+}
+
 function openAdminApprovalModal(off) {
   activeAdminApprovalOff = off;
   const modal = document.getElementById('adminApprovalModal');
@@ -4191,10 +4314,30 @@ function openAdminApprovalModal(off) {
       if (successBox) {
         successBox.style.display = 'block';
         const cleanP = cleanPhone(off.phone);
-        const replyMsg = `مرحباً ${off.name}، تم اعتماد وتفعيل حسابك بنجاح كمسؤول عن نادي ${teamName} في منظومة بطولة تيبازة ESM 2026!\nيمكنك الآن تسجيل الدخول مباشرة بالهاتف: ${off.phone}\nوكلمة المرور: ${off.pass}\nرابط الدخول: https://esm-matches.onrender.com/`;
+        const replyMsg = `مرحباً ${off.name}، تم اعتماد وتفعيل حسابك بنجاح كمسؤول عن نادي ${teamName} في منظومة بطولة تيبازة ESM 2026!
+يمكنك الآن تسجيل الدخول مباشرة برقم هاتفك: ${off.phone}
+وكلمة المرور: ${off.pass}
+رابط الدخول: https://esm-matches.onrender.com/`;
+        currentAdminReplyMsg = replyMsg;
+
+        // 1. رابط واتساب
         const btnSendWa = document.getElementById('btnAdminSendWhatsappSuccess');
         if (btnSendWa) {
           btnSendWa.href = 'https://wa.me/213' + cleanP + '?text=' + encodeURIComponent(replyMsg);
+        }
+
+        // 2. رابط SMS عادي
+        const btnSendSms = document.getElementById('btnAdminSendSmsSuccess');
+        if (btnSendSms) {
+          const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+          const sep = isIOS ? '&body=' : '?body=';
+          btnSendSms.href = 'sms:' + off.phone + sep + encodeURIComponent(replyMsg);
+        }
+
+        // 3. رابط اتصال هاتفي
+        const btnCall = document.getElementById('btnAdminCallSuccess');
+        if (btnCall) {
+          btnCall.href = 'tel:' + off.phone;
         }
       }
     };
