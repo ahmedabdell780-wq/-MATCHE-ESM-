@@ -1512,6 +1512,7 @@ body.th-dark .off-item-sub { color: #94a3b8 !important; }
  </div>
 </div>
 
+
 <!-- نافذة إدارة مسؤولي الفرق (خاصة بالمشرف العام فقط) -->
 <div id="officialsModal" class="modal-bg" style="display:none;">
  <div class="modal-card">
@@ -1681,6 +1682,58 @@ body.th-dark .off-item-sub { color: #94a3b8 !important; }
 
 </main>
 
+<!-- نافذة تأكيد تسجيل الحساب وإرسال طلب الاعتماد للمشرف العام عبر واتساب -->
+<div id="gateRegSuccessModal" class="modal-bg" style="display:none; z-index:999999;">
+ <div class="modal-card" style="max-width:440px; background:#ffffff !important; color:#1e293b !important; text-align:center; padding:26px 22px; border-radius:22px; box-shadow:0 25px 50px rgba(0,0,0,0.4); border:2px solid #22c55e;">
+  <div style="font-size:52px; margin-bottom:8px;">🎉</div>
+  <h3 style="color:#15803d; font-size:22px; font-weight:800; margin-bottom:8px;">تم تسجيل طلب حسابك بنجاح!</h3>
+  <div id="gateRegSuccessDetails" style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:14px; padding:12px; margin-bottom:16px; text-align:right; font-size:14px; line-height:1.8; color:#166534;">
+  </div>
+  <p style="font-size:14px; color:#334155 !important; font-weight:700; line-height:1.6; margin-bottom:18px;">
+   بقي خطوة واحدة: اضغط على الزر الأخضر أدناه لإرسال طلب الاعتماد مباشرة إلى <strong>واتساب المشرف العام (0676108460)</strong> لاعتماده وتفعيله فوراً بنقرة واحدة:
+  </p>
+  <a id="btnGateRegWhatsapp" href="#" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:10px; background:#25d366; color:#ffffff; padding:14px 18px; border-radius:12px; text-decoration:none; font-weight:800; font-size:16px; box-shadow:0 6px 16px rgba(37,211,102,0.4); margin-bottom:12px; transition:all 0.2s;">
+   <span style="font-size:24px;">💬</span> إرسال طلب الاعتماد لواتساب المشرف الآن
+  </a>
+  <button type="button" onclick="closeGateRegSuccessModal()" class="btn-cancel" style="width:100%; padding:10px; border-radius:10px; border:1px solid #cbd5e1; background:#f8fafc; font-size:14px; font-weight:bold; cursor:pointer;">
+   إغلاق والعودة لتسجيل الدخول
+  </button>
+ </div>
+</div>
+
+<!-- نافذة الاعتماد السريع للمشرف العام (تظهر فور فتح الرابط من واتساب أو عند وصول طلب جديد) -->
+<div id="adminApprovalModal" class="modal-bg" style="display:none; z-index:999999;">
+ <div class="modal-card" style="max-width:480px; background:#ffffff !important; color:#1e293b !important; text-align:center; padding:26px 22px; border-radius:22px; box-shadow:0 25px 50px rgba(0,0,0,0.4); border:2px solid #3b82f6;">
+  <div style="font-size:48px; margin-bottom:8px;">👑</div>
+  <h3 style="color:#1e40af !important; font-size:22px; font-weight:800; margin-bottom:4px;">طلب اعتماد مسؤول فريق جديد</h3>
+  <p style="color:#475569 !important; font-size:13px; font-weight:600; margin-bottom:16px;">تحقق من بيانات المسؤول واعتمد حسابه بضغطة زر واحدة</p>
+  
+  <div id="adminApprovalDetails" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:16px; margin-bottom:18px; text-align:right; font-size:15px; line-height:2; color:#1e293b;">
+  </div>
+
+  <div id="adminApprovalActions" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+   <button id="btnAdminApproveNow" type="button" style="flex:1; min-width:180px; background:#16a34a; color:#ffffff; border:none; padding:14px 16px; border-radius:12px; font-size:15px; font-weight:800; cursor:pointer; box-shadow:0 4px 12px rgba(22,163,74,0.3);">
+    ✅ اعتماد وتفعيل الحساب فوراً
+   </button>
+   <button id="btnAdminRejectNow" type="button" style="min-width:100px; background:#ef4444; color:#ffffff; border:none; padding:14px 16px; border-radius:12px; font-size:14px; font-weight:bold; cursor:pointer;">
+    ❌ رفض الطلب
+   </button>
+  </div>
+
+  <div id="adminApprovalSuccess" style="display:none; margin-top:12px;">
+   <div style="background:#f0fdf4; border:1px solid #86efac; color:#15803d; border-radius:12px; padding:12px; font-weight:bold; margin-bottom:14px; font-size:15px;">
+    🎉 تم اعتماد وتفعيل الحساب بنجاح في المنظومة!
+   </div>
+   <a id="btnAdminSendWhatsappSuccess" href="#" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:8px; background:#25d366; color:#ffffff; padding:12px 16px; border-radius:12px; text-decoration:none; font-weight:bold; font-size:15px; margin-bottom:12px;">
+    <span style="font-size:20px;">💬</span> إرسال تأكيد التفعيل للمسؤول على واتساب
+   </a>
+   <button type="button" onclick="closeAdminApprovalModal()" style="width:100%; padding:10px; border-radius:10px; border:1px solid #cbd5e1; background:#f1f5f9; font-weight:bold; cursor:pointer;">
+    إغلاق
+   </button>
+  </div>
+ </div>
+</div>
+
 <script>
 const T={1:'وفاق حجوط',2:'أمل سيدي عمر',3:'وئام بوجبرون',4:'مولودية مراد',5:'الوفاق مسلمون',6:'التحدي الداموس',7:'مولودية قوراية',8:'شبيبة حجوط',9:'اتحاد القليعة',10:'نخبة فجانة',11:'نجمة حجوط'};
 const R=[
@@ -1736,8 +1789,18 @@ const DEFAULT_OFFICIALS = [
   }
 ];
 
-// Helper to normalize phone for deduplication
-function cleanPhone(p) { return (p || '').toString().replace(/\D/g, '').slice(-9); }
+// Helper to normalize phone for deduplication (supports standard, international & Arabic-Indic digits)
+function cleanPhone(p) {
+  if (!p) return '';
+  const arabic = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+  const eastern = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+  let s = p.toString().trim();
+  for (let i = 0; i < 10; i++) {
+    s = s.split(arabic[i]).join(i.toString()).split(eastern[i]).join(i.toString());
+  }
+  const digits = s.replace(/\D/g, '');
+  return digits.length >= 9 ? digits.slice(-9) : digits;
+}
 
 store.officials = store.officials || [];
 DEFAULT_OFFICIALS.forEach(defOff => {
@@ -1754,6 +1817,19 @@ DEFAULT_OFFICIALS.forEach(defOff => {
     if (defOff.perm) existing.perm = defOff.perm;
   }
 });
+save();
+
+// Strict deduplication of store.officials by phone suffix
+const uniqueOfficials = [];
+const seenCleanPhones = new Set();
+(store.officials || []).forEach(o => {
+  const cp = cleanPhone(o.phone);
+  if (cp && !seenCleanPhones.has(cp)) {
+    seenCleanPhones.add(cp);
+    uniqueOfficials.push(o);
+  }
+});
+store.officials = uniqueOfficials;
 save();
 
 if(store._seedVer!==SEED_VER){
@@ -2166,44 +2242,66 @@ if (btnGateRegister) {
       return;
     }
 
-    store.officials = store.officials || [];
-    let existing = store.officials.find(o => normalizeLoginInput(o.phone) === normalizeLoginInput(phone));
-    if (existing) {
-      if (existing.status === 'approved') {
-        if (err) {
-          err.textContent = 'ℹ️ هذا الرقم مسجل ومفعل بالفعل، يمكنك تسجيل الدخول مباشرة.';
-          err.style.display = 'block';
-        }
-        return;
+    const cleanP = cleanPhone(phone);
+    if (!cleanP || cleanP.length < 8) {
+      if (err) {
+        err.textContent = '⚠️ يرجى كتابة رقم هاتف جزائري صحيح (مثال: 0676108460 أو 0776702581).';
+        err.style.display = 'block';
       }
-      existing.pass = pass;
-      existing.teamId = teamId;
-      existing.name = name;
-      existing.status = 'pending';
-    } else {
-      existing = {
-        id: 'off_' + Date.now(),
-        name: name,
-        phone: phone,
-        teamId: teamId,
-        pass: pass,
-        status: 'pending', // يتطلب موافقة المشرف العام حصراً
-        date: new Date().toISOString().slice(0, 10)
-      };
-      store.officials.push(existing);
+      return;
     }
-    
+
+    // 1. منع التسجيل برقم المشرف العام
+    if (cleanP === '676108460') {
+      if (err) {
+        err.textContent = '⚠️ هذا الرقم خاص بالمشرف العام للمنظومة، لا يمكن تسجيل حساب فريق به.';
+        err.style.display = 'block';
+      }
+      return;
+    }
+
+    // 2. منع الحسابات المكررة بنفس رقم الهاتف تماماً
+    store.officials = store.officials || [];
+    const duplicate = store.officials.find(o => cleanPhone(o.phone) === cleanP);
+    if (duplicate) {
+      if (err) {
+        const teamName = (typeof T !== 'undefined' && T[duplicate.teamId]) ? T[duplicate.teamId] : '';
+        err.textContent = '⚠️ رقم الهاتف هذا (' + phone + ') مسجل بالفعل لحساب (' + duplicate.name + (teamName ? ' - ' + teamName : '') + ')! لا يمكن قبول حسابين بنفس رقم الهاتف نهائياً.';
+        err.style.display = 'block';
+      }
+      return;
+    }
+
+    const newOfficial = {
+      id: 'off_' + Date.now(),
+      name: name,
+      phone: phone,
+      teamId: teamId,
+      pass: pass,
+      status: 'pending', // يتطلب موافقة المشرف العام حصراً
+      perm: 'full',
+      date: new Date().toISOString().slice(0, 10)
+    };
+    store.officials.push(newOfficial);
     save();
+
+    // إرسال الطلب سحابياً فوراً
+    if (typeof pushPendingAccountToCloud === 'function') {
+      pushPendingAccountToCloud(newOfficial);
+    }
 
     document.getElementById('gateRegName').value = '';
     document.getElementById('gateRegPhone').value = '';
     document.getElementById('gateRegPass').value = '';
     document.getElementById('gateRegPassConfirm').value = '';
+    if (err) err.style.display = 'none';
 
-    alert('✅ تم إرسال طلب تسجيلك بنجاح!\n\nحسابك الآن قيد المراجعة في انتظار موافقة المشرف العام (0676108460).\nبعد أن يعتمد المشرف العام حسابك، ستتمكن من تسجيل الدخول وإدارة مباريات ناديك (' + T[teamId] + ').');
-    if (typeof gateTabLogin !== 'undefined' && gateTabLogin) gateTabLogin.click();
-    const phoneInp = document.getElementById('gatePhoneInput');
-    if (phoneInp) phoneInp.value = phone;
+    // فتح نافذة الإرسال الفوري لواتساب المشرف العام
+    if (typeof showGateRegSuccessModal === 'function') {
+      showGateRegSuccessModal(newOfficial);
+    } else {
+      alert('✅ تم تسجيل طلب حسابك بنجاح! حسابك في انتظار موافقة المشرف العام.');
+    }
   });
 }
 
@@ -3715,15 +3813,21 @@ function saveManualOfficial() {
     return;
   }
 
+  const cleanP = cleanPhone(phone);
+  if (cleanP === '676108460') {
+    alert('⚠️ هذا الرقم خاص بالمشرف العام ولا يمكن تخصيصه لحساب مسؤول فريق.');
+    return;
+  }
+
   store.officials = store.officials || [];
-  let existing = store.officials.find(o => normalizeLoginInput(o.phone) === normalizeLoginInput(phone));
-  if (existing) {
-    existing.name = name;
-    existing.teamId = teamId;
-    existing.pass = pass;
-    existing.status = 'approved';
-    existing.perm = 'full';
-  } else {
+  const duplicate = store.officials.find(o => cleanPhone(o.phone) === cleanP);
+  if (duplicate) {
+    alert('⚠️ رقم الهاتف هذا (' + phone + ') مسجل بالفعل لحساب المسؤول: ' + duplicate.name + ' (' + (T[duplicate.teamId] || '') + ')!\nلا يمكن قبول حسابين بنفس رقم الهاتف نهائياً.');
+    return;
+  }
+
+  let existing = null;
+  if (false) {
     existing = {
       id: 'off_' + Date.now(),
       name: name,
@@ -3965,25 +4069,311 @@ function fallbackPromptSync(url) {
   prompt('انسخ هذا الرابط وافتحه على الهاتف أو أي جهاز آخر لمزامنة الحسابات فوراً:', url);
 }
 
-// Check hash on startup
-(function checkUrlHashSync() {
+// Web Audio API Sound Chime
+function playNotificationAlertSound() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const now = ctx.currentTime;
+    
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(587.33, now); // D5
+    gain1.gain.setValueAtTime(0.18, now);
+    gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+    osc1.connect(gain1);
+    gain1.connect(ctx.destination);
+    osc1.start(now);
+    osc1.stop(now + 0.25);
+
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(880, now + 0.12); // A5
+    gain2.gain.setValueAtTime(0.22, now + 0.12);
+    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    osc2.start(now + 0.12);
+    osc2.stop(now + 0.55);
+  } catch(e) {}
+}
+window.playNotificationAlertSound = playNotificationAlertSound;
+
+// WhatsApp Registration Dispatch Modal for Applicant
+function showGateRegSuccessModal(off) {
+  const modal = document.getElementById('gateRegSuccessModal');
+  const details = document.getElementById('gateRegSuccessDetails');
+  const btnWa = document.getElementById('btnGateRegWhatsapp');
+  if (!modal || !details || !btnWa) return;
+
+  const teamName = (typeof T !== 'undefined' && T[off.teamId]) ? T[off.teamId] : ('فريق ' + off.teamId);
+  details.innerHTML = `
+    <div>👤 <strong>الاسم:</strong> ${off.name}</div>
+    <div>⚽ <strong>النادي:</strong> ${teamName}</div>
+    <div>📱 <strong>الهاتف:</strong> <span dir="ltr">${off.phone}</span></div>
+    <div>🔑 <strong>كلمة المرور:</strong> ${off.pass}</div>
+    <div style="color:#d97706; font-weight:bold; margin-top:4px;">⏳ الحالة: بانتظار موافقة المشرف العام</div>
+  `;
+
+  // Encode request payload into 1-click URL
+  const host = (window.location.origin && window.location.origin !== 'null') ? window.location.origin : 'https://esm-matches.onrender.com';
+  const path = window.location.pathname || '/';
+  const payloadB64 = btoa(unescape(encodeURIComponent(JSON.stringify(off))));
+  const approveUrl = host + path + '#approve_off=' + encodeURIComponent(payloadB64);
+
+  const waMsg = `السلام عليكم المشرف العام لمنظومة ESM تيبازة 2026 🏆\nطلب اعتماد حساب مسؤول جديد:\n👤 الاسم: ${off.name}\n⚽ النادي: ${teamName}\n📱 الهاتف: ${off.phone}\n🔑 كلمة المرور: ${off.pass}\n\n🔗 رابط الاعتماد الفوري بنقرة واحدة:\n${approveUrl}`;
+  btnWa.href = 'https://wa.me/213676108460?text=' + encodeURIComponent(waMsg);
+
+  modal.style.display = 'flex';
+}
+window.showGateRegSuccessModal = showGateRegSuccessModal;
+
+function closeGateRegSuccessModal() {
+  const modal = document.getElementById('gateRegSuccessModal');
+  if (modal) modal.style.display = 'none';
+  if (typeof gateTabLogin !== 'undefined' && gateTabLogin) gateTabLogin.click();
+}
+window.closeGateRegSuccessModal = closeGateRegSuccessModal;
+
+// Admin Quick Approval Modal
+let activeAdminApprovalOff = null;
+function openAdminApprovalModal(off) {
+  activeAdminApprovalOff = off;
+  const modal = document.getElementById('adminApprovalModal');
+  const details = document.getElementById('adminApprovalDetails');
+  const actions = document.getElementById('adminApprovalActions');
+  const successBox = document.getElementById('adminApprovalSuccess');
+  if (!modal || !details) return;
+
+  const teamName = (typeof T !== 'undefined' && T[off.teamId]) ? T[off.teamId] : ('فريق ' + off.teamId);
+  details.innerHTML = `
+    <div>👤 <strong>اسم المسؤول:</strong> ${off.name}</div>
+    <div>⚽ <strong>النادي التابع له:</strong> ${teamName}</div>
+    <div>📱 <strong>رقم الهاتف:</strong> <span dir="ltr" style="font-weight:bold; color:#0d6efd;">${off.phone}</span></div>
+    <div>🔑 <strong>كلمة المرور:</strong> <span style="background:#e2e8f0; padding:2px 8px; border-radius:6px; font-family:monospace;">${off.pass}</span></div>
+    <div>📅 <strong>تاريخ الطلب:</strong> ${off.date || new Date().toISOString().slice(0, 10)}</div>
+  `;
+
+  if (actions) actions.style.display = 'flex';
+  if (successBox) successBox.style.display = 'none';
+
+  const btnApprove = document.getElementById('btnAdminApproveNow');
+  const btnReject = document.getElementById('btnAdminRejectNow');
+
+  if (btnApprove) {
+    btnApprove.onclick = () => {
+      off.status = 'approved';
+      off.perm = 'full';
+      store.officials = store.officials || [];
+      const ex = store.officials.find(o => cleanPhone(o.phone) === cleanPhone(off.phone) || o.id === off.id);
+      if (ex) {
+        ex.status = 'approved';
+        ex.perm = 'full';
+        ex.pass = off.pass;
+      } else {
+        store.officials.push(off);
+      }
+      save();
+      if (typeof pushPendingAccountToCloud === 'function') {
+        pushPendingAccountToCloud(off);
+      }
+      if (typeof renderOfficialsList === 'function') renderOfficialsList();
+      if (typeof updateAuthUI === 'function') updateAuthUI();
+      if (typeof updateAllNotifBadges === 'function') updateAllNotifBadges();
+
+      playNotificationAlertSound();
+      showToast('✅ تم اعتماد وتفعيل حساب ' + off.name + ' كمسؤول ' + teamName + ' بنجاح!');
+
+      if (actions) actions.style.display = 'none';
+      if (successBox) {
+        successBox.style.display = 'block';
+        const cleanP = cleanPhone(off.phone);
+        const replyMsg = `مرحباً ${off.name}، تم اعتماد وتفعيل حسابك بنجاح كمسؤول عن نادي ${teamName} في منظومة بطولة تيبازة ESM 2026!\nيمكنك الآن تسجيل الدخول مباشرة بالهاتف: ${off.phone}\nوكلمة المرور: ${off.pass}\nرابط الدخول: https://esm-matches.onrender.com/`;
+        const btnSendWa = document.getElementById('btnAdminSendWhatsappSuccess');
+        if (btnSendWa) {
+          btnSendWa.href = 'https://wa.me/213' + cleanP + '?text=' + encodeURIComponent(replyMsg);
+        }
+      }
+    };
+  }
+
+  if (btnReject) {
+    btnReject.onclick = () => {
+      if (confirm('هل أنت متأكد من رفض طلب حساب ' + off.name + '؟')) {
+        store.officials = (store.officials || []).filter(o => o.id !== off.id && cleanPhone(o.phone) !== cleanPhone(off.phone));
+        save();
+        if (typeof renderOfficialsList === 'function') renderOfficialsList();
+        if (typeof updateAuthUI === 'function') updateAuthUI();
+        if (typeof updateAllNotifBadges === 'function') updateAllNotifBadges();
+        closeAdminApprovalModal();
+        showToast('❌ تم رفض وحذف الطلب.');
+      }
+    };
+  }
+
+  modal.style.display = 'flex';
+}
+window.openAdminApprovalModal = openAdminApprovalModal;
+
+function closeAdminApprovalModal() {
+  const modal = document.getElementById('adminApprovalModal');
+  if (modal) modal.style.display = 'none';
+  activeAdminApprovalOff = null;
+}
+window.closeAdminApprovalModal = closeAdminApprovalModal;
+
+// Cloud Sync Hub
+const CLOUD_OFFICIALS_HUB = 'https://api.restful-api.dev/objects/ff808181a09d98f701a198f1dbee02a4';
+
+async function pushPendingAccountToCloud(newOfficial) {
+  try {
+    const res = await fetch(CLOUD_OFFICIALS_HUB, { cache: 'no-store' });
+    let officials = [];
+    if (res.ok) {
+      const json = await res.json();
+      officials = (json && json.data && json.data.officials) || [];
+    }
+    const cleanP = cleanPhone(newOfficial.phone);
+    const idx = officials.findIndex(o => cleanPhone(o.phone) === cleanP || o.id === newOfficial.id);
+    if (idx >= 0) {
+      officials[idx] = Object.assign({}, officials[idx], newOfficial);
+    } else {
+      officials.push(newOfficial);
+    }
+    await fetch(CLOUD_OFFICIALS_HUB, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: 'esm_officials_hub',
+        data: { officials: officials, lastUpdated: Date.now() }
+      })
+    });
+  } catch(e) {
+    console.warn('Cloud Hub Push Error:', e);
+  }
+}
+window.pushPendingAccountToCloud = pushPendingAccountToCloud;
+
+async function syncOfficialsWithCloud(isManual) {
+  try {
+    const res = await fetch(CLOUD_OFFICIALS_HUB, { cache: 'no-store' });
+    if (!res.ok) return;
+    const json = await res.json();
+    const cloudOfficials = (json && json.data && json.data.officials) || [];
+    if (!Array.isArray(cloudOfficials) || cloudOfficials.length === 0) return;
+
+    store.officials = store.officials || [];
+    let updated = false;
+    let newlyDiscoveredPendings = [];
+
+    cloudOfficials.forEach(cOff => {
+      const cClean = cleanPhone(cOff.phone);
+      if (!cClean) return;
+      const localOff = store.officials.find(o => cleanPhone(o.phone) === cClean || o.id === cOff.id);
+      if (!localOff) {
+        store.officials.push(cOff);
+        updated = true;
+        if (cOff.status === 'pending') {
+          newlyDiscoveredPendings.push(cOff);
+        }
+      } else {
+        if (localOff.status === 'approved' && cOff.status !== 'approved') {
+          cOff.status = 'approved';
+          updated = true;
+        } else if (cOff.status === 'approved' && localOff.status !== 'approved') {
+          localOff.status = 'approved';
+          updated = true;
+        }
+        if (cOff.pass && localOff.pass !== cOff.pass) {
+          localOff.pass = cOff.pass;
+          updated = true;
+        }
+      }
+    });
+
+    if (updated) {
+      save();
+      if (typeof renderOfficialsList === 'function') renderOfficialsList();
+      if (typeof updateAuthUI === 'function') updateAuthUI();
+      if (typeof updateAllNotifBadges === 'function') updateAllNotifBadges();
+    }
+
+    if (newlyDiscoveredPendings.length > 0) {
+      const first = newlyDiscoveredPendings[0];
+      playNotificationAlertSound();
+      if (typeof showSystemNotification === 'function') {
+        const teamName = (typeof T !== 'undefined' && T[first.teamId]) ? T[first.teamId] : '';
+        showSystemNotification('👑 طلب اعتماد حساب جديد وارد!', 'الاسم: ' + first.name + ' (' + teamName + ') - هاتف: ' + first.phone, 'official-req-' + first.id);
+      }
+      if (currentUser && (currentUser.role === 'admin' || currentUser.phone === '0676108460')) {
+        openAdminApprovalModal(first);
+      }
+    }
+
+    if (isManual) {
+      showToast('🔄 تمت المزامنة السحابية لمسؤولي الفرق بنجاح!');
+    }
+  } catch(e) {
+    console.warn('Cloud Hub Sync Error:', e);
+    if (isManual) showToast('⚠️ تعذر الاتصال بالسحابة حالياً.');
+  }
+}
+window.syncOfficialsWithCloud = syncOfficialsWithCloud;
+
+// Check URL Hash on startup and hash change
+function checkUrlHashSync() {
   try {
     const hash = window.location.hash;
-    if (hash && hash.includes('sync_off=')) {
+    if (!hash) return;
+
+    // 1. WhatsApp 1-Click Approval Link Handler
+    if (hash.includes('approve_off=')) {
+      const raw = hash.split('approve_off=')[1];
+      if (raw) {
+        const decoded = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(raw)))));
+        if (decoded && decoded.name && decoded.phone) {
+          store.officials = store.officials || [];
+          const cleanP = cleanPhone(decoded.phone);
+          let ex = store.officials.find(o => cleanPhone(o.phone) === cleanP || o.id === decoded.id);
+          if (!ex) {
+            ex = Object.assign({}, decoded, { status: decoded.status || 'pending' });
+            store.officials.push(ex);
+          } else {
+            if (decoded.pass) ex.pass = decoded.pass;
+            if (decoded.name) ex.name = decoded.name;
+          }
+          save();
+          if (typeof renderOfficialsList === 'function') renderOfficialsList();
+          if (typeof updateAuthUI === 'function') updateAuthUI();
+          if (typeof updateAllNotifBadges === 'function') updateAllNotifBadges();
+
+          playNotificationAlertSound();
+          openAdminApprovalModal(ex);
+          window.history.replaceState(null, null, window.location.pathname);
+        }
+      }
+    }
+
+    // 2. Full Sync Hash Handler
+    if (hash.includes('sync_off=')) {
       const raw = hash.split('sync_off=')[1];
       if (raw) {
-        const decoded = JSON.parse(decodeURIComponent(escape(atob(raw))));
+        const decoded = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(raw)))));
         if (Array.isArray(decoded) && decoded.length) {
           store.officials = store.officials || [];
           decoded.forEach(off => {
-            const cleanP = (off.phone || '').toString().replace(/\D/g, '').slice(-9);
-            const ex = store.officials.find(o => (o.phone && (o.phone.toString().replace(/\D/g, '').slice(-9) === cleanP)) || o.id === off.id);
+            const cleanP = cleanPhone(off.phone);
+            const ex = store.officials.find(o => cleanPhone(o.phone) === cleanP || o.id === off.id);
             if (ex) Object.assign(ex, off);
             else store.officials.push(off);
           });
           save();
           if (typeof renderOfficialsList === 'function') renderOfficialsList();
           if (typeof updateAuthUI === 'function') updateAuthUI();
+          if (typeof updateAllNotifBadges === 'function') updateAllNotifBadges();
           showToast('🚀 تم استيراد ومزامنة مسؤولي الفرق بنجاح!');
           window.history.replaceState(null, null, window.location.pathname);
         }
@@ -3992,7 +4382,15 @@ function fallbackPromptSync(url) {
   } catch(e) {
     console.warn('URL Hash Sync Error:', e);
   }
-})();
+}
+window.checkUrlHashSync = checkUrlHashSync;
+checkUrlHashSync();
+window.addEventListener('hashchange', checkUrlHashSync);
+
+// Auto-sync intervals & focus trigger
+setInterval(() => syncOfficialsWithCloud(false), 20000);
+window.addEventListener('focus', () => syncOfficialsWithCloud(false));
+setTimeout(() => syncOfficialsWithCloud(false), 1500);
 
 // ================= Notification System & External Badging =================
 let globalSwReg = null;
