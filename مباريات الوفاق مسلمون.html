@@ -782,6 +782,180 @@ body.th-dark .off-item-sub { color: #94a3b8 !important; }
 .conf-btn:hover{filter:brightness(1.1);}
 
 /* --- نمط إدارة اللاعبين والتشكيلة وحفظ الأهداف --- */
+
+/* --- ورقة تشكيلة المباراة والتبديلات (من دخل ومن خرج) --- */
+.btn-match-lineup-main {
+  background: linear-gradient(135deg, #0f766e, #115e59);
+  color: #ccfbf1;
+  border: 1px solid rgba(204, 251, 241, 0.4);
+  padding: 9px 16px;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(15,118,110,0.2);
+  transition: transform 0.15s, filter 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin: 6px 0 10px;
+}
+.btn-match-lineup-main:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+.btn-res-lineup-pill {
+  background: #f0fdfa;
+  color: #0f766e;
+  border: 1px solid #99f6e4;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  transition: all 0.15s;
+}
+.btn-res-lineup-pill:hover {
+  background: #0f766e;
+  color: #ffffff;
+  border-color: #0f766e;
+}
+.lineup-section-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+}
+.lineup-players-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 7px;
+}
+.lineup-player-chip {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 7px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12.5px;
+  transition: all 0.15s;
+}
+.lineup-player-chip:hover {
+  border-color: #94a3b8;
+  background: #f1f5f9;
+}
+.lineup-player-chip.is-gk {
+  border-color: #f59e0b;
+  background: #fffbeb;
+}
+.lineup-player-chip.is-cap {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+.lineup-team-tab {
+  background: #e2e8f0;
+  color: #334155;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s;
+}
+.lineup-team-tab.active {
+  background: #166534;
+  color: #ffffff;
+  box-shadow: 0 3px 8px rgba(22,101,52,0.3);
+}
+.lineup-add-bar {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+.lineup-select {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12.5px;
+  font-family: inherit;
+  background: #ffffff;
+  color: #1e293b;
+}
+.lineup-inp {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12.5px;
+  font-family: inherit;
+  background: #ffffff;
+  color: #1e293b;
+}
+.btn-lineup-add {
+  background: #166534;
+  color: #ffffff;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.btn-lineup-subaction {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-lineup-subaction:hover {
+  background: #e2e8f0;
+}
+.btn-record-sub {
+  background: #d97706;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.btn-record-sub:hover {
+  background: #b45309;
+}
+.sub-timeline-card {
+  background: #ffffff;
+  border: 1px solid #fde68a;
+  border-radius: 10px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12.5px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+
 .btn-manage-squad {
   background: linear-gradient(135deg, #1f5a34, #0f2a1c);
   color: #f2d27a;
@@ -1680,6 +1854,149 @@ body.th-dark .off-item-sub { color: #94a3b8 !important; }
  </div>
 </div>
 
+<!-- نافذة تشكيلة المباراة وتبديلات اللاعبين (من دخل ومن خرج) -->
+<div id="matchLineupModal" class="modal-bg" style="display:none; z-index:999998;">
+ <div class="modal-card" style="max-width:700px; width:95%; max-height:92vh; display:flex; flex-direction:column; padding:0; border-radius:22px; overflow:hidden; box-shadow:0 25px 60px rgba(0,0,0,0.45); border:1.5px solid rgba(22,101,52,0.4); background:#ffffff; color:#1e293b;">
+  
+  <!-- رأس النافذة -->
+  <div style="background:linear-gradient(135deg, #166534, #0f2a1c); color:#ffffff; padding:16px 20px; display:flex; justify-content:space-between; align-items:center;">
+   <div style="display:flex; align-items:center; gap:10px;">
+    <span style="font-size:28px;">📋</span>
+    <div>
+     <h3 id="lineupModalTitle" style="margin:0; font-size:18px; font-weight:800; color:#fef08a;">ورقة تشكيلة المباراة والتبديلات</h3>
+     <p id="lineupModalSubtitle" style="margin:2px 0 0; font-size:12.5px; opacity:0.9; color:#e2e8f0;">الجولة · الفئة الشبانية · 2026/2027</p>
+    </div>
+   </div>
+   <button type="button" onclick="closeMatchLineupModal()" style="background:rgba(255,255,255,0.18); border:none; color:#ffffff; font-size:22px; width:36px; height:36px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center;">&times;</button>
+  </div>
+
+  <!-- تبديل بين الفريقين (Home vs Away) -->
+  <div style="background:#f1f5f9; padding:10px 16px; border-bottom:1px solid #e2e8f0; display:flex; gap:8px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+   <div id="lineupTeamTabs" style="display:flex; gap:8px; flex-wrap:wrap;">
+    <button id="btnLineupTabH" type="button" class="lineup-team-tab active" onclick="switchLineupTeam('h')">
+     <span id="tabLogoH" class="lgs" style="width:20px;height:20px;display:inline-block;"></span>
+     <span id="tabNameH">الفريق المستضيف</span>
+    </button>
+    <button id="btnLineupTabA" type="button" class="lineup-team-tab" onclick="switchLineupTeam('a')">
+     <span id="tabLogoA" class="lgs" style="width:20px;height:20px;display:inline-block;"></span>
+     <span id="tabNameA">الفريق الضيف</span>
+    </button>
+   </div>
+   <div id="lineupEditBadge" style="font-size:11.5px; font-weight:bold; padding:4px 10px; border-radius:8px; background:#dcfce7; color:#15803d;">
+    ✍️ وضع التعديل متاح
+   </div>
+  </div>
+
+  <!-- محتوى ورقة المباراة القابل للتمرير -->
+  <div style="flex:1; overflow-y:auto; padding:16px 18px; text-align:right;">
+
+   <!-- 1. التشكيلة الأساسية (Starting XI) -->
+   <div class="lineup-section-box">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:6px;">
+     <h4 style="margin:0; font-size:15px; color:#166534; font-weight:800; display:flex; align-items:center; gap:6px;">
+      <span>⭐ التشكيلة الأساسية للمباراة</span>
+      <span id="startersCountBadge" style="background:#166534; color:#fff; font-size:11px; padding:2px 8px; border-radius:12px;">0 / 11</span>
+     </h4>
+     <button id="btnLineupFillAllSquad" type="button" onclick="autoFillStartersFromSquad()" class="btn-lineup-subaction" style="font-size:11.5px;">
+      ⚡ ملء تلقائي من قائمة النادي
+     </button>
+    </div>
+
+    <!-- شبكة اللاعبين الأساسيين -->
+    <div id="startersContainer" class="lineup-players-grid"></div>
+
+    <!-- حقل إضافة لاعب أساسي سريع -->
+    <div id="addStarterForm" class="lineup-add-bar" style="margin-top:10px;">
+     <select id="quickPickStarterSelect" class="lineup-select" style="flex:1; min-width:180px;">
+      <option value="">＋ اختر لاعباً من قائمة النادي...</option>
+     </select>
+     <input id="quickStarterNum" type="number" placeholder="رقم #" style="width:70px; text-align:center;" class="lineup-inp">
+     <button type="button" onclick="addStarterFromSelect()" class="btn-lineup-add">➕ إضافة للأساسيين</button>
+    </div>
+   </div>
+
+   <!-- 2. دكة البدلاء (Substitutes) -->
+   <div class="lineup-section-box" style="margin-top:16px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+     <h4 style="margin:0; font-size:15px; color:#0369a1; font-weight:800; display:flex; align-items:center; gap:6px;">
+      <span>🔄 دكة البدلاء (الاحتياط)</span>
+      <span id="benchCountBadge" style="background:#0369a1; color:#fff; font-size:11px; padding:2px 8px; border-radius:12px;">0 لاعب</span>
+     </h4>
+    </div>
+
+    <!-- شبكة البدلاء -->
+    <div id="benchContainer" class="lineup-players-grid"></div>
+
+    <!-- حقل إضافة لاعب احتياطي سريع -->
+    <div id="addBenchForm" class="lineup-add-bar" style="margin-top:10px;">
+     <select id="quickPickBenchSelect" class="lineup-select" style="flex:1; min-width:180px;">
+      <option value="">＋ اختر لاعباً من قائمة النادي...</option>
+     </select>
+     <input id="quickBenchNum" type="number" placeholder="رقم #" style="width:70px; text-align:center;" class="lineup-inp">
+     <button type="button" onclick="addBenchFromSelect()" class="btn-lineup-add" style="background:#0284c7;">➕ إضافة للاحتياط</button>
+    </div>
+   </div>
+
+   <!-- 3. التغييرات والتبديلات أثناء المباراة (من دخل ومن خرج) -->
+   <div class="lineup-section-box" style="margin-top:16px; border-color:#f59e0b; background:#fffbeb;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+     <h4 style="margin:0; font-size:15px; color:#b45309; font-weight:800; display:flex; align-items:center; gap:6px;">
+      <span>⏱️ التغييرات والتبديلات أثناء المباراة (من دخل ومن خرج)</span>
+      <span id="subsCountBadge" style="background:#b45309; color:#fff; font-size:11px; padding:2px 8px; border-radius:12px;">0 تبديلات</span>
+     </h4>
+    </div>
+
+    <!-- نموذج تسجيل تبديل جديد -->
+    <div id="addSubForm" style="background:#ffffff; border:1px solid #fde68a; border-radius:12px; padding:12px; margin-bottom:12px;">
+     <div style="font-size:12.5px; font-weight:bold; color:#78350f; margin-bottom:8px;">تسجيل تبديل جديد:</div>
+     <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
+      <div>
+       <label style="font-size:11.5px; font-weight:bold; color:#dc2626; display:block; margin-bottom:4px;">🔻 اللاعب الخارج (من الملعب):</label>
+       <select id="subOutSelect" class="lineup-select" style="width:100%;"></select>
+      </div>
+      <div>
+       <label style="font-size:11.5px; font-weight:bold; color:#16a34a; display:block; margin-bottom:4px;">🔺 اللاعب الداخل (من الاحتياط):</label>
+       <select id="subInSelect" class="lineup-select" style="width:100%;"></select>
+      </div>
+     </div>
+     <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+      <div style="width:110px;">
+       <label style="font-size:11.5px; font-weight:bold; color:#4b5563; display:block; margin-bottom:4px;">الدقيقة:</label>
+       <input id="subMinuteInp" type="number" min="1" max="120" placeholder="مثال: 62" class="lineup-inp" style="width:100%;">
+      </div>
+      <div style="flex:1; min-width:140px;">
+       <label style="font-size:11.5px; font-weight:bold; color:#4b5563; display:block; margin-bottom:4px;">السبب / ملاحظة (اختياري):</label>
+       <input id="subReasonInp" type="text" placeholder="تكتيكي / إصابة..." class="lineup-inp" style="width:100%;">
+      </div>
+      <div style="align-self:flex-end;">
+       <button type="button" onclick="recordMatchSubstitution()" class="btn-record-sub">
+        🔄 حفظ التبديل
+       </button>
+      </div>
+     </div>
+    </div>
+
+    <!-- شريط التبديلات المسجلة الزمني -->
+    <div id="subsTimelineList" style="display:flex; flex-direction:column; gap:6px;"></div>
+   </div>
+
+  </div>
+
+  <!-- أسفل النافذة: إجراءات المشاركة والنسخ والإغلاق -->
+  <div style="background:#f8fafc; border-top:1px solid #e2e8f0; padding:12px 18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+   <div style="display:flex; gap:6px; flex-wrap:wrap;">
+    <button type="button" onclick="copyMatchLineupText()" style="background:#334155; color:#ffffff; border:none; padding:8px 12px; border-radius:8px; font-size:12.5px; font-weight:bold; cursor:pointer;">
+     📋 نسخ ورقة التشكيلة للواتساب
+    </button>
+   </div>
+   <button type="button" onclick="closeMatchLineupModal()" style="background:#e2e8f0; color:#334155; border:none; padding:8px 16px; border-radius:8px; font-size:13px; font-weight:bold; cursor:pointer;">
+    إغلاق
+   </button>
+  </div>
+
+ </div>
+</div>
+
 </main>
 
 <!-- نافذة تأكيد تسجيل الحساب وإرسال طلب الاعتماد للمشرف العام عبر واتساب أو SMS أو الهاتف -->
@@ -1964,6 +2281,14 @@ function card(r){
  posterBtn.innerHTML='<span class="ic">🎨</span>صانع بوستر اللقاء (HD للفيسبوك والواتساب)';
  posterBtn.onclick=()=>openPosterModal(r);
  el.appendChild(posterBtn);
+
+ // زر تشكيلة المباراة والتبديلات (من دخل ومن خرج)
+ const lineupBtn=document.createElement('button');
+ lineupBtn.type='button';
+ lineupBtn.className='btn-match-lineup-main';
+ lineupBtn.innerHTML='<span class="ic">📋</span>تشكيلة المباراة والتبديلات (من دخل وخرج)';
+ lineupBtn.onclick=()=>openMatchLineupModal(r, m.h, m.a);
+ el.appendChild(lineupBtn);
 
  // حاوية اعتماد النتيجة والتحكيم المزدوج
  const confBox=document.createElement('div');
@@ -2385,7 +2710,17 @@ function resRow(r,h,a){
  (canEditMatch(h,a)?(
  '<div class="adm radm"><input type="number" min="0" inputmode="numeric" data-f="sh" aria-label="أهداف '+T[h]+'"><span>-</span><input type="number" min="0" inputmode="numeric" data-f="sa" aria-label="أهداف '+T[a]+'"><label><input type="checkbox" data-f="pp"> مؤجلة</label><label><input type="checkbox" data-f="ex"> معفاة</label></div>'+xf(h,a)
  ):(currentUser?'<div class="adm radm-disabled">🔒 التعديل متاح لمسؤول '+T[h]+' أو '+T[a]+' فقط</div>':''));
- const paint=()=>{const x=res(r,h,a);el.querySelector('.rs').textContent=x.v.ex?'معفاة':x.v.pp?'مؤجلة':(x.ok?x.v.sh+' - '+x.v.sa:'VS')};
+ const paint=()=>{const x=res(r,h,a);el.querySelector('.rs').textContent=x.v.ex?'معفاة':x.v.pp?'مؤجلة':(x.ok?x.v.sh+' - '+x.v.sa:'VS');
+  let lpBtn = el.querySelector('.btn-res-lineup-pill');
+  if(!lpBtn){
+    lpBtn = document.createElement('button');
+    lpBtn.type = 'button';
+    lpBtn.className = 'btn-res-lineup-pill';
+    lpBtn.innerHTML = '📋 التشكيلة والتبديلات';
+    lpBtn.onclick = (e) => { e.stopPropagation(); openMatchLineupModal(r, h, a); };
+    el.querySelector('.rs').appendChild(lpBtn);
+  }
+ };
  const d=store[key]||{};
  el.querySelectorAll('[data-f]').forEach(i=>{const f=i.dataset.f;if(f==='pp'||f==='ex')i.checked=!!d[f];else i.value=d[f]!==undefined?d[f]:'';markRoster(i);
   i.addEventListener('input',()=>{
@@ -4970,6 +5305,553 @@ setInterval(() => {
 }, 45000);
 if (typeof updateNotifPermissionUI === 'function') updateNotifPermissionUI();
 if (typeof checkAutomaticNotifications === 'function') checkAutomaticNotifications();
+
+
+// ================= Match Lineup & Substitutions System (التشكيلة والتبديلات) =================
+let activeLineupMatch = null; // { round, h, a, currentSide: 'h'|'a', key: '' }
+
+function openMatchLineupModal(r, h, a) {
+  const key = K(r, h, a);
+  store[key] = store[key] || {};
+  store[key].lineups = store[key].lineups || {};
+
+  // Auto-select side based on logged-in official
+  let defaultSide = 'h';
+  if (currentUser && currentUser.role === 'official' && currentUser.teamId == a) {
+    defaultSide = 'a';
+  }
+
+  activeLineupMatch = {
+    round: r,
+    h: h,
+    a: a,
+    key: key,
+    currentSide: defaultSide
+  };
+
+  const modal = document.getElementById('matchLineupModal');
+  if (!modal) return;
+
+  const titleEl = document.getElementById('lineupModalTitle');
+  const subEl = document.getElementById('lineupModalSubtitle');
+  if (titleEl) titleEl.textContent = `📋 ورقة المباراة: ${T[h]} ضد ${T[a]}`;
+  if (subEl) {
+    const v = store[key] || {};
+    const dStr = v.date ? v.date : defDate(r);
+    const sStr = v.stad ? v.stad : 'الملعب البلدي';
+    subEl.textContent = `الجولة ${r} · ${cat} · ${dStr} · ملعب: ${sStr}`;
+  }
+
+  // Update tabs labels and logos
+  const nameH = document.getElementById('tabNameH');
+  const nameA = document.getElementById('tabNameA');
+  const logoH = document.getElementById('tabLogoH');
+  const logoA = document.getElementById('tabLogoA');
+  if (nameH) nameH.textContent = T[h];
+  if (nameA) nameA.textContent = T[a];
+  if (logoH) logoH.innerHTML = logoInner(h);
+  if (logoA) logoA.innerHTML = logoInner(a);
+
+  switchLineupTeam(defaultSide);
+  modal.style.display = 'flex';
+}
+window.openMatchLineupModal = openMatchLineupModal;
+
+function closeMatchLineupModal() {
+  const modal = document.getElementById('matchLineupModal');
+  if (modal) modal.style.display = 'none';
+  activeLineupMatch = null;
+}
+window.closeMatchLineupModal = closeMatchLineupModal;
+
+function switchLineupTeam(side) {
+  if (!activeLineupMatch) return;
+  activeLineupMatch.currentSide = side;
+
+  const btnH = document.getElementById('btnLineupTabH');
+  const btnA = document.getElementById('btnLineupTabA');
+  if (btnH) btnH.classList.toggle('active', side === 'h');
+  if (btnA) btnA.classList.toggle('active', side === 'a');
+
+  renderMatchLineupView();
+}
+window.switchLineupTeam = switchLineupTeam;
+
+function getActiveTeamId() {
+  if (!activeLineupMatch) return team;
+  return activeLineupMatch.currentSide === 'h' ? activeLineupMatch.h : activeLineupMatch.a;
+}
+
+function canEditCurrentLineup() {
+  if (!currentUser) return false;
+  if (currentUser.role === 'admin') return true;
+  if (currentUser.role === 'official') {
+    return currentUser.teamId == getActiveTeamId();
+  }
+  return false;
+}
+
+function getTeamLineupData(teamId) {
+  if (!activeLineupMatch) return { starters: [], bench: [], subs: [] };
+  const key = activeLineupMatch.key;
+  store[key] = store[key] || {};
+  store[key].lineups = store[key].lineups || {};
+  store[key].lineups[teamId] = store[key].lineups[teamId] || { starters: [], bench: [], subs: [] };
+  return store[key].lineups[teamId];
+}
+
+function renderMatchLineupView() {
+  if (!activeLineupMatch) return;
+  const teamId = getActiveTeamId();
+  const canEdit = canEditCurrentLineup();
+  const data = getTeamLineupData(teamId);
+
+  // Edit badge indicator
+  const editBadge = document.getElementById('lineupEditBadge');
+  if (editBadge) {
+    if (canEdit) {
+      editBadge.style.display = 'block';
+      editBadge.style.background = '#dcfce7';
+      editBadge.style.color = '#15803d';
+      editBadge.textContent = '✍️ وضع التعديل متاح لك';
+    } else {
+      editBadge.style.display = 'block';
+      editBadge.style.background = '#f1f5f9';
+      editBadge.style.color = '#64748b';
+      editBadge.textContent = '🔒 وضع العرض والمشاهدة فقط';
+    }
+  }
+
+  // Toggle forms visibility based on permission
+  const formStarter = document.getElementById('addStarterForm');
+  const formBench = document.getElementById('addBenchForm');
+  const formSub = document.getElementById('addSubForm');
+  const btnAutoFill = document.getElementById('btnLineupFillAllSquad');
+  if (formStarter) formStarter.style.display = canEdit ? 'flex' : 'none';
+  if (formBench) formBench.style.display = canEdit ? 'flex' : 'none';
+  if (formSub) formSub.style.display = canEdit ? 'block' : 'none';
+  if (btnAutoFill) btnAutoFill.style.display = canEdit ? 'inline-block' : 'none';
+
+  // 1. Render Starters
+  const startersBox = document.getElementById('startersContainer');
+  const startersCountBadge = document.getElementById('startersCountBadge');
+  const starters = data.starters || [];
+  if (startersCountBadge) startersCountBadge.textContent = `${starters.length} / 11`;
+
+  if (startersBox) {
+    if (starters.length === 0) {
+      startersBox.innerHTML = '<div style="grid-column:1/-1; color:#94a3b8; font-size:13px; padding:12px; text-align:center; background:#f8fafc; border-radius:10px;">لم يتم تحديد التشكيلة الأساسية بعد.</div>';
+    } else {
+      startersBox.innerHTML = starters.map((p, idx) => {
+        // Check if substituted
+        const subRecord = (data.subs || []).find(s => s.outName === p.name);
+        const subNote = subRecord ? `<span style="color:#dc2626; font-size:10.5px; font-weight:bold; background:#fee2e2; padding:1px 6px; border-radius:4px;">خرج د${subRecord.minute} 🔻</span>` : '';
+        const gkClass = p.isGk ? 'is-gk' : '';
+        const capClass = p.isCaptain ? 'is-cap' : '';
+
+        return `
+          <div class="lineup-player-chip ${gkClass} ${capClass}">
+            <div style="display:flex; align-items:center; gap:6px; overflow:hidden;">
+              <span style="font-weight:900; color:#166534; font-size:13px; min-width:20px;">#${p.num || (idx+1)}</span>
+              <span style="font-weight:700; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">${p.name}</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:4px;">
+              ${subNote}
+              ${canEdit ? `
+                <button type="button" onclick="toggleStarterGk(${idx})" title="تحديد كحارس مرمى" style="border:none; background:none; cursor:pointer; font-size:14px; opacity:${p.isGk ? 1 : 0.35};">🧤</button>
+                <button type="button" onclick="toggleStarterCaptain(${idx})" title="تحديد كقائد الفريق" style="border:none; background:none; cursor:pointer; font-size:14px; opacity:${p.isCaptain ? 1 : 0.35};">Ⓒ</button>
+                <button type="button" onclick="removeStarter(${idx})" title="إزالة من الأساسيين" style="border:none; background:none; cursor:pointer; font-size:13px; color:#ef4444;">🗑️</button>
+              ` : `
+                ${p.isGk ? '<span title="حارس المرمى">🧤</span>' : ''}
+                ${p.isCaptain ? '<span title="قائد الفريق" style="font-weight:bold; color:#1d4ed8;">Ⓒ</span>' : ''}
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  }
+
+  // 2. Render Bench
+  const benchBox = document.getElementById('benchContainer');
+  const benchCountBadge = document.getElementById('benchCountBadge');
+  const bench = data.bench || [];
+  if (benchCountBadge) benchCountBadge.textContent = `${bench.length} لاعب`;
+
+  if (benchBox) {
+    if (bench.length === 0) {
+      benchBox.innerHTML = '<div style="grid-column:1/-1; color:#94a3b8; font-size:13px; padding:10px; text-align:center; background:#f8fafc; border-radius:10px;">لا يوجد بدلاء مسجلين بعد.</div>';
+    } else {
+      benchBox.innerHTML = bench.map((p, idx) => {
+        // Check if entered
+        const subRecord = (data.subs || []).find(s => s.inName === p.name);
+        const subNote = subRecord ? `<span style="color:#16a34a; font-size:10.5px; font-weight:bold; background:#dcfce7; padding:1px 6px; border-radius:4px;">دخل د${subRecord.minute} 🔺</span>` : '';
+
+        return `
+          <div class="lineup-player-chip">
+            <div style="display:flex; align-items:center; gap:6px; overflow:hidden;">
+              <span style="font-weight:900; color:#0369a1; font-size:13px; min-width:20px;">#${p.num || (idx+12)}</span>
+              <span style="font-weight:700; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">${p.name}</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:4px;">
+              ${subNote}
+              ${canEdit ? `
+                <button type="button" onclick="removeBench(${idx})" title="إزالة من الاحتياط" style="border:none; background:none; cursor:pointer; font-size:13px; color:#ef4444;">🗑️</button>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  }
+
+  // 3. Render Substitutions Timeline
+  const subsBox = document.getElementById('subsTimelineList');
+  const subsCountBadge = document.getElementById('subsCountBadge');
+  const subs = data.subs || [];
+  if (subsCountBadge) subsCountBadge.textContent = `${subs.length} تبديلات`;
+
+  if (subsBox) {
+    if (subs.length === 0) {
+      subsBox.innerHTML = '<div style="color:#94a3b8; font-size:13px; padding:10px; text-align:center; background:#ffffff; border-radius:8px;">لم تُسجل أي تبديلات أثناء هذه المباراة.</div>';
+    } else {
+      subsBox.innerHTML = subs.map((s, idx) => `
+        <div class="sub-timeline-card">
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <span style="background:#fef3c7; color:#92400e; font-weight:900; padding:2px 8px; border-radius:6px; font-size:12px;">⏱️ د${s.minute || '--'}</span>
+            <span style="color:#dc2626; font-weight:bold;">🔻 خروج: <b>${s.outName}</b></span>
+            <span style="color:#64748b;">⮀</span>
+            <span style="color:#16a34a; font-weight:bold;">🔺 دخول: <b>${s.inName}</b></span>
+            ${s.reason ? `<span style="color:#64748b; font-size:11px;">(${s.reason})</span>` : ''}
+          </div>
+          ${canEdit ? `
+            <button type="button" onclick="deleteMatchSubstitution(${idx})" style="border:none; background:none; cursor:pointer; color:#ef4444; font-size:14px;" title="حذف هذا التبديل">🗑️</button>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+  }
+
+  // 4. Update Dropdowns
+  updateLineupDropdowns();
+}
+
+function updateLineupDropdowns() {
+  const teamId = getActiveTeamId();
+  const data = getTeamLineupData(teamId);
+  const fullRoster = rosterList(cat);
+
+  const starterNames = (data.starters || []).map(p => p.name);
+  const benchNames = (data.bench || []).map(p => p.name);
+
+  // Quick Starter Dropdown: available players not in starters or bench
+  const starterSel = document.getElementById('quickPickStarterSelect');
+  if (starterSel) {
+    const avail = fullRoster.filter(n => !starterNames.includes(n) && !benchNames.includes(n));
+    starterSel.innerHTML = '<option value="">＋ اختر لاعباً من قائمة النادي...</option>' + 
+      avail.map(n => `<option value="${n}">${n}</option>`).join('');
+  }
+
+  // Quick Bench Dropdown: available players not in starters or bench
+  const benchSel = document.getElementById('quickPickBenchSelect');
+  if (benchSel) {
+    const avail = fullRoster.filter(n => !starterNames.includes(n) && !benchNames.includes(n));
+    benchSel.innerHTML = '<option value="">＋ اختر لاعباً من قائمة النادي...</option>' + 
+      avail.map(n => `<option value="${n}">${n}</option>`).join('');
+  }
+
+  // Sub Out Dropdown: current active players on pitch
+  // (Starters who have not already been substituted OUT + Bench players who have been substituted IN and not substituted OUT)
+  const subOutSel = document.getElementById('subOutSelect');
+  if (subOutSel) {
+    const subs = data.subs || [];
+    const outNames = subs.map(s => s.outName);
+    const inNames = subs.map(s => s.inName);
+
+    // Active on pitch:
+    // 1) Starters not in outNames
+    // 2) Bench players who entered (inNames) and are not in outNames
+    const pitchPlayers = [];
+    (data.starters || []).forEach(p => {
+      if (!outNames.includes(p.name)) pitchPlayers.push(p);
+    });
+    (data.bench || []).forEach(p => {
+      if (inNames.includes(p.name) && !outNames.includes(p.name)) pitchPlayers.push(p);
+    });
+
+    subOutSel.innerHTML = '<option value="">اختر اللاعب الخارج 🔻...</option>' + 
+      pitchPlayers.map(p => `<option value="${p.name}">🔻 ${p.name} (#${p.num || ''})</option>`).join('');
+  }
+
+  // Sub In Dropdown: Bench players who haven't entered yet
+  const subInSel = document.getElementById('subInSelect');
+  if (subInSel) {
+    const subs = data.subs || [];
+    const inNames = subs.map(s => s.inName);
+    const availableBench = (data.bench || []).filter(p => !inNames.includes(p.name));
+
+    subInSel.innerHTML = '<option value="">اختر اللاعب الداخل 🔺...</option>' + 
+      availableBench.map(p => `<option value="${p.name}">🔺 ${p.name} (#${p.num || ''})</option>`).join('');
+  }
+}
+
+function addStarterFromSelect() {
+  if (!canEditCurrentLineup()) return;
+  const teamId = getActiveTeamId();
+  const data = getTeamLineupData(teamId);
+  const sel = document.getElementById('quickPickStarterSelect');
+  const numInp = document.getElementById('quickStarterNum');
+  const name = sel ? sel.value : '';
+  const num = numInp ? numInp.value : '';
+
+  if (!name) {
+    alert('يرجى اختيار لاعب من القائمة أو إضافته أولاً.');
+    return;
+  }
+
+  data.starters = data.starters || [];
+  if (data.starters.length >= 11) {
+    if (!confirm('التشكيلة الأساسية تحتوي بالفعل على 11 لاعباً! هل تريد إضافة هذا اللاعب أيضاً؟')) {
+      return;
+    }
+  }
+
+  data.starters.push({
+    name: name,
+    num: num || (data.starters.length + 1).toString(),
+    isGk: data.starters.length === 0, // first player default GK
+    isCaptain: false
+  });
+
+  save();
+  if (numInp) numInp.value = '';
+  renderMatchLineupView();
+  showToast('✅ تمت إضافة ' + name + ' للتشكيلة الأساسية.');
+}
+window.addStarterFromSelect = addStarterFromSelect;
+
+function removeStarter(idx) {
+  if (!canEditCurrentLineup()) return;
+  const teamId = getActiveTeamId();
+  const data = getTeamLineupData(teamId);
+  const removed = (data.starters || []).splice(idx, 1)[0];
+  // Remove any substitutions referencing this player
+  if (removed && data.subs) {
+    data.subs = data.subs.filter(s => s.outName !== removed.name && s.inName !== removed.name);
+  }
+  save();
+  renderMatchLineupView();
+}
+window.removeStarter = removeStarter;
+
+function toggleStarterGk(idx) {
+  if (!canEditCurrentLineup()) return;
+  const teamId = getActiveTeamId();
+  const data = getTeamLineupData(teamId);
+  if (!data.starters || !data.starters[idx]) return;
+  const cur = data.starters[idx].isGk;
+  data.starters.forEach((p, i) => { if (i !== idx) p.isGk = false; });
+  data.starters[idx].isGk = !cur;
+  save();
+  renderMatchLineupView();
+}
+window.toggleStarterGk = toggleStarterGk;
+
+function toggleStarterCaptain(idx) {
+  if (!canEditCurrentLineup()) return;
+  const teamId = getActiveTeamId();
+  const data = getTeamLineupData(teamId);
+  if (!data.starters || !data.starters[idx]) return;
+  const cur = data.starters[idx].isCaptain;
+  data.starters.forEach((p, i) => { if (i !== idx) p.isCaptain = false; });
+  data.starters[idx].isCaptain = !cur;
+  save();
+  renderMatchLineupView();
+}
+window.toggleStarterCaptain = toggleStarterCaptain;
+
+function addBenchFromSelect() {
+  if (!canEditCurrentLineup()) return;
+  const teamId = getActiveTeamId();
+  const data = getTeamLineupData(teamId);
+  const sel = document.getElementById('quickPickBenchSelect');
+  const numInp = document.getElementById('quickBenchNum');
+  const name = sel ? sel.value : '';
+  const num = numInp ? numInp.value : '';
+
+  if (!name) {
+    alert('يرجى اختيار لاعب لدكة البدلاء.');
+    return;
+  }
+
+  data.bench = data.bench || [];
+  data.bench.push({
+    name: name,
+    num: num || (data.bench.length + 12).toString()
+  });
+
+  save();
+  if (numInp) numInp.value = '';
+  renderMatchLineupView();
+  showToast('✅ تمت إضافة ' + name + ' إلى دكة البدلاء.');
+}
+window.addBenchFromSelect = addBenchFromSelect;
+
+function removeBench(idx) {
+  if (!canEditCurrentLineup()) return;
+  const teamId = getActiveTeamId();
+  const data = getTeamLineupData(teamId);
+  const removed = (data.bench || []).splice(idx, 1)[0];
+  if (removed && data.subs) {
+    data.subs = data.subs.filter(s => s.inName !== removed.name && s.outName !== removed.name);
+  }
+  save();
+  renderMatchLineupView();
+}
+window.removeBench = removeBench;
+
+function autoFillStartersFromSquad() {
+  if (!canEditCurrentLineup()) return;
+  const teamId = getActiveTeamId();
+  const data = getTeamLineupData(teamId);
+  const fullRoster = rosterList(cat);
+
+  if (!fullRoster.length) {
+    alert('قائمة الفريق فارغة.');
+    return;
+  }
+
+  if (data.starters && data.starters.length > 0) {
+    if (!confirm('التشكيلة الأساسية بها لاعبون حالياً. هل تريد إعادة ملئها بأول 11 لاعباً من قائمة النادي؟')) {
+      return;
+    }
+  }
+
+  data.starters = [];
+  data.bench = [];
+  data.subs = [];
+
+  fullRoster.slice(0, 11).forEach((name, i) => {
+    data.starters.push({
+      name: name,
+      num: (i + 1).toString(),
+      isGk: i === 0,
+      isCaptain: i === 1
+    });
+  });
+
+  // Remaining as bench
+  fullRoster.slice(11, 18).forEach((name, i) => {
+    data.bench.push({
+      name: name,
+      num: (i + 12).toString()
+    });
+  });
+
+  save();
+  renderMatchLineupView();
+  showToast('⚡ تم ملء التشكيلة الأساسية والاحتياط تلقائياً من قائمة النادي بنجاح!');
+}
+window.autoFillStartersFromSquad = autoFillStartersFromSquad;
+
+function recordMatchSubstitution() {
+  if (!canEditCurrentLineup()) return;
+  const teamId = getActiveTeamId();
+  const data = getTeamLineupData(teamId);
+
+  const outName = document.getElementById('subOutSelect').value;
+  const inName = document.getElementById('subInSelect').value;
+  const minute = document.getElementById('subMinuteInp').value.trim();
+  const reason = document.getElementById('subReasonInp').value.trim();
+
+  if (!outName || !inName) {
+    alert('يرجى اختيار اللاعب الخارج واللاعب الداخل.');
+    return;
+  }
+  if (!minute) {
+    alert('يرجى تحديد دقيقة التبديل.');
+    return;
+  }
+
+  data.subs = data.subs || [];
+  data.subs.push({
+    outName: outName,
+    inName: inName,
+    minute: minute,
+    reason: reason
+  });
+
+  // Sort substitutions by minute
+  data.subs.sort((a, b) => (+a.minute || 0) - (+b.minute || 0));
+
+  save();
+  document.getElementById('subMinuteInp').value = '';
+  document.getElementById('subReasonInp').value = '';
+  renderMatchLineupView();
+  showToast(`🔄 تم تسجيل التبديل في الدقيقة ${minute}: خروج (${outName}) 🔻 / دخول (${inName}) 🔺`);
+}
+window.recordMatchSubstitution = recordMatchSubstitution;
+
+function deleteMatchSubstitution(idx) {
+  if (!canEditCurrentLineup()) return;
+  const teamId = getActiveTeamId();
+  const data = getTeamLineupData(teamId);
+  if (!data.subs || !data.subs[idx]) return;
+
+  const s = data.subs[idx];
+  if (confirm(`هل أنت متأكد من حذف تبديل الدقيقة ${s.minute} (خروج ${s.outName} ودخول ${s.inName})؟`)) {
+    data.subs.splice(idx, 1);
+    save();
+    renderMatchLineupView();
+    showToast('🗑️ تم حذف التبديل.');
+  }
+}
+window.deleteMatchSubstitution = deleteMatchSubstitution;
+
+function copyMatchLineupText() {
+  if (!activeLineupMatch) return;
+  const teamId = getActiveTeamId();
+  const data = getTeamLineupData(teamId);
+  const teamName = T[teamId];
+  const r = activeLineupMatch.round;
+  const oppId = teamId == activeLineupMatch.h ? activeLineupMatch.a : activeLineupMatch.h;
+  const oppName = T[oppId];
+
+  let text = `📋 ورقة تشكيلة ${teamName} (${cat})\n`;
+  text += `🏆 الجولة ${r}: ضد ${oppName}\n`;
+  text += `━━━━━━━━━━━━━━━━━━━━\n`;
+  text += `⭐ التشكيلة الأساسية:\n`;
+  (data.starters || []).forEach((p, idx) => {
+    const gk = p.isGk ? ' [GK حارس 🧤]' : '';
+    const cap = p.isCaptain ? ' [قائد Ⓒ]' : '';
+    text += `${idx+1}. #${p.num || idx+1} ${p.name}${gk}${cap}\n`;
+  });
+
+  if (data.bench && data.bench.length) {
+    text += `\n🔄 دكة البدلاء (الاحتياط):\n`;
+    data.bench.forEach((p, idx) => {
+      text += `${idx+1}. #${p.num || idx+12} ${p.name}\n`;
+    });
+  }
+
+  if (data.subs && data.subs.length) {
+    text += `\n⏱️ التبديلات أثناء المباراة:\n`;
+    data.subs.forEach(s => {
+      text += `• د${s.minute}: 🔻 خروج: ${s.outName} ⮀ 🔺 دخول: ${s.inName} ${s.reason ? '('+s.reason+')' : ''}\n`;
+    });
+  }
+
+  text += `\nمنظومة بطولة تيبازة الشبانية ESM 2026\nhttps://esm-matches.onrender.com/`;
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      showToast('📋 تم نسخ ورقة التشكيلة والتبديلات بنجاح!');
+    }).catch(() => prompt('انسخ ورقة التشكيلة أدناه:', text));
+  } else {
+    prompt('انسخ ورقة التشكيلة أدناه:', text);
+  }
+}
+window.copyMatchLineupText = copyMatchLineupText;
 
 </script>
 </body>
