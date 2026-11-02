@@ -14,9 +14,9 @@ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:en
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a1017;--panel:#141d27;--ink:#e8edf2;--muted:#93a1b0;--line:#25323f;--field:#0f1822}}
 :root[data-theme="dark"]{--bg:#0a1017;--panel:#141d27;--ink:#e8edf2;--muted:#93a1b0;--line:#25323f;--field:#0f1822}
 *{box-sizing:border-box}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:'Tajawal',Tahoma,'Segoe UI',sans-serif;line-height:1.5}
-main{max-width:620px;margin:0 auto;padding:16px 14px 40px}
+html{scroll-padding-top:env(safe-area-inset-top,0px);overflow-x:hidden!important;width:100%!important;max-width:100vw!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Tajawal',Tahoma,'Segoe UI',sans-serif;line-height:1.5;overflow-x:hidden!important;width:100%!important;max-width:100vw!important;position:relative;-webkit-text-size-adjust:100%}
+main{width:100%!important;max-width:620px!important;margin:0 auto;padding:14px 10px 40px;box-sizing:border-box!important;overflow-x:hidden!important}
 .hd{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:6px 0 2px}
 #fontSel{width:auto;max-width:130px;font-size:13px;padding:6px 8px;margin-inline-start:auto}.hd img{width:56px;height:56px;border-radius:14px}.hd h1{margin:0}
 h1{font-size:22px;font-weight:900;margin:6px 0 2px}
@@ -739,9 +739,17 @@ body.th-dark .off-item-sub { color: #94a3b8 !important; }
 .gate-contact-footer{text-align:center;margin-top:16px;padding-top:14px;border-top:1px dashed var(--line,#d5dce4);font-size:12.5px;color:var(--muted,#5d6b7a);}
 .gate-contact-footer b{color:#1f5a34;}
 
-.user-top-bar{background:var(--panel,#fff);border:1px solid var(--line,#d5dce4);border-radius:14px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,0.04);}
-.user-top-badge{font-size:13px;font-weight:800;color:var(--ink,#0b1722);display:flex;align-items:center;gap:6px;}
-.user-top-actions{display:flex;align-items:center;gap:6px;}
+/* Responsive User Top Bar & Notifications - Anti-Horizontal Overflow */
+.user-top-bar{background:var(--panel,#fff);border:1px solid var(--line,#d5dce4);border-radius:14px;padding:8px 12px;margin-bottom:12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;box-shadow:0 2px 8px rgba(0,0,0,0.04);width:100%;max-width:100%;box-sizing:border-box;}
+.user-top-badge{font-size:12.5px;font-weight:800;color:var(--ink,#0b1722);display:flex;align-items:center;gap:6px;flex-wrap:wrap;max-width:100%;}
+.user-top-actions{display:flex;flex-wrap:wrap;align-items:center;gap:6px;justify-content:flex-end;max-width:100%;}
+.user-top-actions .btn-mgr-action, .user-top-actions .btn-logout{font-size:11.5px;padding:6px 10px;border-radius:8px;white-space:nowrap;}
+
+.top-notif-bar{background:linear-gradient(135deg,#1e3a8a,#0f172a);color:#fff;border-radius:12px;padding:8px 12px;margin-bottom:10px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;width:100%;max-width:100%;box-sizing:border-box;box-shadow:0 4px 12px rgba(15,23,42,0.25);}
+.top-notif-bar .notif-content{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;flex:1 1 180px;min-width:0;word-break:break-word;}
+.top-notif-bar .notif-ctrls{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.top-notif-bar .notif-edit-btn{background:#f59e0b;color:#0b1722;border:0;border-radius:6px;padding:4px 8px;font-size:11px;font-weight:800;cursor:pointer;}
+.top-notif-bar .notif-close-btn{background:rgba(255,255,255,0.2);color:#fff;border:0;border-radius:50%;width:24px;height:24px;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
 
 /* Google Maps Stadium Pin & Pill */
 
@@ -1340,6 +1348,66 @@ body.th-dark .off-item-sub { color: #94a3b8 !important; }
   padding: 4px 6px;
 }
 
+
+/* ===== تحسينات شاملة للهواتف المحمولة ومنع الفراغ الجانبي الأيسر نهائياً ===== */
+@media (max-width: 480px) {
+  html, body {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+    width: 100% !important;
+    position: relative !important;
+  }
+  main {
+    padding: 10px 8px 36px !important;
+    max-width: 100vw !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+  .user-top-bar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    padding: 8px 10px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .user-top-badge {
+    justify-content: space-between !important;
+    width: 100% !important;
+    border-bottom: 1px dashed var(--line, #d5dce4);
+    padding-bottom: 6px;
+    font-size: 12px !important;
+  }
+  .user-top-actions {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    width: 100% !important;
+    gap: 5px !important;
+    justify-content: stretch !important;
+  }
+  .user-top-actions button {
+    flex: 1 1 calc(50% - 5px) !important;
+    min-width: 0 !important;
+    justify-content: center !important;
+    text-align: center !important;
+    padding: 7px 6px !important;
+    font-size: 11px !important;
+    white-space: nowrap !important;
+  }
+  .user-top-actions .btn-logout {
+    flex: 1 1 100% !important;
+    margin-top: 2px;
+  }
+  .top-notif-bar {
+    padding: 8px 10px !important;
+    font-size: 11.5px !important;
+  }
+  .card, .stat, .tbl, .ctl, .conf-box, .app-gate, .modal-card {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
 </style>
 
 <link rel="manifest" href="manifest.json">
