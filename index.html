@@ -2306,6 +2306,31 @@ body.th-dark .off-item-sub { color: #94a3b8 !important; }
  </div>
 </div>
 
+<!-- نافذة استعراض وحفظ صورة الملصق على الهاتف -->
+<div id="adminPosterImgModal" class="modal-bg" style="display:none;z-index:99999;">
+ <div class="modal-card" style="max-width:550px;width:95%;max-height:92vh;padding:16px;border-radius:18px;text-align:center;">
+  <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line,#e2e8f0);padding-bottom:10px;margin-bottom:12px;">
+   <h3 style="margin:0;font-size:16px;font-weight:900;color:#156834;">📸 ملصق الترتيب جاهز للحفظ</h3>
+   <button class="modal-close" type="button" onclick="closeAdminPosterImagePopup()">&times;</button>
+  </div>
+  <div style="background:#f0fdf4;border:1.5px solid #22c55e;border-radius:12px;padding:10px 12px;margin-bottom:12px;font-size:13px;font-weight:800;color:#166534;line-height:1.5;">
+   💡 <b>طريقة الحفظ على الآيفون والهاتف:</b><br>
+   اضغط <b>مطولاً بإصبعك</b> على الصورة ثم اختر <b>"حفظ في الصور" (Save to Photos)</b> أو اضغط زر المشاركة أدناه.
+  </div>
+  <div style="max-height:55vh;overflow-y:auto;background:#0f172a;border-radius:14px;padding:10px;box-shadow:inset 0 2px 10px rgba(0,0,0,0.5);margin-bottom:14px;">
+   <img id="adminPosterPopupImg" src="" alt="ملصق الترتيب" style="max-width:100%;height:auto;border-radius:10px;display:block;margin:0 auto;box-shadow:0 4px 16px rgba(0,0,0,0.3);">
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+   <button type="button" onclick="shareGeneratedPosterFile()" style="background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;border:0;border-radius:12px;padding:12px;font-weight:900;font-size:13.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 14px rgba(37,211,102,0.3);">
+    <span class="ic">📲</span> حفظ / مشاركة
+   </button>
+   <button type="button" onclick="directDownloadGeneratedBlob()" style="background:linear-gradient(135deg,#156834,#0d3813);color:#fff;border:0;border-radius:12px;padding:12px;font-weight:900;font-size:13.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 14px rgba(21,104,52,0.3);">
+    <span class="ic">💾</span> تحميل الملف
+   </button>
+  </div>
+ </div>
+</div>
+
 <div id="notificationsModal" class="modal-bg" style="display:none;">
  <div class="modal-card notif-modal-card">
   <div class="modal-head notif-modal-head">
@@ -4195,8 +4220,8 @@ var CLOUD_SYNC_TOPIC = 'esm_championship_tipaza_2026_wifaq';
 var CLOUD_SYNC_URL = 'https://ntfy.sh/' + CLOUD_SYNC_TOPIC;
 let liveSseSource = null;
 let sseReconnectTimer = null;
-let heartbeatTimer = null;
-let isBroadcasting = false;
+var heartbeatTimer = null;
+var isBroadcasting = false;
 
 // Multi-tab broadcast channel on the same device
 try {
@@ -6659,6 +6684,20 @@ window.copyMatchLineupText = copyMatchLineupText;
 var currentAdminPosterRound = 1;
 var currentAdminPosterCat = 'U15';
 var adminStandingsCachedCanvas = null;
+var adminGeneratedBlob = null;
+var adminGeneratedDataUrl = null;
+var adminGeneratedFile = null;
+
+// دالة تنفيذ العمليات في نطاق فئة معينة دون المساس بالحالة العامة الدائمة
+function withCategoryScope(targetCat, fn) {
+  const prevCat = cat;
+  try {
+    cat = targetCat;
+    return fn();
+  } finally {
+    cat = prevCat;
+  }
+}
 
 function openAdminStandingsPoster(r, targetCat) {
   if (!currentUser || currentUser.role !== 'admin') {
@@ -6667,7 +6706,7 @@ function openAdminStandingsPoster(r, targetCat) {
   }
 
   currentAdminPosterCat = targetCat || cat || 'U15';
-  const lastR = typeof lastRound === 'function' ? lastRound() : 1;
+  const lastR = withCategoryScope(currentAdminPosterCat, () => (typeof lastRound === 'function' ? lastRound() : 1)) || 1;
   const currentUp = (typeof upS !== 'undefined' && upS) ? +upS.value : 1;
   currentAdminPosterRound = r || lastR || currentUp || 1;
 
@@ -6696,7 +6735,19 @@ function closeAdminStandingsPoster() {
 
 function changeAdminPosterCat(newCat) {
   currentAdminPosterCat = newCat;
+  
+  // تحديث الجولة لتتوافق مع آخر جولة ملعوبة في الفئة الجديدة
+  const lastR = withCategoryScope(newCat, () => (typeof lastRound === 'function' ? lastRound() : 1)) || 1;
+  const roundSel = document.getElementById('adminPosterRoundSel');
+  if (roundSel && lastR > 0) {
+    if (currentAdminPosterRound > lastR) {
+      currentAdminPosterRound = lastR;
+    }
+    roundSel.value = currentAdminPosterRound;
+  }
+
   renderAdminStandingsPosterUI(currentAdminPosterRound, currentAdminPosterCat);
+  if (typeof showToast === 'function') showToast('🔄 تم تحديث الترتيب لفئة ' + newCat);
 }
 
 function changeAdminPosterRound(newRound) {
@@ -6708,23 +6759,36 @@ function renderAdminStandingsPosterUI(u, cCat) {
   const container = document.getElementById('adminPosterPreviewContainer');
   if (!container) return;
 
-  const S = standings(u);
-  const n = S.length;
-  const pool = S.filter(x => x.p > 0);
+  // حساب الترتيب والإحصائيات الخاصة بالفئة المحددة بدقة
+  const data = withCategoryScope(cCat, () => {
+    const S = standings(u);
+    const n = S.length;
+    const pool = S.filter(x => x.p > 0);
 
-  // Best attack & defense
-  const att = pool.length ? [...pool].sort((a,b) => b.gf - a.gf)[0] : S[0];
-  const def = pool.length ? [...pool].sort((a,b) => a.ga - b.ga)[0] : S[0];
+    // أفضل هجوم ودفاع في هذه الفئة
+    const att = pool.length ? [...pool].sort((a,b) => b.gf - a.gf)[0] : S[0];
+    const def = pool.length ? [...pool].sort((a,b) => a.ga - b.ga)[0] : S[0];
 
-  // Top Scorer
-  const scTallies = typeof tallies === 'function' ? tallies() : [[], []];
-  const G = scTallies[0] || [];
-  const topScorer = G.length ? G[0] : null;
+    // الهداف في هذه الفئة
+    const scTallies = typeof tallies === 'function' ? tallies() : [[], []];
+    const G = scTallies[0] || [];
+    const topScorer = G.length ? G[0] : null;
 
-  // Goals average
-  const totalMatches = pool.reduce((acc, x) => acc + x.p, 0) / 2;
-  const totalGoals = pool.reduce((acc, x) => acc + x.gf, 0);
-  const avgGoals = totalMatches > 0 ? (totalGoals / totalMatches).toFixed(2) : '0.00';
+    // معدل الأهداف في هذه الفئة
+    const totalMatches = pool.reduce((acc, x) => acc + x.p, 0) / 2;
+    const totalGoals = pool.reduce((acc, x) => acc + x.gf, 0);
+    const avgGoals = totalMatches > 0 ? (totalGoals / totalMatches).toFixed(2) : '0.00';
+
+    // أداء كل فريق في هذه الفئة
+    const forms = {};
+    S.forEach(teamStat => {
+      forms[teamStat.id] = typeof formOf === 'function' ? formOf(teamStat.id, u) : [];
+    });
+
+    return { S, n, pool, att, def, topScorer, totalMatches, totalGoals, avgGoals, forms };
+  });
+
+  const { S, n, pool, att, def, topScorer, totalMatches, totalGoals, avgGoals, forms } = data;
 
   let html = `
     <div class="admin-poster-sheet">
@@ -6768,15 +6832,14 @@ function renderAdminStandingsPosterUI(u, cCat) {
   S.forEach((teamStat, idx) => {
     const rank = idx + 1;
     let rankCls = 'mid';
-    if (rank <= 4) rankCls = 'promo';
+    if (rank <= 5) rankCls = 'promo';
     else if (rank >= n - 2) rankCls = 'releg';
 
     const diff = teamStat.gf - teamStat.ga;
     const diffCls = diff > 0 ? 'pos' : (diff < 0 ? 'neg' : 'zero');
     const diffTxt = diff > 0 ? '+' + diff : (diff === 0 ? '0' : '' + diff);
 
-    const fList = typeof formOf === 'function' ? formOf(teamStat.id, u) : [];
-    // Pad to 5 matches
+    const fList = forms[teamStat.id] || [];
     let formDots = '';
     for (let f = 0; f < 5; f++) {
       const matchIdx = fList.length - 5 + f;
@@ -6878,9 +6941,28 @@ function renderAdminStandingsPosterUI(u, cCat) {
 
 // دالة توليد البوستر بجودة فائقة HD على Canvas
 async function generateAdminPosterCanvas(u, cCat) {
-  const S = standings(u);
-  const n = S.length;
-  const pool = S.filter(x => x.p > 0);
+  const data = withCategoryScope(cCat, () => {
+    const S = standings(u);
+    const n = S.length;
+    const pool = S.filter(x => x.p > 0);
+    const att = pool.length ? [...pool].sort((a,b) => b.gf - a.gf)[0] : S[0];
+    const def = pool.length ? [...pool].sort((a,b) => a.ga - b.ga)[0] : S[0];
+    const scTallies = typeof tallies === 'function' ? tallies() : [[], []];
+    const G = scTallies[0] || [];
+    const topScorer = G.length ? G[0] : null;
+    const totalMatches = pool.reduce((acc, x) => acc + x.p, 0) / 2;
+    const totalGoals = pool.reduce((acc, x) => acc + x.gf, 0);
+    const avgGoals = totalMatches > 0 ? (totalGoals / totalMatches).toFixed(2) : '0.00';
+
+    const forms = {};
+    S.forEach(teamStat => {
+      forms[teamStat.id] = typeof formOf === 'function' ? formOf(teamStat.id, u) : [];
+    });
+
+    return { S, n, pool, att, def, topScorer, totalMatches, totalGoals, avgGoals, forms };
+  });
+
+  const { S, n, pool, att, def, topScorer, totalMatches, totalGoals, avgGoals, forms } = data;
 
   const W = 1200;
   const topH = 260;
@@ -7043,7 +7125,7 @@ async function generateAdminPosterCanvas(u, cCat) {
     tx(c, diffTxt, colX.diff, curY + 42, 23, diffColor, 'center', 900);
 
     // مربعات الأداء (آخر 5 مباريات)
-    const fList = typeof formOf === 'function' ? formOf(teamStat.id, u) : [];
+    const fList = forms[teamStat.id] || [];
     let startFormX = colX.form - 70;
     for (let f = 0; f < 5; f++) {
       const matchIdx = fList.length - 5 + f;
@@ -7077,22 +7159,7 @@ async function generateAdminPosterCanvas(u, cCat) {
   const cardGap = 20;
   const startCardX = 50;
 
-  // Best attack & defense
-  const att = pool.length ? [...pool].sort((a,b) => b.gf - a.gf)[0] : S[0];
-  const def = pool.length ? [...pool].sort((a,b) => a.ga - b.ga)[0] : S[0];
-
-  // Top Scorer
-  const scTallies = typeof tallies === 'function' ? tallies() : [[], []];
-  const G = scTallies[0] || [];
-  const topScorer = G.length ? G[0] : null;
-
-  // Goals average
-  const totalMatches = pool.reduce((acc, x) => acc + x.p, 0) / 2;
-  const totalGoals = pool.reduce((acc, x) => acc + x.gf, 0);
-  const avgGoals = totalMatches > 0 ? (totalGoals / totalMatches).toFixed(2) : '0.00';
-
-  // دالة مساعدة لرسم بطاقة بيضاء نظيفة
-  const drawStatCard = (x, lbl, val, subHtml, icon) => {
+  const drawStatCard = (x, lbl, val, subHtml) => {
     c.fillStyle = '#ffffff';
     c.strokeStyle = '#e2e8f0';
     c.lineWidth = 1.5;
@@ -7141,42 +7208,138 @@ async function generateAdminPosterCanvas(u, cCat) {
   return cv;
 }
 
-
-// دالة تحميل البوستر كصورة PNG
+// دالة تحميل وحفظ البوستر لجميع الهواتف (آيفون، أندرويد، كمبيوتر)
 async function downloadAdminStandingsPoster() {
   if (typeof showToast === 'function') showToast('⏳ جاري تصميم ومعالجة الملصق بجودة فائقة...');
   try {
     const cv = await generateAdminPosterCanvas(currentAdminPosterRound, currentAdminPosterCat);
-    const a = document.createElement('a');
-    a.download = 'ترتيب_الرابطة_الجولة_' + currentAdminPosterRound + '_' + currentAdminPosterCat + '.png';
-    a.href = cv.toDataURL('image/png');
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    if (typeof showToast === 'function') showToast('✅ تم تحميل ملصق الترتيب المعتمد بنجاح!');
+    const blob = await new Promise(r => cv.toBlob(r, 'image/png'));
+    const fileName = 'ترتيب_الرابطة_الجولة_' + currentAdminPosterRound + '_' + currentAdminPosterCat + '.png';
+    const file = new File([blob], fileName, { type: 'image/png' });
+    const dataUrl = cv.toDataURL('image/png');
+
+    adminGeneratedBlob = blob;
+    adminGeneratedDataUrl = dataUrl;
+    adminGeneratedFile = file;
+
+    // 1. الدعم الأصلي للهواتف الذكية (iOS Safari و Android Chrome)
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          title: 'ملصق الترتيب الرسمي المعتمد',
+          text: '🏆 ملصق الترتيب المعتمد - الجولة ' + currentAdminPosterRound + ' (' + currentAdminPosterCat + ') · رابطة تيبازة',
+          files: [file]
+        });
+        if (typeof showToast === 'function') showToast('✅ تم فتح نافذة الحفظ والمشاركة!');
+        return;
+      } catch (err) {
+        if (err.name === 'AbortError') return;
+        console.warn('Share error, showing popup:', err);
+      }
+    }
+
+    // 2. تنزيل مباشر في المتصفح لأجهزة الكمبيوتر وأندرويد
+    try {
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.download = fileName;
+      a.href = blobUrl;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => { a.remove(); URL.revokeObjectURL(blobUrl); }, 3000);
+    } catch(e) {}
+
+    // 3. فتح نافذة الصورة المخصصة مع تعليمات الحفظ بالضغط المطول لمستخدمي الآيفون
+    openAdminPosterImagePopup(dataUrl, fileName);
+    if (typeof showToast === 'function') showToast('📸 تم تجهيز الملصق! اضغط مطولاً على الصورة لحفظها في ألبوم الصور.');
   } catch (err) {
     console.error('Error generating standings poster:', err);
     if (typeof showToast === 'function') showToast('❌ حدث خطأ أثناء توليد الملصق.');
   }
 }
 
-// دالة مشاركة البوستر عبر واتساب
-function shareAdminStandingsPoster() {
-  const S = standings(currentAdminPosterRound);
-  const u = currentAdminPosterRound;
-  let txt = '🏆 *جدول الترتيب الرسمي المعتمد - الجولة ' + u + '*\n';
-  txt += '⚽ رابطة تيبازة لكرة القدم · الفئة: ' + currentAdminPosterCat + '\n';
-  txt += '━━━━━━━━━━━━━━━━━━━━\n';
-  S.forEach((teamStat, idx) => {
-    const diff = teamStat.gf - teamStat.ga;
-    const diffTxt = diff > 0 ? '+' + diff : '' + diff;
-    txt += (idx + 1) + '. *' + T[teamStat.id] + '* | ' + teamStat.pts + ' ن (لعب ' + teamStat.p + ' | فارق ' + diffTxt + ')\n';
-  });
-  txt += '━━━━━━━━━━━━━━━━━━━━\n';
-  txt += '📲 للمعاينة والتحميل: https://esm-matches.onrender.com/';
-
-  window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(txt), '_blank');
+// دالة فتح نافذة الصورة المخصصة للحفظ اليدوي
+function openAdminPosterImagePopup(dataUrl, fileName) {
+  const modal = document.getElementById('adminPosterImgModal');
+  const img = document.getElementById('adminPosterPopupImg');
+  if (modal && img) {
+    img.src = dataUrl;
+    modal.style.display = 'flex';
+  }
 }
+
+function closeAdminPosterImagePopup() {
+  const modal = document.getElementById('adminPosterImgModal');
+  if (modal) modal.style.display = 'none';
+}
+
+async function shareGeneratedPosterFile() {
+  if (adminGeneratedFile && navigator.canShare && navigator.canShare({ files: [adminGeneratedFile] })) {
+    try {
+      await navigator.share({
+        title: 'ملصق الترتيب الرسمي المعتمد',
+        text: '🏆 ملصق الترتيب المعتمد - الجولة ' + currentAdminPosterRound + ' (' + currentAdminPosterCat + ') · رابطة تيبازة',
+        files: [adminGeneratedFile]
+      });
+      return;
+    } catch(e) {}
+  }
+  shareAdminStandingsPoster();
+}
+
+function directDownloadGeneratedBlob() {
+  if (!adminGeneratedBlob) return;
+  const fileName = 'ترتيب_الرابطة_الجولة_' + currentAdminPosterRound + '_' + currentAdminPosterCat + '.png';
+  const blobUrl = URL.createObjectURL(adminGeneratedBlob);
+  const a = document.createElement('a');
+  a.download = fileName;
+  a.href = blobUrl;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { a.remove(); URL.revokeObjectURL(blobUrl); }, 3000);
+}
+
+// دالة مشاركة البوستر عبر واتساب
+async function shareAdminStandingsPoster() {
+  if (typeof showToast === 'function') showToast('⏳ جاري تجهيز المشاركة...');
+  try {
+    const cv = await generateAdminPosterCanvas(currentAdminPosterRound, currentAdminPosterCat);
+    const blob = await new Promise(r => cv.toBlob(r, 'image/png'));
+    const fileName = 'ترتيب_الرابطة_الجولة_' + currentAdminPosterRound + '_' + currentAdminPosterCat + '.png';
+    const file = new File([blob], fileName, { type: 'image/png' });
+
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          title: 'ملصق الترتيب المعتمد',
+          text: '🏆 جدول الترتيب الرسمي المعتمد - الجولة ' + currentAdminPosterRound + ' (' + currentAdminPosterCat + ')\\nرابطة تيبازة لكرة القدم\\nتابع النتائج مباشرة: https://esm-matches.onrender.com/',
+          files: [file]
+        });
+        return;
+      } catch(e) {
+        if (e.name === 'AbortError') return;
+      }
+    }
+
+    const S = withCategoryScope(currentAdminPosterCat, () => standings(currentAdminPosterRound));
+    const u = currentAdminPosterRound;
+    let txt = '🏆 *جدول الترتيب الرسمي المعتمد - الجولة ' + u + '*\n';
+    txt += '⚽ رابطة تيبازة لكرة القدم · الفئة: ' + currentAdminPosterCat + '\n';
+    txt += '━━━━━━━━━━━━━━━━━━━━\n';
+    S.forEach((teamStat, idx) => {
+      const diff = teamStat.gf - teamStat.ga;
+      const diffTxt = diff > 0 ? '+' + diff : '' + diff;
+      txt += (idx + 1) + '. *' + T[teamStat.id] + '* | ' + teamStat.pts + ' ن (لعب ' + teamStat.p + ' | فارق ' + diffTxt + ')\n';
+    });
+    txt += '━━━━━━━━━━━━━━━━━━━━\n';
+    txt += '📲 للمعاينة والتحميل: https://esm-matches.onrender.com/';
+
+    window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(txt), '_blank');
+  } catch(err) {
+    console.error('Share error:', err);
+  }
+}
+
 </script>
 </body>
 </html>
