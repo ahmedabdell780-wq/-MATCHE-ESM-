@@ -2390,6 +2390,20 @@ function setAdminUser(user) {
     if (user) localStorage.setItem('esm_current_user', JSON.stringify(user));
     else localStorage.removeItem('esm_current_user');
   } catch(e) {}
+  if (user && typeof recordUserActivity === 'function') {
+    user.device = typeof getDeviceInfo === 'function' ? getDeviceInfo() : '📱 هاتف';
+    user.lastSeen = Date.now();
+    recordUserActivity(user);
+    if (typeof broadcastLiveChange === 'function') {
+      broadcastLiveChange('HEARTBEAT', {
+        sender: user.name,
+        phone: user.phone,
+        role: user.role,
+        teamId: user.teamId,
+        device: user.device
+      });
+    }
+  }
   updateAuthUI();
   if (typeof render === 'function') render();
   const resT = document.querySelector('[data-t="2"]');
@@ -2682,9 +2696,12 @@ if (btnGateRegister) {
     store.officials.push(newOfficial);
     save();
 
-    // إرسال الطلب سحابياً فوراً
+    // إرسال وبث الطلب سحابياً فوراً لجميع الأجهزة والمشرف العام
     if (typeof pushPendingAccountToCloud === 'function') {
       pushPendingAccountToCloud(newOfficial);
+    }
+    if (typeof broadcastLiveChange === 'function') {
+      broadcastLiveChange('NEW_REGISTRATION', { applicant: newOfficial });
     }
 
     document.getElementById('gateRegName').value = '';
@@ -3705,15 +3722,15 @@ if (importDataFile) {
 
 
 
-// ================= Live Real-Time Multi-Device Cloud Sync =================
-CLOUD_SYNC_TOPIC = 'esm_championship_tipaza_2026_wifaq';
-CLOUD_SYNC_URL = 'https://ntfy.sh/' + CLOUD_SYNC_TOPIC;
-// CLOUD_SYNC_URL initialized at top
+// ================= Live Real-Time Multi-Device Cloud Sync & Presence Engine =================
+var CLOUD_SYNC_TOPIC = 'esm_championship_tipaza_2026_wifaq';
+var CLOUD_SYNC_URL = 'https://ntfy.sh/' + CLOUD_SYNC_TOPIC;
 let liveSseSource = null;
-let liveSyncBusy = false;
 let sseReconnectTimer = null;
+let heartbeatTimer = null;
+let isBroadcasting = false;
 
-// Multi-tab instant sync on same device
+// Multi-tab broadcast channel on the same device
 try {
   window.esmBroadcast = new BroadcastChannel('esm_fixtures_sync_v1');
   window.esmBroadcast.onmessage = (e) => {
@@ -3728,6 +3745,69 @@ try {
     }
   };
 } catch(e) {}
+
+// كشف نوع الجهاز وبيئة التشغيل (PWA مثبت vs متصفح)
+function getDeviceInfo() {
+  const ua = navigator.userAgent || '';
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  const tag = isStandalone ? ' (تطبيق مثبت 📲)' : ' (متصفح 🌐)';
+  if (/iPhone/i.test(ua)) return '📱 iPhone' + tag;
+  if (/iPad|iPod/i.test(ua)) return '📱 iPad' + tag;
+  if (/Android/i.test(ua)) return '📱 Android' + tag;
+  if (/Windows/i.test(ua)) return '💻 Windows PC' + tag;
+  if (/Macintosh|Mac OS/i.test(ua)) return '💻 Mac' + tag;
+  return '🌐 جهاز متصل' + tag;
+}
+
+// تسجيل وحفظ نشاط المستخدم
+function recordUserActivity(userObj) {
+  if (!userObj) return;
+  const p = cleanPhone(userObj.phone);
+  if (!p) return;
+  store.activeSessions = store.activeSessions || {};
+  store.activeSessions[p] = {
+    name: userObj.name || 'مسؤول',
+    role: userObj.role || 'official',
+    teamId: userObj.teamId || null,
+    phone: userObj.phone,
+    device: userObj.device || getDeviceInfo(),
+    lastSeen: userObj.lastSeen || Date.now()
+  };
+
+  if (store.officials) {
+    const off = store.officials.find(o => cleanPhone(o.phone) === p);
+    if (off) {
+      off.lastSeen = userObj.lastSeen || Date.now();
+      off.lastDevice = userObj.device || getDeviceInfo();
+    }
+  }
+}
+
+// تنسيق توقيت آخر نشاط بالعربية
+function formatLastSeen(ts) {
+  if (!ts) return 'غير متصل';
+  const diffSec = Math.floor((Date.now() - ts) / 1000);
+  if (diffSec < 180) return '🟢 متصل الآن';
+  if (diffSec < 3600) return 'منذ ' + Math.max(1, Math.floor(diffSec / 60)) + ' دقيقة';
+  if (diffSec < 86400) return 'اليوم ' + new Date(ts).toLocaleTimeString('ar-DZ', { hour: '2-digit', minute: '2-digit' });
+  return new Date(ts).toLocaleDateString('ar-DZ', { month: 'numeric', day: 'numeric' });
+}
+
+// جلب قائمة المسؤولين الخفيفة للبث (< 1KB)
+function getLightweightOfficials() {
+  return (store.officials || []).map(o => ({
+    id: o.id,
+    name: o.name,
+    phone: o.phone,
+    teamId: o.teamId,
+    pass: o.pass,
+    status: o.status,
+    perm: o.perm || 'full',
+    date: o.date,
+    lastSeen: o.lastSeen || null,
+    lastDevice: o.lastDevice || null
+  }));
+}
 
 function applyStoreUpdates() {
   if (typeof render === 'function') render();
@@ -3755,7 +3835,100 @@ function updateCloudPill(isOnline, text) {
   }
 }
 
-// 1. Live Real-Time Listener via Server-Sent Events (SSE)
+// معالجة الرسائل السحابية الحية الفورية الواردة عبر البث المباشر
+function handleIncomingCloudPayload(payload) {
+  if (!payload || !payload.action) return;
+
+  // 1. نشاط جهاز / متصل (Heartbeat)
+  if (payload.action === 'HEARTBEAT' && payload.phone) {
+    recordUserActivity({
+      name: payload.sender,
+      phone: payload.phone,
+      role: payload.role,
+      teamId: payload.teamId,
+      device: payload.device,
+      lastSeen: payload.lastUpdated || Date.now()
+    });
+    const modal = document.getElementById('officialsModal');
+    if (modal && modal.style.display !== 'none' && typeof renderOfficialsList === 'function') {
+      renderOfficialsList();
+    }
+    return;
+  }
+
+  // 2. طلب حساب جديد وارد من أي هاتف
+  if (payload.action === 'NEW_REGISTRATION' && payload.applicant) {
+    const inc = payload.applicant;
+    store.officials = store.officials || [];
+    const exIdx = store.officials.findIndex(o => cleanPhone(o.phone) === cleanPhone(inc.phone) || o.id === inc.id);
+    if (exIdx === -1) {
+      store.officials.push(inc);
+    } else {
+      store.officials[exIdx] = Object.assign({}, store.officials[exIdx], inc);
+    }
+    saveLocalWithoutBroadcast();
+    applyStoreUpdates();
+
+    if (currentUser && currentUser.role === 'admin') {
+      if (typeof playNotificationAlertSound === 'function') playNotificationAlertSound();
+      if (typeof showToast === 'function') {
+        showToast('🔔 طلب حساب جديد وصل للتو: ' + inc.name + ' (' + (T[inc.teamId] || 'نادي') + ') عبر ' + (payload.device || 'الهاتف') + '!');
+      }
+    }
+    return;
+  }
+
+  // 3. مزامنة وتحديث الحسابات
+  if (payload.action === 'OFFICIALS_SYNC' && Array.isArray(payload.officials)) {
+    store.officials = store.officials || [];
+    let hadNewPending = false;
+    payload.officials.forEach(incOff => {
+      const exIdx = store.officials.findIndex(o => cleanPhone(o.phone) === cleanPhone(incOff.phone) || o.id === incOff.id);
+      if (exIdx === -1) {
+        store.officials.push(incOff);
+        if (incOff.status === 'pending') hadNewPending = true;
+      } else {
+        const localStatus = store.officials[exIdx].status;
+        store.officials[exIdx] = Object.assign({}, store.officials[exIdx], incOff);
+        if (localStatus === 'approved' && incOff.status === 'pending') {
+          store.officials[exIdx].status = 'approved';
+        }
+      }
+    });
+    saveLocalWithoutBroadcast();
+    applyStoreUpdates();
+    if (hadNewPending && currentUser && currentUser.role === 'admin') {
+      if (typeof playNotificationAlertSound === 'function') playNotificationAlertSound();
+      if (typeof showToast === 'function') {
+        showToast('🔔 تم استلام وتحديث الحسابات من جهاز آخر!');
+      }
+    }
+    return;
+  }
+
+  // 4. تحديث نتيجة مباراة
+  if (payload.action === 'SCORE_UPDATE' && payload.key && payload.val) {
+    store[payload.key] = Object.assign(store[payload.key] || {}, payload.val);
+    saveLocalWithoutBroadcast();
+    applyStoreUpdates();
+    if (typeof showToast === 'function') {
+      showToast('⚽ تحديث مباشر للنتيجة من مسؤول ' + (payload.sender || 'الفريق') + '!');
+    }
+    return;
+  }
+
+  // 5. تحديث تشكيلة لاعبين
+  if (payload.action === 'ROSTER_UPDATE' && payload.teamId && payload.cat && Array.isArray(payload.roster)) {
+    store.teamRosters = store.teamRosters || {};
+    store.teamRosters[payload.teamId] = store.teamRosters[payload.teamId] || {};
+    store.teamRosters[payload.teamId][payload.cat] = payload.roster;
+    saveLocalWithoutBroadcast();
+    applyStoreUpdates();
+    return;
+  }
+}
+
+// 1. الاستماع الحي المباشر عبر Server-Sent Events (SSE)
 function startLiveCloudStream() {
   if (liveSseSource) {
     try { liveSseSource.close(); } catch(e) {}
@@ -3773,20 +3946,10 @@ function startLiveCloudStream() {
       try {
         const msgObj = JSON.parse(event.data);
         if (msgObj.event === 'message' && msgObj.message) {
-          const payload = JSON.parse(msgObj.message);
-          if (payload && payload.lastUpdated) {
-            const localUpdated = store.lastUpdated || 0;
-            if (payload.lastUpdated > localUpdated) {
-              console.log('⚡ تم استلام تحديث مباشر من جهاز آخر في نفس اللحظة!');
-              const incomingStore = payload.store || payload;
-              Object.assign(store, incomingStore);
-              try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
-              applyStoreUpdates();
-              updateCloudPill(true, '🟢 متصل بالمزامنة الحية (تم التحديث للتو)');
-              if (typeof showToast === 'function') {
-                showToast('⚡ تم تحديث النتيجة مباشرة من هاتف آخر!');
-              }
-            }
+          let payload = null;
+          try { payload = JSON.parse(msgObj.message); } catch(e) {}
+          if (payload) {
+            handleIncomingCloudPayload(payload);
           }
         }
       } catch(err) {
@@ -3808,186 +3971,140 @@ function startLiveCloudStream() {
   }
 }
 
-// 2. Poll initial / catchup cloud state
+// 2. فحص السحابة والتقاط التحديثات السابقة
 async function catchupCloudState(silent = false) {
   if (!navigator.onLine) return;
   try {
-    const res = await fetch(CLOUD_SYNC_URL + '/json?poll=1&since=all', { cache: 'no-store' });
+    const res = await fetch(CLOUD_SYNC_URL + '/json?poll=1', { cache: 'no-store' });
     if (!res.ok) return;
     const text = await res.text();
     const lines = text.trim().split(/\r?\n/).filter(Boolean);
     if (!lines.length) return;
     
-    let updatedAny = false;
-    store.officials = store.officials || [];
-
     for (let i = 0; i < lines.length; i++) {
       try {
         const item = JSON.parse(lines[i]);
-        let payload = null;
-
-        if (item.attachment && item.attachment.url) {
-          try {
-            const attRes = await fetch(item.attachment.url, { cache: 'no-store' });
-            if (attRes.ok) payload = await attRes.json();
-          } catch(e) {}
-        } else if (item.event === 'message' && item.message) {
+        if (item.event === 'message' && item.message) {
+          let payload = null;
           try { payload = JSON.parse(item.message); } catch(e) {}
-        }
-
-        if (payload) {
-          // 1. Merge officials if present
-          const incOfficials = payload.officials || (payload.store && payload.store.officials);
-          if (Array.isArray(incOfficials) && incOfficials.length) {
-            incOfficials.forEach(incOff => {
-              const existingIdx = store.officials.findIndex(o => o.id === incOff.id || (o.phone && incOff.phone && normalizeLoginInput(o.phone) === normalizeLoginInput(incOff.phone)));
-              if (existingIdx !== -1) {
-                // If local is approved, keep approved unless incoming is explicitly approved
-                const localStatus = store.officials[existingIdx].status;
-                store.officials[existingIdx] = Object.assign({}, store.officials[existingIdx], incOff);
-                if (localStatus === 'approved' && incOff.status === 'pending') {
-                  store.officials[existingIdx].status = 'approved';
-                }
-              } else {
-                store.officials.push(incOff);
-                updatedAny = true;
-              }
-            });
-          }
-
-          // 2. Merge match scores if present
-          if (payload.action === 'SCORE_UPDATE' && payload.key && payload.val) {
-            store[payload.key] = Object.assign(store[payload.key] || {}, payload.val);
-            updatedAny = true;
-          } else if (payload.store) {
-            const incStore = payload.store;
-            for (const k in incStore) {
-              if (k.includes(':') && typeof incStore[k] === 'object') {
-                store[k] = Object.assign(store[k] || {}, incStore[k]);
-                updatedAny = true;
-              }
-            }
-          }
+          if (payload) handleIncomingCloudPayload(payload);
         }
       } catch(e) {}
     }
-
-    if (updatedAny) {
-      try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
-      applyStoreUpdates();
-      if (!silent && typeof showToast === 'function') {
-        showToast('⚡ تم تحديث ومزامنة الحسابات والنتائج من السحابة بنجاح!');
-      }
+    if (!silent && typeof showToast === 'function') {
+      showToast('⚡ تم فحص السحابة ومزامنة الحسابات والنشاط بنجاح!');
     }
   } catch(err) {
     console.warn('Catchup error:', err);
   }
 }
 
-// 3. Broadcast modification to ALL open devices worldwide in real-time
-async function broadcastLiveChange() {
+// 3. بث التحديثات الخفيفة جداً لجميع الأجهزة (< 1KB per message)
+async function broadcastLiveChange(actionType, extraData) {
   store.lastUpdated = Date.now();
-  try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
+  saveLocalWithoutBroadcast();
   
   if (window.esmBroadcast) {
     window.esmBroadcast.postMessage({ type: 'sync', lastUpdated: store.lastUpdated });
   }
   
   if (!navigator.onLine) return;
-  
-  try {
-    // Send lightweight payload (< 2KB) so ntfy NEVER converts to attachment!
-    const lightweightOfficials = (store.officials || []).map(o => ({
-      id: o.id,
-      name: o.name,
-      phone: o.phone,
-      teamId: o.teamId,
-      pass: o.pass,
-      status: o.status,
-      perm: o.perm || 'full',
-      date: o.date
-    }));
+  if (isBroadcasting) return;
+  isBroadcasting = true;
 
-    const payload = {
-      action: 'OFFICIALS_SYNC',
-      sender: (currentUser && currentUser.name) || 'admin',
-      lastUpdated: store.lastUpdated,
-      officials: lightweightOfficials
-    };
-    
+  const action = actionType || 'OFFICIALS_SYNC';
+  const payload = {
+    action: action,
+    sender: (currentUser && currentUser.name) || (action === 'HEARTBEAT' ? 'زائر' : 'المشرف'),
+    phone: (currentUser && currentUser.phone) || '',
+    role: (currentUser && currentUser.role) || 'official',
+    teamId: (currentUser && currentUser.teamId) || null,
+    device: getDeviceInfo(),
+    lastUpdated: store.lastUpdated
+  };
+
+  if (action === 'OFFICIALS_SYNC') {
+    payload.officials = getLightweightOfficials();
+  } else if (extraData && typeof extraData === 'object') {
+    Object.assign(payload, extraData);
+  }
+
+  try {
     await fetch(CLOUD_SYNC_URL, {
       method: 'POST',
       headers: {
         'X-Cache': 'yes',
-        'Title': 'Officials and Matches Live Sync',
-        'Priority': 'urgent'
+        'Title': 'ESM: ' + action,
+        'Priority': (action === 'NEW_REGISTRATION' || action === 'OFFICIALS_SYNC' || action === 'SCORE_UPDATE') ? 'urgent' : 'low'
       },
       body: JSON.stringify(payload)
     });
-    
-    updateCloudPill(true, '🟢 متصل بالسحابة (تم التحديث لجميع الأجهزة)');
+    updateCloudPill(true, '🟢 متصل بالسحابة (مزامنة حية نشطة)');
   } catch(err) {
     console.warn('Broadcast error:', err);
+  } finally {
+    isBroadcasting = false;
   }
 }
 
-// Hook into save() so ANY change anywhere pushes to all devices immediately to ALL open devices worldwide in real-time
-async function broadcastLiveChange() {
-  store.lastUpdated = Date.now();
+function saveLocalWithoutBroadcast() {
   try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
-  
-  if (window.esmBroadcast) {
-    window.esmBroadcast.postMessage({ type: 'sync', lastUpdated: store.lastUpdated });
-  }
-  
-  if (!navigator.onLine) return;
-  
-  try {
-    const payload = {
-      sender: (currentUser && currentUser.name) || 'official',
-      lastUpdated: store.lastUpdated,
-      store: store
-    };
-    
-    await fetch(CLOUD_SYNC_URL, {
-      method: 'POST',
-      headers: {
-        'X-Cache': 'yes',
-        'Title': 'Match Live Update',
-        'Priority': 'urgent'
-      },
-      body: JSON.stringify(payload)
+}
+
+// حفظ محلي مع بث فوري خفيف
+function save() {
+  saveLocalWithoutBroadcast();
+  broadcastLiveChange('OFFICIALS_SYNC');
+}
+window.save = save;
+
+// حلقة نبضات النشاط الدورية (Heartbeat)
+function startHeartbeatLoop() {
+  clearInterval(heartbeatTimer);
+  if (currentUser) {
+    recordUserActivity(currentUser);
+    broadcastLiveChange('HEARTBEAT', {
+      sender: currentUser.name,
+      phone: currentUser.phone,
+      role: currentUser.role,
+      teamId: currentUser.teamId,
+      device: getDeviceInfo()
     });
-    
-    updateCloudPill(true, '🟢 متصل بالسحابة (تم البث لجميع الأجهزة)');
-    if (typeof showToast === 'function') {
-      showToast('☁️ تم بث التعديل لجميع الأجهزة المفتوحة فوراً!');
+  }
+  heartbeatTimer = setInterval(() => {
+    if (currentUser && navigator.onLine) {
+      broadcastLiveChange('HEARTBEAT', {
+        sender: currentUser.name,
+        phone: currentUser.phone,
+        role: currentUser.role,
+        teamId: currentUser.teamId,
+        device: getDeviceInfo()
+      });
     }
-  } catch(err) {
-    console.warn('Broadcast error:', err);
-  }
+  }, 60000);
 }
 
-// Hook into save() so ANY change anywhere pushes to all devices immediately
-const origSave = typeof save === 'function' ? save : null;
-window.save = function() {
-  if (origSave) origSave();
-  broadcastLiveChange();
-};
-
-// Listen to network status & focus
-window.addEventListener('focus', () => { if (navigator.onLine) catchupCloudState(true); });
+// الاستماع لحالة الشبكة وبدء المزامنة
+window.addEventListener('focus', () => {
+  if (navigator.onLine) {
+    catchupCloudState(true);
+    if (currentUser) startHeartbeatLoop();
+  }
+});
 window.addEventListener('online', () => {
   updateCloudPill(true, '🟢 متصل بالمزامنة الحية');
   startLiveCloudStream();
   catchupCloudState(false);
+  startHeartbeatLoop();
 });
 window.addEventListener('offline', () => {
   updateCloudPill(false, '📡 وضع غير متصل (تصفح محلي)');
 });
 
-// Start Live Stream & Catchup on load
+// بدء البث المباشر ونبضات النشاط عند فتح الصفحة
 startLiveCloudStream();
+catchupCloudState(true);
+startHeartbeatLoop();
 catchupCloudState(false);
 
 
@@ -4439,6 +4556,30 @@ function renderOfficialsList() {
     return;
   }
 
+  // شريط مراقبة الأجهزة والحسابات المتصلة الآن لحظياً
+  const activeSessions = store.activeSessions || {};
+  const activeUsers = Object.values(activeSessions).filter(s => s.lastSeen && (Date.now() - s.lastSeen < 300000));
+  
+  let liveBarHtml = `
+    <div id="liveActiveSessionsBar" style="background:#f0fdf4;border:1.5px solid #22c55e;border-radius:12px;padding:10px 14px;margin-bottom:12px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:800;color:#15803d;">
+          <span style="width:10px;height:10px;border-radius:50%;background:#22c55e;display:inline-block;box-shadow:0 0 0 3px rgba(34,197,94,0.3);"></span>
+          <span>الأجهزة والحسابات المتصلة الآن لحظياً (${activeUsers.length}):</span>
+        </div>
+        <button type="button" onclick="catchupCloudState(false)" style="background:#15803d;color:#fff;border:0;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;">🔄 تحديث فوري</button>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">
+        ${activeUsers.length > 0 ? activeUsers.map(u => `
+          <div style="display:inline-flex;align-items:center;gap:6px;background:#ffffff;border:1px solid #86efac;border-radius:8px;padding:4px 8px;font-size:11.5px;">
+            <span>🟢 <b>${u.name}</b> (${T[u.teamId] || u.role})</span>
+            <span style="color:#64748b;font-size:10.5px;">· ${u.device}</span>
+          </div>
+        `).join('') : '<span style="font-size:11.5px;color:#64748b;font-weight:600;">لا توجد جلسات أخرى متصلة في هذه الدقيقة.</span>'}
+      </div>
+    </div>
+  `;
+
   let bannerHtml = '';
   if (pendingList.length > 0) {
     bannerHtml = `
@@ -4449,7 +4590,7 @@ function renderOfficialsList() {
     `;
   }
 
-  container.innerHTML = bannerHtml;
+  container.innerHTML = liveBarHtml + bannerHtml;
   officials.forEach((off) => {
     const card = document.createElement('div');
     const isPending = (off.status === 'pending');
@@ -4492,6 +4633,17 @@ function renderOfficialsList() {
         <div style="color:var(--muted,#64748b);">
           📅 تاريخ التسجيل: <b>${off.date || '2026-11-01'}</b>
         </div>
+      </div>
+
+      <!-- حالة النشاط اللحظي ونوع الجهاز المستخدم -->
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;padding:6px 10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:11.5px;margin:6px 0;flex-wrap:wrap;">
+        <span style="display:inline-flex;align-items:center;gap:4px;font-weight:800;color:${(off.lastSeen && (Date.now() - off.lastSeen < 180000)) ? '#16a34a' : '#64748b'};">
+          <span style="width:8px;height:8px;border-radius:50%;background:${(off.lastSeen && (Date.now() - off.lastSeen < 180000)) ? '#22c55e' : '#94a3b8'};display:inline-block;${(off.lastSeen && (Date.now() - off.lastSeen < 180000)) ? 'box-shadow:0 0 0 2px rgba(34,197,94,0.3);' : ''}"></span>
+          ${(off.lastSeen && (Date.now() - off.lastSeen < 180000)) ? '🟢 نشط الآن (متصل)' : '⚪ آخر نشاط: ' + formatLastSeen(off.lastSeen)}
+        </span>
+        <span style="color:#475569;font-weight:700;">
+          ${off.lastDevice ? `📱 الجهاز: <b>${off.lastDevice}</b>` : '📱 جهاز الدخول: <b>هاتف محمول</b>'}
+        </span>
       </div>
 
       <!-- خيارات التواصل المباشر مع المسؤول (واتساب، SMS، اتصال، نسخ) -->
