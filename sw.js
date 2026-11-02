@@ -1,4 +1,4 @@
-const CACHE_NAME = 'esm-messelmoun-v29';
+const CACHE_NAME = 'esm-messelmoun-v30';
 const ASSETS = [
   './',
   './index.html',
@@ -36,7 +36,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
-  const isHtml = event.request.mode === 'navigate' || event.request.headers.get('accept')?.includes('text/html');
+  const isHtml = event.request.mode === 'navigate' || event.request.headers.get('accept')?.includes('text/html') || event.request.url.includes('manifest.json');
 
   if (isHtml) {
     // Network-First: Always try to get the newest index.html from server

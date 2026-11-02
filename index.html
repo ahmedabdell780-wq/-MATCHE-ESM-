@@ -1753,7 +1753,7 @@ body.th-dark .off-item-sub { color: #94a3b8 !important; }
 
 </style>
 
-<link rel="manifest" href="manifest.json">
+<link rel="manifest" href="manifest.json?v=30">
 <meta name="theme-color" content="#1f5a34">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4034,7 +4034,19 @@ render();
 // ================= PWA & Service Worker =================
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').then(reg => { reg.update();
+    navigator.serviceWorker.register('./sw.js').then(reg => {
+      reg.update();
+      reg.addEventListener('updatefound', () => {
+        const newWorker = reg.installing;
+        if (newWorker) {
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              console.log('New update available, reloading...');
+              window.location.reload();
+            }
+          });
+        }
+      });
       console.log('SW Registered:', reg.scope);
     }).catch(err => {
       console.log('SW Fail:', err);
@@ -4090,7 +4102,7 @@ function showToast(msg) {
 const btnShareApp = document.getElementById('btnShareApp');
 if (btnShareApp) {
   btnShareApp.addEventListener('click', async () => {
-    const title = 'تطبيق مباريات وفاق مسلمون - ESM 2026';
+    const title = 'MOUBARATI L.W.T';
     const text = '⚽ تابع مواعيد مباريات، نتائج، وترتيب وفاق مسلمون (أكابر والفئات الشبانية) لموسم 2026 عبر التطبيق مباشرة:';
     const url = window.location.href;
     if (navigator.share) {
