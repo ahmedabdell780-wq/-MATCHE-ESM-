@@ -1,7 +1,7 @@
 {
-  "name": "مباريات وفاق مسلمون - ESM 2026",
-  "short_name": "وفاق مسلمون",
-  "description": "تطبيق متابعة مباريات، نتائج، وترتيب نادي وفاق مسلمون ESM لموسم 2026",
+  "name": "MOUBARATI L.W.T",
+  "short_name": "MOUBARATI L.W.T",
+  "description": "منصة وتطبيق مباريات رابطة ولاية تيبازة لكرة القدم - MOUBARATI L.W.T",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -10,7 +10,10 @@
   "theme_color": "#1f5a34",
   "lang": "ar",
   "dir": "rtl",
-  "categories": ["sports", "utilities"],
+  "categories": [
+    "sports",
+    "utilities"
+  ],
   "icons": [
     {
       "src": "icon-192.png",
