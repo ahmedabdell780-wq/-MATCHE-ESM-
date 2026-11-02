@@ -14,9 +14,9 @@ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:en
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a1017;--panel:#141d27;--ink:#e8edf2;--muted:#93a1b0;--line:#25323f;--field:#0f1822}}
 :root[data-theme="dark"]{--bg:#0a1017;--panel:#141d27;--ink:#e8edf2;--muted:#93a1b0;--line:#25323f;--field:#0f1822}
 *{box-sizing:border-box}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:'Tajawal',Tahoma,'Segoe UI',sans-serif;line-height:1.5}
-main{max-width:620px;margin:0 auto;padding:16px 14px 40px}
+html{scroll-padding-top:env(safe-area-inset-top,0px);overflow-x:hidden!important;width:100%!important;max-width:100vw!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Tajawal',Tahoma,'Segoe UI',sans-serif;line-height:1.5;overflow-x:hidden!important;width:100%!important;max-width:100vw!important;position:relative;-webkit-text-size-adjust:100%}
+main{width:100%!important;max-width:620px!important;margin:0 auto;padding:14px 10px 40px;box-sizing:border-box!important;overflow-x:hidden!important}
 .hd{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:6px 0 2px}
 #fontSel{width:auto;max-width:130px;font-size:13px;padding:6px 8px;margin-inline-start:auto}.hd img{width:56px;height:56px;border-radius:14px}.hd h1{margin:0}
 h1{font-size:22px;font-weight:900;margin:6px 0 2px}
@@ -739,9 +739,17 @@ body.th-dark .off-item-sub { color: #94a3b8 !important; }
 .gate-contact-footer{text-align:center;margin-top:16px;padding-top:14px;border-top:1px dashed var(--line,#d5dce4);font-size:12.5px;color:var(--muted,#5d6b7a);}
 .gate-contact-footer b{color:#1f5a34;}
 
-.user-top-bar{background:var(--panel,#fff);border:1px solid var(--line,#d5dce4);border-radius:14px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,0.04);}
-.user-top-badge{font-size:13px;font-weight:800;color:var(--ink,#0b1722);display:flex;align-items:center;gap:6px;}
-.user-top-actions{display:flex;align-items:center;gap:6px;}
+/* Responsive User Top Bar & Notifications - Anti-Horizontal Overflow */
+.user-top-bar{background:var(--panel,#fff);border:1px solid var(--line,#d5dce4);border-radius:14px;padding:8px 12px;margin-bottom:12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;box-shadow:0 2px 8px rgba(0,0,0,0.04);width:100%;max-width:100%;box-sizing:border-box;}
+.user-top-badge{font-size:12.5px;font-weight:800;color:var(--ink,#0b1722);display:flex;align-items:center;gap:6px;flex-wrap:wrap;max-width:100%;}
+.user-top-actions{display:flex;flex-wrap:wrap;align-items:center;gap:6px;justify-content:flex-end;max-width:100%;}
+.user-top-actions .btn-mgr-action, .user-top-actions .btn-logout{font-size:11.5px;padding:6px 10px;border-radius:8px;white-space:nowrap;}
+
+.top-notif-bar{background:linear-gradient(135deg,#1e3a8a,#0f172a);color:#fff;border-radius:12px;padding:8px 12px;margin-bottom:10px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;width:100%;max-width:100%;box-sizing:border-box;box-shadow:0 4px 12px rgba(15,23,42,0.25);}
+.top-notif-bar .notif-content{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;flex:1 1 180px;min-width:0;word-break:break-word;}
+.top-notif-bar .notif-ctrls{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.top-notif-bar .notif-edit-btn{background:#f59e0b;color:#0b1722;border:0;border-radius:6px;padding:4px 8px;font-size:11px;font-weight:800;cursor:pointer;}
+.top-notif-bar .notif-close-btn{background:rgba(255,255,255,0.2);color:#fff;border:0;border-radius:50%;width:24px;height:24px;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
 
 /* Google Maps Stadium Pin & Pill */
 
@@ -1340,6 +1348,408 @@ body.th-dark .off-item-sub { color: #94a3b8 !important; }
   padding: 4px 6px;
 }
 
+
+/* ===== تحسينات شاملة للهواتف المحمولة ومنع الفراغ الجانبي الأيسر نهائياً ===== */
+@media (max-width: 480px) {
+  html, body {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+    width: 100% !important;
+    position: relative !important;
+  }
+  main {
+    padding: 10px 8px 36px !important;
+    max-width: 100vw !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+  .user-top-bar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    padding: 8px 10px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .user-top-badge {
+    justify-content: space-between !important;
+    width: 100% !important;
+    border-bottom: 1px dashed var(--line, #d5dce4);
+    padding-bottom: 6px;
+    font-size: 12px !important;
+  }
+  .user-top-actions {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    width: 100% !important;
+    gap: 5px !important;
+    justify-content: stretch !important;
+  }
+  .user-top-actions button {
+    flex: 1 1 calc(50% - 5px) !important;
+    min-width: 0 !important;
+    justify-content: center !important;
+    text-align: center !important;
+    padding: 7px 6px !important;
+    font-size: 11px !important;
+    white-space: nowrap !important;
+  }
+  .user-top-actions .btn-logout {
+    flex: 1 1 100% !important;
+    margin-top: 2px;
+  }
+  .top-notif-bar {
+    padding: 8px 10px !important;
+    font-size: 11.5px !important;
+  }
+  .card, .stat, .tbl, .ctl, .conf-box, .app-gate, .modal-card {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
+
+/* ================= ملصق الترتيب المعتمد للمشرف العام ================= */
+.admin-poster-modal-card {
+  max-width: 680px !important;
+  width: 96% !important;
+  max-height: 92vh !important;
+  padding: 16px !important;
+  border-radius: 20px !important;
+  overflow-y: auto !important;
+  background: var(--panel, #ffffff) !important;
+}
+.admin-poster-sheet {
+  background: #f4f6f8;
+  border: 1px solid #dcdfe4;
+  border-radius: 18px;
+  padding: 18px 14px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+  position: relative;
+  overflow: hidden;
+  font-family: 'Tajawal', Tahoma, sans-serif;
+  direction: rtl;
+  color: #0f172a;
+}
+.admin-poster-watermark {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: radial-gradient(#156834 0.7px, transparent 0.7px);
+  background-size: 20px 20px;
+  opacity: 0.12;
+  pointer-events: none;
+}
+.admin-poster-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+}
+.admin-poster-league-logo {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  border: 2px solid #156834;
+  padding: 2px;
+  background: #fff;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.admin-poster-league-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.admin-poster-headings {
+  flex: 1;
+  text-align: center;
+}
+.admin-poster-title {
+  font-size: 20px;
+  font-weight: 900;
+  color: #156834;
+  margin: 0 0 2px 0;
+  letter-spacing: -0.3px;
+}
+.admin-poster-sub {
+  font-size: 13px;
+  font-weight: 800;
+  color: #334155;
+  margin: 0 0 4px 0;
+}
+.admin-poster-round-badge-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+}
+.admin-poster-round-pill {
+  background: #156834;
+  color: #fff;
+  border-radius: 30px;
+  padding: 4px 6px 4px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 3px 10px rgba(21,104,52,0.3);
+}
+.admin-poster-round-pill .num-circle {
+  background: #fff;
+  color: #156834;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  font-weight: 900;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+.admin-poster-round-pill .pill-lbl {
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+}
+.admin-poster-round-txt {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #475569;
+}
+
+/* Standings Table Styling in Poster */
+.admin-poster-tbl-wrap {
+  margin: 10px 0 14px;
+  width: 100%;
+  overflow-x: auto;
+  position: relative;
+  z-index: 1;
+}
+.admin-tbl-hd-bar {
+  background: #156834;
+  color: #fff;
+  border-radius: 12px;
+  padding: 9px 8px;
+  display: grid;
+  grid-template-columns: 28px minmax(90px, 1.3fr) repeat(6, 24px) 28px 76px 32px;
+  gap: 4px;
+  align-items: center;
+  text-align: center;
+  font-size: 11.5px;
+  font-weight: 900;
+  margin-bottom: 6px;
+  box-shadow: 0 3px 8px rgba(21,104,52,0.2);
+}
+.admin-tbl-item-row {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 6px 8px;
+  display: grid;
+  grid-template-columns: 28px minmax(90px, 1.3fr) repeat(6, 24px) 28px 76px 32px;
+  gap: 4px;
+  align-items: center;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+}
+.admin-rank-tag {
+  color: #fff;
+  border-radius: 6px;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 900;
+  margin: 0 auto;
+}
+.admin-rank-tag.promo { background: #156834; }
+.admin-rank-tag.mid { background: #2e7d32; }
+.admin-rank-tag.releg { background: #d32f2f; }
+
+.admin-team-col {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-align: right;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.admin-team-logo {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.admin-team-logo img, .admin-team-logo svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.admin-team-title {
+  font-size: 12px;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.admin-num-cell {
+  border-left: 1px solid #eef2f6;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1e293b;
+}
+.admin-diff-cell {
+  border-left: 1px solid #eef2f6;
+  font-weight: 900;
+  font-size: 12px;
+}
+.admin-diff-cell.pos { color: #16a34a; }
+.admin-diff-cell.neg { color: #dc2626; }
+.admin-diff-cell.zero { color: #475569; }
+
+.admin-form-boxes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border-left: 1px solid #eef2f6;
+}
+.admin-form-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  font-size: 8.5px;
+  font-weight: 900;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.admin-form-dot.W { background: #16a34a; }
+.admin-form-dot.D { background: #475569; }
+.admin-form-dot.L { background: #dc2626; }
+.admin-form-dot.empty { background: #e2e8f0; color: transparent; }
+
+.admin-pts-cell {
+  font-size: 14px;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+/* 4 Statistics Cards */
+.admin-poster-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+  position: relative;
+  z-index: 1;
+}
+@media (max-width: 520px) {
+  .admin-poster-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.admin-stat-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 8px 10px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.admin-stat-lbl {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+.admin-stat-val {
+  font-size: 18px;
+  font-weight: 900;
+  color: #0f172a;
+  line-height: 1.1;
+}
+.admin-stat-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 4px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #334155;
+}
+.admin-stat-info img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+/* Legend & Footer */
+.admin-poster-legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed #cbd5e1;
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #475569;
+  position: relative;
+  z-index: 1;
+}
+.admin-poster-legend-items {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.admin-legend-box {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  margin-inline-end: 3px;
+  vertical-align: middle;
+}
+.admin-legend-box.promo { background: #156834; }
+.admin-legend-box.releg { background: #d32f2f; }
+
+.admin-poster-footer-banner {
+  background: #156834;
+  color: #fff;
+  border-radius: 20px;
+  padding: 7px 14px;
+  margin-top: 10px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  box-shadow: 0 3px 10px rgba(21,104,52,0.25);
+  position: relative;
+  z-index: 1;
+}
+
 </style>
 
 <link rel="manifest" href="manifest.json">
@@ -1352,7 +1762,8 @@ body.th-dark .off-item-sub { color: #94a3b8 !important; }
 
 
 <!-- Firebase Cloud Sync SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js">
+</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
 </head>
@@ -1447,6 +1858,7 @@ body.th-dark .off-item-sub { color: #94a3b8 !important; }
   <div class="user-top-actions">
    <button id="btnTopPlayersMgr" class="btn-mgr-action" type="button" onclick="openPlayersModal(cat)"><span class="ic">👥</span> إدارة اللاعبين</button>
    <button id="btnTopOfficialsMgr" class="btn-mgr-action" style="display:none;" type="button" onclick="openOfficialsModal()">👥 مسؤولو الفرق <span id="topPendingBadge" class="badge-count">0</span></button>
+   <button id="btnAdminStandingsPoster" class="btn-mgr-action" style="display:none;background:linear-gradient(135deg,#156834,#0d3813);color:#fff;" type="button" onclick="openAdminStandingsPoster()"><span class="ic">📊</span> ملصق الترتيب المعتمد</button>
    <button id="btnTopNotifs" class="btn-mgr-action notif-bell-btn" type="button" onclick="openNotificationsModal()" title="مركز الإشعارات"><span class="ic">🔔</span> الإشعارات <span id="notifBadgeCount" class="badge-count notif-badge" style="display:none;">0</span></button>
    <button id="btnTopLogout" class="btn-logout" type="button">🚪 خروج</button>
   </div>
@@ -1591,6 +2003,9 @@ body.th-dark .off-item-sub { color: #94a3b8 !important; }
 </div>
 <div id="tblView" hidden>
  <section class="block ctl"><h2 class="bh"><span class="bi">🏆</span>الترتيب</h2><div class="field"><label for="upto">بعد أي جولة</label><select id="upto"></select></div></section>
+ <div id="adminTablePosterBanner" style="display:none;margin-top:10px;margin-bottom:12px;text-align:center;">
+  <button type="button" class="btn-mgr-action" style="width:100%;background:linear-gradient(135deg,#156834,#0d3813);color:#fff;padding:12px;border-radius:12px;font-size:13.5px;font-weight:900;cursor:pointer;box-shadow:0 4px 14px rgba(21,104,52,0.3);" onclick="openAdminStandingsPoster()"><span class="ic">👑</span> ملصق الترتيب بالنموذج المعتمد (خاص بالمشرف العام)</button>
+ </div>
  <div id="tblBox"></div>
 </div>
 
@@ -1846,6 +2261,51 @@ body.th-dark .off-item-sub { color: #94a3b8 !important; }
 
 
 <!-- نافذة مركز الإشعارات والتنبيهات -->
+<!-- نافذة ملصق الترتيب المعتمد (خاص بالمشرف العام) -->
+<div id="adminStandingsPosterModal" class="modal-bg" style="display:none;">
+ <div class="modal-card admin-poster-modal-card">
+  <div class="modal-head" style="display:flex;align-items:center;justify-content:space-between;padding-bottom:10px;border-bottom:1px solid var(--line,#e2e8f0);margin-bottom:12px;">
+   <div style="display:flex;align-items:center;gap:8px;">
+    <span style="font-size:22px;">👑</span>
+    <h3 style="margin:0;font-size:16px;font-weight:900;color:#156834;">ملصق الترتيب بالنموذج المعتمد (المشرف العام)</h3>
+   </div>
+   <button class="modal-close" type="button" onclick="closeAdminStandingsPoster()">&times;</button>
+  </div>
+
+  <!-- شريط التحكم بالفئة والجولة -->
+  <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;background:var(--field,#f0f4f8);padding:10px 14px;border-radius:12px;margin-bottom:12px;">
+   <div style="display:flex;align-items:center;gap:8px;">
+    <label style="font-size:13px;font-weight:800;color:#334155;margin:0;">الفئة:</label>
+    <select id="adminPosterCatSel" onchange="changeAdminPosterCat(this.value)" style="padding:5px 10px;border-radius:8px;border:1px solid #cbd5e1;font-size:13px;font-weight:800;">
+     <option value="U15">فئة U15</option>
+     <option value="U17">فئة U17</option>
+     <option value="U20">فئة U20</option>
+    </select>
+   </div>
+   <div style="display:flex;align-items:center;gap:8px;">
+    <label style="font-size:13px;font-weight:800;color:#334155;margin:0;">الجولة:</label>
+    <select id="adminPosterRoundSel" onchange="changeAdminPosterRound(+this.value)" style="padding:5px 10px;border-radius:8px;border:1px solid #cbd5e1;font-size:13px;font-weight:800;">
+    </select>
+   </div>
+  </div>
+
+  <!-- حاوية معاينة الملصق -->
+  <div id="adminPosterPreviewContainer">
+   <!-- يتم رسم الملصق هنا برمجياً -->
+  </div>
+
+  <!-- أزرار الإجراءات والتحميل والمشاركة -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;">
+   <button type="button" class="btn-poster-dl" onclick="downloadAdminStandingsPoster()" style="background:linear-gradient(135deg,#156834,#0d3813);color:#fff;border:0;border-radius:12px;padding:12px;font-weight:900;font-size:13.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 14px rgba(21,104,52,0.3);">
+    <span class="ic">📥</span> تحميل الملصق (HD PNG)
+   </button>
+   <button type="button" class="btn-poster-share" onclick="shareAdminStandingsPoster()" style="background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;border:0;border-radius:12px;padding:12px;font-weight:900;font-size:13.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 14px rgba(37,211,102,0.3);">
+    <span class="ic">📲</span> مشاركة واتساب
+   </button>
+  </div>
+ </div>
+</div>
+
 <div id="notificationsModal" class="modal-bg" style="display:none;">
  <div class="modal-card notif-modal-card">
   <div class="modal-head notif-modal-head">
@@ -2427,6 +2887,10 @@ function updateAuthUI() {
     document.body.classList.add('admin');
 
     if (currentUser.role === 'admin') {
+      const adminPosterBtn = document.getElementById('btnAdminStandingsPoster');
+      if (adminPosterBtn) adminPosterBtn.style.display = 'inline-flex';
+      const adminTablePosterBanner = document.getElementById('adminTablePosterBanner');
+      if (adminTablePosterBanner) adminTablePosterBanner.style.display = 'block';
       if (topBadge) topBadge.innerHTML = '👑 <span><b>المشرف العام</b> (كامل الصلاحيات)</span>';
       if (topMgrBtn) {
         topMgrBtn.style.display = 'inline-flex';
@@ -2441,6 +2905,10 @@ function updateAuthUI() {
         topPlayersBtn.innerHTML = '<span class="ic">👥</span> إدارة تشكيلات الأندية';
       }
     } else if (currentUser.role === 'official') {
+      const adminPosterBtn = document.getElementById('btnAdminStandingsPoster');
+      if (adminPosterBtn) adminPosterBtn.style.display = 'none';
+      const adminTablePosterBanner = document.getElementById('adminTablePosterBanner');
+      if (adminTablePosterBanner) adminTablePosterBanner.style.display = 'none';
       const teamName = T[currentUser.teamId] || 'فريقك';
       if (topBadge) topBadge.innerHTML = '👤 <span><b>' + currentUser.name + '</b> (مسؤول ' + teamName + ')</span>';
       if (topMgrBtn) topMgrBtn.style.display = 'none';
@@ -6185,6 +6653,530 @@ function copyMatchLineupText() {
 }
 window.copyMatchLineupText = copyMatchLineupText;
 
+
+
+// ================= ملصق الترتيب المعتمد (النموذج الرسمي الحصري للمشرف العام) =================
+var currentAdminPosterRound = 1;
+var currentAdminPosterCat = 'U15';
+var adminStandingsCachedCanvas = null;
+
+function openAdminStandingsPoster(r, targetCat) {
+  if (!currentUser || currentUser.role !== 'admin') {
+    if (typeof showToast === 'function') showToast('⚠️ هذا القسم مخصص للمشرف العام فقط.');
+    return;
+  }
+
+  currentAdminPosterCat = targetCat || cat || 'U15';
+  const lastR = typeof lastRound === 'function' ? lastRound() : 1;
+  const currentUp = (typeof upS !== 'undefined' && upS) ? +upS.value : 1;
+  currentAdminPosterRound = r || lastR || currentUp || 1;
+
+  const modal = document.getElementById('adminStandingsPosterModal');
+  const catSel = document.getElementById('adminPosterCatSel');
+  const roundSel = document.getElementById('adminPosterRoundSel');
+
+  if (catSel) catSel.value = currentAdminPosterCat;
+
+  if (roundSel) {
+    let opts = '';
+    for (let i = 1; i <= 22; i++) {
+      opts += '<option value="' + i + '"' + (i === currentAdminPosterRound ? ' selected' : '') + '>الجولة ' + i + '</option>';
+    }
+    roundSel.innerHTML = opts;
+  }
+
+  if (modal) modal.style.display = 'flex';
+  renderAdminStandingsPosterUI(currentAdminPosterRound, currentAdminPosterCat);
+}
+
+function closeAdminStandingsPoster() {
+  const modal = document.getElementById('adminStandingsPosterModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function changeAdminPosterCat(newCat) {
+  currentAdminPosterCat = newCat;
+  renderAdminStandingsPosterUI(currentAdminPosterRound, currentAdminPosterCat);
+}
+
+function changeAdminPosterRound(newRound) {
+  currentAdminPosterRound = newRound;
+  renderAdminStandingsPosterUI(currentAdminPosterRound, currentAdminPosterCat);
+}
+
+function renderAdminStandingsPosterUI(u, cCat) {
+  const container = document.getElementById('adminPosterPreviewContainer');
+  if (!container) return;
+
+  const S = standings(u);
+  const n = S.length;
+  const pool = S.filter(x => x.p > 0);
+
+  // Best attack & defense
+  const att = pool.length ? [...pool].sort((a,b) => b.gf - a.gf)[0] : S[0];
+  const def = pool.length ? [...pool].sort((a,b) => a.ga - b.ga)[0] : S[0];
+
+  // Top Scorer
+  const scTallies = typeof tallies === 'function' ? tallies() : [[], []];
+  const G = scTallies[0] || [];
+  const topScorer = G.length ? G[0] : null;
+
+  // Goals average
+  const totalMatches = pool.reduce((acc, x) => acc + x.p, 0) / 2;
+  const totalGoals = pool.reduce((acc, x) => acc + x.gf, 0);
+  const avgGoals = totalMatches > 0 ? (totalGoals / totalMatches).toFixed(2) : '0.00';
+
+  let html = `
+    <div class="admin-poster-sheet">
+      <div class="admin-poster-watermark"></div>
+      
+      <!-- الرأس والشعار والكبسولة -->
+      <div class="admin-poster-top">
+        <div class="admin-poster-league-logo">
+          <img src="${LGSRC}" alt="شعار الرابطة">
+        </div>
+        <div class="admin-poster-headings">
+          <h2 class="admin-poster-title">رابطة تيبازة لكرة القدم</h2>
+          <div class="admin-poster-sub">الفئات الشبانية 2026/2027 · الفئة ${cCat} (مجموعة وسط غرب)</div>
+        </div>
+        <div class="admin-poster-round-badge-wrap">
+          <div class="admin-poster-round-pill">
+            <span class="num-circle">${u}</span>
+            <span class="pill-lbl">الترتيب</span>
+          </div>
+          <div class="admin-poster-round-txt">الترتيب بعد الجولة ${u}</div>
+        </div>
+      </div>
+
+      <!-- جدول الترتيب بالنموذج المعتمد -->
+      <div class="admin-poster-tbl-wrap">
+        <div class="admin-tbl-hd-bar">
+          <span>#</span>
+          <span style="text-align:right;">الفريق</span>
+          <span>لعب</span>
+          <span>فاز</span>
+          <span>تعادل</span>
+          <span>خسر</span>
+          <span>له</span>
+          <span>عليه</span>
+          <span>الفرق</span>
+          <span>الأداء</span>
+          <span>النقاط</span>
+        </div>
+  `;
+
+  S.forEach((teamStat, idx) => {
+    const rank = idx + 1;
+    let rankCls = 'mid';
+    if (rank <= 4) rankCls = 'promo';
+    else if (rank >= n - 2) rankCls = 'releg';
+
+    const diff = teamStat.gf - teamStat.ga;
+    const diffCls = diff > 0 ? 'pos' : (diff < 0 ? 'neg' : 'zero');
+    const diffTxt = diff > 0 ? '+' + diff : (diff === 0 ? '0' : '' + diff);
+
+    const fList = typeof formOf === 'function' ? formOf(teamStat.id, u) : [];
+    // Pad to 5 matches
+    let formDots = '';
+    for (let f = 0; f < 5; f++) {
+      const matchIdx = fList.length - 5 + f;
+      if (matchIdx >= 0 && matchIdx < fList.length) {
+        const resChar = fList[matchIdx];
+        const arabicChar = resChar === 'W' ? 'ف' : (resChar === 'D' ? 'ت' : 'خ');
+        formDots += `<span class="admin-form-dot ${resChar}">${arabicChar}</span>`;
+      } else {
+        formDots += `<span class="admin-form-dot empty">·</span>`;
+      }
+    }
+
+    html += `
+      <div class="admin-tbl-item-row">
+        <span><span class="admin-rank-tag ${rankCls}">${rank}</span></span>
+        <div class="admin-team-col">
+          <span class="admin-team-logo">${logoInner(teamStat.id)}</span>
+          <span class="admin-team-title">${T[teamStat.id]}</span>
+        </div>
+        <span class="admin-num-cell">${teamStat.p}</span>
+        <span class="admin-num-cell">${teamStat.w}</span>
+        <span class="admin-num-cell">${teamStat.d}</span>
+        <span class="admin-num-cell">${teamStat.l}</span>
+        <span class="admin-num-cell">${teamStat.gf}</span>
+        <span class="admin-num-cell">${teamStat.ga}</span>
+        <span class="admin-diff-cell ${diffCls}">${diffTxt}</span>
+        <span class="admin-form-boxes">${formDots}</span>
+        <span class="admin-pts-cell">${teamStat.pts}</span>
+      </div>
+    `;
+  });
+
+  html += `
+      </div>
+
+      <!-- بطاقات الإحصاءات الأربعة بالأسفل -->
+      <div class="admin-poster-stats-grid">
+        <!-- الهداف -->
+        <div class="admin-stat-card">
+          <div class="admin-stat-lbl">الهداف</div>
+          <div class="admin-stat-val">${topScorer ? topScorer.c : '0'}</div>
+          <div class="admin-stat-info">
+            <span>⚽</span>
+            <span style="font-weight:900;">${topScorer ? topScorer.n : 'لا أهداف'}</span>
+            <small style="opacity:0.75;">(${topScorer ? T[topScorer.t] : '-'})</small>
+          </div>
+        </div>
+
+        <!-- أفضل هجوم -->
+        <div class="admin-stat-card">
+          <div class="admin-stat-lbl">أفضل هجوم</div>
+          <div class="admin-stat-val">${att ? att.gf : '0'}</div>
+          <div class="admin-stat-info">
+            <span class="admin-team-logo" style="width:16px;height:16px;">${att ? logoInner(att.id) : ''}</span>
+            <span>${att ? T[att.id] : '-'}</span>
+          </div>
+        </div>
+
+        <!-- أفضل دفاع -->
+        <div class="admin-stat-card">
+          <div class="admin-stat-lbl">أفضل دفاع</div>
+          <div class="admin-stat-val">${def ? def.ga : '0'}</div>
+          <div class="admin-stat-info">
+            <span class="admin-team-logo" style="width:16px;height:16px;">${def ? logoInner(def.id) : ''}</span>
+            <span>${def ? T[def.id] : '-'}</span>
+          </div>
+        </div>
+
+        <!-- معدل الأهداف -->
+        <div class="admin-stat-card">
+          <div class="admin-stat-lbl">معدل الأهداف في المباراة</div>
+          <div class="admin-stat-val">${avgGoals}</div>
+          <div class="admin-stat-info">
+            <small>${totalGoals} هدفاً · ${totalMatches} مباريات</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- مفتاح الألوان -->
+      <div class="admin-poster-legend">
+        <div class="admin-poster-legend-items">
+          <span><span class="admin-legend-box promo"></span> الصعود / الصدارة</span>
+          <span><span class="admin-legend-box releg"></span> منطقة السقوط</span>
+        </div>
+        <div>
+          <span>ف فوز · ت تعادل · خ خسارة (آخر 5 مباريات)</span>
+        </div>
+      </div>
+
+      <!-- الشريط الختامي الكبسولي -->
+      <div class="admin-poster-footer-banner">
+        MOUBARATI LIVE · الترتيب الرسمي المعتمد · رابطة تيبازة
+      </div>
+    </div>
+  `;
+
+  container.innerHTML = html;
+}
+
+// دالة توليد البوستر بجودة فائقة HD على Canvas
+async function generateAdminPosterCanvas(u, cCat) {
+  const S = standings(u);
+  const n = S.length;
+  const pool = S.filter(x => x.p > 0);
+
+  const W = 1200;
+  const topH = 260;
+  const rowH = 68;
+  const tblH = 70 + n * (rowH + 6);
+  const statsH = 210;
+  const footH = 140;
+  const H = topH + tblH + statsH + footH;
+
+  const [cv, c] = canvas0(W, H);
+  cv.dataset.noBrand = '1';
+
+  // الخلفية الأساسية
+  c.fillStyle = '#f4f6f8';
+  c.fillRect(0, 0, W, H);
+
+  // إطار أبيض أنيق مع ظلال
+  c.save();
+  c.fillStyle = '#ffffff';
+  c.shadowColor = 'rgba(0,0,0,0.06)';
+  c.shadowBlur = 20;
+  c.shadowOffsetY = 6;
+  rr(c, 24, 24, W - 48, H - 48, 28);
+  c.fill();
+  c.restore();
+
+  // علامة مائية ناعمة
+  c.save();
+  fnt(c, 100, 900);
+  c.textAlign = 'center';
+  c.fillStyle = 'rgba(21,104,52,0.025)';
+  for (let yy = 150; yy < H; yy += 240) {
+    for (let xx = 150; xx < W; xx += 350) {
+      c.fillText('ESM 2026', xx, yy);
+    }
+  }
+  c.restore();
+
+  // تحميل الشعارات
+  const [LG, clubImgs] = await Promise.all([
+    leagueImg(),
+    Promise.all(S.map(x => img(x.id)))
+  ]);
+
+  // الرأس: شعار الرابطة
+  if (LG) {
+    c.save();
+    c.beginPath();
+    c.arc(W - 120, 110, 56, 0, 7);
+    c.fillStyle = '#ffffff';
+    c.fill();
+    c.lineWidth = 4;
+    c.strokeStyle = '#156834';
+    c.stroke();
+    c.clip();
+    c.drawImage(LG, W - 176, 54, 112, 112);
+    c.restore();
+  }
+
+  // عناوين الرأس
+  tx(c, 'رابطة تيبازة لكرة القدم', W/2 + 20, 95, 42, '#156834', 'center', 900);
+  tx(c, 'الفئات الشبانية 2026/2027 · الفئة ' + cCat + ' (مجموعة وسط غرب)', W/2 + 20, 142, 26, '#334155', 'center', 800);
+
+  // كبسولة رقم الجولة
+  c.fillStyle = '#156834';
+  rr(c, 60, 68, 220, 76, 38);
+  c.fill();
+  // الدائرة البيضاء
+  c.fillStyle = '#ffffff';
+  c.beginPath();
+  c.arc(104, 106, 30, 0, 7);
+  c.fill();
+  tx(c, '' + u, 104, 118, 36, '#156834', 'center', 900);
+  tx(c, 'الترتيب', 200, 116, 34, '#ffffff', 'center', 900);
+  tx(c, 'الترتيب بعد الجولة ' + u, 170, 172, 22, '#475569', 'center', 800);
+
+  // رأس الجدول الأخضر
+  const tableTop = 220;
+  c.fillStyle = '#156834';
+  rr(c, 50, tableTop, W - 100, 58, 14);
+  c.fill();
+
+  const colX = {
+    rank: 1115,
+    logo: 1055,
+    team: 1020,
+    p: 685,
+    w: 630,
+    d: 575,
+    l: 520,
+    gf: 465,
+    ga: 410,
+    diff: 350,
+    form: 215,
+    pts: 88
+  };
+
+  tx(c, '#', colX.rank, tableTop + 38, 22, '#ffffff', 'center', 900);
+  tx(c, 'الفريق', colX.team, tableTop + 38, 22, '#ffffff', 'right', 900);
+  tx(c, 'لعب', colX.p, tableTop + 38, 21, '#ffffff', 'center', 900);
+  tx(c, 'فاز', colX.w, tableTop + 38, 21, '#ffffff', 'center', 900);
+  tx(c, 'تعادل', colX.d, tableTop + 38, 21, '#ffffff', 'center', 900);
+  tx(c, 'خسر', colX.l, tableTop + 38, 21, '#ffffff', 'center', 900);
+  tx(c, 'له', colX.gf, tableTop + 38, 21, '#ffffff', 'center', 900);
+  tx(c, 'عليه', colX.ga, tableTop + 38, 21, '#ffffff', 'center', 900);
+  tx(c, 'الفرق', colX.diff, tableTop + 38, 21, '#ffffff', 'center', 900);
+  tx(c, 'الأداء', colX.form, tableTop + 38, 21, '#ffffff', 'center', 900);
+  tx(c, 'النقاط', colX.pts, tableTop + 38, 22, '#ffffff', 'center', 900);
+
+  // رسم صفوف الجدول
+  let curY = tableTop + 70;
+  S.forEach((teamStat, idx) => {
+    const rank = idx + 1;
+    let rankColor = '#2e7d32';
+    if (rank <= 5) rankColor = '#156834';
+    else if (rank >= n - 2) rankColor = '#d32f2f';
+
+    // بطاقة الصف البيضاء
+    c.fillStyle = '#ffffff';
+    c.strokeStyle = '#e2e8f0';
+    c.lineWidth = 1.5;
+    rr(c, 50, curY, W - 100, rowH, 12);
+    c.fill();
+    c.stroke();
+
+    // بادج الترتيب
+    c.fillStyle = rankColor;
+    rr(c, colX.rank - 24, curY + 12, 48, 44, 8);
+    c.fill();
+    tx(c, '' + rank, colX.rank, curY + 42, 24, '#ffffff', 'center', 900);
+
+    // شعار النادي واسمه
+    const clubImg = clubImgs[idx];
+    if (clubImg) {
+      drawLogo(c, clubImg, colX.logo, curY + 34, 46);
+    }
+    tx(c, T[teamStat.id], colX.team, curY + 43, 22, '#0f172a', 'right', 900);
+
+    // فواصل خفيفة بين الأعمدة الرقمية
+    c.strokeStyle = '#eef2f6';
+    c.lineWidth = 1;
+    [colX.p, colX.w, colX.d, colX.l, colX.gf, colX.ga].forEach(cx => {
+      c.beginPath();
+      c.moveTo(cx + 26, curY + 10);
+      c.lineTo(cx + 26, curY + rowH - 10);
+      c.stroke();
+    });
+
+    tx(c, '' + teamStat.p, colX.p, curY + 42, 23, '#1e293b', 'center', 800);
+    tx(c, '' + teamStat.w, colX.w, curY + 42, 23, '#1e293b', 'center', 800);
+    tx(c, '' + teamStat.d, colX.d, curY + 42, 23, '#1e293b', 'center', 800);
+    tx(c, '' + teamStat.l, colX.l, curY + 42, 23, '#1e293b', 'center', 800);
+    tx(c, '' + teamStat.gf, colX.gf, curY + 42, 23, '#1e293b', 'center', 800);
+    tx(c, '' + teamStat.ga, colX.ga, curY + 42, 23, '#1e293b', 'center', 800);
+
+    // فارق الأهداف
+    const diff = teamStat.gf - teamStat.ga;
+    const diffColor = diff > 0 ? '#16a34a' : (diff < 0 ? '#dc2626' : '#475569');
+    const diffTxt = diff > 0 ? '+' + diff : (diff === 0 ? '0' : '' + diff);
+    tx(c, diffTxt, colX.diff, curY + 42, 23, diffColor, 'center', 900);
+
+    // مربعات الأداء (آخر 5 مباريات)
+    const fList = typeof formOf === 'function' ? formOf(teamStat.id, u) : [];
+    let startFormX = colX.form - 70;
+    for (let f = 0; f < 5; f++) {
+      const matchIdx = fList.length - 5 + f;
+      const bx = startFormX + f * 30;
+      const by = curY + 20;
+      if (matchIdx >= 0 && matchIdx < fList.length) {
+        const resChar = fList[matchIdx];
+        const resColor = resChar === 'W' ? '#16a34a' : (resChar === 'D' ? '#475569' : '#dc2626');
+        const arabicChar = resChar === 'W' ? 'ف' : (resChar === 'D' ? 'ت' : 'خ');
+        c.fillStyle = resColor;
+        rr(c, bx, by, 25, 25, 6);
+        c.fill();
+        tx(c, arabicChar, bx + 12.5, by + 18, 15, '#ffffff', 'center', 900);
+      } else {
+        c.fillStyle = '#e2e8f0';
+        rr(c, bx, by, 25, 25, 6);
+        c.fill();
+      }
+    }
+
+    // النقاط
+    tx(c, '' + teamStat.pts, colX.pts, curY + 43, 27, '#0f172a', 'center', 900);
+
+    curY += rowH + 6;
+  });
+
+  // بطاقات الإحصاءات الأربعة بالأسفل
+  const statsY = curY + 20;
+  const cardW = 260;
+  const cardH = 135;
+  const cardGap = 20;
+  const startCardX = 50;
+
+  // Best attack & defense
+  const att = pool.length ? [...pool].sort((a,b) => b.gf - a.gf)[0] : S[0];
+  const def = pool.length ? [...pool].sort((a,b) => a.ga - b.ga)[0] : S[0];
+
+  // Top Scorer
+  const scTallies = typeof tallies === 'function' ? tallies() : [[], []];
+  const G = scTallies[0] || [];
+  const topScorer = G.length ? G[0] : null;
+
+  // Goals average
+  const totalMatches = pool.reduce((acc, x) => acc + x.p, 0) / 2;
+  const totalGoals = pool.reduce((acc, x) => acc + x.gf, 0);
+  const avgGoals = totalMatches > 0 ? (totalGoals / totalMatches).toFixed(2) : '0.00';
+
+  // دالة مساعدة لرسم بطاقة بيضاء نظيفة
+  const drawStatCard = (x, lbl, val, subHtml, icon) => {
+    c.fillStyle = '#ffffff';
+    c.strokeStyle = '#e2e8f0';
+    c.lineWidth = 1.5;
+    rr(c, x, statsY, cardW, cardH, 16);
+    c.fill();
+    c.stroke();
+    tx(c, lbl, x + cardW/2, statsY + 32, 20, '#64748b', 'center', 800);
+    tx(c, val, x + cardW/2, statsY + 76, 38, '#0f172a', 'center', 900);
+    tx(c, subHtml, x + cardW/2, statsY + 112, 19, '#334155', 'center', 800);
+  };
+
+  // 1. الهداف (أقصى اليمين)
+  drawStatCard(startCardX + 3 * (cardW + cardGap), 'الهداف', topScorer ? '' + topScorer.c : '0', '⚽ ' + (topScorer ? topScorer.n : 'لا أهداف'));
+
+  // 2. أفضل هجوم
+  drawStatCard(startCardX + 2 * (cardW + cardGap), 'أفضل هجوم', att ? '' + att.gf : '0', att ? T[att.id] : '-');
+
+  // 3. أفضل دفاع
+  drawStatCard(startCardX + 1 * (cardW + cardGap), 'أفضل دفاع', def ? '' + def.ga : '0', def ? T[def.id] : '-');
+
+  // 4. معدل الأهداف (أقصى اليسار)
+  drawStatCard(startCardX, 'معدل الأهداف في المباراة', avgGoals, totalGoals + ' هدفاً · ' + totalMatches + ' مباريات');
+
+  // مفتاح الألوان
+  const legendY = statsY + cardH + 26;
+  c.fillStyle = '#156834';
+  rr(c, W - 180, legendY, 18, 18, 4);
+  c.fill();
+  tx(c, 'الصعود / الصدارة', W - 195, legendY + 16, 20, '#475569', 'right', 800);
+
+  c.fillStyle = '#d32f2f';
+  rr(c, W - 380, legendY, 18, 18, 4);
+  c.fill();
+  tx(c, 'منطقة السقوط', W - 395, legendY + 16, 20, '#475569', 'right', 800);
+
+  tx(c, 'ف فوز · ت تعادل · خ خسارة (آخر 5 مباريات)', 60, legendY + 16, 20, '#64748b', 'left', 700);
+
+  // شريط الختام الكبسولي
+  const footY = legendY + 45;
+  c.fillStyle = '#156834';
+  rr(c, 50, footY, W - 100, 60, 30);
+  c.fill();
+  tx(c, 'MOUBARATI LIVE · الترتيب الرسمي المعتمد · رابطة تيبازة', W/2, footY + 40, 26, '#ffffff', 'center', 900);
+
+  adminStandingsCachedCanvas = cv;
+  return cv;
+}
+
+
+// دالة تحميل البوستر كصورة PNG
+async function downloadAdminStandingsPoster() {
+  if (typeof showToast === 'function') showToast('⏳ جاري تصميم ومعالجة الملصق بجودة فائقة...');
+  try {
+    const cv = await generateAdminPosterCanvas(currentAdminPosterRound, currentAdminPosterCat);
+    const a = document.createElement('a');
+    a.download = 'ترتيب_الرابطة_الجولة_' + currentAdminPosterRound + '_' + currentAdminPosterCat + '.png';
+    a.href = cv.toDataURL('image/png');
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    if (typeof showToast === 'function') showToast('✅ تم تحميل ملصق الترتيب المعتمد بنجاح!');
+  } catch (err) {
+    console.error('Error generating standings poster:', err);
+    if (typeof showToast === 'function') showToast('❌ حدث خطأ أثناء توليد الملصق.');
+  }
+}
+
+// دالة مشاركة البوستر عبر واتساب
+function shareAdminStandingsPoster() {
+  const S = standings(currentAdminPosterRound);
+  const u = currentAdminPosterRound;
+  let txt = '🏆 *جدول الترتيب الرسمي المعتمد - الجولة ' + u + '*\n';
+  txt += '⚽ رابطة تيبازة لكرة القدم · الفئة: ' + currentAdminPosterCat + '\n';
+  txt += '━━━━━━━━━━━━━━━━━━━━\n';
+  S.forEach((teamStat, idx) => {
+    const diff = teamStat.gf - teamStat.ga;
+    const diffTxt = diff > 0 ? '+' + diff : '' + diff;
+    txt += (idx + 1) + '. *' + T[teamStat.id] + '* | ' + teamStat.pts + ' ن (لعب ' + teamStat.p + ' | فارق ' + diffTxt + ')\n';
+  });
+  txt += '━━━━━━━━━━━━━━━━━━━━\n';
+  txt += '📲 للمعاينة والتحميل: https://esm-matches.onrender.com/';
+
+  window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(txt), '_blank');
+}
 </script>
 </body>
 </html>
