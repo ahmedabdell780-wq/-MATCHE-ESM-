@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>منصة مباريات رابطة تيبازة</title>
 <meta name="theme-color" content="#1f5a34">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="favicon.png">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -105,6 +108,164 @@ h2{font-size:15px;margin:14px 2px 8px}
 .subs-list{display:flex;flex-direction:column;gap:6px;margin-top:6px}
 .sub-badge{display:flex;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--ln);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:700}
 .poster-preview-box{width:100%;max-height:260px;object-fit:contain;border-radius:12px;margin-top:8px;background:#000;display:none}
+
+
+/* --- ضبط الخطوط والثيم والتناسق مع الهواتف والوضع الليلي --- */
+body, button, input, select, textarea {
+  font-family: 'Tajawal', 'Cairo', system-ui, -apple-system, sans-serif !important;
+}
+h1, h2, h3, .poster-title {
+  font-family: 'Cairo', 'Tajawal', sans-serif !important;
+}
+
+header {
+  background: linear-gradient(135deg, #156834, #0b381b) !important;
+  color: #fff !important;
+  padding: calc(8px + var(--sa)) 12px 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+header h1 { font-size: 15px !important; line-height: 1.2 !important; margin: 0 !important; }
+header small { font-size: 11px !important; opacity: 0.85 !important; }
+header .btn.sm {
+  padding: 4px 8px !important;
+  font-size: 11.5px !important;
+  border-radius: 8px !important;
+  background: rgba(255,255,255,0.18) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255,255,255,0.3) !important;
+}
+
+/* إجبار ملصق وجدول الترتيب على إظهار نصوص واضحة وعالية التباين دائماً حتى في الوضع الليلي */
+.poster-card {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 18px !important;
+  padding: 14px 10px !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06) !important;
+  position: relative !important;
+}
+.poster-title { color: #156834 !important; }
+.poster-sub { color: #334155 !important; }
+
+.swipe-hint {
+  display: none;
+  text-align: center;
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 700;
+  margin-bottom: 6px;
+  background: #f1f5f9;
+  padding: 3px 6px;
+  border-radius: 6px;
+}
+@media(max-width: 600px) {
+  .swipe-hint { display: block; }
+}
+
+.st-tbl {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  font-size: 12px !important;
+  min-width: 520px !important;
+}
+.st-tbl th {
+  background: #156834 !important;
+  color: #ffffff !important;
+  padding: 8px 3px !important;
+  font-weight: 800 !important;
+  border: none !important;
+  font-size: 11.5px !important;
+}
+.st-tbl td {
+  padding: 6px 2px !important;
+  text-align: center !important;
+  border-bottom: 1px solid #edf2f7 !important;
+  vertical-align: middle !important;
+  color: #0f172a !important;
+  font-weight: 600 !important;
+}
+.st-tbl td.n {
+  text-align: right !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  white-space: nowrap !important;
+  padding-right: 4px !important;
+}
+.st-tbl td b { color: #0f172a !important; }
+
+.stat-box {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #0f172a !important;
+}
+.stat-box .lbl { color: #64748b !important; }
+.stat-box .val { color: #0f172a !important; }
+.stat-box .sub { color: #334155 !important; }
+
+/* بطاقات التشكيلة الأساسية مع صور وأرقام اللاعبين */
+.starter-card-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--card);
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid var(--ln);
+  margin-bottom: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+.player-avatar-box {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  border: 1.5px solid var(--g);
+  overflow: hidden;
+  flex-shrink: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.player-avatar-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.player-avatar-box .cam-icon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  font-size: 8px;
+  text-align: center;
+  line-height: 12px;
+}
+.starter-num-input {
+  width: 44px;
+  height: 36px;
+  text-align: center;
+  font-weight: 900;
+  font-size: 15px;
+  border-radius: 8px;
+  border: 1.5px solid var(--g);
+  color: var(--g);
+  background: #f0fdf4;
+}
+.pos-badge-select {
+  padding: 6px 4px;
+  font-size: 11px;
+  font-weight: 800;
+  border-radius: 6px;
+  border: 1px solid var(--ln);
+  background: var(--bg);
+}
 
 </style>
 <script>window.ESM_FIREBASE={apiKey:"AIzaSyBSDRAZwpChKIXpRPVIUp0JtdfflLqPRfU",authDomain:"moubarati-l-w-t.firebaseapp.com",projectId:"moubarati-l-w-t",appId:"1:582704281935:web:aeb821d64b4de733386d3a"};</script>
@@ -475,9 +636,10 @@ function standings(){
  return chips() + `
  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
    <span style="font-size:13px;font-weight:800;color:var(--g);">🏆 الترتيب الرسمي المعتمد · ${cat}</span>
+   ${(me && (me.role === 'admin' || me.role === 'manager')) ? `
    <button class="btn sm" id="btnDlPoster" onclick="downloadStandingsPoster()" style="display:inline-flex;align-items:center;gap:4px;background:#16a34a;">
      📷 تحميل الملصق كصورة HD
-   </button>
+   </button>` : ''}
  </div>
 
  <div class="poster-card" id="standingsPosterBox">
@@ -497,6 +659,7 @@ function standings(){
    </div>
    
    <div class="tbl-wrap">
+     <div class="swipe-hint">← اسحب الجدول أفقياً لعرض كامل الأرقام والإحصاءات والأداء →</div>
      <table class="st-tbl">
        <thead>
          <tr>
@@ -680,13 +843,21 @@ function rosterList(c, targetTeam) {
   if (!tId) {
     tId = (me && me.teamId) ? me.teamId : 5;
   }
+  let rawList = [];
   if (teamRosters && teamRosters[tId] && teamRosters[tId][targetCat] && teamRosters[tId][targetCat].length) {
-    return teamRosters[tId][targetCat];
+    rawList = teamRosters[tId][targetCat];
+  } else if (tId == 5 && DEFAULT_ROSTER[targetCat]) {
+    rawList = DEFAULT_ROSTER[targetCat];
   }
-  if (tId == 5 && DEFAULT_ROSTER[targetCat]) {
-    return DEFAULT_ROSTER[targetCat];
-  }
-  return [];
+  return rawList.map(item => (typeof item === 'string' ? item : (item && item.name) || ''));
+}
+
+function getRosterPlayerObj(tId, c, idx) {
+  const list = (teamRosters[tId] && teamRosters[tId][c]) || [];
+  const item = list[idx];
+  if (!item) return { name: '', num: (idx + 1).toString(), photo: '' };
+  if (typeof item === 'string') return { name: item, num: (idx + 1).toString(), photo: '' };
+  return Object.assign({ name: '', num: (idx + 1).toString(), photo: '' }, item);
 }
 
 function minOpts() {
@@ -873,11 +1044,10 @@ function getMatchLineupData(k, side) {
   const v = S[k] || {};
   const prop = side === 'h' ? 'lineupH' : 'lineupA';
   v[prop] = v[prop] || { starters: [], bench: [], subs: [] };
-  // Fill 11 starter slots if empty
   while (v[prop].starters.length < 11) {
     const idx = v[prop].starters.length + 1;
     const defPos = idx === 1 ? 'GK' : (idx <= 5 ? 'DF' : (idx <= 9 ? 'MF' : 'FW'));
-    v[prop].starters.push({ num: idx.toString(), name: '', pos: defPos });
+    v[prop].starters.push({ num: idx.toString(), name: '', pos: defPos, photo: '' });
   }
   return v[prop];
 }
@@ -895,7 +1065,6 @@ function renderLineupView() {
   const starterNames = data.starters.map(p => p.name).filter(Boolean);
   const benchNames = data.bench.map(p => p.name).filter(Boolean);
 
-  // 1. التشكيلة الأساسية (11)
   const posOpts = [
     { k: 'GK', t: 'حارس (GK)' },
     { k: 'DF', t: 'دفاع (DF)' },
@@ -903,20 +1072,40 @@ function renderLineupView() {
     { k: 'FW', t: 'هجوم (FW)' }
   ];
 
+  // 1. التشكيلة الأساسية (11 لاعباً) مع صورهم وأرقامهم
   let startersHtml = '';
   data.starters.forEach((p, idx) => {
+    const photoSrc = p.photo || 'icon-192.png';
     startersHtml += `
-    <div class="lineup-row">
-      <input type="text" class="lineup-num" value="${esc(p.num)}" data-sidx="${idx}" data-field="num" placeholder="${idx+1}">
-      <input type="text" style="flex:1;" value="${esc(p.name)}" data-sidx="${idx}" data-field="name" placeholder="اسم اللاعب ${idx+1}...">
-      <select class="lineup-pos" data-sidx="${idx}" data-field="pos">
+    <div class="starter-card-item">
+      <!-- رقم قميص اللاعب -->
+      <input type="number" min="1" max="99" class="starter-num-input" value="${esc(p.num || idx+1)}" data-sidx="${idx}" data-field="num" title="تغيير رقم القميص">
+      
+      <!-- صورة اللاعب مع إمكانية رفع صورة جديدة -->
+      <div class="player-avatar-box" onclick="triggerPlayerPhoto(${idx}, 'starter')" title="اضغط لرفع صورة اللاعب">
+        <img src="${photoSrc}" id="pimg_starter_${idx}" alt="">
+        <span class="cam-icon">📷</span>
+      </div>
+      <input type="file" id="pfile_starter_${idx}" accept="image/*" style="display:none;" onchange="handlePlayerPhoto(event, ${idx}, 'starter')">
+
+      <!-- اسم اللاعب واختياره السريع من التشكيلة -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:3px;min-width:0;">
+        <input type="text" style="padding:6px 8px;font-weight:700;font-size:13px;" value="${esc(p.name)}" data-sidx="${idx}" data-field="name" placeholder="اسم اللاعب ${idx+1}...">
+        <select style="padding:3px 6px;font-size:11px;border-radius:6px;border:1px solid var(--ln);background:var(--bg);color:var(--tx);" onchange="setStarterFromRoster(${idx}, this.value)">
+          <option value="">＋ اختر من قائمة النادي...</option>
+          ${fullRoster.map(n => `<option value="${n}" ${p.name===n?'selected':''}>${n}</option>`).join('')}
+        </select>
+      </div>
+
+      <!-- مركز اللاعب -->
+      <select class="pos-badge-select" data-sidx="${idx}" data-field="pos">
         ${posOpts.map(po => `<option value="${po.k}" ${p.pos===po.k?'selected':''}>${po.t}</option>`).join('')}
       </select>
     </div>`;
   });
   $('startersContainer').innerHTML = startersHtml;
 
-  // استماع تعديل الأساسيين
+  // استماع تحديثات الحقول
   $('startersContainer').querySelectorAll('[data-sidx]').forEach(inp => {
     inp.oninput = () => {
       const idx = +inp.dataset.sidx;
@@ -925,21 +1114,35 @@ function renderLineupView() {
     };
   });
 
-  // 2. قائمة الاحتياط
+  // 2. قائمة الاحتياط مع الرقم والصورة
   const availForBench = fullRoster.filter(n => !starterNames.includes(n) && !benchNames.includes(n));
   $('selBenchAdd').innerHTML = '<option value="">＋ اختيار لاعب من تشكيلة النادي...</option>' +
     availForBench.map(n => `<option value="${n}">${n}</option>`).join('');
 
   let benchHtml = '';
   data.bench.forEach((b, idx) => {
+    const photoSrc = b.photo || 'icon-192.png';
     benchHtml += `
-    <div class="lineup-row" style="background:#f8fafc;">
-      <span style="font-weight:700;font-size:12px;color:var(--mu);width:26px;">#${idx+1}</span>
+    <div class="starter-card-item" style="background:#f8fafc;">
+      <input type="number" min="1" max="99" class="starter-num-input" style="border-color:#64748b;color:#334155;background:#fff;" value="${esc(b.num || 12+idx)}" data-bidx="${idx}" data-field="num" title="رقم البديل">
+      <div class="player-avatar-box" onclick="triggerPlayerPhoto(${idx}, 'bench')" title="اضغط لرفع صورة البديل" style="border-color:#64748b;">
+        <img src="${photoSrc}" id="pimg_bench_${idx}" alt="">
+        <span class="cam-icon">📷</span>
+      </div>
+      <input type="file" id="pfile_bench_${idx}" accept="image/*" style="display:none;" onchange="handlePlayerPhoto(event, ${idx}, 'bench')">
       <span style="flex:1;font-weight:700;font-size:13px;">${esc(b.name)}</span>
-      <button type="button" class="btn sm alt red" onclick="removeBenchPlayer(${idx})" style="padding:2px 8px;font-size:11px;">إزالة</button>
+      <button type="button" class="btn sm alt red" onclick="removeBenchPlayer(${idx})" style="padding:4px 8px;font-size:11px;">إزالة</button>
     </div>`;
   });
   $('benchContainer').innerHTML = benchHtml || '<div style="font-size:12px;color:var(--mu);padding:4px;">لا يوجد لاعبون في قائمة الاحتياط حالياً.</div>';
+
+  $('benchContainer').querySelectorAll('[data-bidx]').forEach(inp => {
+    inp.oninput = () => {
+      const idx = +inp.dataset.bidx;
+      const f = inp.dataset.field;
+      data.bench[idx][f] = inp.value;
+    };
+  });
 
   // 3. التبديلات
   const activeStarters = data.starters.map(p => p.name).filter(Boolean);
@@ -962,62 +1165,35 @@ function renderLineupView() {
   $('subsContainer').innerHTML = subsHtml || '<div style="font-size:12px;color:var(--mu);padding:4px;">لم يتم تسجيل أي تبديلات بعد.</div>';
 }
 
-// ملء تلقائي للأساسيين
-$('btnAutofillStarters').onclick = () => {
-  const m = /^(?:([A-Z0-9]+)\|)?(\d+):(\d+)-(\d+)$/.exec(curLineupMatchKey);
-  const curTeamId = curLineupSide === 'h' ? +m[3] : +m[4];
-  const squad = rosterList(m[1]||'U15', curTeamId);
-  if (!squad.length) return alert('⚠️ لا توجد تشكيلة مسجلة لهذا النادي لإجراء الملء التلقائي.');
+window.setStarterFromRoster = (idx, name) => {
+  if (!name) return;
   const data = getMatchLineupData(curLineupMatchKey, curLineupSide);
-  squad.slice(0, 11).forEach((name, i) => {
-    data.starters[i].name = name;
-  });
-  renderLineupView();
-  toast('⚡ تم الملء التلقائي لأول 11 لاعباً بنجاح!');
-};
-
-$('btnAddBench').onclick = () => {
-  const sel = $('selBenchAdd');
-  if (!sel.value) return;
-  const data = getMatchLineupData(curLineupMatchKey, curLineupSide);
-  data.bench.push({ name: sel.value, num: '' });
-  sel.value = '';
+  data.starters[idx].name = name;
   renderLineupView();
 };
 
-window.removeBenchPlayer = idx => {
-  const data = getMatchLineupData(curLineupMatchKey, curLineupSide);
-  data.bench.splice(idx, 1);
-  renderLineupView();
+window.triggerPlayerPhoto = (idx, type) => {
+  const inp = document.getElementById(`pfile_${type}_${idx}`);
+  if (inp) inp.click();
 };
 
-$('btnAddSub').onclick = () => {
-  const pOut = $('selSubOut').value;
-  const pIn = $('selSubIn').value;
-  const min = $('selSubMin').value;
-  if (!pOut || !pIn || !min) return alert('⚠️ يرجى اختيار اللاعب الخارج والبديل والدقيقة.');
-  const data = getMatchLineupData(curLineupMatchKey, curLineupSide);
-  data.subs.push({ out: pOut, in: pIn, min: min });
-  $('selSubOut').value = '';
-  $('selSubIn').value = '';
-  $('selSubMin').value = '';
-  renderLineupView();
+window.handlePlayerPhoto = (event, idx, type) => {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const dataUrl = ev.target.result;
+    const data = getMatchLineupData(curLineupMatchKey, curLineupSide);
+    if (type === 'starter') {
+      data.starters[idx].photo = dataUrl;
+    } else {
+      data.bench[idx].photo = dataUrl;
+    }
+    renderLineupView();
+    toast('📸 تم تحديث صورة اللاعب بنجاح!');
+  };
+  reader.readAsDataURL(file);
 };
-
-window.removeSub = idx => {
-  const data = getMatchLineupData(curLineupMatchKey, curLineupSide);
-  data.subs.splice(idx, 1);
-  renderLineupView();
-};
-
-$('btnSaveLineup').onclick = async () => {
-  const m = /^(?:([A-Z0-9]+)\|)?(\d+):(\d+)-(\d+)$/.exec(curLineupMatchKey);
-  const v = S[curLineupMatchKey] || {};
-  await put(curLineupMatchKey, +m[3], +m[4], v);
-  $('lineupModal').close();
-  toast('✅ تم حفظ التشكيلة والتبديلات بنجاح!');
-};
-
 // ==========================================
 // 4. نافذة إدارة تشكيلة اللاعبين لكل نادٍ
 // ==========================================
@@ -1050,18 +1226,60 @@ function renderRosterModalList() {
   $('lblRosterCount').textContent = `إجمالي المسجلين في فئة ${activeRosterCat}: (${list.length}) لاعب`;
   
   let html = '';
-  list.forEach((p, idx) => {
+  list.forEach((rawItem, idx) => {
+    const p = getRosterPlayerObj(activeRosterTeam, activeRosterCat, idx);
+    const photoSrc = p.photo || 'icon-192.png';
     html += `
-    <div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg);padding:6px 10px;border-radius:8px;border:1px solid var(--ln);">
-      <span style="font-weight:700;font-size:13px;"><b style="color:var(--mu);margin-left:6px;">#${idx+1}</b> ${esc(p)}</span>
+    <div style="display:flex;align-items:center;gap:8px;background:var(--card);padding:8px 10px;border-radius:10px;border:1px solid var(--ln);box-shadow:0 1px 3px rgba(0,0,0,0.03);">
+      <!-- رقم القميص -->
+      <input type="number" min="1" max="99" value="${esc(p.num)}" onchange="updateRosterPlayerNum(${idx}, this.value)" style="width:40px;height:34px;text-align:center;font-weight:900;font-size:14px;border:1.5px solid var(--g);color:var(--g);background:#f0fdf4;border-radius:8px;" title="رقم القميص">
+      
+      <!-- صورة اللاعب مع رفع سريع -->
+      <div class="player-avatar-box" onclick="triggerRosterPhoto(${idx})" title="تغيير صورة اللاعب">
+        <img src="${photoSrc}" id="rimg_${idx}" alt="">
+        <span class="cam-icon">📷</span>
+      </div>
+      <input type="file" id="rfile_${idx}" accept="image/*" style="display:none;" onchange="handleRosterPhoto(event, ${idx})">
+
+      <!-- اسم اللاعب -->
+      <span style="flex:1;font-weight:800;font-size:13px;color:var(--tx);">${esc(p.name)}</span>
+
       <div style="display:flex;gap:4px;">
-        <button type="button" class="btn sm alt" onclick="editPlayer(${idx})" style="padding:2px 8px;font-size:11px;">تعديل</button>
-        <button type="button" class="btn sm alt red" onclick="deletePlayer(${idx})" style="padding:2px 8px;font-size:11px;">حذف</button>
+        <button type="button" class="btn sm alt" onclick="editPlayer(${idx})" style="padding:4px 8px;font-size:11px;">تعديل</button>
+        <button type="button" class="btn sm alt red" onclick="deletePlayer(${idx})" style="padding:4px 8px;font-size:11px;">حذف</button>
       </div>
     </div>`;
   });
   $('rosterPlayersList').innerHTML = html || '<div style="text-align:center;color:var(--mu);padding:14px;font-size:13px;">لا يوجد لاعبون مسجلون في هذه الفئة بعد.</div>';
 }
+
+window.updateRosterPlayerNum = (idx, newNum) => {
+  const p = getRosterPlayerObj(activeRosterTeam, activeRosterCat, idx);
+  p.num = newNum || (idx + 1).toString();
+  teamRosters[activeRosterTeam][activeRosterCat][idx] = p;
+  saveTeamRosters();
+};
+
+window.triggerRosterPhoto = idx => {
+  const inp = document.getElementById(`rfile_${idx}`);
+  if (inp) inp.click();
+};
+
+window.handleRosterPhoto = (event, idx) => {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const dataUrl = ev.target.result;
+    const p = getRosterPlayerObj(activeRosterTeam, activeRosterCat, idx);
+    p.photo = dataUrl;
+    teamRosters[activeRosterTeam][activeRosterCat][idx] = p;
+    saveTeamRosters();
+    renderRosterModalList();
+    toast('📸 تم تحديث صورة اللاعب بنجاح!');
+  };
+  reader.readAsDataURL(file);
+};
 
 $('btnAddPlayer').onclick = () => {
   const raw = $('inpAddPlayerName').value.trim();
@@ -1069,10 +1287,16 @@ $('btnAddPlayer').onclick = () => {
   const names = raw.split(/[,،\n]+/).map(x => x.trim()).filter(Boolean);
   teamRosters[activeRosterTeam] = teamRosters[activeRosterTeam] || { U15: [], U17: [], U20: [] };
   teamRosters[activeRosterTeam][activeRosterCat] = teamRosters[activeRosterTeam][activeRosterCat] || [];
+  const existingNames = rosterList(activeRosterCat, activeRosterTeam);
   let added = 0;
   names.forEach(n => {
-    if (!teamRosters[activeRosterTeam][activeRosterCat].includes(n)) {
-      teamRosters[activeRosterTeam][activeRosterCat].push(n);
+    if (!existingNames.includes(n)) {
+      const curIdx = teamRosters[activeRosterTeam][activeRosterCat].length;
+      teamRosters[activeRosterTeam][activeRosterCat].push({
+        name: n,
+        num: (curIdx + 1).toString(),
+        photo: ''
+      });
       added++;
     }
   });
@@ -1083,11 +1307,11 @@ $('btnAddPlayer').onclick = () => {
 };
 
 window.editPlayer = idx => {
-  const list = teamRosters[activeRosterTeam][activeRosterCat];
-  const old = list[idx];
-  const updated = prompt('تعديل اسم اللاعب:', old);
+  const p = getRosterPlayerObj(activeRosterTeam, activeRosterCat, idx);
+  const updated = prompt('تعديل اسم اللاعب:', p.name);
   if (updated && updated.trim()) {
-    list[idx] = updated.trim();
+    p.name = updated.trim();
+    teamRosters[activeRosterTeam][activeRosterCat][idx] = p;
     saveTeamRosters();
     renderRosterModalList();
   }
