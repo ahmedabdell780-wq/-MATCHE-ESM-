@@ -20,7 +20,7 @@ button,input,select{font:inherit}
 .btn{border:0;border-radius:10px;padding:10px 14px;background:var(--g);color:#fff;font-weight:700;cursor:pointer}
 .btn.alt{background:transparent;color:var(--g);border:1.5px solid var(--g)}.btn.red{background:var(--er)}.btn.sm{padding:6px 10px;font-size:13px}
 header .btn{background:#ffffff26;padding:6px 10px;font-size:13px}
-main{max-width:640px;margin:0 auto;padding:12px 12px calc(84px + var(--sb))}
+main{max-width:760px;margin:0 auto;padding:12px 12px calc(84px + var(--sb))}
 .card{background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:12px;margin-bottom:10px}
 .chips{display:flex;gap:8px;margin-bottom:10px}
 .chip{flex:1;padding:9px;border-radius:10px;border:1.5px solid var(--ln);background:var(--card);color:var(--tx);font-weight:700;cursor:pointer}
@@ -51,11 +51,48 @@ dialog{border:0;border-radius:16px;padding:16px;width:min(92vw,380px);background
 #toast.on{opacity:1}
 .u{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
 h2{font-size:15px;margin:14px 2px 8px}
+
+/* --- تصميم ملصق وجدول الترتيب الرسمي المعتمد لرابطة تيبازة --- */
+.poster-card{background:#ffffff;border-radius:20px;padding:16px 14px;box-shadow:0 4px 20px rgba(0,0,0,0.06);border:1px solid #e2e8f0;margin-bottom:14px;overflow-x:auto}
+.poster-hdr{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;padding-bottom:10px;border-bottom:1.5px solid #edf2f7}
+.poster-hdr-rt{display:flex;align-items:center;gap:10px}
+.poster-title{font-size:19px;font-weight:900;color:var(--g);margin:0;line-height:1.2}
+.poster-sub{font-size:11.5px;color:#334155;font-weight:700;margin-top:2px}
+.poster-rnd-badge{background:var(--g);color:#fff;border-radius:99px;padding:4px 12px;font-weight:900;font-size:12px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.poster-rnd-badge span{background:#fff;color:var(--g);border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:11px}
+
+.tbl-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.st-tbl{width:100%;border-collapse:collapse;font-size:12px;min-width:540px}
+.st-tbl th{background:var(--g);color:#fff;padding:8px 4px;font-weight:700;font-size:12px;border:none;white-space:nowrap}
+.st-tbl th:first-child{border-radius:0 8px 8px 0}
+.st-tbl th:last-child{border-radius:8px 0 0 8px}
+.st-tbl td{padding:6px 3px;text-align:center;border-bottom:1px solid #edf2f7;vertical-align:middle}
+.st-tbl td.n{text-align:right;font-weight:700;white-space:nowrap;padding-right:6px}
+
+.rk-pill{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;color:#fff;font-weight:800;font-size:12px}
+.rk-pill.top{background:#16a34a}
+.rk-pill.mid{background:#1f5a34}
+.rk-pill.bot{background:#dc2626}
+
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+@media(max-width:520px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+.stat-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:10px 6px;text-align:center}
+.stat-box .lbl{font-size:11px;color:#64748b;font-weight:700}
+.stat-box .val{font-size:18px;font-weight:900;color:#0f172a;margin:2px 0}
+.stat-box .sub{font-size:10.5px;color:#475569;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.legend-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:12px;font-size:11px;color:#64748b;flex-wrap:wrap;font-weight:600}
+.legend-row span{display:inline-flex;align-items:center;gap:4px}
+.legend-box{width:12px;height:12px;border-radius:3px;display:inline-block}
+
+.poster-ftr{background:var(--g);color:#fff;border-radius:99px;padding:8px;text-align:center;font-weight:800;font-size:12.5px;margin-top:12px;letter-spacing:.3px}
 </style>
 <script>window.ESM_FIREBASE={apiKey:"AIzaSyBSDRAZwpChKIXpRPVIUp0JtdfflLqPRfU",authDomain:"moubarati-l-w-t.firebaseapp.com",projectId:"moubarati-l-w-t",appId:"1:582704281935:web:aeb821d64b4de733386d3a"};</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="logos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
 <body>
 <header><img src="icon-192.png" alt=""><div><h1>مباريات رابطة تيبازة</h1><small>الفئات الشبانية 2026/2027 · وسط غرب</small></div><span class="sp"></span><span id="who" style="font-size:12px"></span><button class="btn" id="out" hidden>خروج</button></header>
@@ -63,6 +100,7 @@ h2{font-size:15px;margin:14px 2px 8px}
  <div class="chips"><button class="chip" id="tl" aria-pressed="true">دخول</button><button class="chip" id="tr" aria-pressed="false">طلب حساب</button></div>
  <div id="fl" class="card"><label>رقم الهاتف أو اسم المستخدم</label><input id="lu" autocomplete="username"><label>كلمة المرور</label><input id="lp" type="password" autocomplete="current-password"><div class="err" id="le"></div><button class="btn" id="bl" style="width:100%">تسجيل الدخول</button></div>
  <div id="fr" class="card" hidden><label>الاسم واللقب</label><input id="rn"><label>رقم الهاتف (للدخول)</label><input id="rp" inputmode="tel"><label>الفريق</label><select class="f" id="rt"></select><label>كلمة المرور (6 أحرف على الأقل)</label><input id="rw" type="password"><label>تأكيد كلمة المرور</label><input id="rc" type="password"><div class="err" id="re"></div><button class="btn" id="br" style="width:100%">إرسال الطلب</button></div>
+ <button class="btn alt" id="bguest" style="width:100%;margin-top:10px;">👁️ تصفح المباريات والترتيب كزائر</button>
  <p style="text-align:center;color:var(--mu);font-size:13px">للاستفسار واعتماد الحسابات: <a href="https://wa.me/213676108460" style="color:var(--g)">0676108460</a></p>
 </div>
 <main id="app" hidden></main>
@@ -127,10 +165,22 @@ function fixtures(){
  p.m.forEach(([hm,aw])=>{
   const k=K(cat,round,hm,aw),v=S[k],has=v&&v.sh!==undefined&&v.sh!=='';
   const st=!has?'':v.status==='confirmed'?'<span class="b ok">✅ معتمدة</span>':v.status==='disputed'?'<span class="b no">⚠️ محل اعتراض</span>':'<span class="b wt">⏳ بانتظار التأكيد</span>';
-  h+=`<div class="card"><div class="m"><div class="tm">${esc(T[hm])}</div><div class="sc ${has?'':'vs'}">${has?v.sh+' - '+v.sa:'VS'}</div><div class="tm">${esc(T[aw])}</div></div>
-  <div class="meta"><span>📅 ${v&&v.date?esc(v.date):'التاريخ غير محدد'}</span>${st}</div>
-  <div class="act">${canEdit(hm,aw,v)?`<button class="btn sm" data-e="${k}">✏️ ${has?'تعديل':'إدخال'} النتيجة</button>`:''}${canConfirm(hm,aw,v)&&has?`<button class="btn sm" data-ok="${k}">✅ ${me.role==='admin'?'اعتماد':'تأكيد'}</button>${me.role!=='admin'?`<button class="btn sm red" data-no="${k}">❌ اعتراض</button>`:''}`:''}</div></div>`});
- return h+`<div class="bye">🛌 مستريحة: ${esc(T[p.bye])}</div>`
+  h+=`<div class="card">
+    <div class="m">
+      <div class="tm" style="display:flex;align-items:center;gap:8px;justify-content:flex-end;">
+        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(T[hm])}</span>
+        ${typeof teamLogoImg==='function'?teamLogoImg(hm, 28):''}
+      </div>
+      <div class="sc ${has?'':'vs'}">${has?v.sh+' - '+v.sa:'VS'}</div>
+      <div class="tm" style="display:flex;align-items:center;gap:8px;justify-content:flex-start;">
+        ${typeof teamLogoImg==='function'?teamLogoImg(aw, 28):''}
+        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(T[aw])}</span>
+      </div>
+    </div>
+    <div class="meta"><span>📅 ${v&&v.date?esc(v.date):'التاريخ غير محدد'}</span>${st}</div>
+    <div class="act">${canEdit(hm,aw,v)?`<button class="btn sm" data-e="${k}">✏️ ${has?'تعديل':'إدخال'} النتيجة</button>`:''}${canConfirm(hm,aw,v)&&has?`<button class="btn sm" data-ok="${k}">✅ ${me.role==='admin'?'اعتماد':'تأكيد'}</button>${me.role!=='admin'?`<button class="btn sm red" data-no="${k}">❌ اعتراض</button>`:''}`:''}</div>
+  </div>`});
+ return h+`<div class="bye" style="display:flex;align-items:center;justify-content:center;gap:6px;">🛌 معفى من هذه الجولة: ${typeof teamLogoImg==='function'?teamLogoImg(p.bye, 20):''} <b>${esc(T[p.bye])}</b></div>`
 }
 function standings(){
  const t={};Object.keys(T).forEach(i=>t[i]={id:+i,p:0,w:0,d:0,l:0,f:0,a:0,pts:0});
@@ -138,9 +188,203 @@ function standings(){
   const v=S[K(cat,r,h,a)];if(!v||v.status!=='confirmed'||v.sh===''||v.sh==null)return;
   const x=+v.sh,y=+v.sa,H=t[h],A=t[a];H.p++;A.p++;H.f+=x;H.a+=y;A.f+=y;A.a+=x;
   if(x>y){H.w++;A.l++;H.pts+=3}else if(x<y){A.w++;H.l++;A.pts+=3}else{H.d++;A.d++;H.pts++;A.pts++}});
+
  const rows=Object.values(t).sort((a,b)=>b.pts-a.pts||(b.f-b.a)-(a.f-a.a)||b.f-a.f||a.id-b.id);
- return chips()+`<div class="card" style="padding:6px"><table><tr><th>#</th><th style="text-align:right">الفريق</th><th>ل</th><th>ف</th><th>ت</th><th>خ</th><th>+/-</th><th>نق</th></tr>${rows.map((r,i)=>`<tr><td>${i+1}</td><td class="n">${esc(T[r.id])}</td><td>${r.p}</td><td>${r.w}</td><td>${r.d}</td><td>${r.l}</td><td dir="ltr">${r.f-r.a}</td><td class="p">${r.pts}</td></tr>`).join('')}</table></div><p style="font-size:12px;color:var(--mu);text-align:center">تُحتسب النتائج المعتمدة فقط</p>`
+
+ // معرفة آخر جولة ملعوبة
+ let lastRound = 1;
+ for(let r=1;r<=22;r++){
+   if(pairs(r).m.some(([h,a])=>{const v=S[K(cat,r,h,a)];return v&&v.status==='confirmed'&&v.sh!=='';})){
+     lastRound = r;
+   }
+ }
+
+ // حساب الإحصاءات العامة
+ let totalGoals = 0, totalMatches = 0;
+ let maxGF = -1, topAttTeam = 'وفاق حجوط';
+ let minGA = 9999, topDefTeam = 'وفاق حجوط';
+
+ rows.forEach(r => {
+   if(r.p > 0){
+     if(r.f > maxGF){ maxGF = r.f; topAttTeam = T[r.id]; }
+     if(r.a < minGA){ minGA = r.a; topDefTeam = T[r.id]; }
+   }
+   totalGoals += r.f;
+ });
+
+ for(let r=1;r<=22;r++){
+   pairs(r).m.forEach(([h,a])=>{
+     const v=S[K(cat,r,h,a)];
+     if(v && v.status==='confirmed' && v.sh!=='' && v.sh!=null) totalMatches++;
+   });
+ }
+ const matchGoals = Math.round(totalGoals / 2);
+ const avgGoals = totalMatches > 0 ? (matchGoals / totalMatches).toFixed(2) : '0.00';
+ if(maxGF < 0) maxGF = 0;
+ if(minGA === 9999) minGA = 0;
+
+ // آخر 5 مباريات لكل نادٍ
+ const formOf = (tId) => {
+   const resList = [];
+   for(let r=1; r<=lastRound; r++){
+     pairs(r).m.forEach(([h,a])=>{
+       if(h != tId && a != tId) return;
+       const v = S[K(cat, r, h, a)];
+       if(!v || v.status !== 'confirmed' || v.sh === '' || v.sh == null) return;
+       const my = (h == tId ? +v.sh : +v.sa);
+       const op = (h == tId ? +v.sa : +v.sh);
+       resList.push(my > op ? 'W' : (my < op ? 'L' : 'D'));
+     });
+   }
+   return resList.slice(-5);
+ };
+
+ const formHtml = (fList) => {
+   const dot = x => x === 'W'
+     ? '<span style="background:#16a34a;color:#fff;border-radius:4px;padding:1px 4px;font-size:10px;font-weight:800;display:inline-block;min-width:14px;text-align:center;">ف</span>'
+     : (x === 'L'
+       ? '<span style="background:#dc2626;color:#fff;border-radius:4px;padding:1px 4px;font-size:10px;font-weight:800;display:inline-block;min-width:14px;text-align:center;">خ</span>'
+       : '<span style="background:#475569;color:#fff;border-radius:4px;padding:1px 4px;font-size:10px;font-weight:800;display:inline-block;min-width:14px;text-align:center;">ت</span>');
+   let h = '';
+   for(let i=0; i<5; i++){
+     if(i < fList.length) h += dot(fList[i]);
+     else h += '<span style="background:#e2e8f0;border-radius:4px;display:inline-block;width:14px;height:14px;vertical-align:middle;"></span>';
+   }
+   return `<span style="display:inline-flex;gap:2px;align-items:center;justify-content:center;">${h}</span>`;
+ };
+
+ return chips() + `
+ <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
+   <span style="font-size:13px;font-weight:800;color:var(--g);">🏆 الترتيب الرسمي المعتمد · ${cat}</span>
+   <button class="btn sm" id="btnDlPoster" onclick="downloadStandingsPoster()" style="display:inline-flex;align-items:center;gap:4px;background:#16a34a;">
+     📷 تحميل الملصق كصورة HD
+   </button>
+ </div>
+
+ <div class="poster-card" id="standingsPosterBox">
+   <div class="poster-hdr">
+     <div class="poster-hdr-rt">
+       <img src="icon-192.png" style="width:46px;height:46px;border-radius:50%;object-fit:cover;border:1.5px solid var(--g);" alt="شعار الرابطة">
+       <div>
+         <h2 class="poster-title">رابطة تيبازة لكرة القدم</h2>
+         <div class="poster-sub">الفئات الشبانية 2026/2027 · الفئة ${cat} (مجموعة وسط غرب)</div>
+         <div style="font-size:11.5px;color:#64748b;font-weight:700;margin-top:1px;">الترتيب بعد الجولة ${lastRound}</div>
+       </div>
+     </div>
+     <div class="poster-rnd-badge">
+       <span>${lastRound}</span>
+       <b>الترتيب</b>
+     </div>
+   </div>
+   
+   <div class="tbl-wrap">
+     <table class="st-tbl">
+       <thead>
+         <tr>
+           <th style="width:34px;">#</th>
+           <th style="text-align:right;padding-right:8px;">الفريق</th>
+           <th>لعب</th>
+           <th>فاز</th>
+           <th>تعادل</th>
+           <th>خسر</th>
+           <th>له</th>
+           <th>عليه</th>
+           <th>الفرق</th>
+           <th style="width:96px;">الأداء</th>
+           <th style="width:44px;">النقاط</th>
+         </tr>
+       </thead>
+       <tbody>
+         ${rows.map((r, i) => {
+           const diff = r.f - r.a;
+           const diffStr = diff > 0 ? `+${diff}` : `${diff}`;
+           const diffColor = diff > 0 ? '#16a34a' : (diff < 0 ? '#dc2626' : '#64748b');
+           const rkClass = (i + 1) === 1 ? 'top' : ((i + 1) <= 8 ? 'mid' : 'bot');
+           const fList = formOf(r.id);
+           const logo = typeof teamLogoImg==='function'?teamLogoImg(r.id, 24):'';
+           return `<tr>
+             <td><span class="rk-pill ${rkClass}">${i + 1}</span></td>
+             <td class="n">
+               <div style="display:inline-flex;align-items:center;gap:6px;">
+                 ${logo}
+                 <span>${esc(T[r.id])}</span>
+               </div>
+             </td>
+             <td><b>${r.p}</b></td>
+             <td>${r.w}</td>
+             <td>${r.d}</td>
+             <td>${r.l}</td>
+             <td>${r.f}</td>
+             <td>${r.a}</td>
+             <td dir="ltr" style="font-weight:800;color:${diffColor};">${diffStr}</td>
+             <td>${formHtml(fList)}</td>
+             <td style="font-size:15px;font-weight:900;color:var(--g);">${r.pts}</td>
+           </tr>`;
+         }).join('')}
+       </tbody>
+     </table>
+   </div>
+
+   <div class="stat-grid">
+     <div class="stat-box">
+       <div class="lbl">الهداف</div>
+       <div class="val">0</div>
+       <div class="sub">⚽ لا أهداف</div>
+     </div>
+     <div class="stat-box">
+       <div class="lbl">أفضل هجوم</div>
+       <div class="val" style="color:#16a34a;">${maxGF}</div>
+       <div class="sub">${esc(topAttTeam)}</div>
+     </div>
+     <div class="stat-box">
+       <div class="lbl">أفضل دفاع</div>
+       <div class="val" style="color:#2563eb;">${minGA}</div>
+       <div class="sub">${esc(topDefTeam)}</div>
+     </div>
+     <div class="stat-box">
+       <div class="lbl">معدل الأهداف في المباراة</div>
+       <div class="val" style="color:#d97706;">${avgGoals}</div>
+       <div class="sub">${matchGoals} هدفاً · ${totalMatches} مباريات</div>
+     </div>
+   </div>
+
+   <div class="legend-row">
+     <span><i class="legend-box" style="background:#16a34a;"></i> الصعود / الصدارة</span>
+     <span><i class="legend-box" style="background:#dc2626;"></i> منطقة السقوط</span>
+     <span>(ف فوز · ت تعادل · خ خسارة - آخر 5 مباريات)</span>
+   </div>
+
+   <div class="poster-ftr">
+     MOUBARATI LIVE · الترتيب الرسمي المعتمد · رابطة تيبازة
+   </div>
+ </div>
+ `;
 }
+
+window.downloadStandingsPoster = async function() {
+  const el = document.getElementById('standingsPosterBox');
+  if (!el) return;
+  toast('⏳ جاري إنشاء ملصق الترتيب...');
+  try {
+    if (typeof html2canvas === 'undefined') {
+      alert('يرجى التأكد من اتصال الإنترنت لتحميل الصورة.');
+      return;
+    }
+    const canvas = await html2canvas(el, {
+      scale: 2.5,
+      useCORS: true,
+      backgroundColor: '#ffffff'
+    });
+    const link = document.createElement('a');
+    link.download = `ترتيب_رابطة_تيبازة_${cat}_الجولة.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    toast('✅ تم تنزيل ملصق الترتيب بنجاح!');
+  } catch (e) {
+    console.error(e);
+    toast('⛔ تعذر إنشاء الصورة');
+  }
+};
 function admin(){
  const row=u=>`<div class="card u"><div><b>${esc(u.name)}</b><br><small>${esc(T[u.teamId]||'')} · <a href="tel:${esc(u.phone)}">${esc(u.phone)}</a></small></div><div class="act" style="margin:0">${u.status!=='approved'?`<button class="btn sm" data-u="${u.id}" data-s="approved">✅ اعتماد</button>`:''}${u.status!=='suspended'?`<button class="btn sm red" data-u="${u.id}" data-s="suspended">⏸ ${u.status==='pending'?'رفض':'تجميد'}</button>`:''}</div></div>`;
  const pend=U.filter(u=>u.status==='pending'),oth=U.filter(u=>u.status!=='pending');
@@ -196,6 +440,15 @@ async function importSeed(){
   b.set(db.collection('scores').doc(k.replace('|','_')),{key:k,home:+m[1],away:+m[2],data:{sh:+s[0],sa:+s[1],date:s[2]||'',status:'confirmed',enteredBy:'admin'},by:me.uid})});
  try{await b.commit();toast('✅ تم الاستيراد')}catch(e){toast('⛔ فشل الاستيراد')}
 }
+
+const bguest = document.getElementById('bguest');
+if(bguest) {
+  bguest.onclick = () => {
+    me = { role: 'guest', perm: 'view_only' };
+    show();
+  };
+}
+
 init();
 </script>
 </body>

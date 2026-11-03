@@ -1,7 +1,8 @@
-const CACHE_NAME = 'esm-messelmoun-v31';
+const CACHE_NAME = 'esm-messelmoun-v32';
 const ASSETS = [
   './',
   './index.html',
+  './logos.js',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
