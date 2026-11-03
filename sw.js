@@ -1,8 +1,9 @@
-const CACHE_NAME = 'esm-messelmoun-v32';
+const CACHE_NAME = 'esm-messelmoun-v33';
 const ASSETS = [
   './',
   './index.html',
   './logos.js',
+  './league-logo.png',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
