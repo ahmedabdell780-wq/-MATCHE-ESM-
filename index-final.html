@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>منصة مباريات رابطة تيبازة</title>
+<meta name="theme-color" content="#1f5a34">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="favicon.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{--bg:#f3f1ea;--card:#fff;--tx:#17211b;--mu:#66726a;--ln:#e0ddd2;--g:#1f5a34;--g2:#2d7a49;--gold:#f2b632;--er:#b3261e;--ok:#1d7a3e;--sa:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root{--bg:#0e1511;--card:#17211b;--tx:#e8efe9;--mu:#93a39a;--ln:#27352c}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Tajawal,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+header{background:linear-gradient(135deg,var(--g),#0f3a20);color:#fff;padding:calc(10px + var(--sa)) 14px 10px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:5}
+header img{width:40px;height:40px;border-radius:10px}header h1{font-size:16px;margin:0;line-height:1.2}header small{opacity:.8;font-size:12px}
+header .sp{flex:1}
+button,input,select{font:inherit}
+.btn{border:0;border-radius:10px;padding:10px 14px;background:var(--g);color:#fff;font-weight:700;cursor:pointer}
+.btn.alt{background:transparent;color:var(--g);border:1.5px solid var(--g)}.btn.red{background:var(--er)}.btn.sm{padding:6px 10px;font-size:13px}
+header .btn{background:#ffffff26;padding:6px 10px;font-size:13px}
+main{max-width:640px;margin:0 auto;padding:12px 12px calc(84px + var(--sb))}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:12px;margin-bottom:10px}
+.chips{display:flex;gap:8px;margin-bottom:10px}
+.chip{flex:1;padding:9px;border-radius:10px;border:1.5px solid var(--ln);background:var(--card);color:var(--tx);font-weight:700;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--g);color:#fff;border-color:var(--g)}
+.rnd{display:flex;align-items:center;gap:8px;margin-bottom:10px}.rnd select{flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--ln);background:var(--card);color:var(--tx)}
+.rnd button{width:44px;padding:10px 0}
+.m{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;text-align:center}
+.tm{font-weight:700;font-size:15px}.sc{font-size:22px;font-weight:900;min-width:76px;color:var(--g)}.sc.vs{color:var(--mu);font-size:15px}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px;font-size:12.5px;color:var(--mu);flex-wrap:wrap}
+.b{padding:2px 9px;border-radius:99px;font-size:12px;font-weight:700}
+.b.ok{background:#dff3e6;color:#145a2c}.b.wt{background:#fff1cf;color:#7a5200}.b.no{background:#fbe0de;color:var(--er)}
+.act{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.bye{text-align:center;color:var(--mu);font-size:13px;margin-top:4px}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:7px 3px;text-align:center;border-bottom:1px solid var(--ln)}
+td.n{text-align:right;font-weight:700;white-space:nowrap}th{color:var(--mu);font-weight:600}td.p{font-weight:900;color:var(--g)}
+tr:first-child td{background:#2d7a491a}
+nav{position:fixed;bottom:0;inset-inline:0;background:var(--card);border-top:1px solid var(--ln);display:flex;padding-bottom:var(--sb);z-index:5}
+nav button{flex:1;border:0;background:none;padding:10px 4px;color:var(--mu);font-weight:700;font-size:13px;cursor:pointer}
+nav button[aria-pressed=true]{color:var(--g);box-shadow:inset 0 3px 0 var(--g)}
+.gate{max-width:420px;margin:0 auto;padding:16px}
+label{display:block;font-size:13px;color:var(--mu);margin:10px 0 4px}
+input,select.f{width:100%;padding:11px;border:1.5px solid var(--ln);border-radius:10px;background:var(--card);color:var(--tx)}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--g2);outline-offset:1px}
+.err{color:var(--er);font-size:13px;margin-top:8px;min-height:18px}
+dialog{border:0;border-radius:16px;padding:16px;width:min(92vw,380px);background:var(--card);color:var(--tx)}dialog::backdrop{background:#0008}
+.sc2{display:flex;gap:10px;align-items:center;justify-content:center}.sc2 input{text-align:center;font-size:22px;font-weight:900;width:80px}
+#toast{position:fixed;bottom:calc(76px + var(--sb));inset-inline:16px;margin:auto;max-width:360px;background:#17211be6;color:#fff;padding:10px 14px;border-radius:12px;text-align:center;opacity:0;pointer-events:none;transition:.25s;z-index:20}
+#toast.on{opacity:1}
+.u{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+h2{font-size:15px;margin:14px 2px 8px}
+</style>
+<script>window.ESM_FIREBASE={apiKey:"AIzaSyBSDRAZwpChKIXpRPVIUp0JtdfflLqPRfU",authDomain:"moubarati-l-w-t.firebaseapp.com",projectId:"moubarati-l-w-t",appId:"1:582704281935:web:aeb821d64b4de733386d3a"};</script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+<header><img src="icon-192.png" alt=""><div><h1>مباريات رابطة تيبازة</h1><small>الفئات الشبانية 2026/2027 · وسط غرب</small></div><span class="sp"></span><span id="who" style="font-size:12px"></span><button class="btn" id="out" hidden>خروج</button></header>
+<div id="gate" class="gate" hidden>
+ <div class="chips"><button class="chip" id="tl" aria-pressed="true">دخول</button><button class="chip" id="tr" aria-pressed="false">طلب حساب</button></div>
+ <div id="fl" class="card"><label>رقم الهاتف أو اسم المستخدم</label><input id="lu" autocomplete="username"><label>كلمة المرور</label><input id="lp" type="password" autocomplete="current-password"><div class="err" id="le"></div><button class="btn" id="bl" style="width:100%">تسجيل الدخول</button></div>
+ <div id="fr" class="card" hidden><label>الاسم واللقب</label><input id="rn"><label>رقم الهاتف (للدخول)</label><input id="rp" inputmode="tel"><label>الفريق</label><select class="f" id="rt"></select><label>كلمة المرور (6 أحرف على الأقل)</label><input id="rw" type="password"><label>تأكيد كلمة المرور</label><input id="rc" type="password"><div class="err" id="re"></div><button class="btn" id="br" style="width:100%">إرسال الطلب</button></div>
+ <p style="text-align:center;color:var(--mu);font-size:13px">للاستفسار واعتماد الحسابات: <a href="https://wa.me/213676108460" style="color:var(--g)">0676108460</a></p>
+</div>
+<main id="app" hidden></main>
+<nav id="nav" hidden><button data-t="m" aria-pressed="true">⚽ المباريات</button><button data-t="s" aria-pressed="false">🏆 الترتيب</button><button data-t="a" id="na" aria-pressed="false" hidden>👑 الإدارة</button></nav>
+<dialog id="dg"><h2 id="dt" style="margin-top:0"></h2><div class="sc2"><input id="sh" type="number" min="0" inputmode="numeric"><b>-</b><input id="sa" type="number" min="0" inputmode="numeric"></div><label>تاريخ المباراة</label><input id="sd" type="date"><div class="act" style="margin-top:14px"><button class="btn" id="ds" style="flex:1">حفظ</button><button class="btn alt" id="dc">إلغاء</button></div></dialog>
+<div id="toast"></div>
+<script>
+const T={1:'وفاق حجوط',2:'أمل سيدي عمر',3:'وئام بوجبرون',4:'مولودية مراد',5:'الوفاق مسلمون',6:'التحدي الداموس',7:'مولودية قوراية',8:'شبيبة حجوط',9:'اتحاد القليعة',10:'نخبة فجانة',11:'نجمة حجوط'},R=[[7,[[11,1],[6,5],[8,4],[3,9],[10,2]]],[5,[[1,10],[2,8],[9,11],[4,6],[7,3]]],[4,[[11,7],[3,5],[6,2],[8,10],[1,9]]],[2,[[4,3],[5,11],[10,6],[7,9],[8,1]]],[10,[[3,2],[11,4],[9,5],[6,8],[1,7]]],[8,[[10,3],[4,9],[2,11],[5,7],[6,1]]],[6,[[9,2],[3,8],[11,10],[7,4],[1,5]]],[1,[[10,9],[2,7],[6,3],[4,5],[8,11]]],[3,[[9,8],[7,10],[5,2],[11,6],[1,4]]],[11,[[8,7],[6,9],[10,5],[2,4],[3,1]]],[9,[[7,6],[5,8],[11,3],[4,10],[1,2]]]],SEED={"1:11-1":["1","1","2026-10-23"],"1:6-5":["2","3","2026-10-17"],"1:8-4":["2","0","2026-10-17"],"1:3-9":["1","1","2026-10-17"],"1:10-2":["2","3","2026-10-17"],"2:1-10":["0","1","2026-10-23"],"2:2-8":["0","1","2026-10-23"],"2:9-11":["2","3","2026-10-23"],"2:4-6":["2","0","2026-10-23"],"2:7-3":["0","0","2026-10-24"],"3:11-7":["1","0","2026-10-31"],"3:3-5":["0","4","2026-10-31"],"3:6-2":["4","0","2026-10-31"],"3:8-10":["0","1","2026-10-31"],"3:1-9":["4","4","2026-10-31"],"U17|1:11-1":["0","5","2026-10-23"],"U17|1:6-5":["2","1","2026-10-17"],"U17|1:8-4":["0","0","2026-10-17"],"U17|1:3-9":["3","4","2026-10-17"],"U17|1:10-2":["0","4","2026-10-17"],"U17|2:1-10":["4","0","2026-10-23"],"U17|2:2-8":["0","0","2026-10-23"],"U17|2:9-11":["0","3","2026-10-23"],"U17|2:4-6":["1","0","2026-10-23"],"U17|2:7-3":["5","3","2026-10-24"],"U17|3:11-7":["1","2","2026-10-31"],"U17|3:3-5":["2","2","2026-10-31"],"U17|3:6-2":["3","0","2026-10-31"],"U17|3:8-10":["8","0","2026-10-31"],"U17|3:1-9":["4","0","2026-10-31"],"U20|1:11-1":["1","3","2026-10-23"],"U20|1:6-5":["4","1","2026-10-17"],"U20|1:8-4":["2","8","2026-10-17"],"U20|1:3-9":["1","3","2026-10-17"],"U20|2:2-8":["3","1","2026-10-23"],"U20|2:9-11":["3","3","2026-10-23"],"U20|2:4-6":["0","1","2026-10-23"],"U20|2:7-3":["1","1","2026-10-24"],"U20|3:11-7":["1","1","2026-10-31"],"U20|3:3-5":["0","3","2026-10-31"],"U20|3:6-2":["3","2","2026-10-31"],"U20|3:1-9":["1","1","2026-10-31"]},CATS=['U15','U17','U20'];
+const $=i=>document.getElementById(i);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const K=(c,r,h,a)=>(c==='U15'?'':c+'|')+r+':'+h+'-'+a;
+const pairs=r=>{const w=R[(r-1)%11];return{bye:w[0],m:w[1].map(p=>r>11?[p[1],p[0]]:[p[0],p[1]])}};
+const ph=s=>{s=String(s||'').replace(/[٠-٩]/g,d=>d.charCodeAt(0)-1632).replace(/[۰-۹]/g,d=>d.charCodeAt(0)-1776).replace(/\D/g,'');return s.length>=9?s.slice(-9):s};
+const mail=v=>{v=String(v||'').trim().toLowerCase();if(v.includes('@'))return v;const d=ph(v);if(/^\d{6,}$/.test(d))return d+'@esm.local';return/^[a-z0-9._-]+$/.test(v)?v+'@esm.local':''};
+let auth,db,me=null,S={},U=[],cat='U15',round=1,tab='m',subs=[],reg=false,cur=null;
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2800)}
+function say(id,t){$(id).textContent=t}
+function errTxt(e){const c=(e&&e.code)||'';return c.includes('network')?'📡 لا يوجد اتصال':c.includes('too-many')?'⏳ محاولات كثيرة، حاول لاحقاً':c.includes('email-already')?'⚠️ الرقم مسجل بالفعل، تواصل مع المشرف':c.includes('weak')?'⚠️ كلمة المرور قصيرة':'❌ بيانات الدخول غير صحيحة'}
+
+function init(){
+ const cfg=window.ESM_FIREBASE;
+ $('rt').innerHTML=Object.keys(T).map(i=>`<option value="${i}">${esc(T[i])}</option>`).join('');
+ $('gate').hidden=false;
+ if(!cfg||/PUT_YOUR/.test(cfg.apiKey)){say('le','⚠️ إعداد Firebase غير مكتمل في index.html');return}
+ firebase.initializeApp(cfg);auth=firebase.auth();db=firebase.firestore();
+ db.collection('scores').onSnapshot(s=>{s.docChanges().forEach(c=>{const d=c.doc.data();if(c.type==='removed')delete S[d.key];else S[d.key]=d.data});draw()},()=>{});
+ auth.onAuthStateChanged(onAuth);
+ if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+async function onAuth(u){
+ if(reg)return;
+ subs.forEach(f=>f());subs=[];U=[];
+ if(!u){me=null;show();return}
+ let p=null;try{const s=await db.collection('users').doc(u.uid).get();p=s.exists?s.data():null}catch(e){}
+ if(!p||(p.role!=='admin'&&p.status!=='approved')){
+  await auth.signOut();say('le',p&&p.status==='suspended'?'⛔ الحساب معطل من المشرف العام':'⏳ حسابك بانتظار موافقة المشرف العام');return}
+ me=Object.assign({uid:u.uid},p);
+ if(me.role==='admin')subs.push(db.collection('users').onSnapshot(s=>{U=s.docs.filter(d=>d.data().role!=='admin').map(d=>Object.assign({id:d.id},d.data()));draw()}));
+ const f=firstOpen();round=f;show();
+}
+function firstOpen(){for(let r=1;r<=22;r++)if(pairs(r).m.some(([h,a])=>{const v=S[K(cat,r,h,a)];return!v||v.status!=='confirmed'}))return r;return 22}
+function show(){
+ const ok=!!me;$('gate').hidden=ok;$('app').hidden=!ok;$('nav').hidden=!ok;$('out').hidden=!ok;$('na').hidden=!(ok&&me.role==='admin');
+ $('who').textContent=ok?(me.role==='admin'?'👑 المشرف':'⚽ '+(T[me.teamId]||'')):'';
+ if(ok)draw()
+}
+
+/* ---- صلاحيات ---- */
+function canEdit(h,a,v){
+ if(!me)return false;if(me.role==='admin')return true;
+ if(me.perm==='view_only'||(me.teamId!=h&&me.teamId!=a))return false;
+ return!(v&&v.status==='confirmed')
+}
+const canConfirm=(h,a,v)=>me&&v&&v.status!=='confirmed'&&(me.role==='admin'||((me.teamId==h||me.teamId==a)&&me.teamId!=v.enteredBy&&v.status==='pending_confirm'&&me.perm!=='view_only'));
+
+/* ---- رسم الواجهة ---- */
+function draw(){if(!me)return;$('app').innerHTML=tab==='m'?fixtures():tab==='s'?standings():admin()}
+function chips(){return`<div class="chips">${CATS.map(c=>`<button class="chip" data-c="${c}" aria-pressed="${c===cat}">${c}</button>`).join('')}</div>`}
+function fixtures(){
+ const p=pairs(round);
+ let h=chips()+`<div class="rnd"><button class="btn sm" data-r="${round+1}" ${round>=22?'disabled':''}>›</button><select id="rs">${Array.from({length:22},(_,i)=>`<option value="${i+1}" ${i+1===round?'selected':''}>الجولة ${i+1}${i>=11?' (إياب)':''}</option>`).join('')}</select><button class="btn sm" data-r="${round-1}" ${round<=1?'disabled':''}>‹</button></div>`;
+ p.m.forEach(([hm,aw])=>{
+  const k=K(cat,round,hm,aw),v=S[k],has=v&&v.sh!==undefined&&v.sh!=='';
+  const st=!has?'':v.status==='confirmed'?'<span class="b ok">✅ معتمدة</span>':v.status==='disputed'?'<span class="b no">⚠️ محل اعتراض</span>':'<span class="b wt">⏳ بانتظار التأكيد</span>';
+  h+=`<div class="card"><div class="m"><div class="tm">${esc(T[hm])}</div><div class="sc ${has?'':'vs'}">${has?v.sh+' - '+v.sa:'VS'}</div><div class="tm">${esc(T[aw])}</div></div>
+  <div class="meta"><span>📅 ${v&&v.date?esc(v.date):'التاريخ غير محدد'}</span>${st}</div>
+  <div class="act">${canEdit(hm,aw,v)?`<button class="btn sm" data-e="${k}">✏️ ${has?'تعديل':'إدخال'} النتيجة</button>`:''}${canConfirm(hm,aw,v)&&has?`<button class="btn sm" data-ok="${k}">✅ ${me.role==='admin'?'اعتماد':'تأكيد'}</button>${me.role!=='admin'?`<button class="btn sm red" data-no="${k}">❌ اعتراض</button>`:''}`:''}</div></div>`});
+ return h+`<div class="bye">🛌 مستريحة: ${esc(T[p.bye])}</div>`
+}
+function standings(){
+ const t={};Object.keys(T).forEach(i=>t[i]={id:+i,p:0,w:0,d:0,l:0,f:0,a:0,pts:0});
+ for(let r=1;r<=22;r++)pairs(r).m.forEach(([h,a])=>{
+  const v=S[K(cat,r,h,a)];if(!v||v.status!=='confirmed'||v.sh===''||v.sh==null)return;
+  const x=+v.sh,y=+v.sa,H=t[h],A=t[a];H.p++;A.p++;H.f+=x;H.a+=y;A.f+=y;A.a+=x;
+  if(x>y){H.w++;A.l++;H.pts+=3}else if(x<y){A.w++;H.l++;A.pts+=3}else{H.d++;A.d++;H.pts++;A.pts++}});
+ const rows=Object.values(t).sort((a,b)=>b.pts-a.pts||(b.f-b.a)-(a.f-a.a)||b.f-a.f||a.id-b.id);
+ return chips()+`<div class="card" style="padding:6px"><table><tr><th>#</th><th style="text-align:right">الفريق</th><th>ل</th><th>ف</th><th>ت</th><th>خ</th><th>+/-</th><th>نق</th></tr>${rows.map((r,i)=>`<tr><td>${i+1}</td><td class="n">${esc(T[r.id])}</td><td>${r.p}</td><td>${r.w}</td><td>${r.d}</td><td>${r.l}</td><td dir="ltr">${r.f-r.a}</td><td class="p">${r.pts}</td></tr>`).join('')}</table></div><p style="font-size:12px;color:var(--mu);text-align:center">تُحتسب النتائج المعتمدة فقط</p>`
+}
+function admin(){
+ const row=u=>`<div class="card u"><div><b>${esc(u.name)}</b><br><small>${esc(T[u.teamId]||'')} · <a href="tel:${esc(u.phone)}">${esc(u.phone)}</a></small></div><div class="act" style="margin:0">${u.status!=='approved'?`<button class="btn sm" data-u="${u.id}" data-s="approved">✅ اعتماد</button>`:''}${u.status!=='suspended'?`<button class="btn sm red" data-u="${u.id}" data-s="suspended">⏸ ${u.status==='pending'?'رفض':'تجميد'}</button>`:''}</div></div>`;
+ const pend=U.filter(u=>u.status==='pending'),oth=U.filter(u=>u.status!=='pending');
+ return`<h2>⏳ بانتظار الموافقة (${pend.length})</h2>${pend.map(row).join('')||'<div class="card" style="color:var(--mu)">لا توجد طلبات</div>'}<h2>👥 الحسابات (${oth.length})</h2>${oth.map(row).join('')||'<div class="card" style="color:var(--mu)">لا توجد حسابات</div>'}<h2>🧰 أدوات</h2><div class="card"><button class="btn alt" id="seed" style="width:100%">استيراد نتائج الجولات 1-3 السابقة</button></div>`
+}
+
+/* ---- أحداث ---- */
+document.addEventListener('click',async e=>{
+ const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.c){cat=b.dataset.c;round=firstOpen();draw()}
+ else if(b.dataset.r){round=+b.dataset.r;draw()}
+ else if(b.dataset.t){tab=b.dataset.t;document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-pressed',x===b));draw()}
+ else if(b.dataset.e)openEdit(b.dataset.e)
+ else if(b.dataset.ok)setSt(b.dataset.ok,'confirmed')
+ else if(b.dataset.no)setSt(b.dataset.no,'disputed')
+ else if(b.dataset.u)try{await db.collection('users').doc(b.dataset.u).update({status:b.dataset.s})}catch(x){toast('⛔ تعذر التنفيذ')}
+ else if(b.id==='seed')importSeed()
+});
+document.addEventListener('change',e=>{if(e.target.id==='rs'){round=+e.target.value;draw()}});
+$('out').onclick=()=>auth.signOut();
+$('tl').onclick=()=>{$('fl').hidden=false;$('fr').hidden=true;$('tl').setAttribute('aria-pressed',true);$('tr').setAttribute('aria-pressed',false)};
+$('tr').onclick=()=>{$('fl').hidden=true;$('fr').hidden=false;$('tr').setAttribute('aria-pressed',true);$('tl').setAttribute('aria-pressed',false)};
+$('bl').onclick=async()=>{say('le','');const m=mail($('lu').value),p=$('lp').value;if(!m||!p)return say('le','⚠️ أدخل رقم الهاتف وكلمة المرور');if(!auth)return;try{await auth.signInWithEmailAndPassword(m,p);$('lp').value=''}catch(x){say('le',errTxt(x))}};
+$('lp').onkeydown=e=>{if(e.key==='Enter')$('bl').click()};
+$('br').onclick=async()=>{
+ say('re','');const n=$('rn').value.trim(),p=$('rp').value.trim(),w=$('rw').value;
+ if(!n||ph(p).length<9)return say('re','⚠️ أدخل الاسم ورقم هاتف صحيحاً');
+ if(w.length<6)return say('re','⚠️ كلمة المرور قصيرة');if(w!==$('rc').value)return say('re','⚠️ كلمتا المرور غير متطابقتين');
+ if(!auth)return;reg=true;
+ try{const c=await auth.createUserWithEmailAndPassword(ph(p)+'@esm.local',w);
+  await db.collection('users').doc(c.user.uid).set({name:n,phone:p,teamId:+$('rt').value,role:'manager',status:'pending',perm:'full',date:new Date().toISOString().slice(0,10)});
+  await auth.signOut();['rn','rp','rw','rc'].forEach(i=>$(i).value='');$('tl').click();say('le','✅ تم إرسال طلبك. بعد اعتماد المشرف يمكنك الدخول.')}
+ catch(x){say('re',errTxt(x))}
+ reg=false
+};
+function openEdit(k){
+ const m=/^(?:([A-Z0-9]+)\|)?(\d+):(\d+)-(\d+)$/.exec(k);cur={k,h:+m[3],a:+m[4]};const v=S[k]||{};
+ $('dt').textContent=T[cur.h]+' ضد '+T[cur.a];$('sh').value=v.sh??'';$('sa').value=v.sa??'';$('sd').value=v.date||'';$('dg').showModal()
+}
+$('dc').onclick=()=>$('dg').close();
+$('ds').onclick=async()=>{
+ const x=$('sh').value,y=$('sa').value;if(x===''||y===''||+x<0||+y<0)return toast('⚠️ أدخل نتيجة صحيحة');
+ const adm=me.role==='admin',old=S[cur.k]||{};
+ const data=Object.assign({},old,{sh:+x,sa:+y,date:$('sd').value,status:adm?'confirmed':'pending_confirm',enteredBy:adm?'admin':me.teamId});
+ await put(cur.k,cur.h,cur.a,data);$('dg').close()
+};
+async function put(k,h,a,data){try{await db.collection('scores').doc(k.replace('|','_')).set({key:k,home:h,away:a,data,by:me.uid});toast('✅ تم الحفظ')}catch(e){toast('⛔ رُفض الحفظ: لا تملك الصلاحية')}}
+function setSt(k,st){const m=/^(?:[A-Z0-9]+\|)?\d+:(\d+)-(\d+)$/.exec(k);put(k,+m[1],+m[2],Object.assign({},S[k],{status:st,confirmedBy:me.role==='admin'?'admin':me.teamId}))}
+async function importSeed(){
+ if(!confirm('استيراد '+Object.keys(SEED).length+' نتيجة (الجولات 1-3) كنتائج معتمدة؟'))return;
+ const b=db.batch();
+ Object.keys(SEED).forEach(k=>{const m=/^(?:[A-Z0-9]+\|)?\d+:(\d+)-(\d+)$/.exec(k),s=SEED[k];
+  b.set(db.collection('scores').doc(k.replace('|','_')),{key:k,home:+m[1],away:+m[2],data:{sh:+s[0],sa:+s[1],date:s[2]||'',status:'confirmed',enteredBy:'admin'},by:me.uid})});
+ try{await b.commit();toast('✅ تم الاستيراد')}catch(e){toast('⛔ فشل الاستيراد')}
+}
+init();
+</script>
+</body>
+</html>
