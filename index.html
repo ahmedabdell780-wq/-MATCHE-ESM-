@@ -1766,6 +1766,8 @@ body.th-dark .off-item-sub { color: #94a3b8 !important; }
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js">
 </script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script>window.ESM_FIREBASE={apiKey:"PUT_YOUR_API_KEY",authDomain:"PUT_YOUR_PROJECT.firebaseapp.com",projectId:"PUT_YOUR_PROJECT_ID",appId:"PUT_YOUR_APP_ID"};</script>
 
 </head>
 <body>
@@ -2620,12 +2622,6 @@ const DT={U20:'09:00',U17:'10:30',U15:'14:00'};
 function K2(ct,r,h,a){return(ct==='U15'?'':ct+'|')+r+':'+h+'-'+a}
 
 var currentUser = null;
-var CLOUD_SYNC_TOPIC = 'esm_championship_tipaza_2026_wifaq';
-var CLOUD_SYNC_URL = 'https://ntfy.sh/' + CLOUD_SYNC_TOPIC;
-try {
-  const savedUser = localStorage.getItem('esm_current_user');
-  if (savedUser) currentUser = JSON.parse(savedUser);
-} catch(e) {}
 
 const KEY='wifaq-fixtures-v1';
 let store={};try{store=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){store={}}
@@ -2633,28 +2629,7 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}if
 let team=5,mode='first',round=1,style=store.style==='red'?'red':'blue';
 const SEED={"1:11-1": {"sh": "1", "sa": "1", "date": "2026-10-23"}, "1:6-5": {"sh": "2", "sa": "3", "date": "2026-10-17", "stad": "الداموس"}, "1:8-4": {"sh": "2", "sa": "0", "date": "2026-10-17"}, "1:3-9": {"sh": "1", "sa": "1", "date": "2026-10-17"}, "1:10-2": {"sh": "2", "sa": "3", "date": "2026-10-17"}, "2:1-10": {"sh": "0", "sa": "1", "date": "2026-10-23", "stad": "حجوط"}, "2:2-8": {"sh": "0", "sa": "1", "date": "2026-10-23", "stad": "سيدي عمر"}, "2:9-11": {"sh": "2", "sa": "3", "date": "2026-10-23", "stad": "القليعة"}, "2:4-6": {"sh": "2", "sa": "0", "date": "2026-10-23", "stad": "بوجبرون"}, "2:7-3": {"sh": "0", "sa": "0", "date": "2026-10-24", "stad": "قوراية"}, "3:11-7": {"sh": "1", "sa": "0", "date": "2026-10-31", "stad": "حجوط"}, "3:3-5": {"sh": "0", "sa": "4", "date": "2026-10-31", "stad": "بوجبرون", "ga": "يحياوي مهدي د28، عبد اللاوي بدر الدين د49، عبيدات محمد أكرم د74، يحياوي مهدي د90"}, "3:6-2": {"sh": "4", "sa": "0", "date": "2026-10-31"}, "3:8-10": {"sh": "0", "sa": "1", "date": "2026-10-31"}, "3:1-9": {"sh": "4", "sa": "4", "date": "2026-10-31"}, "U17|1:11-1": {"sh": "0", "sa": "5", "date": "2026-10-23"}, "U17|1:6-5": {"sh": "2", "sa": "1", "date": "2026-10-17", "stad": "الداموس"}, "U17|1:8-4": {"sh": "0", "sa": "0", "date": "2026-10-17"}, "U17|1:3-9": {"sh": "3", "sa": "4", "date": "2026-10-17"}, "U17|1:10-2": {"sh": "0", "sa": "4", "date": "2026-10-17"}, "U17|2:1-10": {"sh": "4", "sa": "0", "date": "2026-10-23", "stad": "حجوط"}, "U17|2:2-8": {"sh": "0", "sa": "0", "date": "2026-10-23", "stad": "سيدي عمر"}, "U17|2:9-11": {"sh": "0", "sa": "3", "date": "2026-10-23", "stad": "القليعة"}, "U17|2:4-6": {"sh": "1", "sa": "0", "date": "2026-10-23", "stad": "بوجبرون"}, "U17|2:7-3": {"sh": "5", "sa": "3", "date": "2026-10-24", "stad": "قوراية"}, "U17|3:11-7": {"sh": "1", "sa": "2", "date": "2026-10-31", "stad": "حجوط"}, "U17|3:3-5": {"sh": "2", "sa": "2", "date": "2026-10-31", "stad": "بوجبرون"}, "U17|3:6-2": {"sh": "3", "sa": "0", "date": "2026-10-31"}, "U17|3:8-10": {"sh": "8", "sa": "0", "date": "2026-10-31"}, "U17|3:1-9": {"sh": "4", "sa": "0", "date": "2026-10-31"}, "U20|1:11-1": {"sh": "1", "sa": "3", "date": "2026-10-23"}, "U20|1:6-5": {"sh": "4", "sa": "1", "date": "2026-10-17", "stad": "الداموس"}, "U20|1:8-4": {"sh": "2", "sa": "8", "date": "2026-10-17"}, "U20|1:3-9": {"sh": "1", "sa": "3", "date": "2026-10-17"}, "U20|1:10-2": {"pp": true, "date": "2026-10-17"}, "U20|2:1-10": {"pp": true, "date": "2026-10-24"}, "U20|2:2-8": {"sh": "3", "sa": "1", "date": "2026-10-23", "stad": "سيدي عمر"}, "U20|2:9-11": {"sh": "3", "sa": "3", "date": "2026-10-23", "stad": "القليعة"}, "U20|2:4-6": {"sh": "0", "sa": "1", "date": "2026-10-23", "stad": "بوجبرون"}, "U20|2:7-3": {"sh": "1", "sa": "1", "date": "2026-10-24", "stad": "قوراية"}, "U20|3:11-7": {"sh": "1", "sa": "1", "date": "2026-10-31", "stad": "حجوط"}, "U20|3:3-5": {"sh": "0", "sa": "3", "date": "2026-10-31", "stad": "بوجبرون", "ga": "عطاف شيب د34، عطاف شيب د52، موساوي المهدي د67"}, "U20|3:6-2": {"sh": "3", "sa": "2", "date": "2026-10-31"}, "U20|3:8-10": {"ex": true, "date": "2026-10-31"}, "U20|3:1-9": {"sh": "1", "sa": "1", "date": "2026-10-31"}};
 const SEED_VER="v3_r123";
-const DEFAULT_OFFICIALS = [
-  {
-    id: "off_1793539119701",
-    name: "oulladj mohamed",
-    phone: "0776702581",
-    teamId: 10,
-    pass: "Efm@2025",
-    status: "approved",
-    perm: "full",
-    date: "2026-11-01"
-  },
-  {
-    id: "off_1793549118204",
-    name: "Bouceta brahim",
-    phone: "0665079130",
-    teamId: 5,
-    pass: "bobra",
-    status: "approved",
-    perm: "full",
-    date: "2026-11-01"
-  }
-];
+const DEFAULT_OFFICIALS = [];
 
 // Helper to normalize phone for deduplication (supports standard, international & Arabic-Indic digits)
 function cleanPhone(p) {
@@ -2841,7 +2816,6 @@ document.querySelectorAll('#styleSeg button').forEach(b=>{b.setAttribute('aria-p
  style=b.dataset.s;store.style=style;save();document.querySelectorAll('#styleSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b));render()}});
 
 function h53(s){let h1=0xdeadbeef,h2=0x41c6ce57;for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677)}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return 4294967296*(2097151&h2)+(h1>>>0)}
-const HASH=7543435611185347;
 // ================= Auth & Team Officials System =================
 store.officials = store.officials || [];
 // currentUser is already initialized at top
@@ -2871,10 +2845,10 @@ function updateTeamDropdown() {
 
 
 function setAdminUser(user) {
+  if (!user && window.esmAuth) { try { window.esmAuth.signOut(); } catch(e) {} }
   currentUser = user;
   try {
-    if (user) localStorage.setItem('esm_current_user', JSON.stringify(user));
-    else localStorage.removeItem('esm_current_user');
+    localStorage.removeItem('esm_current_user');
   } catch(e) {}
   if (user && typeof recordUserActivity === 'function') {
     user.device = typeof getDeviceInfo === 'function' ? getDeviceInfo() : '📱 هاتف';
@@ -2999,93 +2973,6 @@ function normalizeLoginInput(val) {
   return s.replace(/[\s\-\.\(\)\+]/g, '').toLowerCase();
 }
 
-function executeUnifiedLogin() {
-  const rawPhone = (document.getElementById('gatePhoneInput').value || '').trim();
-  const rawPass = (document.getElementById('gatePassInput').value || '').trim();
-  const phone = normalizeLoginInput(rawPhone);
-  const pass = normalizeLoginInput(rawPass);
-  const err = document.getElementById('gateLoginError');
-  if (err) err.style.display = 'none';
-
-  // 1. تحقق المشرف العام (Super Admin)
-  // المشرف العام (هاتف 0676108460 أو كلمة المرور 481927 / 2026 / admin / esm / 0676108460)
-  const validAdminPass = ['481927', '2026', 'admin', '0676108460', '676108460', 'esm', 'esm2026'];
-  const validAdminPhones = ['0676108460', '676108460', '213676108460', 'admin', 'المشرف', 'المشرفالعام', 'مشرف', 'esm', 'وفاقمسلمون', 'مسلمون'];
-
-  const isAdminPhone = validAdminPhones.includes(phone) || rawPhone.includes('0676108460') || rawPhone.includes('مشرف');
-  const isAdminPass = validAdminPass.includes(pass) || validAdminPass.includes(rawPass) || (rawPass && typeof HASH !== 'undefined' && h53(rawPass) === HASH);
-
-  // إذا أدخل المشرف هاتفه المعتمد 0676108460 أو كلمة المرور الخاصة به، يفتح التطبيق مباشرة بصلاحية المشرف العام!
-  if (isAdminPhone || isAdminPass) {
-    setAdminUser({ role: 'admin', name: 'المشرف العام', phone: '0676108460' });
-    document.getElementById('gatePhoneInput').value = '';
-    document.getElementById('gatePassInput').value = '';
-    showToast('👑 مرحباً بك أيها المشرف العام!');
-    return;
-  }
-
-  if (!pass && !phone) {
-    if (err) {
-      err.textContent = '⚠️ يرجى إدخال رقم الهاتف أو اسم المستخدم وكلمة المرور.';
-      err.style.display = 'block';
-    }
-    return;
-  }
-
-  // 2. تحقق مسؤول الفريق (Team Official)
-  const officials = store.officials || [];
-  const found = officials.find(o => {
-    const oPhone = normalizeLoginInput(o.phone);
-    const oPass = normalizeLoginInput(o.pass);
-    const oName = (o.name || '').trim().toLowerCase();
-    const teamName = (T[o.teamId] || '').trim().toLowerCase();
-    
-    const phoneMatches = (oPhone === phone) || (oPhone.endsWith(phone)) || (phone.endsWith(oPhone)) || (o.phone === rawPhone);
-    const nameMatches = rawPhone && (oName.includes(rawPhone.toLowerCase()) || teamName.includes(rawPhone.toLowerCase()));
-    const passMatches = (oPass === pass) || (o.pass === rawPass) || validAdminPass.includes(pass);
-
-    return (phoneMatches || nameMatches) && passMatches;
-  });
-
-  if (found) {
-    // شرط موافقة المشرف العام
-    if (found.status === 'pending') {
-      if (err) {
-        err.innerHTML = '⏳ <b>طلب حسابك لا يزال قيد الانتظار!</b><br>يجب أن يوافق عليه المشرف العام (0676108460) أولاً قبل أن تتمكن من فتح التطبيق.';
-        err.style.display = 'block';
-      }
-      return;
-    }
-
-    if (found.status === 'suspended') {
-      if (err) {
-        err.textContent = '⛔ هذا الحساب معطل حالياً من قِبل المشرف العام.';
-        err.style.display = 'block';
-      }
-      return;
-    }
-
-    setAdminUser({
-      role: 'official',
-      id: found.id,
-      name: found.name,
-      phone: found.phone,
-      teamId: found.teamId,
-      perm: found.perm || 'full'
-    });
-
-    document.getElementById('gatePhoneInput').value = '';
-    document.getElementById('gatePassInput').value = '';
-    showToast('⚽ مرحباً بك: ' + found.name + ' - مسؤول ' + T[found.teamId]);
-    return;
-  }
-
-  // فشل الدخول
-  if (err) {
-    err.textContent = '❌ رقم الهاتف أو كلمة المرور غير صحيحة. يرجى التأكد والمحاولة مجدداً.';
-    err.style.display = 'block';
-  }
-}
 window.executeUnifiedLogin = executeUnifiedLogin;
 
 const btnUnifiedLogin = document.getElementById('btnUnifiedLogin');
@@ -3123,95 +3010,7 @@ if (gatePhoneInput) {
 
 // Gate Registration (تسجيل طلب حساب جديد يتطلب موافقة المشرف العام حصراً)
 const btnGateRegister = document.getElementById('btnGateRegister');
-if (btnGateRegister) {
-  btnGateRegister.addEventListener('click', () => {
-    const name = document.getElementById('gateRegName').value.trim();
-    const phone = document.getElementById('gateRegPhone').value.trim();
-    const teamId = +document.getElementById('gateRegTeam').value;
-    const pass = document.getElementById('gateRegPass').value.trim();
-    const passConfirm = document.getElementById('gateRegPassConfirm').value.trim();
-    const err = document.getElementById('gateRegError');
-
-    if (!name || !phone || !pass) {
-      if (err) {
-        err.textContent = '⚠️ يرجى ملء جميع الحقول المطلوبة.';
-        err.style.display = 'block';
-      }
-      return;
-    }
-    if (pass !== passConfirm) {
-      if (err) {
-        err.textContent = '⚠️ كلمة المرور غير متطابقة.';
-        err.style.display = 'block';
-      }
-      return;
-    }
-
-    const cleanP = cleanPhone(phone);
-    if (!cleanP || cleanP.length < 8) {
-      if (err) {
-        err.textContent = '⚠️ يرجى كتابة رقم هاتف جزائري صحيح (مثال: 0676108460 أو 0776702581).';
-        err.style.display = 'block';
-      }
-      return;
-    }
-
-    // 1. منع التسجيل برقم المشرف العام
-    if (cleanP === '676108460') {
-      if (err) {
-        err.textContent = '⚠️ هذا الرقم خاص بالمشرف العام للمنظومة، لا يمكن تسجيل حساب فريق به.';
-        err.style.display = 'block';
-      }
-      return;
-    }
-
-    // 2. منع الحسابات المكررة بنفس رقم الهاتف تماماً
-    store.officials = store.officials || [];
-    const duplicate = store.officials.find(o => cleanPhone(o.phone) === cleanP);
-    if (duplicate) {
-      if (err) {
-        const teamName = (typeof T !== 'undefined' && T[duplicate.teamId]) ? T[duplicate.teamId] : '';
-        err.textContent = '⚠️ رقم الهاتف هذا (' + phone + ') مسجل بالفعل لحساب (' + duplicate.name + (teamName ? ' - ' + teamName : '') + ')! لا يمكن قبول حسابين بنفس رقم الهاتف نهائياً.';
-        err.style.display = 'block';
-      }
-      return;
-    }
-
-    const newOfficial = {
-      id: 'off_' + Date.now(),
-      name: name,
-      phone: phone,
-      teamId: teamId,
-      pass: pass,
-      status: 'pending', // يتطلب موافقة المشرف العام حصراً
-      perm: 'full',
-      date: new Date().toISOString().slice(0, 10)
-    };
-    store.officials.push(newOfficial);
-    save();
-
-    // إرسال وبث الطلب سحابياً فوراً لجميع الأجهزة والمشرف العام
-    if (typeof pushPendingAccountToCloud === 'function') {
-      pushPendingAccountToCloud(newOfficial);
-    }
-    if (typeof broadcastLiveChange === 'function') {
-      broadcastLiveChange('NEW_REGISTRATION', { applicant: newOfficial });
-    }
-
-    document.getElementById('gateRegName').value = '';
-    document.getElementById('gateRegPhone').value = '';
-    document.getElementById('gateRegPass').value = '';
-    document.getElementById('gateRegPassConfirm').value = '';
-    if (err) err.style.display = 'none';
-
-    // فتح نافذة الإرسال الفوري لواتساب المشرف العام
-    if (typeof showGateRegSuccessModal === 'function') {
-      showGateRegSuccessModal(newOfficial);
-    } else {
-      alert('✅ تم تسجيل طلب حسابك بنجاح! حسابك في انتظار موافقة المشرف العام.');
-    }
-  });
-}
+if (btnGateRegister) btnGateRegister.addEventListener('click', esmRegister);
 
 const btnTopLogout = document.getElementById('btnTopLogout');
 if (btnTopLogout) {
@@ -4229,8 +4028,6 @@ if (importDataFile) {
 
 
 // ================= Live Real-Time Multi-Device Cloud Sync & Presence Engine =================
-var CLOUD_SYNC_TOPIC = 'esm_championship_tipaza_2026_wifaq';
-var CLOUD_SYNC_URL = 'https://ntfy.sh/' + CLOUD_SYNC_TOPIC;
 let liveSseSource = null;
 let sseReconnectTimer = null;
 var heartbeatTimer = null;
@@ -4300,20 +4097,6 @@ function formatLastSeen(ts) {
 }
 
 // جلب قائمة المسؤولين الخفيفة للبث (< 1KB)
-function getLightweightOfficials() {
-  return (store.officials || []).map(o => ({
-    id: o.id,
-    name: o.name,
-    phone: o.phone,
-    teamId: o.teamId,
-    pass: o.pass,
-    status: o.status,
-    perm: o.perm || 'full',
-    date: o.date,
-    lastSeen: o.lastSeen || null,
-    lastDevice: o.lastDevice || null
-  }));
-}
 
 function applyStoreUpdates() {
   if (typeof render === 'function') render();
@@ -4342,216 +4125,182 @@ function updateCloudPill(isOnline, text) {
 }
 
 // معالجة الرسائل السحابية الحية الفورية الواردة عبر البث المباشر
-function handleIncomingCloudPayload(payload) {
-  if (!payload || !payload.action) return;
-
-  // 1. نشاط جهاز / متصل (Heartbeat)
-  if (payload.action === 'HEARTBEAT' && payload.phone) {
-    recordUserActivity({
-      name: payload.sender,
-      phone: payload.phone,
-      role: payload.role,
-      teamId: payload.teamId,
-      device: payload.device,
-      lastSeen: payload.lastUpdated || Date.now()
-    });
-    const modal = document.getElementById('officialsModal');
-    if (modal && modal.style.display !== 'none' && typeof renderOfficialsList === 'function') {
-      renderOfficialsList();
-    }
-    return;
-  }
-
-  // 2. طلب حساب جديد وارد من أي هاتف
-  if (payload.action === 'NEW_REGISTRATION' && payload.applicant) {
-    const inc = payload.applicant;
-    store.officials = store.officials || [];
-    const exIdx = store.officials.findIndex(o => cleanPhone(o.phone) === cleanPhone(inc.phone) || o.id === inc.id);
-    if (exIdx === -1) {
-      store.officials.push(inc);
-    } else {
-      store.officials[exIdx] = Object.assign({}, store.officials[exIdx], inc);
-    }
-    saveLocalWithoutBroadcast();
-    applyStoreUpdates();
-
-    if (currentUser && currentUser.role === 'admin') {
-      if (typeof playNotificationAlertSound === 'function') playNotificationAlertSound();
-      if (typeof showToast === 'function') {
-        showToast('🔔 طلب حساب جديد وصل للتو: ' + inc.name + ' (' + (T[inc.teamId] || 'نادي') + ') عبر ' + (payload.device || 'الهاتف') + '!');
-      }
-    }
-    return;
-  }
-
-  // 3. مزامنة وتحديث الحسابات
-  if (payload.action === 'OFFICIALS_SYNC' && Array.isArray(payload.officials)) {
-    store.officials = store.officials || [];
-    let hadNewPending = false;
-    payload.officials.forEach(incOff => {
-      const exIdx = store.officials.findIndex(o => cleanPhone(o.phone) === cleanPhone(incOff.phone) || o.id === incOff.id);
-      if (exIdx === -1) {
-        store.officials.push(incOff);
-        if (incOff.status === 'pending') hadNewPending = true;
-      } else {
-        const localStatus = store.officials[exIdx].status;
-        store.officials[exIdx] = Object.assign({}, store.officials[exIdx], incOff);
-        if (localStatus === 'approved' && incOff.status === 'pending') {
-          store.officials[exIdx].status = 'approved';
-        }
-      }
-    });
-    saveLocalWithoutBroadcast();
-    applyStoreUpdates();
-    if (hadNewPending && currentUser && currentUser.role === 'admin') {
-      if (typeof playNotificationAlertSound === 'function') playNotificationAlertSound();
-      if (typeof showToast === 'function') {
-        showToast('🔔 تم استلام وتحديث الحسابات من جهاز آخر!');
-      }
-    }
-    return;
-  }
-
-  // 4. تحديث نتيجة مباراة
-  if (payload.action === 'SCORE_UPDATE' && payload.key && payload.val) {
-    store[payload.key] = Object.assign(store[payload.key] || {}, payload.val);
-    saveLocalWithoutBroadcast();
-    applyStoreUpdates();
-    if (typeof showToast === 'function') {
-      showToast('⚽ تحديث مباشر للنتيجة من مسؤول ' + (payload.sender || 'الفريق') + '!');
-    }
-    return;
-  }
-
-  // 5. تحديث تشكيلة لاعبين
-  if (payload.action === 'ROSTER_UPDATE' && payload.teamId && payload.cat && Array.isArray(payload.roster)) {
-    store.teamRosters = store.teamRosters || {};
-    store.teamRosters[payload.teamId] = store.teamRosters[payload.teamId] || {};
-    store.teamRosters[payload.teamId][payload.cat] = payload.roster;
-    saveLocalWithoutBroadcast();
-    applyStoreUpdates();
-    return;
-  }
-}
 
 // 1. الاستماع الحي المباشر عبر Server-Sent Events (SSE)
+// ===== Secure layer: Firebase Auth + Firestore (replaces ntfy / client-side auth) =====
+var esmAuth = null, esmDb = null, esmReg = false, esmStarted = false;
+var esmLast = {}, esmLastRost = {}, esmLastUsers = {}, esmUnsubs = [];
+var ESM_KEY_RE = /^(?:([A-Z0-9]+)\|)?(\d+):(\d+)-(\d+)$/;
+function esmSafe(v) { return JSON.parse(JSON.stringify(v == null ? null : v)); }
+function esmEmail(input) {
+  const d = normalizeLoginInput(input);
+  if (!d) return '';
+  if (d.indexOf('@') > 0) return d;
+  if (/^\d+$/.test(d)) return cleanPhone(d) + '@esm.local';
+  return /^[a-z0-9._-]+$/.test(d) ? d + '@esm.local' : '';
+}
+function esmErr(id, msg) {
+  const e = document.getElementById(id);
+  if (e) { e.textContent = msg; e.style.display = 'block'; }
+}
+function esmAuthMsg(e) {
+  const c = (e && e.code) || '';
+  if (c.indexOf('network') >= 0) return '📡 لا يوجد اتصال بالإنترنت.';
+  if (c.indexOf('too-many') >= 0) return '⏳ محاولات كثيرة، حاول لاحقاً.';
+  if (c.indexOf('email-already') >= 0) return '⚠️ رقم الهاتف مسجل بالفعل.';
+  if (c.indexOf('weak-password') >= 0) return '⚠️ كلمة المرور قصيرة (6 أحرف على الأقل).';
+  return '❌ رقم الهاتف أو كلمة المرور غير صحيحة.';
+}
+function esmClearListeners() { esmUnsubs.forEach(u => { try { u(); } catch (e) {} }); esmUnsubs = []; }
+
 function startLiveCloudStream() {
-  if (liveSseSource) {
-    try { liveSseSource.close(); } catch(e) {}
+  if (esmStarted) return;
+  const cfg = window.ESM_FIREBASE;
+  if (!window.firebase || !cfg || !cfg.apiKey || /PUT_YOUR/.test(cfg.apiKey)) {
+    updateCloudPill(false, '⚠️ إعداد Firebase غير مكتمل');
+    return;
   }
-  
-  try {
-    liveSseSource = new EventSource(CLOUD_SYNC_URL + '/sse');
-    
-    liveSseSource.onopen = () => {
-      console.log('⚡ متصل بقناة البث السحابي المباشر!');
-      updateCloudPill(true, '🟢 متصل بالمزامنة الحية (أي تعديل يظهر فوراً على كل الأجهزة)');
-    };
-    
-    liveSseSource.onmessage = (event) => {
-      try {
-        const msgObj = JSON.parse(event.data);
-        if (msgObj.event === 'message' && msgObj.message) {
-          let payload = null;
-          try { payload = JSON.parse(msgObj.message); } catch(e) {}
-          if (payload) {
-            handleIncomingCloudPayload(payload);
-          }
-        }
-      } catch(err) {
-        console.warn('Error parsing incoming live message:', err);
-      }
-    };
-    
-    liveSseSource.onerror = (err) => {
-      console.warn('Live stream disconnected, reconnecting in 5s...', err);
-      if (!navigator.onLine) {
-        updateCloudPill(false, '📡 وضع غير متصل (تصفح محلي)');
-      }
-      try { liveSseSource.close(); } catch(e) {}
-      clearTimeout(sseReconnectTimer);
-      sseReconnectTimer = setTimeout(startLiveCloudStream, 5000);
-    };
-  } catch(e) {
-    console.warn('Failed to start EventSource:', e);
-  }
+  esmStarted = true;
+  store.officials = []; // لا نحتفظ بحسابات أو كلمات مرور قديمة محلياً
+  try { firebase.initializeApp(cfg); } catch (e) {}
+  esmAuth = firebase.auth(); esmDb = firebase.firestore();
+  window.esmAuth = esmAuth;
+  esmDb.collection('scores').onSnapshot(snap => {
+    snap.docChanges().forEach(ch => {
+      const d = ch.doc.data(), k = d.key;
+      if (!k) return;
+      if (ch.type === 'removed') { delete store[k]; delete esmLast[k]; }
+      else { store[k] = d.data || {}; esmLast[k] = JSON.stringify(store[k]); }
+    });
+    saveLocalWithoutBroadcast(); applyStoreUpdates();
+    updateCloudPill(true, '🟢 متصل بالمزامنة الحية');
+  }, () => updateCloudPill(false, '📡 تعذر الاتصال بالسحابة'));
+  esmAuth.onAuthStateChanged(esmOnAuth);
 }
 
-// 2. فحص السحابة والتقاط التحديثات السابقة
-async function catchupCloudState(silent = false) {
-  if (!navigator.onLine) return;
-  try {
-    const res = await fetch(CLOUD_SYNC_URL + '/json?poll=1', { cache: 'no-store' });
-    if (!res.ok) return;
-    const text = await res.text();
-    const lines = text.trim().split(/\r?\n/).filter(Boolean);
-    if (!lines.length) return;
-    
-    for (let i = 0; i < lines.length; i++) {
-      try {
-        const item = JSON.parse(lines[i]);
-        if (item.event === 'message' && item.message) {
-          let payload = null;
-          try { payload = JSON.parse(item.message); } catch(e) {}
-          if (payload) handleIncomingCloudPayload(payload);
-        }
-      } catch(e) {}
-    }
-    if (!silent && typeof showToast === 'function') {
-      showToast('⚡ تم فحص السحابة ومزامنة الحسابات والنشاط بنجاح!');
-    }
-  } catch(err) {
-    console.warn('Catchup error:', err);
+async function esmOnAuth(user) {
+  if (esmReg) return;
+  esmClearListeners();
+  if (!user) { if (currentUser) setAdminUser(null); return; }
+  let p = null;
+  try { const s = await esmDb.collection('users').doc(user.uid).get(); p = s.exists ? s.data() : null; } catch (e) {}
+  if (!p || (p.role !== 'admin' && p.status !== 'approved')) {
+    const msg = p && p.status === 'suspended' ? '⛔ هذا الحساب معطل من المشرف العام.' : '⏳ حسابك بانتظار موافقة المشرف العام.';
+    await esmAuth.signOut(); esmErr('gateLoginError', msg); return;
+  }
+  if (p.role === 'admin') {
+    setAdminUser({ role: 'admin', id: user.uid, name: p.name || 'المشرف العام', phone: p.phone || '' });
+    esmUnsubs.push(esmDb.collection('users').onSnapshot(s => {
+      store.officials = s.docs.filter(d => d.data().role !== 'admin').map(d => Object.assign({ id: d.id }, d.data()));
+      esmLastUsers = {}; store.officials.forEach(o => { esmLastUsers[o.id] = o.status + '|' + (o.perm || 'full'); });
+      saveLocalWithoutBroadcast(); applyStoreUpdates();
+    }));
+    esmUnsubs.push(esmDb.collection('rosters').onSnapshot(esmRosters));
+  } else {
+    setAdminUser({ role: 'official', id: user.uid, name: p.name, phone: p.phone, teamId: p.teamId, perm: p.perm || 'full' });
+    esmUnsubs.push(esmDb.collection('rosters').where('teamId', '==', p.teamId).onSnapshot(esmRosters));
   }
 }
+function esmRosters(s) {
+  store.teamRosters = store.teamRosters || {};
+  s.docs.forEach(d => {
+    const r = d.data();
+    store.teamRosters[r.teamId] = store.teamRosters[r.teamId] || {};
+    store.teamRosters[r.teamId][r.cat] = r.roster || [];
+    esmLastRost[d.id] = JSON.stringify(r.roster || []);
+  });
+  saveLocalWithoutBroadcast(); applyStoreUpdates();
+}
 
-// 3. بث التحديثات الخفيفة جداً لجميع الأجهزة (< 1KB per message)
-async function broadcastLiveChange(actionType, extraData) {
+function executeUnifiedLogin() {
+  const email = esmEmail(document.getElementById('gatePhoneInput').value);
+  const pass = document.getElementById('gatePassInput').value;
+  const err = document.getElementById('gateLoginError'); if (err) err.style.display = 'none';
+  if (!esmAuth) return esmErr('gateLoginError', '⚠️ إعداد Firebase غير مكتمل.');
+  if (!email || !pass) return esmErr('gateLoginError', '⚠️ أدخل رقم الهاتف وكلمة المرور.');
+  esmAuth.signInWithEmailAndPassword(email, pass).then(() => {
+    document.getElementById('gatePassInput').value = '';
+  }).catch(e => esmErr('gateLoginError', esmAuthMsg(e)));
+}
+window.executeUnifiedLogin = executeUnifiedLogin;
+
+async function esmRegister() {
+  const g = id => (document.getElementById(id).value || '').trim();
+  const name = g('gateRegName'), phone = g('gateRegPhone'), pass = g('gateRegPass');
+  const teamId = +document.getElementById('gateRegTeam').value, E = 'gateRegError';
+  if (!name || !phone || !pass) return esmErr(E, '⚠️ يرجى ملء جميع الحقول المطلوبة.');
+  if (pass !== g('gateRegPassConfirm')) return esmErr(E, '⚠️ كلمة المرور غير متطابقة.');
+  if (pass.length < 6) return esmErr(E, '⚠️ كلمة المرور قصيرة (6 أحرف على الأقل).');
+  const cp = cleanPhone(phone);
+  if (!cp || cp.length < 8) return esmErr(E, '⚠️ يرجى كتابة رقم هاتف جزائري صحيح.');
+  if (!esmAuth) return esmErr(E, '⚠️ إعداد Firebase غير مكتمل.');
+  const off = { name, phone, teamId, role: 'manager', status: 'pending', perm: 'full', date: new Date().toISOString().slice(0, 10) };
+  esmReg = true;
+  try {
+    const c = await esmAuth.createUserWithEmailAndPassword(cp + '@esm.local', pass);
+    await esmDb.collection('users').doc(c.user.uid).set(off);
+    await esmAuth.signOut();
+    ['gateRegName', 'gateRegPhone', 'gateRegPass', 'gateRegPassConfirm'].forEach(i => document.getElementById(i).value = '');
+    const er = document.getElementById(E); if (er) er.style.display = 'none';
+    showGateRegSuccessModal(Object.assign({ id: c.user.uid }, off));
+  } catch (e) { esmErr(E, esmAuthMsg(e)); }
+  esmReg = false;
+}
+
+async function broadcastLiveChange(actionType) {
   store.lastUpdated = Date.now();
   saveLocalWithoutBroadcast();
-  
-  if (window.esmBroadcast) {
-    window.esmBroadcast.postMessage({ type: 'sync', lastUpdated: store.lastUpdated });
-  }
-  
-  if (!navigator.onLine) return;
-  if (isBroadcasting) return;
-  isBroadcasting = true;
-
-  const action = actionType || 'OFFICIALS_SYNC';
-  const payload = {
-    action: action,
-    sender: (currentUser && currentUser.name) || (action === 'HEARTBEAT' ? 'زائر' : 'المشرف'),
-    phone: (currentUser && currentUser.phone) || '',
-    role: (currentUser && currentUser.role) || 'official',
-    teamId: (currentUser && currentUser.teamId) || null,
-    device: getDeviceInfo(),
-    lastUpdated: store.lastUpdated
-  };
-
-  if (action === 'OFFICIALS_SYNC') {
-    payload.officials = getLightweightOfficials();
-  } else if (extraData && typeof extraData === 'object') {
-    Object.assign(payload, extraData);
-  }
-
-  try {
-    await fetch(CLOUD_SYNC_URL, {
-      method: 'POST',
-      headers: {
-        'X-Cache': 'yes',
-        'Title': 'ESM: ' + action,
-        'Priority': (action === 'NEW_REGISTRATION' || action === 'OFFICIALS_SYNC' || action === 'SCORE_UPDATE') ? 'urgent' : 'low'
-      },
-      body: JSON.stringify(payload)
+  if (window.esmBroadcast) window.esmBroadcast.postMessage({ type: 'sync', lastUpdated: store.lastUpdated });
+  if (!esmDb || !currentUser || actionType === 'HEARTBEAT') return;
+  const admin = currentUser.role === 'admin', jobs = [];
+  Object.keys(store).forEach(k => {
+    const m = ESM_KEY_RE.exec(k); if (!m || !store[k] || typeof store[k] !== 'object') return;
+    const j = JSON.stringify(store[k]);
+    if (esmLast[k] === j) return;
+    const home = +m[3], away = +m[4];
+    if (!admin && currentUser.teamId != home && currentUser.teamId != away) return;
+    esmLast[k] = j;
+    jobs.push(esmDb.collection('scores').doc(k.replace('|', '_')).set({ key: k, home, away, data: esmSafe(store[k]), by: currentUser.id || '' }));
+  });
+  Object.keys(store.teamRosters || {}).forEach(t => Object.keys(store.teamRosters[t] || {}).forEach(c => {
+    const id = t + '_' + c, j = JSON.stringify(store.teamRosters[t][c] || []);
+    if (esmLastRost[id] === j || (!admin && currentUser.teamId != t)) return;
+    esmLastRost[id] = j;
+    jobs.push(esmDb.collection('rosters').doc(id).set({ teamId: +t, cat: c, roster: esmSafe(store.teamRosters[t][c] || []) }));
+  }));
+  if (admin) {
+    const ids = {};
+    (store.officials || []).forEach(o => {
+      ids[o.id] = 1; const sig = o.status + '|' + (o.perm || 'full');
+      if (esmLastUsers[o.id] !== undefined && esmLastUsers[o.id] !== sig) {
+        esmLastUsers[o.id] = sig;
+        jobs.push(esmDb.collection('users').doc(o.id).update({ status: o.status, perm: o.perm || 'full' }));
+      }
     });
-    updateCloudPill(true, '🟢 متصل بالسحابة (مزامنة حية نشطة)');
-  } catch(err) {
-    console.warn('Broadcast error:', err);
-  } finally {
-    isBroadcasting = false;
+    Object.keys(esmLastUsers).forEach(id => { if (!ids[id]) { delete esmLastUsers[id]; jobs.push(esmDb.collection('users').doc(id).delete()); } });
   }
+  try { await Promise.all(jobs); } catch (e) { showToast('⛔ رُفض الحفظ: لا تملك الصلاحية.'); }
 }
+function esmPushAll() {
+  if (!currentUser || currentUser.role !== 'admin') return showToast('⛔ للمشرف العام فقط.');
+  esmLast = {}; esmLastRost = {}; broadcastLiveChange();
+}
+function catchupCloudState(silent) { if (!silent && typeof showToast === 'function') showToast('🟢 المزامنة تعمل تلقائياً.'); }
+function startHeartbeatLoop() {}
+function getLightweightOfficials() { return []; }
+function handleIncomingCloudPayload() {}
+function generateSmartSyncLink() { showToast('⚠️ تم إيقاف هذه الميزة لأسباب أمنية.'); }
+function fallbackPromptSync() {}
+function checkUrlHashSync() {}
+function pushPendingAccountToCloud() { return Promise.resolve(); }
+function syncOfficialsWithCloud() { return Promise.resolve(); }
+function getStoredFbConfig() { return null; }
+function initFirebaseSync() {}
+
+
+// 2. فحص السحابة والتقاط التحديثات السابقة
+
+// 3. بث التحديثات الخفيفة جداً لجميع الأجهزة (< 1KB per message)
 
 function saveLocalWithoutBroadcast() {
   try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
@@ -4565,30 +4314,6 @@ function save() {
 window.save = save;
 
 // حلقة نبضات النشاط الدورية (Heartbeat)
-function startHeartbeatLoop() {
-  clearInterval(heartbeatTimer);
-  if (currentUser) {
-    recordUserActivity(currentUser);
-    broadcastLiveChange('HEARTBEAT', {
-      sender: currentUser.name,
-      phone: currentUser.phone,
-      role: currentUser.role,
-      teamId: currentUser.teamId,
-      device: getDeviceInfo()
-    });
-  }
-  heartbeatTimer = setInterval(() => {
-    if (currentUser && navigator.onLine) {
-      broadcastLiveChange('HEARTBEAT', {
-        sender: currentUser.name,
-        phone: currentUser.phone,
-        role: currentUser.role,
-        teamId: currentUser.teamId,
-        device: getDeviceInfo()
-      });
-    }
-  }, 60000);
-}
 
 // الاستماع لحالة الشبكة وبدء المزامنة
 window.addEventListener('focus', () => {
@@ -4627,7 +4352,7 @@ if (btnPullCloudNow) {
 }
 if (btnPushCloudNow) {
   btnPushCloudNow.addEventListener('click', () => {
-    broadcastLiveChange();
+    esmPushAll();
     if (cloudModal) cloudModal.style.display = 'none';
   });
 }
@@ -4989,55 +4714,8 @@ function toggleAddOfficialForm() {
 window.toggleAddOfficialForm = toggleAddOfficialForm;
 
 function saveManualOfficial() {
-  const name = (document.getElementById('manOffName').value || '').trim();
-  const phone = (document.getElementById('manOffPhone').value || '').trim();
-  const teamId = +document.getElementById('manOffTeam').value;
-  const pass = (document.getElementById('manOffPass').value || '').trim();
-
-  if (!name || !phone || !pass) {
-    alert('يرجى ملء جميع الحقول: الاسم، رقم الهاتف، الفريق، وكلمة المرور.');
-    return;
-  }
-
-  const cleanP = cleanPhone(phone);
-  if (cleanP === '676108460') {
-    alert('⚠️ هذا الرقم خاص بالمشرف العام ولا يمكن تخصيصه لحساب مسؤول فريق.');
-    return;
-  }
-
-  store.officials = store.officials || [];
-  const duplicate = store.officials.find(o => cleanPhone(o.phone) === cleanP);
-  if (duplicate) {
-    alert('⚠️ رقم الهاتف هذا (' + phone + ') مسجل بالفعل لحساب المسؤول: ' + duplicate.name + ' (' + (T[duplicate.teamId] || '') + ')!\nلا يمكن قبول حسابين بنفس رقم الهاتف نهائياً.');
-    return;
-  }
-
-  let existing = null;
-  if (false) {
-    existing = {
-      id: 'off_' + Date.now(),
-      name: name,
-      phone: phone,
-      teamId: teamId,
-      pass: pass,
-      status: 'approved',
-      perm: 'full',
-      date: new Date().toISOString().slice(0, 10)
-    };
-    store.officials.push(existing);
-  }
-
-  save();
+  alert('يُنشئ المسؤول حسابه بنفسه عبر "طلب حساب"، ثم تعتمده من هذه القائمة.');
   toggleAddOfficialForm();
-  renderOfficialsList();
-  updateAuthUI();
-
-  // Clear inputs
-  document.getElementById('manOffName').value = '';
-  document.getElementById('manOffPhone').value = '';
-  document.getElementById('manOffPass').value = '';
-
-  showToast('✅ تم إنشاء واعتماد حساب المسؤول ' + name + ' كمسؤول ' + T[teamId] + ' بنجاح!');
 }
 window.saveManualOfficial = saveManualOfficial;
 
@@ -5134,7 +4812,7 @@ function renderOfficialsList() {
       <!-- تفاصيل كلمة المرور والصلاحيات -->
       <div class="off-item-infobar">
         <div>
-          🔑 كلمة المرور الحالية: <span class="off-item-pass-tag" dir="ltr">${off.pass || '***'}</span>
+          🔑 كلمة المرور الحالية: <span class="off-item-pass-tag" dir="ltr">مخفية</span>
         </div>
         <div style="color:var(--muted,#64748b);">
           📅 تاريخ التسجيل: <b>${off.date || '2026-11-01'}</b>
@@ -5164,16 +4842,14 @@ function renderOfficialsList() {
         <a href="tel:${off.phone}" style="display:inline-flex; align-items:center; gap:4px; background:#059669; color:#ffffff; padding:4px 8px; border-radius:6px; text-decoration:none; font-size:11.5px; font-weight:bold;" title="اتصال هاتفي مباشر">
           📞 اتصال
         </a>
-        <button type="button" class="off-act-btn" data-act="copyCreds" data-id="${off.id}" style="padding:4px 8px; font-size:11.5px; font-weight:bold; background:#e2e8f0; color:#1e293b; border:1px solid #cbd5e1; border-radius:6px; cursor:pointer;" title="نسخ بيانات الدخول للمسؤول">
-          📋 نسخ البيانات
-        </button>
+        
       </div>
 
       <!-- أزرار الصلاحيات والإدارة الكاملة للمشرف -->
       <div class="off-item-actions">
         ${isPending ? `<button type="button" class="off-act-btn btn-approve" data-act="approve" data-id="${off.id}">✅ موافقة وتفعيل الحساب</button>` : ''}
         
-        <button type="button" class="off-act-btn btn-pass" data-act="changePass" data-id="${off.id}">✏️ تغيير كلمة المرور</button>
+        
 
         <button type="button" class="off-act-btn btn-perm" data-act="togglePerm" data-id="${off.id}" title="تبديل بين كامل الصلاحيات ومشاهدة فقط">⚙️ ${isViewOnly ? 'منح صلاحية التعديل' : 'إنقاص الصلاحيات (مشاهدة فقط)'}</button>
 
@@ -5290,31 +4966,8 @@ if (officialsModalClose && officialsModal) {
 
 
 // ================= Smart Sync via URL Hash (مزامنة فورية مضمونة 100% بين الهاتف والحاسوب) =================
-function generateSmartSyncLink() {
-  const officials = store.officials || [];
-  try {
-    const jsonStr = JSON.stringify(officials);
-    const b64 = btoa(unescape(encodeURIComponent(jsonStr)));
-    const baseUrl = window.location.origin + window.location.pathname;
-    const syncUrl = baseUrl + '#sync_off=' + b64;
-    
-    // Copy to clipboard
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(syncUrl).then(() => {
-        showToast('📋 تم نسخ رابط المزامنة! افتحه على هاتفك لتظهر كل الحسابات فوراً.');
-      }).catch(() => fallbackPromptSync(syncUrl));
-    } else {
-      fallbackPromptSync(syncUrl);
-    }
-  } catch(e) {
-    alert('حدث خطأ أثناء إنشاء الرابط: ' + e.message);
-  }
-}
 window.generateSmartSyncLink = generateSmartSyncLink;
 
-function fallbackPromptSync(url) {
-  prompt('انسخ هذا الرابط وافتحه على الهاتف أو أي جهاز آخر لمزامنة الحسابات فوراً:', url);
-}
 
 // Web Audio API Sound Chime
 function playNotificationAlertSound() {
@@ -5375,7 +5028,7 @@ function showGateRegSuccessModal(off) {
     <div>👤 <strong>الاسم:</strong> ${off.name}</div>
     <div>⚽ <strong>النادي:</strong> ${teamName}</div>
     <div>📱 <strong>الهاتف:</strong> <span dir="ltr">${off.phone}</span></div>
-    <div>🔑 <strong>كلمة المرور:</strong> ${off.pass}</div>
+    <div>🔑 <strong>كلمة المرور:</strong> (التي اختارها عند التسجيل)</div>
     <div style="color:#d97706; font-weight:bold; margin-top:4px;">⏳ الحالة: بانتظار موافقة المشرف العام</div>
   `;
 
@@ -5390,7 +5043,7 @@ function showGateRegSuccessModal(off) {
 👤 الاسم: ${off.name}
 ⚽ النادي: ${teamName}
 📱 الهاتف: ${off.phone}
-🔑 كلمة المرور: ${off.pass}
+🔑 كلمة المرور: (التي اختارها عند التسجيل)
 
 🔗 رابط الاعتماد الفوري بنقرة واحدة:
 ${approveUrl}`;
@@ -5449,7 +5102,7 @@ function openAdminApprovalModal(off) {
     <div>👤 <strong>اسم المسؤول:</strong> ${off.name}</div>
     <div>⚽ <strong>النادي التابع له:</strong> ${teamName}</div>
     <div>📱 <strong>رقم الهاتف:</strong> <span dir="ltr" style="font-weight:bold; color:#0d6efd;">${off.phone}</span></div>
-    <div>🔑 <strong>كلمة المرور:</strong> <span style="background:#e2e8f0; padding:2px 8px; border-radius:6px; font-family:monospace;">${off.pass}</span></div>
+    <div>🔑 <strong>كلمة المرور:</strong> <span style="background:#e2e8f0; padding:2px 8px; border-radius:6px; font-family:monospace;">(التي اختارها عند التسجيل)</span></div>
     <div>📅 <strong>تاريخ الطلب:</strong> ${off.date || new Date().toISOString().slice(0, 10)}</div>
   `;
 
@@ -5489,7 +5142,7 @@ function openAdminApprovalModal(off) {
         const cleanP = cleanPhone(off.phone);
         const replyMsg = `مرحباً ${off.name}، تم اعتماد وتفعيل حسابك بنجاح كمسؤول عن نادي ${teamName} في منظومة بطولة تيبازة ESM 2026!
 يمكنك الآن تسجيل الدخول مباشرة برقم هاتفك: ${off.phone}
-وكلمة المرور: ${off.pass}
+وكلمة المرور: (التي اختارها عند التسجيل)
 رابط الدخول: https://esm-matches.onrender.com/`;
         currentAdminReplyMsg = replyMsg;
 
@@ -5544,161 +5197,11 @@ window.closeAdminApprovalModal = closeAdminApprovalModal;
 // Cloud Sync Hub
 const CLOUD_OFFICIALS_HUB = 'https://api.restful-api.dev/objects/ff808181a09d98f701a198f1dbee02a4';
 
-async function pushPendingAccountToCloud(newOfficial) {
-  try {
-    const res = await fetch(CLOUD_OFFICIALS_HUB, { cache: 'no-store' });
-    let officials = [];
-    if (res.ok) {
-      const json = await res.json();
-      officials = (json && json.data && json.data.officials) || [];
-    }
-    const cleanP = cleanPhone(newOfficial.phone);
-    const idx = officials.findIndex(o => cleanPhone(o.phone) === cleanP || o.id === newOfficial.id);
-    if (idx >= 0) {
-      officials[idx] = Object.assign({}, officials[idx], newOfficial);
-    } else {
-      officials.push(newOfficial);
-    }
-    await fetch(CLOUD_OFFICIALS_HUB, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: 'esm_officials_hub',
-        data: { officials: officials, lastUpdated: Date.now() }
-      })
-    });
-  } catch(e) {
-    console.warn('Cloud Hub Push Error:', e);
-  }
-}
 window.pushPendingAccountToCloud = pushPendingAccountToCloud;
 
-async function syncOfficialsWithCloud(isManual) {
-  try {
-    const res = await fetch(CLOUD_OFFICIALS_HUB, { cache: 'no-store' });
-    if (!res.ok) return;
-    const json = await res.json();
-    const cloudOfficials = (json && json.data && json.data.officials) || [];
-    if (!Array.isArray(cloudOfficials) || cloudOfficials.length === 0) return;
-
-    store.officials = store.officials || [];
-    let updated = false;
-    let newlyDiscoveredPendings = [];
-
-    cloudOfficials.forEach(cOff => {
-      const cClean = cleanPhone(cOff.phone);
-      if (!cClean) return;
-      const localOff = store.officials.find(o => cleanPhone(o.phone) === cClean || o.id === cOff.id);
-      if (!localOff) {
-        store.officials.push(cOff);
-        updated = true;
-        if (cOff.status === 'pending') {
-          newlyDiscoveredPendings.push(cOff);
-        }
-      } else {
-        if (localOff.status === 'approved' && cOff.status !== 'approved') {
-          cOff.status = 'approved';
-          updated = true;
-        } else if (cOff.status === 'approved' && localOff.status !== 'approved') {
-          localOff.status = 'approved';
-          updated = true;
-        }
-        if (cOff.pass && localOff.pass !== cOff.pass) {
-          localOff.pass = cOff.pass;
-          updated = true;
-        }
-      }
-    });
-
-    if (updated) {
-      save();
-      if (typeof renderOfficialsList === 'function') renderOfficialsList();
-      if (typeof updateAuthUI === 'function') updateAuthUI();
-      if (typeof updateAllNotifBadges === 'function') updateAllNotifBadges();
-    }
-
-    if (newlyDiscoveredPendings.length > 0) {
-      const first = newlyDiscoveredPendings[0];
-      playNotificationAlertSound();
-      if (typeof showSystemNotification === 'function') {
-        const teamName = (typeof T !== 'undefined' && T[first.teamId]) ? T[first.teamId] : '';
-        showSystemNotification('👑 طلب اعتماد حساب جديد وارد!', 'الاسم: ' + first.name + ' (' + teamName + ') - هاتف: ' + first.phone, 'official-req-' + first.id);
-      }
-      if (currentUser && (currentUser.role === 'admin' || currentUser.phone === '0676108460')) {
-        openAdminApprovalModal(first);
-      }
-    }
-
-    if (isManual) {
-      showToast('🔄 تمت المزامنة السحابية لمسؤولي الفرق بنجاح!');
-    }
-  } catch(e) {
-    console.warn('Cloud Hub Sync Error:', e);
-    if (isManual) showToast('⚠️ تعذر الاتصال بالسحابة حالياً.');
-  }
-}
 window.syncOfficialsWithCloud = syncOfficialsWithCloud;
 
 // Check URL Hash on startup and hash change
-function checkUrlHashSync() {
-  try {
-    const hash = window.location.hash;
-    if (!hash) return;
-
-    // 1. WhatsApp 1-Click Approval Link Handler
-    if (hash.includes('approve_off=')) {
-      const raw = hash.split('approve_off=')[1];
-      if (raw) {
-        const decoded = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(raw)))));
-        if (decoded && decoded.name && decoded.phone) {
-          store.officials = store.officials || [];
-          const cleanP = cleanPhone(decoded.phone);
-          let ex = store.officials.find(o => cleanPhone(o.phone) === cleanP || o.id === decoded.id);
-          if (!ex) {
-            ex = Object.assign({}, decoded, { status: decoded.status || 'pending' });
-            store.officials.push(ex);
-          } else {
-            if (decoded.pass) ex.pass = decoded.pass;
-            if (decoded.name) ex.name = decoded.name;
-          }
-          save();
-          if (typeof renderOfficialsList === 'function') renderOfficialsList();
-          if (typeof updateAuthUI === 'function') updateAuthUI();
-          if (typeof updateAllNotifBadges === 'function') updateAllNotifBadges();
-
-          playNotificationAlertSound();
-          openAdminApprovalModal(ex);
-          window.history.replaceState(null, null, window.location.pathname);
-        }
-      }
-    }
-
-    // 2. Full Sync Hash Handler
-    if (hash.includes('sync_off=')) {
-      const raw = hash.split('sync_off=')[1];
-      if (raw) {
-        const decoded = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(raw)))));
-        if (Array.isArray(decoded) && decoded.length) {
-          store.officials = store.officials || [];
-          decoded.forEach(off => {
-            const cleanP = cleanPhone(off.phone);
-            const ex = store.officials.find(o => cleanPhone(o.phone) === cleanP || o.id === off.id);
-            if (ex) Object.assign(ex, off);
-            else store.officials.push(off);
-          });
-          save();
-          if (typeof renderOfficialsList === 'function') renderOfficialsList();
-          if (typeof updateAuthUI === 'function') updateAuthUI();
-          if (typeof updateAllNotifBadges === 'function') updateAllNotifBadges();
-          showToast('🚀 تم استيراد ومزامنة مسؤولي الفرق بنجاح!');
-          window.history.replaceState(null, null, window.location.pathname);
-        }
-      }
-    }
-  } catch(e) {
-    console.warn('URL Hash Sync Error:', e);
-  }
-}
 window.checkUrlHashSync = checkUrlHashSync;
 checkUrlHashSync();
 window.addEventListener('hashchange', checkUrlHashSync);

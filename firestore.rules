@@ -2,40 +2,43 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{db}/documents {
 
-    function me() { return get(/databases/$(database)/documents/users/$(request.auth.uid)).data; }
     function signedIn() { return request.auth != null; }
+    function me() { return get(/databases/$(database)/documents/users/$(request.auth.uid)).data; }
     function isAdmin() { return signedIn() && me().role == 'admin'; }
     function isManager() { return signedIn() && me().role == 'manager' && me().status == 'approved'; }
+    function canWrite() { return isManager() && me().get('perm', 'full') != 'view_only'; }
 
-    // الحسابات: كل شخص ينشئ طلبًا بصفة manager/pending فقط، والمشرف وحده يغيّر الحالة
+    // الحسابات: الإنشاء كطلب معلّق فقط، وللمشرف وحده الاعتماد والتجميد والحذف
     match /users/{uid} {
       allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
       allow create: if signedIn() && request.auth.uid == uid
         && request.resource.data.role == 'manager'
-        && request.resource.data.status == 'pending';
-      allow update: if isAdmin();
+        && request.resource.data.status == 'pending'
+        && request.resource.data.teamId is int;
+      allow update, delete: if isAdmin();
     }
 
-    // الفرق: القراءة للجميع، والتعديل لمسؤول الفريق نفسه أو المشرف
-    match /teams/{t} {
+    // النتائج: قراءة للجميع. الكتابة للمشرف أو لمسؤول أحد الفريقين، دون تعديل نتيجة معتمدة
+    match /scores/{k} {
       allow read: if true;
-      allow create, delete: if isAdmin();
-      allow update: if isAdmin() || (isManager() && me().teamId == t
-        && request.resource.data.name == resource.data.name);
-    }
-
-    // المباريات: المشرف ينشئ، والمسؤول يكتب النتيجة لمباريات فريقه فقط
-    match /matches/{m} {
-      allow read: if true;
-      allow create, delete: if isAdmin();
-      allow update: if isAdmin() || (isManager()
-        && resource.data.status != 'validated'
+      allow delete: if isAdmin();
+      allow create: if isAdmin() || (canWrite()
+        && (request.resource.data.home == me().teamId || request.resource.data.away == me().teamId)
+        && request.resource.data.data.get('status', '') != 'confirmed');
+      allow update: if isAdmin() || (canWrite()
         && (resource.data.home == me().teamId || resource.data.away == me().teamId)
         && request.resource.data.home == resource.data.home
         && request.resource.data.away == resource.data.away
-        && ( request.resource.data.status == 'pending'
-          || (request.resource.data.status == 'validated'
-              && resource.data.enteredTeam != me().teamId)));
+        && resource.data.data.get('status', '') != 'confirmed'
+        && (request.resource.data.data.get('status', '') != 'confirmed'
+            || resource.data.data.get('enteredBy', -1) != me().teamId));
+    }
+
+    // تشكيلات اللاعبين: خاصة بالنادي ومشرفه فقط
+    match /rosters/{id} {
+      allow read: if isAdmin() || (isManager() && resource.data.teamId == me().teamId);
+      allow create, update: if isAdmin() || (canWrite() && request.resource.data.teamId == me().teamId);
+      allow delete: if isAdmin();
     }
   }
 }
