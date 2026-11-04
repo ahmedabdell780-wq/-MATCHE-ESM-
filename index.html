@@ -213,364 +213,6 @@ h2{font-size:15px;margin:14px 2px 8px}
 .players-cat-tab.active{background: #fff;
   color: #1f5a34;
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);}
-
-/* ========================================================
-   ⚡ MATCHDAY PROMO POSTER & RETRO SCOREBOARD
-   ======================================================== */
-.promo-modal-card {
-  max-width: 920px;
-  width: 95%;
-  max-height: 94vh;
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 25px 70px rgba(0,0,0,0.85);
-  border: 1.5px solid rgba(6,182,212,0.4);
-  background: #0b1320;
-  color: #ffffff;
-}
-
-.promo-modal-header {
-  background: linear-gradient(135deg, #0e374e, #071724);
-  padding: 14px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid rgba(6,182,212,0.3);
-}
-
-.promo-modal-body {
-  display: flex;
-  gap: 20px;
-  padding: 18px;
-  overflow-y: auto;
-  align-items: flex-start;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.promo-wrapper {
-  flex: 1;
-  min-width: 320px;
-  max-width: 440px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.promo-container {
-  width: 100%;
-  aspect-ratio: 4/5;
-  background: radial-gradient(circle at 50% 30%, #0e374e 0%, #081e2d 50%, #030a10 95%);
-  border-radius: 22px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(6,182,212,0.25);
-  border: 1.5px solid rgba(6,182,212,0.35);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 16px 14px 14px;
-  direction: rtl;
-  user-select: none;
-}
-
-.central-glow {
-  position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 340px;
-  height: 240px;
-  background: radial-gradient(ellipse at center, rgba(6, 182, 212, 0.4) 0%, rgba(6, 182, 212, 0) 70%);
-  pointer-events: none;
-  filter: blur(25px);
-  z-index: 1;
-}
-
-.tournament-hero-logo {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  z-index: 5;
-}
-
-.matchday-title {
-  font-family: 'Cairo', 'Impact', sans-serif;
-  font-size: 48px;
-  font-weight: 900;
-  font-style: italic;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  background: linear-gradient(180deg, #ffffff 0%, #a5f3fc 45%, #06b6d4 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 4px 14px rgba(6, 182, 212, 0.75));
-  line-height: 1;
-  text-align: center;
-  margin-top: 4px;
-  position: relative;
-  z-index: 4;
-}
-
-.center-info {
-  text-align: center;
-  margin: 4px 0 2px;
-  position: relative;
-  z-index: 4;
-}
-.matchday-date {
-  font-size: 14px;
-  font-weight: 900;
-  letter-spacing: 1px;
-  color: #ffffff;
-  text-shadow: 0 2px 6px rgba(0,0,0,0.9);
-  font-family: 'Cairo', 'Tajawal', sans-serif;
-}
-.matchday-time {
-  font-size: 34px;
-  font-weight: 900;
-  letter-spacing: 2px;
-  color: #38bdf8;
-  text-shadow: 0 0 20px rgba(56, 189, 248, 0.9), 0 2px 10px rgba(0,0,0,0.9);
-  font-family: monospace;
-  margin-top: 2px;
-  line-height: 1;
-}
-
-.player-wrapper {
-  position: relative;
-  width: 100%;
-  height: 165px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 3;
-  margin: -6px 0;
-  pointer-events: none;
-}
-
-/* ========================================================
-   RETRO SCOREBOARD CONTAINER (Exact classes requested)
-   ======================================================== */
-.retro-scoreboard-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  background: transparent;
-  width: 100%;
-  padding: 8px 2px 2px;
-  margin-top: auto;
-  z-index: 5;
-  direction: ltr;
-}
-
-.retro-score-badge {
-  width: 34px;
-  height: 42px;
-  background: linear-gradient(135deg, #10b981 0%, #047857 100%);
-  border-radius: 8px;
-  border: 1.5px solid rgba(255,255,255,0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255,255,255,0.4);
-  flex-shrink: 0;
-}
-.retro-score-text {
-  color: #ffffff;
-  font-size: 20px;
-  font-weight: 900;
-  font-family: monospace;
-  line-height: 1;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-}
-
-.retro-team-banner {
-  flex: 1;
-  height: 44px;
-  background: rgba(15, 23, 42, 0.94);
-  border: 1.5px solid rgba(255,255,255,0.22);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  padding: 3px 6px;
-  gap: 5px;
-  margin: 0 3px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.6);
-  min-width: 0;
-  overflow: hidden;
-}
-.retro-team-banner.left {
-  justify-content: flex-start;
-  flex-direction: row;
-}
-.retro-team-banner.right {
-  justify-content: flex-end;
-  flex-direction: row;
-}
-
-.retro-team-logo-container {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2px;
-  flex-shrink: 0;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-}
-.retro-team-logo {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: 50%;
-}
-
-.retro-team-name {
-  color: #ffffff;
-  font-weight: 800;
-  font-size: 11.5px;
-  line-height: 1.15;
-  font-family: 'Cairo', 'Tajawal', sans-serif;
-  text-align: center;
-  flex: 1;
-  min-width: 0;
-  word-break: break-word;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.retro-center-badge {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 0 2px;
-  flex-shrink: 0;
-  z-index: 6;
-}
-.retro-tab-top {
-  background: #0284c7;
-  color: #ffffff;
-  font-size: 9.5px;
-  font-weight: 900;
-  padding: 2px 10px;
-  border-radius: 12px;
-  margin-bottom: -5px;
-  z-index: 8;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-  border: 1px solid rgba(255,255,255,0.3);
-  white-space: nowrap;
-}
-.retro-timer-outer {
-  background: #0f172a;
-  border: 1.5px solid #0284c7;
-  border-radius: 10px;
-  padding: 2px;
-  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
-}
-.retro-timer-inner {
-  background: #020617;
-  border-radius: 8px;
-  padding: 2px 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.retro-timer-text {
-  color: #38bdf8;
-  font-size: 13px;
-  font-weight: 900;
-  font-family: monospace;
-}
-
-.retro-floating-ball-container {
-  position: absolute;
-  top: -24px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 44px;
-  height: 44px;
-  z-index: 10;
-  filter: drop-shadow(0 6px 10px rgba(0,0,0,0.6));
-  pointer-events: none;
-}
-.retro-soccer-ball-svg {
-  width: 100%;
-  height: 100%;
-}
-.retro-soccer-shadow {
-  width: 28px;
-  height: 5px;
-  background: radial-gradient(ellipse at center, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 70%);
-  margin: 2px auto 0;
-}
-
-.bottom-branding {
-  font-size: 10px;
-  font-weight: 800;
-  color: #64748b;
-  text-align: center;
-  margin-top: 6px;
-  letter-spacing: 0.5px;
-  position: relative;
-  z-index: 4;
-}
-
-/* ========================================================
-   MATCHDAY EDITOR PANEL
-   ======================================================== */
-.editor-panel {
-  flex: 1;
-  min-width: 280px;
-  background: #111827;
-  border-radius: 20px;
-  padding: 18px;
-  border: 1.5px solid #1f2937;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.panel-title {
-  color: #38bdf8;
-  font-weight: 900;
-  font-size: 16px;
-  margin: 0 0 4px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.bg-presets-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-}
-.bg-preset-btn {
-  aspect-ratio: 1;
-  border-radius: 10px;
-  border: 2px solid transparent;
-  cursor: pointer;
-  background-size: cover;
-  background-position: center;
-  transition: transform 0.15s, border-color 0.15s;
-}
-.bg-preset-btn:hover {
-  transform: scale(1.05);
-}
-.bg-preset-btn.active {
-  border-color: #38bdf8;
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.7);
-}
-
 </style>
 <script>window.ESM_FIREBASE={apiKey:"AIzaSyBSDRAZwpChKIXpRPVIUp0JtdfflLqPRfU",authDomain:"moubarati-l-w-t.firebaseapp.com",projectId:"moubarati-l-w-t",appId:"1:582704281935:web:aeb821d64b4de733386d3a"};</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -581,10 +223,7 @@ h2{font-size:15px;margin:14px 2px 8px}
 <header><img src="icon-192.png" alt=""><div><h1>مباريات رابطة تيبازة</h1><small>الفئات الشبانية 2026/2027 · وسط غرب</small></div><span class="sp"></span><span id="who" style="font-size:12px"></span><button class="btn" id="out" hidden>خروج</button></header>
 <div id="gate" class="gate" hidden>
  <div class="chips"><button class="chip" id="tl" aria-pressed="true">دخول</button><button class="chip" id="tr" aria-pressed="false">طلب حساب</button></div>
- <div id="fl" class="card"><label>رقم الهاتف أو اسم المستخدم</label><input id="lu" autocomplete="username"><label>كلمة المرور</label><input id="lp" type="password" autocomplete="current-password"><div class="err" id="le"></div><button class="btn" id="bl" style="width:100%">تسجيل الدخول</button>
- <button type="button" class="btn alt" id="guestBtn" onclick="enterAsGuest()" style="width:100%; margin-top:10px; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.22); color:#f8fafc; font-weight:800; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; font-size:14px; padding:10px;">
-  <span style="font-size:18px;">👁️</span><span>تصفح المباريات كزائر فقط</span>
- </button></div>
+ <div id="fl" class="card"><label>رقم الهاتف أو اسم المستخدم</label><input id="lu" autocomplete="username"><label>كلمة المرور</label><input id="lp" type="password" autocomplete="current-password"><div class="err" id="le"></div><button class="btn" id="bl" style="width:100%">تسجيل الدخول</button></div>
  <div id="fr" class="card" hidden><label>الاسم واللقب</label><input id="rn"><label>رقم الهاتف (للدخول)</label><input id="rp" inputmode="tel"><label>الفريق</label><select class="f" id="rt"></select><label>كلمة المرور (6 أحرف على الأقل)</label><input id="rw" type="password"><label>تأكيد كلمة المرور</label><input id="rc" type="password"><div class="err" id="re"></div><button class="btn" id="br" style="width:100%">إرسال الطلب</button></div>
  <p style="text-align:center;color:var(--mu);font-size:13px">للاستفسار واعتماد الحسابات: <a href="https://wa.me/213676108460" style="color:var(--g)">0676108460</a></p>
 </div>
@@ -659,7 +298,7 @@ h2{font-size:15px;margin:14px 2px 8px}
      <p id="lineupModalSubtitle" style="margin:2px 0 0; font-size:12.5px; opacity:0.9; color:#e2e8f0;">الجولة · الفئة الشبانية · 2026/2027</p>
     </div>
    </div>
-   <div style="display:flex; align-items:center; gap:8px;"><button type="button" onclick="if(activeLineupMatch)openMatchdayModal(activeLineupMatch.key)" class="btn sm" style="background:linear-gradient(135deg,#0284c7,#0369a1); color:#fff; font-weight:800; border:none; border-radius:8px; font-size:12px; padding:6px 12px; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 6px rgba(0,0,0,0.25);"><span>⚡</span><span>بوستر Matchday</span></button><button type="button" onclick="closeMatchLineupModal()" style="background:rgba(255,255,255,0.18); border:none; color:#ffffff; font-size:22px; width:36px; height:36px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center;">&times;</button></div>
+   <button type="button" onclick="closeMatchLineupModal()" style="background:rgba(255,255,255,0.18); border:none; color:#ffffff; font-size:22px; width:36px; height:36px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center;">&times;</button>
   </div>
 
   <!-- تبديل بين الفريقين (Home vs Away) -->
@@ -788,205 +427,6 @@ h2{font-size:15px;margin:14px 2px 8px}
 
  </div>
 </div>
-
-<!-- نافذة تصميم وتحميل بوستر المباراة MATCHDAY مع اللوحة الريترو -->
-<div id="matchdayPromoModal" class="modal-bg" style="display:none; z-index:999999;">
-  <div class="promo-modal-card">
-    
-    <!-- رأس النافذة -->
-    <div class="promo-modal-header">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <span style="font-size:24px;">⚡</span>
-        <div>
-          <h3 style="margin:0;font-size:16px;font-weight:900;color:#38bdf8;">تصميم بوستر المباراة · MATCHDAY</h3>
-          <span style="font-size:11.5px;color:#94a3b8;font-weight:700;" id="promoModalSubtitle">بوستر رسمي عالي الدقة مع لوحة النتائج الريترو</span>
-        </div>
-      </div>
-      <button type="button" class="modal-close" onclick="closeMatchdayModal()" style="background:transparent;border:none;color:#fff;font-size:26px;cursor:pointer;line-height:1;">&times;</button>
-    </div>
-
-    <!-- جسم النافذة (الملصق + أدوات التحكم) -->
-    <div class="promo-modal-body">
-      
-      <!-- حاوية البوستر المراد تصديره كصورة -->
-      <div class="promo-wrapper">
-        <div id="promoPoster" class="promo-container">
-          <div class="central-glow"></div>
-          
-          <!-- كأس البطولة في الزاوية العلوية -->
-          <div class="tournament-hero-logo">
-            <svg viewBox="0 0 48 48" width="40" height="40">
-              <circle cx="24" cy="24" r="21" fill="rgba(6,182,212,0.18)" stroke="#06b6d4" stroke-width="2"/>
-              <path d="M16 12h16v8a8 8 0 0 1-16 0v-8z" fill="#facc15" stroke="#ca8a04" stroke-width="1.5"/>
-              <path d="M12 14h4v4a4 4 0 0 1-4-4zM32 14h4a4 4 0 0 1-4 4v-4z" fill="#facc15" stroke="#ca8a04" stroke-width="1.5"/>
-              <path d="M22 28h4v6h-4z" fill="#eab308"/>
-              <path d="M18 34h12v3H18z" fill="#ca8a04"/>
-            </svg>
-          </div>
-
-          <!-- عنوان MATCHDAY ثلاثي الأبعاد -->
-          <div class="matchday-title" dir="ltr">MATCHDAY</div>
-
-          <!-- معلومات الوسط: التاريخ والتوقيت والملعب -->
-          <div class="center-info">
-            <div class="matchday-date" id="promoDateText">📅 السبت، 31 أكتوبر، 2026</div>
-            <div class="matchday-time" id="promoTimeText">17:30</div>
-            <div style="font-size:11px;color:#94a3b8;font-weight:800;margin-top:2px;" id="promoStadText">🏟️ الملعب البلدي</div>
-          </div>
-
-          <!-- رسم ديناميكي للاعب يقفز ويسدد الكرة -->
-          <div class="player-wrapper">
-            <svg viewBox="0 0 300 240" style="width:100%;height:100%;filter:drop-shadow(0 0 22px rgba(6,182,212,0.55));">
-              <g fill="#0e4363" stroke="#38bdf8" stroke-width="2" opacity="0.95">
-                <circle cx="85" cy="55" r="14" />
-                <path d="M78 68 L115 110 L155 130 L170 160 L140 165 L110 135 L80 115 Z" />
-                <path d="M85 75 L50 95 L30 85 M105 85 L145 75 L165 90" stroke-width="3" stroke-linecap="round" fill="none"/>
-                <path d="M110 135 L80 165 L60 215 L50 215" stroke-width="6" stroke-linecap="round" fill="none"/>
-                <path d="M155 130 L195 145 L245 160 L255 155" stroke-width="6" stroke-linecap="round" fill="none"/>
-              </g>
-              <circle cx="270" cy="150" r="14" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
-              <polygon points="270,143 275,148 273,154 267,154 265,148" fill="#0f172a"/>
-              <path d="M220 170 Q 245 162 260 155" stroke="#38bdf8" stroke-width="2.5" fill="none" opacity="0.8"/>
-            </svg>
-          </div>
-
-          <!-- لوحة النتائج الريترو (نفس هيكلة المستخدم تماماً) -->
-          <div class="retro-scoreboard-container">
-            <div class="retro-score-badge left">
-              <span class="retro-score-text" id="promoScoreA">-</span>
-            </div>
-            <div class="retro-team-banner left">
-              <div class="retro-team-logo-container left">
-                <img class="retro-team-logo" id="promoLogoA" src="icon-192.png" onerror="this.src='icon-192.png'">
-              </div>
-              <span class="retro-team-name long-text arabic-text" id="promoTeamNameA">
-                الضيف
-              </span>
-            </div>
-            <div class="retro-center-badge">
-              <div class="retro-tab-top">
-                <span id="promoRoundBadge">الجولة 3 · U20</span>
-              </div>
-              <div class="retro-timer-outer">
-                <div class="retro-timer-inner">
-                  <span class="retro-timer-text" id="promoTimerBadge">17:30</span>
-                </div>
-              </div>
-            </div>
-            <div class="retro-team-banner right">
-              <span class="retro-team-name arabic-text" id="promoTeamNameH">
-                المستقبل
-              </span>
-              <div class="retro-team-logo-container right">
-                <img class="retro-team-logo" id="promoLogoH" src="icon-192.png" onerror="this.src='icon-192.png'">
-              </div>
-            </div>
-            <div class="retro-score-badge right">
-              <span class="retro-score-text" id="promoScoreH">-</span>
-            </div>
-            <div class="retro-floating-ball-container">
-              <svg viewBox="0 0 100 100" class="retro-soccer-ball-svg">
-                <circle cx="50" cy="50" r="48" fill="#ffffff" stroke="#111" stroke-width="2.5"></circle>
-                <polygon points="50,38 61,46 57,59 43,59 39,46" fill="#17202a"></polygon>
-                <polygon points="50,5 42,16 50,26 58,16" fill="#17202a"></polygon>
-                <polygon points="18,72 28,64 24,51 12,54 10,67" fill="#17202a"></polygon>
-                <polygon points="82,72 72,64 76,51 88,54 90,67" fill="#17202a"></polygon>
-                <polygon points="20,26 29,36 21,48 10,43 11,31" fill="#17202a"></polygon>
-                <polygon points="80,26 71,36 79,48 90,43 89,31" fill="#17202a"></polygon>
-                <polygon points="50,95 38,87 42,74 58,74 62,87" fill="#17202a"></polygon>
-                <line x1="50" y1="38" x2="50" y2="26" stroke="#111" stroke-width="2"></line>
-                <line x1="61" y1="46" x2="71" y2="36" stroke="#111" stroke-width="2"></line>
-                <line x1="57" y1="59" x2="62" y2="74" stroke="#111" stroke-width="2"></line>
-                <line x1="43" y1="59" x2="38" y2="74" stroke="#111" stroke-width="2"></line>
-                <line x1="39" y1="46" x2="29" y2="36" stroke="#111" stroke-width="2"></line>
-                <line x1="58" y1="16" x2="71" y2="21" stroke="#111" stroke-width="2"></line>
-                <line x1="42" y1="16" x2="29" y2="21" stroke="#111" stroke-width="2"></line>
-                <line x1="80" y1="26" x2="79" y2="48" stroke="#111" stroke-width="2"></line>
-                <line x1="20" y1="26" x2="21" y2="48" stroke="#111" stroke-width="2"></line>
-                <line x1="88" y1="54" x2="76" y2="51" stroke="#111" stroke-width="2"></line>
-                <line x1="12" y1="54" x2="24" y2="51" stroke="#111" stroke-width="2"></line>
-                <line x1="82" y1="72" x2="62" y2="87" stroke="#111" stroke-width="2"></line>
-                <line x1="18" y1="72" x2="38" y2="87" stroke="#111" stroke-width="2"></line>
-                <circle cx="50" cy="50" r="48" fill="url(#ballShadingPromo)" style="mix-blend-mode: multiply;"></circle>
-                <defs>
-                  <radialGradient id="ballShadingPromo" cx="35%" cy="35%" r="65%">
-                    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.6"></stop>
-                    <stop offset="40%" stop-color="#cccccc" stop-opacity="0.2"></stop>
-                    <stop offset="80%" stop-color="#333333" stop-opacity="0.6"></stop>
-                    <stop offset="100%" stop-color="#000000" stop-opacity="0.95"></stop>
-                  </radialGradient>
-                </defs>
-              </svg>
-              <div class="retro-soccer-shadow"></div>
-            </div>
-          </div>
-
-          <!-- الشريط السفلي للرابطة -->
-          <div class="bottom-branding">
-            رابطة تيبازة الولائية لكرة القدم · MOUBARATI L.W.T
-          </div>
-        </div>
-      </div>
-
-      <!-- لوحة التحكم في البوستر (MATCHDAY EDITOR) -->
-      <div class="editor-panel">
-        <h3 class="panel-title">⚡ MATCHDAY EDITOR V2</h3>
-
-        <div>
-          <label style="font-size:12px;color:#94a3b8;font-weight:700;display:block;margin-bottom:6px;">نمط الخلفية</label>
-          <div class="bg-presets-grid">
-            <button type="button" class="bg-preset-btn active" id="btnBgPreset1" onclick="setPromoBgPreset(1)" style="background:#0e374e;" title="لاعب ودخان نيوني"></button>
-            <button type="button" class="bg-preset-btn" id="btnBgPreset2" onclick="setPromoBgPreset(2)" style="background:linear-gradient(135deg, #1e1b4b, #0f172a);" title="أضواء الملعب الليلي"></button>
-            <button type="button" class="bg-preset-btn" id="btnBgPreset3" onclick="setPromoBgPreset(3)" style="background:linear-gradient(135deg, #451a03, #0f172a);" title="توهج ذهبي فاخر"></button>
-            <button type="button" class="bg-preset-btn" id="btnBgPreset4" onclick="setPromoBgPreset(4)" style="background:linear-gradient(135deg, #064e3b, #022c22);" title="أخضر زمردي رياضي"></button>
-          </div>
-        </div>
-
-        <div>
-          <label style="font-size:12px;color:#94a3b8;font-weight:700;display:block;margin-bottom:4px;">حالة النتيجة في البوستر</label>
-          <div style="display:flex;gap:6px;">
-            <button type="button" class="btn sm" id="btnPromoStatusUpcoming" onclick="setPromoStatusMode('upcoming')" style="flex:1;background:#0284c7;color:#fff;">⏳ قادمة (- ضد -)</button>
-            <button type="button" class="btn sm alt" id="btnPromoStatusFinal" onclick="setPromoStatusMode('final')" style="flex:1;">⚽ نتيجة معتمدة</button>
-          </div>
-        </div>
-
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <div>
-            <label style="font-size:11px;color:#94a3b8;font-weight:700;display:block;margin-bottom:2px;">توقيت المباراة</label>
-            <input type="text" id="inpPromoTime" oninput="updatePromoTexts()" style="width:100%;padding:6px 10px;border-radius:8px;border:1px solid #374151;background:#1f2937;color:#fff;font-family:monospace;font-size:13px;font-weight:700;">
-          </div>
-          <div>
-            <label style="font-size:11px;color:#94a3b8;font-weight:700;display:block;margin-bottom:2px;">نص الجولة / الدورة</label>
-            <input type="text" id="inpPromoBadge" oninput="updatePromoTexts()" style="width:100%;padding:6px 10px;border-radius:8px;border:1px solid #374151;background:#1f2937;color:#fff;font-family:inherit;font-size:12px;font-weight:700;">
-          </div>
-        </div>
-
-        <div>
-          <label style="font-size:11px;color:#94a3b8;font-weight:700;display:block;margin-bottom:2px;">تاريخ المباراة</label>
-          <input type="text" id="inpPromoDate" oninput="updatePromoTexts()" style="width:100%;padding:6px 10px;border-radius:8px;border:1px solid #374151;background:#1f2937;color:#fff;font-family:inherit;font-size:12px;font-weight:700;">
-        </div>
-
-        <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px;padding-top:10px;border-top:1px solid #1f2937;">
-          <button type="button" id="btnDownloadPromo" onclick="downloadMatchdayPosterHD()" style="background:linear-gradient(135deg, #0284c7, #0369a1);color:#fff;border:none;padding:12px;border-radius:10px;font-weight:900;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 15px rgba(2,132,199,0.4);">
-            ⬇️ تحميل بوستر المباراة HD
-          </button>
-          <div style="display:flex;gap:6px;">
-            <button type="button" onclick="shareMatchdayPoster()" style="flex:1;background:#10b981;color:#fff;border:none;padding:8px 12px;border-radius:8px;font-weight:800;font-size:12px;cursor:pointer;">
-              📱 مشاركة عبر واتساب
-            </button>
-            <button type="button" onclick="closeMatchdayModal()" style="background:#374151;color:#fff;border:none;padding:8px 16px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer;">
-              إغلاق
-            </button>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-</div>
-
 <div id="toast"></div>
 <select id="rr" hidden><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option></select><select id="upto" hidden><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option></select>
 <script>(function(){
@@ -1040,22 +480,12 @@ const DEFAULT_ROSTER={U15:['بلعيدي جلول شمس الدين','بلعيد
 U17:['بلجيلالي باسل','بلعيدي عبد الباسط','بن سعيداني عبد المالك','بوحدي عبد العالي','جدوّر عبد الرزاق','جدوّر محمد شريف','حدوش محمد','داهل إياد','شرفاوي محمد أمين','صبان عبد المالك','عبداللاوي يحيى','عشودة عبد الرؤوف','عشودة محمد','عماري محمد أمين','عمروش عبد النور','عمروش لخضر يوسف','غانم عبد الباسط','غانم عبد الجليل','غانم هارون','لعرب رفيق','مختاري عبد الصمد','مسيلتي عبد الجليل','موساوي عامر','نذير أيمن'],
 U20:['بسكري سيف الدين','بلجوهرة نجم الدين','بلجيلالي عبد الوهاب','بلعيدي إدريس','بهيلي محمد سعيد','بوزيان محمد ياسين','حموني عبد الرحمن','داهل ياسر','داود كريم','عطاف شيب','عمروش حسين','عمروش عبد الصمد','عوايجية عبد الرحيم','غانم محمد أمين','لنتري غيث','لنتري محمد عامر','مامو هيثم','مختاري سيد أحمد','مختاري عبد الصمد','مسيلتي محمد','موساوي المهدي','موساوي محمد زكرياء']};
 function canManageTeamRoster(targetTeamId) {
-  const u = (typeof currentUser !== 'undefined' && currentUser) ? currentUser : (typeof me !== 'undefined' && me ? me : null);
-  if (!u) return false;
-  if (u.role === 'admin') return true;
-  if (u.role === 'official' || u.role === 'manager') {
-    return u.teamId == targetTeamId;
+  if (!currentUser) return false;
+  if (currentUser.role === 'admin') return true;
+  if (currentUser.role === 'official') {
+    return currentUser.teamId == targetTeamId;
   }
   return false;
-}
-function getEditableRosterList(tId, c) {
-  if (!store.teamRosters) store.teamRosters = {};
-  if (!store.teamRosters[tId]) store.teamRosters[tId] = { U15: [], U17: [], U20: [] };
-  if (!store.teamRosters[tId][c] || !store.teamRosters[tId][c].length) {
-    const existing = rosterList(c, tId);
-    store.teamRosters[tId][c] = [...existing];
-  }
-  return store.teamRosters[tId][c];
 }
 function rosterList(c, targetTeam){
   const targetCat = c || cat || 'U15';
@@ -1090,202 +520,6 @@ function refreshRoster(){
   const badge = document.getElementById('catSquadBadge');
   if(badge) badge.textContent = cat + ' (' + rosterList(cat, myTeam).length + ' لاعب)';
 }
-
-// ==========================================
-// ⚡ MATCHDAY PROMO POSTER & RETRO SCOREBOARD
-// ==========================================
-let curPromoMatchKey = null;
-let curPromoScoreMode = 'upcoming';
-let curPromoMatchData = null;
-
-const _promoEl = id => document.getElementById(id);
-
-function openMatchdayModal(k) {
-  curPromoMatchKey = k;
-  const m = /^(?:([A-Z0-9]+)\|)?(\d+):(\d+)-(\d+)$/.exec(k);
-  if (!m) return;
-  const catCode = m[1] || (typeof cat !== 'undefined' ? cat : 'U15');
-  const r = +m[2], h = +m[3], a = +m[4];
-  const v = (typeof store !== 'undefined' && store[k]) || (typeof S !== 'undefined' && S[k]) || {};
-  curPromoMatchData = { k, catCode, r, h, a, v };
-
-  const teamMap = (typeof T !== 'undefined' && T && T[1]) ? T : ((typeof window !== 'undefined' && window.T && window.T[1]) ? window.T : {
-    1:'وفاق حجوط',2:'أمل سيدي عمر',3:'وئام بوجبرون',4:'مولودية مراد',
-    5:'الوفاق مسلمون',6:'التحدي الداموس',7:'مولودية قوراية',8:'شبيبة حجوط',
-    9:'اتحاد القليعة',10:'نخبة فجانة',11:'نجمة حجوط'
-  });
-  if (typeof window !== 'undefined' && !window.T) window.T = teamMap;
-
-  const nameH = teamMap[h] || 'المستقبل';
-  const nameA = teamMap[a] || 'الضيف';
-  if (_promoEl('promoTeamNameH')) _promoEl('promoTeamNameH').textContent = nameH;
-  if (_promoEl('promoTeamNameA')) _promoEl('promoTeamNameA').textContent = nameA;
-  
-  const getLogo = (id) => {
-    if (typeof getTeamLogo === 'function') {
-      const l = getTeamLogo(id);
-      if (l) return l;
-    }
-    if (typeof LOGOS !== 'undefined' && LOGOS[id]) return LOGOS[id];
-    if (typeof LG !== 'undefined' && LG[id]) return LG[id];
-    if (typeof store !== 'undefined' && store.logos && store.logos[id]) return store.logos[id];
-    return 'icon-192.png';
-  };
-  const logoH = getLogo(h);
-  const logoA = getLogo(a);
-  if (_promoEl('promoLogoH')) _promoEl('promoLogoH').src = logoH;
-  if (_promoEl('promoLogoA')) _promoEl('promoLogoA').src = logoA;
-
-  const dStr = v.date || 'السبت، 31 أكتوبر، 2026';
-  const tStr = v.time || (catCode === 'U15' ? '14:00' : (catCode === 'U17' ? '10:30' : '09:00'));
-  const sStr = v.stad || (h == 5 ? 'الملعب البلدي مسلمون' : `ملعب ${teamMap[h] || 'الفريق'}`);
-
-  if (_promoEl('promoDateText')) _promoEl('promoDateText').textContent = `📅 ${dStr}`;
-  if (_promoEl('promoTimeText')) _promoEl('promoTimeText').textContent = tStr;
-  if (_promoEl('promoStadText')) _promoEl('promoStadText').textContent = `🏟️ ${sStr}`;
-
-  if (_promoEl('inpPromoDate')) _promoEl('inpPromoDate').value = dStr;
-  if (_promoEl('inpPromoTime')) _promoEl('inpPromoTime').value = tStr;
-  if (_promoEl('inpPromoBadge')) _promoEl('inpPromoBadge').value = `الجولة ${r} · ${catCode}`;
-  if (_promoEl('promoRoundBadge')) _promoEl('promoRoundBadge').textContent = `الجولة ${r} · ${catCode}`;
-  if (_promoEl('promoTimerBadge')) _promoEl('promoTimerBadge').textContent = tStr;
-
-  const hasScore = v && v.sh !== undefined && v.sh !== '' && v.sh !== null;
-  if (hasScore) {
-    setPromoStatusMode('final');
-  } else {
-    setPromoStatusMode('upcoming');
-  }
-
-  setPromoBgPreset(1);
-
-  const modal = document.getElementById('matchdayPromoModal');
-  if (modal) modal.style.display = 'flex';
-}
-
-function closeMatchdayModal() {
-  const modal = document.getElementById('matchdayPromoModal');
-  if (modal) modal.style.display = 'none';
-}
-
-function setPromoStatusMode(mode) {
-  curPromoScoreMode = mode;
-  const btnUp = _promoEl('btnPromoStatusUpcoming');
-  const btnFin = _promoEl('btnPromoStatusFinal');
-  if (btnUp && btnFin) {
-    if (mode === 'upcoming') {
-      btnUp.style.background = '#0284c7';
-      btnUp.style.color = '#fff';
-      btnFin.style.background = 'transparent';
-      btnFin.style.color = '#94a3b8';
-      if (_promoEl('promoScoreH')) _promoEl('promoScoreH').textContent = '-';
-      if (_promoEl('promoScoreA')) _promoEl('promoScoreA').textContent = '-';
-    } else {
-      btnFin.style.background = '#10b981';
-      btnFin.style.color = '#fff';
-      btnUp.style.background = 'transparent';
-      btnUp.style.color = '#94a3b8';
-      const v = curPromoMatchData ? curPromoMatchData.v : {};
-      if (_promoEl('promoScoreH')) _promoEl('promoScoreH').textContent = (v && v.sh !== undefined && v.sh !== '') ? v.sh : '0';
-      if (_promoEl('promoScoreA')) _promoEl('promoScoreA').textContent = (v && v.sa !== undefined && v.sa !== '') ? v.sa : '0';
-    }
-  }
-}
-
-function setPromoBgPreset(idx) {
-  const p = document.getElementById('promoPoster');
-  if (!p) return;
-  document.querySelectorAll('.bg-preset-btn').forEach((b, i) => {
-    b.classList.toggle('active', i === (idx - 1));
-  });
-  if (idx === 1) {
-    p.style.background = 'radial-gradient(circle at 50% 30%, #0e374e 0%, #081e2d 50%, #030a10 95%)';
-  } else if (idx === 2) {
-    p.style.background = 'radial-gradient(circle at 50% 30%, #1e1b4b 0%, #0f172a 60%, #020617 95%)';
-  } else if (idx === 3) {
-    p.style.background = 'radial-gradient(circle at 50% 30%, #451a03 0%, #1c0e04 60%, #080301 95%)';
-  } else if (idx === 4) {
-    p.style.background = 'radial-gradient(circle at 50% 30%, #064e3b 0%, #022c22 60%, #01140e 95%)';
-  }
-}
-
-function updatePromoTexts() {
-  const t = _promoEl('inpPromoTime')?.value || '17:30';
-  const d = _promoEl('inpPromoDate')?.value || '';
-  const b = _promoEl('inpPromoBadge')?.value || '';
-  if (_promoEl('promoTimeText')) _promoEl('promoTimeText').textContent = t;
-  if (_promoEl('promoTimerBadge')) _promoEl('promoTimerBadge').textContent = t;
-  if (_promoEl('promoDateText')) _promoEl('promoDateText').textContent = `📅 ${d}`;
-  if (_promoEl('promoRoundBadge')) _promoEl('promoRoundBadge').textContent = b;
-}
-
-async function downloadMatchdayPosterHD() {
-  toast('⏳ جاري تجهيز بوستر المباراة عالي الدقة (HD)...');
-  const posterEl = document.getElementById('promoPoster');
-  if (!posterEl) return;
-  try {
-    if (typeof html2canvas === 'undefined') {
-      alert('يرجى التحقق من اتصال الإنترنت لتحميل الصورة.');
-      return;
-    }
-    const canvas = await html2canvas(posterEl, {
-      scale: 2.5,
-      useCORS: true,
-      backgroundColor: '#030a10',
-      logging: false
-    });
-    const link = document.createElement('a');
-    const h = curPromoMatchData ? curPromoMatchData.h : 'home';
-    const a = curPromoMatchData ? curPromoMatchData.a : 'away';
-    const tMap = (typeof window !== 'undefined' && window.T) ? window.T : (typeof T !== 'undefined' ? T : {});
-    link.download = `MATCHDAY_${tMap[h] || 'فريق'}_ضد_${tMap[a] || 'فريق'}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-    toast('✅ تم تنزيل بوستر Matchday بنجاح!');
-  } catch(e) {
-    console.error(e);
-    toast('⛔ تعذر إنشاء صورة البوستر');
-  }
-}
-
-async function shareMatchdayPoster() {
-  const posterEl = document.getElementById('promoPoster');
-  if (!posterEl) return;
-  toast('⏳ جاري إعداد الصورة للمشاركة...');
-  try {
-    const canvas = await html2canvas(posterEl, { scale: 2, useCORS: true, backgroundColor: '#030a10' });
-    canvas.toBlob(async blob => {
-      const file = new File([blob], 'matchday.png', { type: 'image/png' });
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        try {
-          await navigator.share({
-            files: [file],
-            title: 'بوستر مباراة ' + (curPromoMatchData ? T[curPromoMatchData.h] + ' ضد ' + T[curPromoMatchData.a] : ''),
-            text: '⚡ شاهد بوستر المباراة الرسمي!'
-          });
-          return;
-        } catch(err) {
-          if (err.name === 'AbortError') return;
-        }
-      }
-      const link = document.createElement('a');
-      link.download = 'matchday.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-      toast('✅ تم تنزيل البوستر لمشاركته');
-    }, 'image/png');
-  } catch(e) {
-    toast('⚠️ تعذر مشاركة البوستر');
-  }
-}
-window.openMatchdayModal = openMatchdayModal;
-window.closeMatchdayModal = closeMatchdayModal;
-window.setPromoStatusMode = setPromoStatusMode;
-window.setPromoBgPreset = setPromoBgPreset;
-window.updatePromoTexts = updatePromoTexts;
-window.downloadMatchdayPosterHD = downloadMatchdayPosterHD;
-window.shareMatchdayPoster = shareMatchdayPoster;
-
 function openPlayersModal(c, tId){
   // تطبيق قفل الأمان: مسؤول النادي مقفول حصراً على ناديه
   if (currentUser && currentUser.role === 'official') {
@@ -1368,7 +602,7 @@ function switchPlayerModalCat(c){
 function renderPlayersModalList(){
   const tId = window.activePlayerModalTeam || (currentUser && currentUser.role === 'official' ? currentUser.teamId : (typeof team !== 'undefined' ? team : 5));
   const c = window.activePlayerModalCat || cat || 'U15';
-  const list = getEditableRosterList(tId, c);
+  const list = rosterList(c, tId);
   
   const b15 = document.getElementById('countBadgeU15'); if(b15) b15.textContent = rosterList('U15', tId).length;
   const b17 = document.getElementById('countBadgeU17'); if(b17) b17.textContent = rosterList('U17', tId).length;
@@ -1384,8 +618,7 @@ function renderPlayersModalList(){
   const canEdit = canManageTeamRoster(tId);
   
   let html = '';
-  list.forEach((rawItem, idx) => {
-    const name = typeof rawItem === 'object' && rawItem ? (rawItem.name || '') : String(rawItem || '');
+  list.forEach((name, idx) => {
     if(query && !name.toLowerCase().includes(query)) return;
     html += '<div class="player-item-row">' +
       '<div class="player-row-info">' +
@@ -1425,21 +658,23 @@ function addPlayerFromModal(){
     return;
   }
   const c = window.activePlayerModalCat || cat || 'U15';
-  const list = getEditableRosterList(tId, c);
+  
+  if (!store.teamRosters) store.teamRosters = {};
+  if (!store.teamRosters[tId]) store.teamRosters[tId] = { U15: [], U17: [], U20: [] };
+  if (!store.teamRosters[tId][c]) store.teamRosters[tId][c] = [];
   
   const newNames = val.split(/[,،\n]+/).map(x => x.trim()).filter(Boolean);
   let addedCount = 0;
   newNames.forEach(n => {
-    const exists = list.some(item => (typeof item === 'object' && item ? item.name === n : item === n));
-    if(!exists){
-      list.push(n);
+    if(!store.teamRosters[tId][c].includes(n)){
+      store.teamRosters[tId][c].push(n);
       addedCount++;
     }
   });
 
   if (tId == 5) {
     store.customRosters = store.customRosters || {};
-    store.customRosters[c] = [...list];
+    store.customRosters[c] = [...store.teamRosters[5][c]];
   }
   
   save();
@@ -1455,26 +690,17 @@ function editPlayerFromModal(idx){
     return;
   }
   const c = window.activePlayerModalCat || cat || 'U15';
-  const list = getEditableRosterList(tId, c);
-  if(idx < 0 || idx >= list.length) {
-    alert('⚠️ لم يتم العثور على اللاعب المحدد!');
-    return;
-  }
-  const oldItem = list[idx];
-  const oldName = typeof oldItem === 'object' && oldItem ? (oldItem.name || '') : String(oldItem || '');
-  const newName = prompt('تعديل اسم ولقب اللاعب لنادي ' + (T[tId] || '') + ':', oldName);
+  const list = (store.teamRosters && store.teamRosters[tId] && store.teamRosters[tId][c]) ? store.teamRosters[tId][c] : [];
+  if(idx < 0 || idx >= list.length) return;
+  const oldName = list[idx];
+  const newName = prompt('تعديل اسم ولقب اللاعب لنادي ' + T[tId] + ':', oldName);
   if(newName === null) return;
   const trimmed = newName.trim();
   if(!trimmed){
     alert('اسم اللاعب لا يمكن أن يكون فارغاً');
     return;
   }
-  if (typeof oldItem === 'object' && oldItem) {
-    oldItem.name = trimmed;
-    list[idx] = oldItem;
-  } else {
-    list[idx] = trimmed;
-  }
+  list[idx] = trimmed;
   if (tId == 5) {
     store.customRosters = store.customRosters || {};
     store.customRosters[c] = [...list];
@@ -1490,14 +716,10 @@ function deletePlayerFromModal(idx){
     return;
   }
   const c = window.activePlayerModalCat || cat || 'U15';
-  const list = getEditableRosterList(tId, c);
-  if(idx < 0 || idx >= list.length) {
-    alert('⚠️ لم يتم العثور على اللاعب المحدد!');
-    return;
-  }
-  const targetItem = list[idx];
-  const pName = typeof targetItem === 'object' && targetItem ? (targetItem.name || '') : String(targetItem || '');
-  if(!confirm('هل أنت متأكد من حذف اللاعب (' + pName + ') من قائمة فئة ' + c + ' لنادي ' + (T[tId] || '') + '؟')){
+  const list = (store.teamRosters && store.teamRosters[tId] && store.teamRosters[tId][c]) ? store.teamRosters[tId][c] : [];
+  if(idx < 0 || idx >= list.length) return;
+  const pName = list[idx];
+  if(!confirm('هل أنت متأكد من حذف اللاعب (' + pName + ') من قائمة فئة ' + c + ' لنادي ' + T[tId] + '؟')){
     return;
   }
   list.splice(idx, 1);
@@ -2637,18 +1859,6 @@ async function onAuth(u){
  show();
 }
 function firstOpen(){for(let r=1;r<=22;r++)if(pairs(r).m.some(([h,a])=>{const v=S[K(cat,r,h,a)];return!v||v.status!=='confirmed'}))return r;return 22}
-function enterAsGuest() {
-  me = { uid: 'guest', name: 'زائر', role: 'guest', phone: '', teamId: null };
-  currentUser = { role: 'guest', username: 'زائر' };
-  OLD.state({ user: currentUser });
-  const who = document.getElementById('who');
-  if (who) who.textContent = '👁️ زائر';
-  show();
-  draw();
-  toast('👋 أهلاً بك! يتم التصفح الآن كزائر');
-}
-window.enterAsGuest = enterAsGuest;
-
 function show(){
  const ok=!!me;$('gate').hidden=ok;$('app').hidden=!ok;$('nav').hidden=!ok;$('out').hidden=!ok;$('na').hidden=!(ok&&me.role==='admin');
  $('who').textContent=ok?(me.role==='admin'?'👑 المشرف':'⚽ '+(T[me.teamId]||'')):'';
@@ -2677,13 +1887,13 @@ function fixtures(){
   const k=K(cat,round,hm,aw),v=S[k],has=v&&v.sh!==undefined&&v.sh!=='';
   h+=`<div class="card"><div class="m"><div class="tm">${lg(hm)}<span>${esc(T[hm])}</span></div><div class="sc ${has?'':'vs'}">${has?`<bdi dir="ltr">${v.sa} - ${v.sh}</bdi>`:'VS'}</div><div class="tm">${lg(aw)}<span>${esc(T[aw])}</span></div></div>
   <div class="meta"><span>${mi(v)}</span>${has?stBadge(v):v&&v.pp?'<span class="b wt">⏳ مؤجلة</span>':v&&v.ex?'<span class="b no">معفاة</span>':''}</div>
-  <div class="act"><button class="btn sm" data-promo="${round}-${hm}-${aw}" style="background:linear-gradient(135deg,#0284c7,#0369a1);color:#fff;font-weight:800;border:none;box-shadow:0 2px 6px rgba(2,132,199,0.3);">⚡ بوستر Matchday</button><button class="btn sm alt" data-lu="${round}-${hm}-${aw}">📋 التشكيلة والتبديلات</button>${canEdit(hm,aw,v)?`<button class="btn sm" data-e="${k}">✏️ ${has?'تعديل':'إدخال'} النتيجة</button>`:''}${canConfirm(hm,aw,v)&&has?`<button class="btn sm" data-ok="${k}">✅ ${me.role==='admin'?'اعتماد':'تأكيد'}</button>${me.role!=='admin'?`<button class="btn sm red" data-no="${k}">❌ اعتراض</button>`:''}`:''}</div></div>`});
+  <div class="act"><button class="btn sm alt" data-lu="${round}-${hm}-${aw}">📋 التشكيلة والتبديلات</button>${canEdit(hm,aw,v)?`<button class="btn sm" data-e="${k}">✏️ ${has?'تعديل':'إدخال'} النتيجة</button>`:''}${canConfirm(hm,aw,v)&&has?`<button class="btn sm" data-ok="${k}">✅ ${me.role==='admin'?'اعتماد':'تأكيد'}</button>${me.role!=='admin'?`<button class="btn sm red" data-no="${k}">❌ اعتراض</button>`:''}`:''}</div></div>`});
  return h+`<div class="bye">🛌 مستريحة: ${esc(T[p.bye])}</div>`
 }
 function results(){
  const p=pairs(round);let h=chips()+rnd()+`<button class="btn alt" data-shot="r" style="width:100%;margin-bottom:10px">📷 حفظ الجولة كصورة</button><div class="rh">نتائج الجولة ${round} · ${round<=11?'ذهاب':'إياب'} · ${cat}</div>`;
  p.m.forEach(([hm,aw])=>{const v=S[K(cat,round,hm,aw)],has=v&&v.sh!==undefined&&v.sh!=='';
-  h+=`<div class="card rs"><div class="m"><div class="tm">${lg(hm)}<span>${esc(T[hm])}</span></div><div class="sc ${has?'':'vs'}">${has?`<bdi dir="ltr">${v.sa} - ${v.sh}</bdi>`:'VS'}</div><div class="tm">${lg(aw)}<span>${esc(T[aw])}</span></div></div>${has&&v.status!=='confirmed'?'<div class="meta" style="justify-content:center">'+stBadge(v)+'</div>':''}<div class="actions" style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--bdr);display:flex;gap:6px;justify-content:center;flex-wrap:wrap;"><button class="btn sm" data-lu="${round}-${hm}-${aw}" style="font-size:12px;padding:5px 10px;">📋 التشكيلة والأحداث</button><button class="btn sm" data-promo="${round}-${hm}-${aw}" style="font-size:12px;padding:5px 10px;background:linear-gradient(135deg,#0284c7,#0369a1);color:#fff;font-weight:800;border:none;">⚡ بوستر Matchday</button></div></div>`});
+  h+=`<div class="card rs"><div class="m"><div class="tm">${lg(hm)}<span>${esc(T[hm])}</span></div><div class="sc ${has?'':'vs'}">${has?`<bdi dir="ltr">${v.sa} - ${v.sh}</bdi>`:'VS'}</div><div class="tm">${lg(aw)}<span>${esc(T[aw])}</span></div></div>${has&&v.status!=='confirmed'?'<div class="meta" style="justify-content:center">'+stBadge(v)+'</div>':''}</div>`});
  return h+`<div class="bye">🛌 معفى من هذه الجولة: ${esc(T[p.bye])}</div>`
 }
 function tbl(c,up){
@@ -2741,13 +1951,9 @@ document.addEventListener('click',async e=>{
  if(b.dataset.c){cat=b.dataset.c;round=firstOpen();up=0;draw()}
  else if(b.dataset.r){round=+b.dataset.r;draw()}
  else if(b.dataset.t){tab=b.dataset.t;document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-pressed',x===b));draw()}
- else if(b.dataset.promo){
-  const [r, h, a] = b.dataset.promo.split('-').map(Number);
-  openMatchdayModal((typeof cat !== 'undefined' ? cat : 'U15') + '|' + r + ':' + h + '-' + a);
- }
  else if(b.dataset.lu){const[r,h,a]=b.dataset.lu.split('-').map(Number);OLD.load(S);OLD.state({cat,round:r,rosters:RO,team:me.role==='admin'?5:me.teamId});OLD.lineup(r,h,a)}
  else if(b.id==='plBtn'){OLD.load(S);OLD.state({cat,rosters:RO});OLD.players(cat,me.role==='admin'?5:me.teamId)}
- else if(b.dataset.shot){ if(b.dataset.shot==='s' && me && me.role==='guest'){ alert('⚠️ عذراً، تحميل صورة جدول الترتيب مخصص لإدارة الرابطة ومسؤولي الأندية فقط.'); } else { poster(b.dataset.shot); } }
+ else if(b.dataset.shot)poster(b.dataset.shot)
  else if(b.dataset.e)openEdit(b.dataset.e)
  else if(b.dataset.ok)setSt(b.dataset.ok,'confirmed')
  else if(b.dataset.no)setSt(b.dataset.no,'disputed')
@@ -2756,7 +1962,7 @@ document.addEventListener('click',async e=>{
  else if(b.id==='adminPoster')posterAdmin()
 });
 document.addEventListener('change',e=>{if(e.target.id==='rs'){round=+e.target.value;draw()}if(e.target.id==='us'){up=+e.target.value;draw()}});
-$('out').onclick=()=>{ if(me && me.role==='guest'){ me=null; currentUser=null; OLD.state({user:null}); show(); return; } if(auth)auth.signOut(); };
+$('out').onclick=()=>auth.signOut();
 $('tl').onclick=()=>{$('fl').hidden=false;$('fr').hidden=true;$('tl').setAttribute('aria-pressed',true);$('tr').setAttribute('aria-pressed',false)};
 $('tr').onclick=()=>{$('fl').hidden=true;$('fr').hidden=false;$('tr').setAttribute('aria-pressed',true);$('tl').setAttribute('aria-pressed',false)};
 $('bl').onclick=async()=>{say('le','');const m=mail($('lu').value),p=$('lp').value;if(!m||!p)return say('le','⚠️ أدخل رقم الهاتف وكلمة المرور');if(!auth)return;try{await auth.signInWithEmailAndPassword(m,p);$('lp').value=''}catch(x){say('le',errTxt(x))}};
