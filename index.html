@@ -480,12 +480,22 @@ const DEFAULT_ROSTER={U15:['بلعيدي جلول شمس الدين','بلعيد
 U17:['بلجيلالي باسل','بلعيدي عبد الباسط','بن سعيداني عبد المالك','بوحدي عبد العالي','جدوّر عبد الرزاق','جدوّر محمد شريف','حدوش محمد','داهل إياد','شرفاوي محمد أمين','صبان عبد المالك','عبداللاوي يحيى','عشودة عبد الرؤوف','عشودة محمد','عماري محمد أمين','عمروش عبد النور','عمروش لخضر يوسف','غانم عبد الباسط','غانم عبد الجليل','غانم هارون','لعرب رفيق','مختاري عبد الصمد','مسيلتي عبد الجليل','موساوي عامر','نذير أيمن'],
 U20:['بسكري سيف الدين','بلجوهرة نجم الدين','بلجيلالي عبد الوهاب','بلعيدي إدريس','بهيلي محمد سعيد','بوزيان محمد ياسين','حموني عبد الرحمن','داهل ياسر','داود كريم','عطاف شيب','عمروش حسين','عمروش عبد الصمد','عوايجية عبد الرحيم','غانم محمد أمين','لنتري غيث','لنتري محمد عامر','مامو هيثم','مختاري سيد أحمد','مختاري عبد الصمد','مسيلتي محمد','موساوي المهدي','موساوي محمد زكرياء']};
 function canManageTeamRoster(targetTeamId) {
-  if (!currentUser) return false;
-  if (currentUser.role === 'admin') return true;
-  if (currentUser.role === 'official') {
-    return currentUser.teamId == targetTeamId;
+  const u = (typeof currentUser !== 'undefined' && currentUser) ? currentUser : (typeof me !== 'undefined' && me ? me : null);
+  if (!u) return false;
+  if (u.role === 'admin') return true;
+  if (u.role === 'official' || u.role === 'manager') {
+    return u.teamId == targetTeamId;
   }
   return false;
+}
+function getEditableRosterList(tId, c) {
+  if (!store.teamRosters) store.teamRosters = {};
+  if (!store.teamRosters[tId]) store.teamRosters[tId] = { U15: [], U17: [], U20: [] };
+  if (!store.teamRosters[tId][c] || !store.teamRosters[tId][c].length) {
+    const existing = rosterList(c, tId);
+    store.teamRosters[tId][c] = [...existing];
+  }
+  return store.teamRosters[tId][c];
 }
 function rosterList(c, targetTeam){
   const targetCat = c || cat || 'U15';
@@ -602,7 +612,7 @@ function switchPlayerModalCat(c){
 function renderPlayersModalList(){
   const tId = window.activePlayerModalTeam || (currentUser && currentUser.role === 'official' ? currentUser.teamId : (typeof team !== 'undefined' ? team : 5));
   const c = window.activePlayerModalCat || cat || 'U15';
-  const list = rosterList(c, tId);
+  const list = getEditableRosterList(tId, c);
   
   const b15 = document.getElementById('countBadgeU15'); if(b15) b15.textContent = rosterList('U15', tId).length;
   const b17 = document.getElementById('countBadgeU17'); if(b17) b17.textContent = rosterList('U17', tId).length;
@@ -618,7 +628,8 @@ function renderPlayersModalList(){
   const canEdit = canManageTeamRoster(tId);
   
   let html = '';
-  list.forEach((name, idx) => {
+  list.forEach((rawItem, idx) => {
+    const name = typeof rawItem === 'object' && rawItem ? (rawItem.name || '') : String(rawItem || '');
     if(query && !name.toLowerCase().includes(query)) return;
     html += '<div class="player-item-row">' +
       '<div class="player-row-info">' +
@@ -658,23 +669,21 @@ function addPlayerFromModal(){
     return;
   }
   const c = window.activePlayerModalCat || cat || 'U15';
-  
-  if (!store.teamRosters) store.teamRosters = {};
-  if (!store.teamRosters[tId]) store.teamRosters[tId] = { U15: [], U17: [], U20: [] };
-  if (!store.teamRosters[tId][c]) store.teamRosters[tId][c] = [];
+  const list = getEditableRosterList(tId, c);
   
   const newNames = val.split(/[,،\n]+/).map(x => x.trim()).filter(Boolean);
   let addedCount = 0;
   newNames.forEach(n => {
-    if(!store.teamRosters[tId][c].includes(n)){
-      store.teamRosters[tId][c].push(n);
+    const exists = list.some(item => (typeof item === 'object' && item ? item.name === n : item === n));
+    if(!exists){
+      list.push(n);
       addedCount++;
     }
   });
 
   if (tId == 5) {
     store.customRosters = store.customRosters || {};
-    store.customRosters[c] = [...store.teamRosters[5][c]];
+    store.customRosters[c] = [...list];
   }
   
   save();
@@ -690,17 +699,26 @@ function editPlayerFromModal(idx){
     return;
   }
   const c = window.activePlayerModalCat || cat || 'U15';
-  const list = (store.teamRosters && store.teamRosters[tId] && store.teamRosters[tId][c]) ? store.teamRosters[tId][c] : [];
-  if(idx < 0 || idx >= list.length) return;
-  const oldName = list[idx];
-  const newName = prompt('تعديل اسم ولقب اللاعب لنادي ' + T[tId] + ':', oldName);
+  const list = getEditableRosterList(tId, c);
+  if(idx < 0 || idx >= list.length) {
+    alert('⚠️ لم يتم العثور على اللاعب المحدد!');
+    return;
+  }
+  const oldItem = list[idx];
+  const oldName = typeof oldItem === 'object' && oldItem ? (oldItem.name || '') : String(oldItem || '');
+  const newName = prompt('تعديل اسم ولقب اللاعب لنادي ' + (T[tId] || '') + ':', oldName);
   if(newName === null) return;
   const trimmed = newName.trim();
   if(!trimmed){
     alert('اسم اللاعب لا يمكن أن يكون فارغاً');
     return;
   }
-  list[idx] = trimmed;
+  if (typeof oldItem === 'object' && oldItem) {
+    oldItem.name = trimmed;
+    list[idx] = oldItem;
+  } else {
+    list[idx] = trimmed;
+  }
   if (tId == 5) {
     store.customRosters = store.customRosters || {};
     store.customRosters[c] = [...list];
@@ -716,10 +734,14 @@ function deletePlayerFromModal(idx){
     return;
   }
   const c = window.activePlayerModalCat || cat || 'U15';
-  const list = (store.teamRosters && store.teamRosters[tId] && store.teamRosters[tId][c]) ? store.teamRosters[tId][c] : [];
-  if(idx < 0 || idx >= list.length) return;
-  const pName = list[idx];
-  if(!confirm('هل أنت متأكد من حذف اللاعب (' + pName + ') من قائمة فئة ' + c + ' لنادي ' + T[tId] + '؟')){
+  const list = getEditableRosterList(tId, c);
+  if(idx < 0 || idx >= list.length) {
+    alert('⚠️ لم يتم العثور على اللاعب المحدد!');
+    return;
+  }
+  const targetItem = list[idx];
+  const pName = typeof targetItem === 'object' && targetItem ? (targetItem.name || '') : String(targetItem || '');
+  if(!confirm('هل أنت متأكد من حذف اللاعب (' + pName + ') من قائمة فئة ' + c + ' لنادي ' + (T[tId] || '') + '؟')){
     return;
   }
   list.splice(idx, 1);
