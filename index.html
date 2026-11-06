@@ -2429,8 +2429,9 @@ async function posterMatch(r,h,a){
  x.save();x.shadowColor='#ffd54a';x.shadowBlur=50;x.beginPath();x.arc(W/2,LY,92,0,7);const gg=x.createLinearGradient(0,LY-92,0,LY+92);gg.addColorStop(0,'#ffe27a');gg.addColorStop(1,'#e0a100');x.fillStyle=gg;x.fill();x.restore();
  const vs_has=v&&v.sh!==undefined&&v.sh!==''&&v.sh!==null;
  if(vs_has){
+   // left=away(a), right=home(h) → عرض: away_score - home_score
    x.direction='ltr';
-   tx(x,v.sh+' - '+v.sa,W/2,LY+8,F(900,72),'#1b1300');
+   tx(x,v.sa+' - '+v.sh,W/2,LY+8,F(900,72),'#1b1300');
    x.direction='rtl';
    tx(x,'النتيجة',W/2,LY-54,F(700,22),'#1b1300','center');
  }else{
@@ -2440,16 +2441,52 @@ async function posterMatch(r,h,a){
  const info=[['📅',v.date?dAr(v.date):'التاريخ يُعلن لاحقاً'],['⏰',v.time||'14:00'],['📍',v.stad||'الملعب يُعلن لاحقاً']];
  const ws=[430,200,330];let X=W/2+(ws[0]+ws[1]+ws[2]+40)/2;
  info.forEach(([ic,s],i)=>{X-=ws[i];rr(x,X,885,ws[i],72,36);x.fillStyle='rgba(255,255,255,.12)';x.fill();x.lineWidth=2;x.strokeStyle='rgba(255,255,255,.28)';x.stroke();tx(x,ic+' '+s,X+ws[i]/2,921,F(700,29),'#fff','center',ws[i]-30);X-=20});
- // أبرز اللاعبين
- const pool=async(t)=>{const L=((typeof LU!=='undefined'?LU:{})[key]||{})[t];let ns=L&&L.starters?L.starters.map(s=>s.name||s):[];if(!ns.length){try{OLD.load(S);OLD.state({cat,rosters:RO||{},team:t});ns=OLD.rosterList(cat,t).map(s=>typeof s==='string'?s:s.name)}catch(e){ns=[]}}
-  const out=[];for(const n of ns){const im=photoOf(t,n);if(im)out.push([n,await imgOf(im)]);if(out.length>=3)break}return out};
- const [ph1,ph2]=await Promise.all([pool(h),pool(a)]);
- tx(x,'أبرز اللاعبين',W/2,1005,F(800,34),'rgba(255,255,255,.7)');
- const grp=(arr,cx,c)=>{const n=arr.length,cw=140,gap=14,tot=n*cw+(n-1)*gap;arr.forEach(([nm,im],i)=>{const X0=cx+tot/2-(i+1)*cw-i*gap,Y0=1030;
-  x.save();x.shadowColor=rgba(c,.9);x.shadowBlur=24;rr(x,X0,Y0,cw,190,18);x.fillStyle='#0b0f17';x.fill();x.restore();
-  x.save();rr(x,X0,Y0,cw,190,18);x.clip();if(im)cover(x,im,X0,Y0,cw,190,.2);const g2=x.createLinearGradient(0,Y0+110,0,Y0+190);g2.addColorStop(0,'rgba(5,7,12,0)');g2.addColorStop(1,'rgba(5,7,12,.95)');x.fillStyle=g2;x.fillRect(X0,Y0,cw,190);x.restore();
-  rr(x,X0,Y0,cw,190,18);x.lineWidth=4;x.strokeStyle=rgba(c,1);x.stroke();tx(x,nm.split(' ').slice(0,2).join(' '),X0+cw/2,Y0+170,F(800,20),'#fff','center',cw-12)})};
- if(ph1.length||ph2.length){grp(ph1,W-290,c1);grp(ph2,290,c2)}else tx(x,'تُعلن التشكيلة قريباً',W/2,1110,F(700,32),'rgba(255,255,255,.55)');
+  // ===== صور الهدافين مع الدقيقة =====
+ const goalPool=async(t,ghStr)=>{
+   if(!ghStr)return [];
+   const goals=parseG(ghStr);
+   const out=[];
+   for(const g of goals){
+     if(!g.n)continue;
+     const rawIm=photoOf(t,g.n);
+     const im=rawIm?await imgOf(rawIm):null;
+     out.push({n:g.n,m:g.m,k:g.k||1,im});
+   }
+   return out;
+ };
+ // left=away(a)→v.ga | right=home(h)→v.gh
+ const [goalsA,goalsH]=await Promise.all([goalPool(a,v.ga),goalPool(h,v.gh)]);
+ const hasGoalers=goalsH.length||goalsA.length;
+ // --- رسم بطاقات الهدافين ---
+ const grpGoal=(arr,cx,c)=>{
+   if(!arr.length)return;
+   const cw=130,ch=200,gap=10,tot=arr.length*(cw+gap)-gap;
+   const startX=cx-tot/2;
+   arr.forEach((g,i)=>{
+     const X0=startX+i*(cw+gap),Y0=1010;
+     x.save();x.shadowColor=rgba(c,.85);x.shadowBlur=20;
+     rr(x,X0,Y0,cw,ch,16);x.fillStyle='#0b0f17';x.fill();x.restore();
+     x.save();rr(x,X0,Y0,cw,ch,16);x.clip();
+     if(g.im)cover(x,g.im,X0,Y0,cw,ch,.15);
+     const grd=x.createLinearGradient(0,Y0+ch*0.45,0,Y0+ch);
+     grd.addColorStop(0,'rgba(5,7,12,0)');grd.addColorStop(1,'rgba(5,7,12,.96)');
+     x.fillStyle=grd;x.fillRect(X0,Y0,cw,ch);x.restore();
+     rr(x,X0,Y0,cw,ch,16);x.lineWidth=3;x.strokeStyle=rgba(c,1);x.stroke();
+     const minLabel=g.m?(g.k>1?g.k+'× '+g.m+"'" :g.m+"'"):'⚽';
+     rr(x,X0+8,Y0+8,cw-16,30,15);x.fillStyle=rgba(c,.85);x.fill();
+     tx(x,'⚽ '+minLabel,X0+cw/2,Y0+28,F(700,16),'#fff','center',cw-20);
+     const shortN=g.n.split(' ').slice(0,2).join(' ');
+     tx(x,shortN,X0+cw/2,Y0+ch-32,F(700,16),'#fff','center',cw-14);
+   });
+ };
+ if(hasGoalers){
+   tx(x,'⚽ الهدافون',W/2,998,F(800,32),'rgba(255,255,255,.85)');
+   // away على اليسار (cx=W/4) | home على اليمين (cx=3*W/4)
+   grpGoal(goalsA,W/4+20,c2);
+   grpGoal(goalsH,3*W/4-20,c1);
+ } else {
+   tx(x,'تُعلن التشكيلة قريباً',W/2,1110,F(700,32),'rgba(255,255,255,.55)');
+ }
  await footer(x,W,H,await imgOf(typeof LEAGUE!=='undefined'?LEAGUE:null));
  await OLD.saveImg(cv,'مباراة-'+T[h]+'-'+T[a]+'.png')
 }
