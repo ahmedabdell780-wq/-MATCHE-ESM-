@@ -1,0 +1,13 @@
+{
+  "name": "esm-live-relay",
+  "version": "1.0.0",
+  "description": "وسيط بث مباشر: يستقبل فيديو المتصفح عبر WebSocket ويرسله إلى فيسبوك/يوتيوب عبر RTMP",
+  "main": "server.js",
+  "private": true,
+  "engines": { "node": ">=18" },
+  "scripts": { "start": "node server.js" },
+  "dependencies": {
+    "ffmpeg-static": "^5.2.0",
+    "ws": "^8.18.0"
+  }
+}
