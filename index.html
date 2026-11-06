@@ -326,7 +326,7 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
   <p class="gfoot">للاستفسار واعتماد الحسابات: <a href="https://wa.me/213676108460" target="_blank" rel="noopener">0676108460</a></p>
  </div>
 </div>
-<main id="app" hidden></main>
+<main id="app"></main>
 <nav id="nav"><button data-t="m" aria-pressed="true">⚽ المباريات</button><button data-t="r" aria-pressed="false">📋 النتائج</button><button data-t="s" aria-pressed="false">🏆 الترتيب</button><button data-t="g" aria-pressed="false">🥅 الهدافون</button><button data-t="a" id="na" aria-pressed="false" hidden>👑 الإدارة</button></nav>
 <dialog id="dg"><h2 id="dt" style="margin-top:0"></h2>
 <label>حالة المباراة</label><select id="ms" class="f"><option value="sched">📅 مبرمجة — حفظ الموعد والملعب فقط</option><option value="done">✅ منتهية — إدخال النتيجة</option><option value="pp">⏳ مؤجلة</option><option value="ex">🚫 معفاة</option></select>
@@ -2027,8 +2027,16 @@ function init(){
  $('gate').hidden=false;try{$('gateLogo').src=LEAGUE}catch(e){}
  if(!cfg||/PUT_YOUR/.test(cfg.apiKey)){say('le','⚠️ إعداد Firebase غير مكتمل في index.html');return}
  firebase.initializeApp(cfg);auth=firebase.auth();db=firebase.firestore();
- db.collection('scores').onSnapshot(s=>{s.docChanges().forEach(c=>{const d=c.doc.data();if(c.type==='removed')delete S[d.key];else{const x=Object.assign({},d.data);delete x.lineups;S[d.key]=x}});draw()},()=>{});
+ db.collection('scores').onSnapshot(s=>{
+  s.docChanges().forEach(c=>{const d=c.doc.data();if(c.type==='removed')delete S[d.key];else{const x=Object.assign({},d.data);delete x.lineups;S[d.key]=x}});
+  /* رفع hidden عن التطبيق فور تحميل البيانات (حتى للزائر) */
+  $('app').hidden=false;
+  draw();
+},()=>{$('app').hidden=false;draw();});
  auth.onAuthStateChanged(onAuth);
+ /* للزائر: رفع hidden عن التطبيق مباشرة */
+ $('app').hidden=false;
+ draw();
  if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
 async function onAuth(u){
@@ -2058,10 +2066,10 @@ function firstOpen(){for(let r=1;r<=22;r++)if(pairs(r).m.some(([h,a])=>{const v=
 function show(){
  const ok=!!me;
  $('gate').hidden=ok;
+ $('app').hidden=false;   /* دائماً مرئي — الزائر والمسجّل */
  $('out').hidden=!ok;
  $('na').hidden=!(ok&&me.role==='admin');
  $('who').textContent=ok?(me.role==='admin'?'👑 المشرف':'⚽ '+(T[me.teamId]||'')):'👁️ زائر';
- // الزائر يرى المباريات والترتيب والهدافين
  draw()
 }
 
