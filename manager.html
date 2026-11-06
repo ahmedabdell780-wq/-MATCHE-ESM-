@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f5a34">
+<title>فضاء مسؤولي الفرق</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--g:#1f5a34;--g2:#2d7a49;--bg:#f3f1ea;--card:#fff;--tx:#1b1f1c;--mu:#6a726c;--ln:#dcd9cf;--er:#b3261e;--ok:#1d7a3e}
+*{box-sizing:border-box}
+body{margin:0;font-family:Tajawal,system-ui,sans-serif;background:var(--bg);color:var(--tx);padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+header{background:var(--g);color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+header h1{font-size:18px;margin:0}
+header a,header button{color:#fff;background:#ffffff22;border:0;border-radius:8px;padding:7px 12px;font:inherit;font-size:14px;text-decoration:none;cursor:pointer}
+main{max-width:640px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:16px;margin-bottom:14px}
+h2{font-size:17px;margin:0 0 12px}
+label{display:block;font-size:14px;color:var(--mu);margin:10px 0 4px}
+input,select,textarea{width:100%;padding:11px;border:1px solid var(--ln);border-radius:8px;font:inherit;background:#fff}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--g2);outline-offset:1px}
+.btn{background:var(--g);color:#fff;border:0;border-radius:8px;padding:12px 16px;font:inherit;font-weight:700;width:100%;margin-top:14px;cursor:pointer}
+.btn.sm{width:auto;margin:0;padding:8px 14px;font-size:14px}
+.btn.alt{background:#fff;color:var(--g);border:1px solid var(--g)}
+.btn.no{background:var(--er)}
+.tabs{display:flex;gap:6px;margin-bottom:14px}
+.tabs button{flex:1;padding:10px;border:1px solid var(--ln);background:#fff;border-radius:8px;font:inherit;cursor:pointer}
+.tabs button.on{background:var(--g);color:#fff;border-color:var(--g)}
+.msg{padding:10px 12px;border-radius:8px;font-size:14px;margin-top:12px;background:#fdecea;color:var(--er)}
+.msg.ok{background:#e6f4ea;color:var(--ok)}
+.row{display:flex;gap:8px;align-items:center}
+.row>*{flex:1}
+.match{border-top:1px solid var(--ln);padding:12px 0}
+.match:first-of-type{border-top:0}
+.vs{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;text-align:center;font-weight:700}
+.vs input{width:56px;text-align:center;font-size:18px;padding:8px}
+.meta{font-size:13px;color:var(--mu);text-align:center;margin-bottom:6px}
+.tag{display:inline-block;font-size:12px;border-radius:20px;padding:2px 10px;background:#fff3cd;color:#7a5b00}
+.tag.v{background:#e6f4ea;color:var(--ok)}
+.hide{display:none}
+.mu{color:var(--mu);font-size:14px}
+</style>
+</head>
+<body>
+<header><h1>فضاء مسؤولي الفرق</h1><span><a href="index.html">البرنامج</a> <button id="out" class="hide">خروج</button></span></header>
+<main id="app"><p class="mu">جارٍ التحميل…</p></main>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+/* 1) ضع هنا إعداد Firebase الخاص بمشروعك (Project settings > Your apps) */
+const firebaseConfig = {
+  apiKey: "PUT_YOUR_API_KEY",
+  authDomain: "PUT_YOUR_PROJECT.firebaseapp.com",
+  projectId: "PUT_YOUR_PROJECT_ID",
+  appId: "PUT_YOUR_APP_ID"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth(), db = firebase.firestore();
+const $ = id => document.getElementById(id);
+const app = $('app');
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let me = null, teams = {}, unsub = null;
+
+const errs = {
+  'auth/invalid-credential':'البريد أو كلمة المرور غير صحيحة.',
+  'auth/wrong-password':'كلمة المرور غير صحيحة.',
+  'auth/user-not-found':'لا يوجد حساب بهذا البريد.',
+  'auth/email-already-in-use':'هذا البريد مسجّل من قبل. سجّل الدخول.',
+  'auth/weak-password':'كلمة المرور قصيرة، استعمل 6 أحرف على الأقل.',
+  'auth/invalid-email':'صيغة البريد غير صحيحة.',
+  'permission-denied':'ليست لديك صلاحية لهذه العملية.'
+};
+const em = e => errs[e.code] || ('حدث خطأ: ' + (e.message || e.code));
+const show = (el, t, ok) => { el.className = 'msg' + (ok ? ' ok' : ''); el.textContent = t; };
+
+async function loadTeams(){
+  const s = await db.collection('teams').orderBy('name').get();
+  teams = {}; s.forEach(d => teams[d.id] = { id: d.id, ...d.data() });
+}
+const teamOpts = (sel) => Object.values(teams).map(t => `<option value="${esc(t.id)}" ${t.id===sel?'selected':''}>${esc(t.name)}</option>`).join('');
+
+/* ---------- تسجيل الدخول / إنشاء حساب ---------- */
+function viewAuth(){
+  $('out').classList.add('hide');
+  app.innerHTML = `
+  <div class="card">
+    <div class="tabs"><button id="t1" class="on">دخول</button><button id="t2">حساب جديد</button></div>
+    <div id="f1">
+      <label>البريد الإلكتروني</label><input id="le" type="email" autocomplete="email">
+      <label>كلمة المرور</label><input id="lp" type="password" autocomplete="current-password">
+      <button class="btn" id="lb">دخول</button>
+    </div>
+    <div id="f2" class="hide">
+      <label>الاسم الكامل</label><input id="rn" autocomplete="name">
+      <label>فريقك</label><select id="rt"><option value="">اختر الفريق…</option>${teamOpts()}</select>
+      <label>البريد الإلكتروني</label><input id="re" type="email" autocomplete="email">
+      <label>كلمة المرور</label><input id="rp" type="password" autocomplete="new-password">
+      <button class="btn" id="rb">إرسال طلب الحساب</button>
+      <p class="mu">يُفعَّل الحساب بعد موافقة المشرف.</p>
+    </div>
+    <div id="m" class="hide"></div>
+  </div>`;
+  const tab = n => { $('f1').classList.toggle('hide', n!==1); $('f2').classList.toggle('hide', n!==2);
+    $('t1').classList.toggle('on', n===1); $('t2').classList.toggle('on', n===2); $('m').className='hide'; };
+  $('t1').onclick = () => tab(1); $('t2').onclick = () => tab(2);
+  $('lb').onclick = async () => {
+    try { await auth.signInWithEmailAndPassword($('le').value.trim(), $('lp').value); }
+    catch(e){ show($('m'), em(e)); }
+  };
+  $('rb').onclick = async () => {
+    const name = $('rn').value.trim(), team = $('rt').value;
+    if(!name || !team) return show($('m'), 'اكتب اسمك واختر فريقك.');
+    try {
+      window._reg = { name, team };
+      const c = await auth.createUserWithEmailAndPassword($('re').value.trim(), $('rp').value);
+      await db.collection('users').doc(c.user.uid).set({
+        name, teamId: team, role: 'manager', status: 'pending',
+        email: c.user.email, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    } catch(e){ show($('m'), em(e)); }
+  };
+}
+
+/* ---------- حالة الانتظار ---------- */
+function viewPending(st){
+  app.innerHTML = `<div class="card"><h2>${st==='rejected'?'تم رفض الطلب':'طلبك قيد المراجعة'}</h2>
+  <p class="mu">${st==='rejected'?'تواصل مع المشرف لمعرفة السبب.':'سيُفعَّل حسابك بعد موافقة المشرف. أعد فتح الصفحة لاحقًا.'}</p></div>`;
+}
+
+/* ---------- مسؤول الفريق ---------- */
+async function viewManager(){
+  const tid = me.teamId, t = teams[tid] || {};
+  app.innerHTML = `
+  <div class="tabs"><button id="a1" class="on">مبارياتي</button><button id="a2">معلومات ناديي</button></div>
+  <div id="p1"></div>
+  <div id="p2" class="hide card">
+    <h2>${esc(t.name)}</h2>
+    <label>الملعب</label><input id="cs" value="${esc(t.stadium)}">
+    <label>المدرب</label><input id="cc" value="${esc(t.coach)}">
+    <label>الرئيس</label><input id="cp" value="${esc(t.president)}">
+    <label>هاتف التواصل</label><input id="ct" type="tel" value="${esc(t.phone)}">
+    <label>رابط الشعار (صورة)</label><input id="cl" type="url" value="${esc(t.logo)}">
+    <label>قائمة اللاعبين (لاعب في كل سطر)</label><textarea id="cpl" rows="8">${esc(t.players)}</textarea>
+    <button class="btn" id="cb">حفظ معلومات النادي</button><div id="cm" class="hide"></div>
+  </div>`;
+  const tab = n => { $('p1').classList.toggle('hide', n!==1); $('p2').classList.toggle('hide', n!==2);
+    $('a1').classList.toggle('on', n===1); $('a2').classList.toggle('on', n===2); };
+  $('a1').onclick = () => tab(1); $('a2').onclick = () => tab(2);
+  $('cb').onclick = async () => {
+    try {
+      await db.collection('teams').doc(tid).update({
+        stadium:$('cs').value.trim(), coach:$('cc').value.trim(), president:$('cp').value.trim(),
+        phone:$('ct').value.trim(), logo:$('cl').value.trim(), players:$('cpl').value
+      });
+      show($('cm'), 'تم حفظ معلومات النادي.', true);
+    } catch(e){ show($('cm'), em(e)); }
+  };
+  if(unsub) unsub();
+  unsub = db.collection('matches').orderBy('round').onSnapshot(s => {
+    const list = s.docs.map(d => ({ id:d.id, ...d.data() })).filter(m => m.home===tid || m.away===tid);
+    $('p1').innerHTML = `<div class="card"><h2>مباريات ${esc(t.name)}</h2>` +
+      (list.length ? list.map(matchCard).join('') : '<p class="mu">لم يضف المشرف أي مباراة لفريقك بعد.</p>') + '</div>';
+    bindMatches(tid);
+  }, e => { $('p1').innerHTML = `<div class="msg">${esc(em(e))}</div>`; });
+}
+
+function matchCard(m){
+  const h = teams[m.home]?.name || '؟', a = teams[m.away]?.name || '؟';
+  const sc = m.score || {};
+  const done = m.status === 'validated';
+  return `<div class="match" data-id="${esc(m.id)}">
+    <div class="meta">${esc(m.category)} · الجولة ${esc(m.round)} ${m.date?'· '+esc(m.date):''}
+      ${m.score ? `<span class="tag ${done?'v':''}">${done?'مؤكدة':'بانتظار التأكيد'}</span>` : ''}</div>
+    <div class="vs"><span>${esc(h)}</span>
+      <span class="row"><input class="sh" type="number" min="0" inputmode="numeric" value="${sc.h ?? ''}" ${done?'disabled':''}>
+      <span>-</span><input class="sa" type="number" min="0" inputmode="numeric" value="${sc.a ?? ''}" ${done?'disabled':''}></span>
+      <span>${esc(a)}</span></div>
+    ${done ? '' : `<div class="row" style="margin-top:10px">
+      <button class="btn sm sv">حفظ النتيجة</button>
+      ${m.score && m.enteredTeam && m.enteredTeam !== (me.teamId||'') || (me.role==='admin' && m.score) ? '<button class="btn sm alt cf">تأكيد النتيجة</button>' : ''}</div>`}
+  </div>`;
+}
+
+function bindMatches(tid){
+  document.querySelectorAll('.match').forEach(el => {
+    const ref = db.collection('matches').doc(el.dataset.id);
+    const sv = el.querySelector('.sv'), cf = el.querySelector('.cf');
+    if(sv) sv.onclick = async () => {
+      const h = parseInt(el.querySelector('.sh').value), a = parseInt(el.querySelector('.sa').value);
+      if(isNaN(h) || isNaN(a) || h<0 || a<0) return alert('أدخل نتيجة صحيحة للفريقين.');
+      try { await ref.update({ score:{h,a}, status:'pending', enteredBy:auth.currentUser.uid, enteredTeam: tid || 'admin' }); }
+      catch(e){ alert(em(e)); }
+    };
+    if(cf) cf.onclick = async () => {
+      try { await ref.update({ status:'validated', validatedBy:auth.currentUser.uid }); }
+      catch(e){ alert(em(e)); }
+    };
+  });
+}
+
+/* ---------- المشرف ---------- */
+async function viewAdmin(){
+  app.innerHTML = `
+  <div class="card"><h2>طلبات الحسابات</h2><div id="req" class="mu">…</div></div>
+  <div class="card"><h2>إضافة فريق</h2>
+    <div class="row"><input id="nt" placeholder="اسم الفريق"><button class="btn sm" id="ntb">إضافة</button></div></div>
+  <div class="card"><h2>إضافة مباراة</h2>
+    <div class="row"><select id="mc"><option>U15</option><option>U17</option><option>U20</option></select>
+    <input id="mr" type="number" min="1" placeholder="الجولة"></div>
+    <label>المستضيف</label><select id="mh"></select>
+    <label>الضيف</label><select id="ma"></select>
+    <label>التاريخ</label><input id="md" type="date">
+    <button class="btn" id="mb">إضافة المباراة</button><div id="mm" class="hide"></div></div>
+  <div class="card"><h2>كل المباريات</h2><div id="allm"></div></div>`;
+  const fill = () => { $('mh').innerHTML = $('ma').innerHTML = teamOpts(); };
+  fill();
+  $('ntb').onclick = async () => {
+    const n = $('nt').value.trim(); if(!n) return;
+    await db.collection('teams').add({ name:n }); $('nt').value=''; await loadTeams(); fill();
+  };
+  $('mb').onclick = async () => {
+    if($('mh').value === $('ma').value) return show($('mm'), 'اختر فريقين مختلفين.');
+    if(!$('mr').value) return show($('mm'), 'اكتب رقم الجولة.');
+    try {
+      await db.collection('matches').add({ category:$('mc').value, round:+$('mr').value,
+        home:$('mh').value, away:$('ma').value, date:$('md').value });
+      show($('mm'), 'تمت إضافة المباراة.', true);
+    } catch(e){ show($('mm'), em(e)); }
+  };
+  db.collection('users').where('status','==','pending').onSnapshot(s => {
+    $('req').innerHTML = s.empty ? 'لا توجد طلبات جديدة.' : s.docs.map(d => { const u = d.data();
+      return `<div class="match" data-u="${esc(d.id)}"><b>${esc(u.name)}</b> — ${esc(teams[u.teamId]?.name)}
+      <div class="mu">${esc(u.email)}</div>
+      <div class="row" style="margin-top:8px"><button class="btn sm ap">قبول</button><button class="btn sm no rj">رفض</button></div></div>`; }).join('');
+    document.querySelectorAll('[data-u]').forEach(el => {
+      const r = db.collection('users').doc(el.dataset.u);
+      el.querySelector('.ap').onclick = () => r.update({ status:'approved' });
+      el.querySelector('.rj').onclick = () => r.update({ status:'rejected' });
+    });
+  });
+  if(unsub) unsub();
+  unsub = db.collection('matches').orderBy('round').onSnapshot(s => {
+    $('allm').innerHTML = s.docs.map(d => matchCard({ id:d.id, ...d.data() })).join('') || '<p class="mu">لا توجد مباريات.</p>';
+    bindMatches(null);
+  });
+}
+
+/* ---------- نقطة الدخول ---------- */
+$('out').onclick = () => auth.signOut();
+auth.onAuthStateChanged(async u => {
+  if(unsub){ unsub(); unsub = null; }
+  try { await loadTeams(); } catch(e){}
+  if(!u) return viewAuth();
+  $('out').classList.remove('hide');
+  let snap;
+  for(let i=0;i<5;i++){ snap = await db.collection('users').doc(u.uid).get(); if(snap.exists) break; await new Promise(r=>setTimeout(r,500)); }
+  if(!snap.exists){ app.innerHTML = '<div class="card"><p class="mu">لا يوجد ملف لهذا الحساب. تواصل مع المشرف.</p></div>'; return; }
+  me = snap.data();
+  if(me.role === 'admin') return viewAdmin();
+  if(me.status !== 'approved') return viewPending(me.status);
+  viewManager();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{db}/documents {
+
+    function me() { return get(/databases/$(database)/documents/users/$(request.auth.uid)).data; }
+    function signedIn() { return request.auth != null; }
+    function isAdmin() { return signedIn() && me().role == 'admin'; }
+    function isManager() { return signedIn() && me().role == 'manager' && me().status == 'approved'; }
+
+    // الحسابات: كل شخص ينشئ طلبًا بصفة manager/pending فقط، والمشرف وحده يغيّر الحالة
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.role == 'manager'
+        && request.resource.data.status == 'pending';
+      allow update: if isAdmin();
+    }
+
+    // الفرق: القراءة للجميع، والتعديل لمسؤول الفريق نفسه أو المشرف
+    match /teams/{t} {
+      allow read: if true;
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || (isManager() && me().teamId == t
+        && request.resource.data.name == resource.data.name);
+    }
+
+    // المباريات: المشرف ينشئ، والمسؤول يكتب النتيجة لمباريات فريقه فقط
+    match /matches/{m} {
+      allow read: if true;
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || (isManager()
+        && resource.data.status != 'validated'
+        && (resource.data.home == me().teamId || resource.data.away == me().teamId)
+        && request.resource.data.home == resource.data.home
+        && request.resource.data.away == resource.data.away
+        && ( request.resource.data.status == 'pending'
+          || (request.resource.data.status == 'validated'
+              && resource.data.enteredTeam != me().teamId)));
+    }
+  }
+}
