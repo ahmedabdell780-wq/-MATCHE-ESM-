@@ -21,7 +21,7 @@ const ffmpegPath = require('ffmpeg-static');
 const PORT = +process.env.PORT || 8080;
 const API_KEY = process.env.FIREBASE_API_KEY || '';
 const PROJECT = process.env.FIREBASE_PROJECT_ID || '';
-const ORIGINS = (process.env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean);
+const ORIGINS = (process.env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim().replace(/\/+$/, '')).filter(Boolean);
 const ALLOW_TRANSCODE = process.env.ALLOW_TRANSCODE === '1';
 const FORCE_TRANSCODE = process.env.FORCE_TRANSCODE === '1';
 const ALLOW_CUSTOM = process.env.ALLOW_CUSTOM === '1';
