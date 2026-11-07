@@ -95,6 +95,7 @@ nav button[aria-pressed=true]{color:#6fe39a;box-shadow:inset 0 3px 0 #6fe39a}
 .rrow.r1{grid-template-columns:.95fr 1.05fr .95fr 1.35fr 1.35fr .5fr}
 .rinfo{font-size:12px;text-align:center;color:#cbd5e1;padding:0 4px}.rinfo:empty{display:none}
 #liveSet{width:min(94vw,460px)}#liveSet details{margin:10px 0;border:1px solid var(--ln);border-radius:12px;padding:8px 12px;background:var(--field)}#liveSet summary{cursor:pointer;font-weight:800}#liveSet ol{margin:8px 0 2px;padding-inline-start:20px;font-size:13.5px;line-height:1.9}
+#liveSet .srv,.srv{padding:9px 12px;border-radius:12px;font-size:13.5px;font-weight:700;margin-bottom:6px}.srv.ok{background:#16a34a26;color:#22c55e}.srv.wait{background:#f2b63226;color:#e0a420}.srv.bad{background:#dc262626;color:#f87171}
 #liveSet .chk{display:flex;gap:8px;align-items:center;margin-top:10px;font-size:13.5px}#liveSet .chk input{width:auto}.rbtn.on{background:#16a34a}.rbtn.gl{background:#b8860b}
 select.rbtn{appearance:none;-webkit-appearance:none;text-align:center;width:auto}select.rbtn option{color:#000}
 #rec.min .extra{display:none}
@@ -353,16 +354,18 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
   <div class="rrow extra"><button class="rbtn" id="rcCam">🔄 الكاميرا</button><button class="rbtn" id="rcSwap">⇄ الجهة</button><select class="rbtn" id="rcQ" aria-label="الجودة"><option value="720">HD 720</option><option value="480">خفيفة 480</option></select><button class="rbtn" id="rcSave">💾 حفظ النتيجة</button><button class="rbtn" id="rcX">✕ خروج</button></div>
  </div>
 </div>
-<dialog id="liveSet"><h2 style="margin-top:0">📡 البث المباشر</h2>
-<label for="lvT">وجهة البث</label><select class="f" id="lvT"><option value="facebook">فيسبوك (Facebook Live)</option><option value="youtube">يوتيوب (YouTube Live)</option><option value="custom">عنوان RTMP مخصص</option></select>
-<div id="lvKW"><label for="lvK">مفتاح البث (Stream key)</label><input id="lvK" type="password" autocomplete="off" placeholder="الصق مفتاح البث هنا"></div>
-<div id="lvUW" hidden><label for="lvU">عنوان RTMP الكامل (مع المفتاح)</label><input id="lvU" autocomplete="off" placeholder="rtmps://…"></div>
-<label class="chk"><input type="checkbox" id="lvS"> حفظ المفتاح على هذا الجهاز فقط</label>
-<label for="lvR">رابط خادم البث الوسيط</label><input id="lvR" inputmode="url" autocomplete="off" placeholder="https://esm-relay.onrender.com">
-<details><summary>كيف أحصل على مفتاح فيسبوك؟</summary><ol><li>اضغط «🔗 فتح فيسبوك المباشر» أدناه وسجّل الدخول بحساب مدير الصفحة.</li><li>اختر صفحة الرابطة ثم «برنامج البث / Streaming software».</li><li>انسخ <b>مفتاح البث (Stream key)</b> والصقه هنا.</li><li>اضغط «🔴 ابدأ البث» هنا، وبعد ظهور المعاينة في فيسبوك اضغط <b>Go Live</b> هناك.</li><li>عند نهاية المباراة أوقف البث من هنا ثم أنهِ البث في فيسبوك.</li></ol></details>
+<dialog id="liveSet"><h2 style="margin-top:0">📡 بث مباشر على فيسبوك</h2>
+<div class="srv wait" id="lvSt">⏳ جارٍ فحص الخادم…</div>
+<label for="lvK">مفتاح البث (من فيسبوك)</label><input id="lvK" type="password" autocomplete="off" placeholder="الصق المفتاح هنا">
+<label class="chk"><input type="checkbox" id="lvS" checked> تذكّر المفتاح على هذا الجهاز</label>
+<div class="act" style="margin-top:10px"><button class="btn alt" id="lvFb" style="flex:1">🔗 افتح فيسبوك لأخذ المفتاح</button></div>
+<details><summary>كيف أحصل على المفتاح؟</summary><ol><li>اضغط الزر أعلاه وسجّل الدخول بحساب مدير الصفحة.</li><li>اختر «برنامج البث / Streaming software».</li><li>انسخ <b>Stream key</b> والصقه هنا.</li><li>اضغط «ابدأ البث» هنا، ثم <b>Go Live</b> في فيسبوك.</li></ol></details>
+<details id="lvAdv"><summary>⚙️ إعدادات متقدمة</summary>
+<label for="lvT">وجهة البث</label><select class="f" id="lvT"><option value="facebook">فيسبوك</option><option value="youtube">يوتيوب</option><option value="custom">عنوان RTMP مخصص</option></select>
+<div id="lvUW" hidden><label for="lvU">عنوان RTMP الكامل</label><input id="lvU" autocomplete="off" placeholder="rtmps://…"></div>
+<label for="lvR">رابط خادم البث</label><input id="lvR" inputmode="url" autocomplete="off" placeholder="https://esm-live-relay.onrender.com"></details>
 <div class="err" id="lvE" role="alert"></div>
-<div class="act"><button class="btn" id="lvGo" style="flex:1">🔴 ابدأ البث</button><button class="btn alt" id="lvFb">🔗 فتح فيسبوك المباشر</button></div>
-<div class="act" style="margin-top:8px"><button class="btn alt" id="lvX" style="flex:1">إلغاء</button></div></dialog>
+<div class="act" style="margin-top:6px"><button class="btn" id="lvGo" style="flex:1">🔴 ابدأ البث</button><button class="btn alt" id="lvX">إلغاء</button></div></dialog>
 <dialog id="recDone"><h2 style="margin-top:0">🎬 انتهى التصوير</h2><p class="hint" style="text-align:right;margin:0 0 10px">احفظ كل جزء في هاتفك أو شاركه مباشرة (واتساب، ألبوم الصور…)</p><div id="rdList"></div><div class="act" style="margin-top:10px"><button class="btn" id="rdSave" style="flex:1">💾 حفظ النتيجة والهدافين</button></div><div class="act" style="margin-top:8px"><button class="btn alt" id="rdClose" style="flex:1">إغلاق</button></div></dialog>
 <dialog id="stf"><h2 style="margin-top:0">🧑‍💼 الطاقم الفني والإداري</h2>
 <div id="stTeamBar"></div>
@@ -2810,23 +2813,32 @@ $('rcX').onclick=()=>{if(RC.live&&RC.live.on){if(!confirm('البث المباش
 document.addEventListener('visibilitychange',async()=>{if(RC.on&&!document.hidden){try{RC.wl=await navigator.wakeLock.request('screen')}catch(e){}}});
 
 /* ===== البث المباشر إلى فيسبوك/يوتيوب عبر خادم وسيط (RTMP) ===== */
-const LIVE_RELAY=''; /* اختياري: ضع هنا رابط الخادم الوسيط الافتراضي مثل https://esm-relay.onrender.com */
+const LIVE_RELAY='https://esm-live-relay.onrender.com'; /* غيّره إن سمّيت الخدمة باسم آخر */
 const LK={t:'esmLiveTarget',k:'esmLiveKey',r:'esmLiveRelay'};
 const lsGet=k=>{try{return localStorage.getItem(k)||''}catch(e){return''}},lsSet=(k,v)=>{try{v?localStorage.setItem(k,v):localStorage.removeItem(k)}catch(e){}};
 const rcWs=r=>{r=(r||'').trim().replace(/\/+$/,'').replace(/\/live$/,'');if(!r)return'';if(!/^(wss?|https?):\/\//.test(r))r='https://'+r;return r.replace(/^http/,'ws')+'/live'};
 const rcLiveMime=()=>['video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/mp4','video/webm;codecs=h264,opus','video/webm;codecs=h264','video/webm;codecs=vp8,opus','video/webm'].find(t=>{try{return MediaRecorder.isTypeSupported(t)}catch(e){return false}})||'';
 function rcWake(r){try{fetch(rcWs(r).replace(/^ws/,'http').replace(/\/live$/,'')+'/healthz',{mode:'no-cors'}).catch(()=>{})}catch(e){}}
 function rcLiveOpen(){
- const t=lsGet(LK.t)||'facebook';$('lvT').value=t;$('lvK').value=lsGet(LK.k);$('lvS').checked=!!lsGet(LK.k);$('lvR').value=lsGet(LK.r)||LIVE_RELAY;$('lvU').value='';
- $('lvKW').hidden=t==='custom';$('lvUW').hidden=t!=='custom';say('lvE','');$('liveSet').showModal();if($('lvR').value)rcWake($('lvR').value)}
-$('lvT').onchange=()=>{const c=$('lvT').value==='custom';$('lvKW').hidden=c;$('lvUW').hidden=!c};
-$('lvX').onclick=()=>$('liveSet').close();
+ const t=lsGet(LK.t)||'facebook';$('lvT').value=t;$('lvK').value=lsGet(LK.k);$('lvS').checked=true;$('lvR').value=lsGet(LK.r);$('lvU').value='';
+ $('lvUW').hidden=t!=='custom';say('lvE','');$('liveSet').showModal();rcPingLoop()}
+$('lvT').onchange=()=>{$('lvUW').hidden=$('lvT').value!=='custom'};
+let lvTm=null;
+async function rcPing(){const r=$('lvR').value.trim()||LIVE_RELAY,el=$('lvSt');
+ if(!rcWs(r)){el.className='srv bad';el.textContent='⚠️ أدخل رابط الخادم في «إعدادات متقدمة»';$('lvAdv').open=true;return true}
+ el.className='srv wait';el.textContent='⏳ جارٍ الاتصال بالخادم… (قد يستغرق دقيقة إن كان نائماً)';
+ try{const c=new AbortController(),tm=setTimeout(()=>c.abort(),9000),res=await fetch(rcWs(r).replace(/^ws/,'http').replace(/\/live$/,'')+'/healthz',{signal:c.signal});clearTimeout(tm);
+  if(res.ok){el.className='srv ok';el.textContent='🟢 الخادم جاهز للبث';return true}}catch(e){}
+ el.className='srv bad';el.textContent='🔴 الخادم غير متاح بعد… نعيد المحاولة';return false}
+function rcPingLoop(){clearTimeout(lvTm);const go=async()=>{if(!$('liveSet').open)return;const ok=await rcPing();if(!ok&&$('liveSet').open)lvTm=setTimeout(go,4000)};go()}
+$('lvR').onchange=rcPingLoop;
+$('lvX').onclick=()=>{clearTimeout(lvTm);$('liveSet').close()};
 $('lvFb').onclick=()=>window.open('https://www.facebook.com/live/producer','_blank','noopener');
-$('lvGo').onclick=()=>{say('lvE','');const t=$('lvT').value,k=$('lvK').value.trim(),u=$('lvU').value.trim(),r=$('lvR').value.trim();
- if(!rcWs(r))return say('lvE','⚠️ أدخل رابط خادم البث الوسيط (راجع ملف README في مجلد live-relay)');
+$('lvGo').onclick=()=>{say('lvE','');const t=$('lvT').value,k=$('lvK').value.trim(),u=$('lvU').value.trim(),r=$('lvR').value.trim()||LIVE_RELAY;
+ if(!rcWs(r)){$('lvAdv').open=true;return say('lvE','⚠️ أدخل رابط خادم البث في «إعدادات متقدمة»')}
  if(t==='custom'?!u:!k)return say('lvE','⚠️ أدخل '+(t==='custom'?'عنوان RTMP':'مفتاح البث'));
  if(!auth||!auth.currentUser)return say('lvE','⚠️ سجّل الدخول أولاً');
- lsSet(LK.r,r);lsSet(LK.t,t);lsSet(LK.k,$('lvS').checked&&t!=='custom'?k:'');
+ clearTimeout(lvTm);lsSet(LK.r,$('lvR').value.trim());lsSet(LK.t,t);lsSet(LK.k,$('lvS').checked&&t!=='custom'?k:'');
  $('liveSet').close();rcLiveStart({target:t,key:k,url:u,relay:rcWs(r)})};
 $('rcLive').onclick=()=>{if(RC.live&&RC.live.on){if(confirm('إيقاف البث المباشر؟'))rcLiveStop(false);return}rcLiveOpen()};
 function rcLiveStart(o){RC.live={on:true,state:'connecting',target:o.target,key:o.key,url:o.url,relay:o.relay,t0:0,tries:0,stat:{},user:false,fatal:false,slow:false};rcLiveConnect();rcUi()}

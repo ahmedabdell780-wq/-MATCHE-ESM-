@@ -1,20 +1,11 @@
-# وسيط البث المباشر (Live Relay)
+# تشغيل البث المباشر في 4 خطوات
 
-يستقبل فيديو الاستوديو من المتصفح ويرسله إلى فيسبوك (أو يوتيوب) عبر RTMPS.
+1. أنشئ مستودعاً جديداً على GitHub باسم `esm-live-relay` وارفع إليه الملفات الأربعة:
+   `server.js` و`package.json` و`render.yaml` و`README.md`.
+2. افتح https://dashboard.render.com ← **New +** ← **Blueprint** ← اختر هذا المستودع ← **Apply**.
+   (يُنشئ الخدمة ويضبط كل الإعدادات تلقائياً باسم `esm-live-relay`).
+3. انتظر حتى تظهر Live. رابط الخدمة سيكون: https://esm-live-relay.onrender.com
+   (إن ظهر رابط مختلف فالصقه في الاستوديو ← 📡 بث ← ⚙️ إعدادات متقدمة).
+4. في الاستوديو: 📡 بث ← الصق مفتاح فيسبوك ← 🔴 ابدأ البث.
 
-## النشر على Render (Web Service)
-1. ارفع مجلد `live-relay` إلى مستودع GitHub جديد (أو مجلد داخل المستودع الحالي).
-2. Render ← New ← Web Service ← اختر المستودع.
-   - Runtime: Node
-   - Build Command: `npm install`
-   - Start Command: `npm start`
-3. Environment Variables:
-   - `FIREBASE_API_KEY` = AIzaSyBSDRAZwpChKIXpRPVIUp0JtdfflLqPRfU
-   - `FIREBASE_PROJECT_ID` = moubarati-l-w-t
-   - `ALLOWED_ORIGINS` = https://esm-matches.onrender.com
-4. انسخ رابط الخدمة (مثل https://esm-relay.onrender.com) وضعه في الاستوديو ← 📡 بث ← خادم البث.
-
-## ملاحظات
-- الخطة المجانية تنام بعد خمول: افتح رابط الخدمة قبل المباراة بدقيقة (الاستوديو يوقظه تلقائياً).
-- النسخ بدون إعادة ترميز (`-c copy`) خفيف جداً. يعمل مع Safari (iPhone) وChrome (H.264).
-- `FORCE_TRANSCODE=1` يضمن مفاتيح إطارات منتظمة لكنه يحتاج معالجاً أقوى (خطة مدفوعة).
+ملاحظة: الخطة المجانية تنام بعد خمول. عند فتح نافذة البث يوقظها التطبيق ويعرض 🟢 عندما تجهز.

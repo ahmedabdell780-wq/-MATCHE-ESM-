@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: esm-live-relay
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: FIREBASE_API_KEY
+        value: AIzaSyBSDRAZwpChKIXpRPVIUp0JtdfflLqPRfU
+      - key: FIREBASE_PROJECT_ID
+        value: moubarati-l-w-t
+      - key: ALLOWED_ORIGINS
+        value: https://esm-matches.onrender.com
