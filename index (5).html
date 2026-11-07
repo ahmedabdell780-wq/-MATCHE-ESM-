@@ -2157,7 +2157,7 @@ function fixtures(){
   const k=K(cat,round,hm,aw),v=S[k],has=v&&v.sh!==undefined&&v.sh!=='';
   h+=`<div class="card"><div class="m"><div class="tm">${lg(hm)}<span>${esc(T[hm])}</span></div><div class="sc ${has?'':'vs'}">${has?`<bdi dir="ltr">${v.sa} - ${v.sh}</bdi>`:'VS'}</div><div class="tm">${lg(aw)}<span>${esc(T[aw])}</span></div></div>
   <div class="meta"><span>${mi(v)}</span>${has?stBadge(v):v&&v.pp?'<span class="b wt">⏳ مؤجلة</span>':v&&v.ex?'<span class="b no">معفاة</span>':''}</div>
-  <div class="act"><button class="btn sm alt" data-lu="${round}-${hm}-${aw}">📋 التشكيلة والتبديلات</button>${me&&(me.role==='admin'||hm==me.teamId||aw==me.teamId)?`<button class="btn sm alt" data-rec="${k}">🎥 تصوير مباشر</button>`:''}<button class="btn sm alt" data-mp="${round}-${hm}-${aw}">📣 ملصق المباراة</button>${v&&(v.gh||v.ga)?`<button class="btn sm alt" data-gp="${k}">⚽ ملصق الهدف</button>`:''}${canEdit(hm,aw,v)?`<button class="btn sm" data-e="${k}">✏️ ${has?'تعديل النتيجة':'الموعد / النتيجة'}</button>`:''}${canConfirm(hm,aw,v)&&has?`<button class="btn sm" data-ok="${k}">✅ ${me.role==='admin'?'اعتماد':'تأكيد'}</button>${me.role!=='admin'?`<button class="btn sm red" data-no="${k}">❌ اعتراض</button>`:''}`:''}</div></div>`});
+  <div class="act"><button class="btn sm alt" data-lu="${round}-${hm}-${aw}">📋 التشكيلة والتبديلات</button>${me&&me.role==='admin'?`<button class="btn sm alt" data-rec="${k}">🎥 تصوير مباشر</button>`:''}<button class="btn sm alt" data-mp="${round}-${hm}-${aw}">📣 ملصق المباراة</button>${v&&(v.gh||v.ga)?`<button class="btn sm alt" data-gp="${k}">⚽ ملصق الهدف</button>`:''}${canEdit(hm,aw,v)?`<button class="btn sm" data-e="${k}">✏️ ${has?'تعديل النتيجة':'الموعد / النتيجة'}</button>`:''}${canConfirm(hm,aw,v)&&has?`<button class="btn sm" data-ok="${k}">✅ ${me.role==='admin'?'اعتماد':'تأكيد'}</button>${me.role!=='admin'?`<button class="btn sm red" data-no="${k}">❌ اعتراض</button>`:''}`:''}</div></div>`});
  return h+`<div class="bye">🛌 مستريحة: ${esc(T[p.bye])}</div>`
 }
 function results(){
@@ -2654,6 +2654,7 @@ const rcEl=()=>{const c=RC.clk;return c.base+(c.run?(Date.now()-c.start)/1000:0)
 const rcCnt=sd=>RC.goals.filter(g=>g.side===sd).length;
 function rcNames(t){try{OLD.state({cat:RC.cat,rosters:RO});return(OLD.rosterList(RC.cat,t)||[]).map(x=>typeof x==='string'?x:(x&&x.name)||'').filter(Boolean)}catch(e){return[]}}
 async function openStudio(k){
+ if(!me||me.role!=='admin')return toast('⛔ التصوير المباشر للمشرف العام فقط');
  const m=/^(?:([A-Z0-9]+)\|)?(\d+):(\d+)-(\d+)$/.exec(k);if(!m)return;
  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.MediaRecorder||!HTMLCanvasElement.prototype.captureStream)return toast('⚠️ هذا المتصفح لا يدعم التصوير. استعمل Safari أو Chrome حديثاً');
  Object.assign(RC,{on:true,k,cat:m[1]||'U15',round:+m[2],h:+m[3],a:+m[4],goals:[],clk:{base:0,start:0,run:false,period:1,half:45,ended:false},swap:true,q:720,facing:'environment',rec:null,recording:false,stopping:false,parts:[],bytes:0,banner:null,flash:{h:0,a:0},stream:null,ar:0,live:{on:false}});
