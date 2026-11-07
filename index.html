@@ -358,8 +358,8 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
 <div class="srv wait" id="lvSt">⏳ جارٍ فحص الخادم…</div>
 <label for="lvK">مفتاح البث (من فيسبوك)</label><input id="lvK" type="password" autocomplete="off" placeholder="الصق المفتاح هنا">
 <label class="chk"><input type="checkbox" id="lvS" checked> تذكّر المفتاح على هذا الجهاز</label>
-<div class="act" style="margin-top:10px"><button class="btn alt" id="lvFb" style="flex:1">🔗 افتح فيسبوك لأخذ المفتاح</button></div>
-<details><summary>كيف أحصل على المفتاح؟</summary><ol><li>اضغط الزر أعلاه وسجّل الدخول بحساب مدير الصفحة.</li><li>اختر «برنامج البث / Streaming software».</li><li>انسخ <b>Stream key</b> والصقه هنا.</li><li>اضغط «ابدأ البث» هنا، ثم <b>Go Live</b> في فيسبوك.</li></ol></details>
+<div class="act" style="margin-top:10px"><button class="btn alt" id="lvFb" style="flex:1">🔗 رابط أخذ المفتاح (من الحاسوب)</button></div>
+<details><summary>كيف أحصل على المفتاح؟</summary><ol><li><b>من الحاسوب:</b> افتح facebook.com/live/producer (على الهاتف يفتح تطبيق فيسبوك ولا يعرض المفتاح).</li><li>اختر صفحتك ثم «برنامج البث / Streaming software».</li><li>انسخ <b>Stream key</b> وأرسله لهاتفك (واتساب لنفسك) والصقه هنا.</li><li>اضغط «ابدأ البث» هنا، ثم <b>Go Live</b> في فيسبوك.</li></ol><p class="hint" style="text-align:right;margin:0">⚠️ لا تضغط «Lancer un direct» في تطبيق فيسبوك: هذا بث بكاميرا الهاتف.</p></details>
 <details id="lvAdv"><summary>⚙️ إعدادات متقدمة</summary>
 <label for="lvT">وجهة البث</label><select class="f" id="lvT"><option value="facebook">فيسبوك</option><option value="youtube">يوتيوب</option><option value="custom">عنوان RTMP مخصص</option></select>
 <div id="lvUW" hidden><label for="lvU">عنوان RTMP الكامل</label><input id="lvU" autocomplete="off" placeholder="rtmps://…"></div>
@@ -2742,7 +2742,8 @@ function rcUi(){
  lb.textContent=!liveOn?'📡 بث':L.state==='live'?'📡 '+rcMS((Date.now()-L.t0)/1000)+(L.slow?' ⚠':''):L.state==='retry'?'🔄 إعادة':'⏳ اتصال';
  const inf=[];
  if(liveOn){inf.push((L.target==='facebook'?'فيسبوك':L.target==='youtube'?'يوتيوب':'بث مخصص')+(L.state==='live'?' · مباشر':L.state==='retry'?' · إعادة الاتصال ('+L.tries+')':' · جارٍ الاتصال'));
-  if(L.stat&&L.stat.kbps)inf.push(Math.round(L.stat.kbps)+' kbps');if(L.stat&&L.stat.fps)inf.push(Math.round(L.stat.fps)+' fps');if(L.slow)inf.push('⚠ الشبكة بطيئة')}
+  if(L.stat&&L.stat.rx!=null)inf.push('↑ '+(L.stat.rx/1048576).toFixed(1)+' MB');if(L.stat&&L.stat.kbps)inf.push(Math.round(L.stat.kbps)+' kbps');if(L.stat&&L.stat.fps)inf.push(Math.round(L.stat.fps)+' fps');if(L.slow)inf.push('⚠ الشبكة بطيئة');
+  if(L.state==='live'&&Date.now()-L.t0>15000&&!(L.stat&&L.stat.kbps))inf.push('⏳ الإشارة لم تصل فيسبوك بعد')}
  if(RC.recording)inf.push('🎞 '+Math.round(RC.bytes/1048576)+' MB');
  $('rcInfo').textContent=inf.join(' · ');
  $('rcQ').disabled=RC.recording||liveOn;
@@ -2833,7 +2834,7 @@ async function rcPing(){const r=$('lvR').value.trim()||LIVE_RELAY,el=$('lvSt');
 function rcPingLoop(){clearTimeout(lvTm);const go=async()=>{if(!$('liveSet').open)return;const ok=await rcPing();if(!ok&&$('liveSet').open)lvTm=setTimeout(go,4000)};go()}
 $('lvR').onchange=rcPingLoop;
 $('lvX').onclick=()=>{clearTimeout(lvTm);$('liveSet').close()};
-$('lvFb').onclick=()=>window.open('https://www.facebook.com/live/producer','_blank','noopener');
+$('lvFb').onclick=async()=>{const u='https://www.facebook.com/live/producer';try{await navigator.clipboard.writeText(u);toast('📋 نُسخ الرابط. افتحه من الحاسوب')}catch(e){}if(!/iPhone|iPad|Android/i.test(navigator.userAgent))window.open(u,'_blank','noopener')};
 $('lvGo').onclick=()=>{say('lvE','');const t=$('lvT').value,k=$('lvK').value.trim(),u=$('lvU').value.trim(),r=$('lvR').value.trim()||LIVE_RELAY;
  if(!rcWs(r)){$('lvAdv').open=true;return say('lvE','⚠️ أدخل رابط خادم البث في «إعدادات متقدمة»')}
  if(t==='custom'?!u:!k)return say('lvE','⚠️ أدخل '+(t==='custom'?'عنوان RTMP':'مفتاح البث'));
@@ -2851,7 +2852,7 @@ function rcLiveConnect(){
   if(m.type==='ready'){L.state='live';L.tries=0;L.mode=m.mode;if(!L.t0)L.t0=Date.now();rcLiveRec();toast('📡 البث متصل. اضغط Go Live في فيسبوك عند ظهور المعاينة')}
   else if(m.type==='stats')L.stat=m;
   else if(m.type==='error'){L.fatal=true;L.endMsg='⛔ '+m.msg}
-  else if(m.type==='ended'){if(m.msg&&/رفضت|الحد|متصفحك/.test(m.msg))L.fatal=true;L.endMsg=m.msg}};
+  else if(m.type==='ended'){if(m.msg&&/رفضت|الحد|متصفحك|تعطّل/.test(m.msg))L.fatal=true;L.endMsg=m.msg+(m.detail?' ['+m.detail.slice(-90)+']':'')}};
  ws.onclose=()=>{rcLiveRecStop();if(!L.on||L.ws!==ws)return;if(L.user)return;if(L.fatal)return rcLiveEnd(L.endMsg||'انتهى البث');
   if(++L.tries>6)return rcLiveEnd('⚠️ انقطع البث وتعذّرت إعادة الاتصال');
   L.state='retry';setTimeout(()=>{if(RC.live===L&&L.on&&!L.user)rcLiveConnect()},3000)};
