@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
@@ -698,6 +698,9 @@ function rosterList(c, targetTeam){
     }
   }
 
+  if (typeof RO !== 'undefined' && RO[tId] && RO[tId][targetCat] && RO[tId][targetCat].length) {
+    return RO[tId][targetCat];
+  }
   if (store.teamRosters && store.teamRosters[tId] && store.teamRosters[tId][targetCat] && store.teamRosters[tId][targetCat].length) {
     return store.teamRosters[tId][targetCat];
   }
@@ -870,11 +873,19 @@ function addPlayerFromModal(){
     }
   });
 
+  if (typeof RO !== 'undefined') {
+    RO[tId] = RO[tId] || {};
+    RO[tId][c] = [...store.teamRosters[tId][c]];
+  }
   if (tId == 5) {
     store.customRosters = store.customRosters || {};
     store.customRosters[c] = [...store.teamRosters[5][c]];
   }
-  
+  try {
+    if (typeof db !== 'undefined' && db) {
+      db.collection('rosters').doc(tId + '_' + c).set({ teamId: +tId, cat: c, roster: store.teamRosters[tId][c] });
+    }
+  } catch(e) { console.error('Add roster error:', e); }
   save();
   refreshRoster();
   input.value = '';
@@ -902,10 +913,22 @@ function editPlayerFromModal(idx){
     return;
   }
   list[idx] = trimmed;
+  if (typeof RO !== 'undefined') {
+    RO[tId] = RO[tId] || {};
+    RO[tId][c] = [...list];
+  }
+  store.teamRosters = store.teamRosters || {};
+  store.teamRosters[tId] = store.teamRosters[tId] || {};
+  store.teamRosters[tId][c] = [...list];
   if (tId == 5) {
     store.customRosters = store.customRosters || {};
     store.customRosters[c] = [...list];
   }
+  try {
+    if (typeof db !== 'undefined' && db) {
+      db.collection('rosters').doc(tId + '_' + c).set({ teamId: +tId, cat: c, roster: list });
+    }
+  } catch(e) { console.error('Save roster error:', e); }
   save();
   refreshRoster();
   renderPlayersModalList();
@@ -927,10 +950,22 @@ function deletePlayerFromModal(idx){
     return;
   }
   list.splice(idx, 1);
+  if (typeof RO !== 'undefined') {
+    RO[tId] = RO[tId] || {};
+    RO[tId][c] = [...list];
+  }
+  store.teamRosters = store.teamRosters || {};
+  store.teamRosters[tId] = store.teamRosters[tId] || {};
+  store.teamRosters[tId][c] = [...list];
   if (tId == 5) {
     store.customRosters = store.customRosters || {};
     store.customRosters[c] = [...list];
   }
+  try {
+    if (typeof db !== 'undefined' && db) {
+      db.collection('rosters').doc(tId + '_' + c).set({ teamId: +tId, cat: c, roster: list });
+    }
+  } catch(e) { console.error('Delete roster error:', e); }
   save();
   refreshRoster();
   renderPlayersModalList();
@@ -2117,7 +2152,7 @@ function init(){
   $('app').hidden=false;
   draw();
 },()=>{$('app').hidden=false;draw();});
- listenPublic();
+ listenPublic(); listenPhotos();
  auth.onAuthStateChanged(onAuth);
  /* للزائر: رفع hidden عن التطبيق مباشرة */
  $('app').hidden=false;
@@ -2408,8 +2443,7 @@ const pid=(t,n)=>{let h=5381;const s=nrm(n);for(let i=0;i<s.length;i++)h=((h<<5)
 const photoOf=(t,n)=>{n=nrm(n);if(!n)return null;if(PH[t+'|'+n])return PH[t+'|'+n];const pre=t+'|',ks=Object.keys(PH).filter(x=>x.startsWith(pre)),nt=n.split(' '),ns=n.replace(/ /g,'');
  const k=ks.find(x=>{const y=x.slice(pre.length),ys=y.replace(/ /g,'');return y.includes(n)||n.includes(y)||ys===ns||(ys&&(ys.includes(ns)||ns.includes(ys)))})||ks.find(x=>{const yt=x.slice(pre.length).split(' ');return nt.length>=2&&yt.length>=2&&(nt.every(w=>yt.includes(w))||yt.every(w=>nt.includes(w)))});return k?PH[k]:null};
 const imgOf=s=>new Promise(r=>{if(!s)return r(null);const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=s});
-function listenPhotos(){
- const q=me.role==='admin'?db.collection('photos'):db.collection('photos').where('teamId','==',me.teamId);
+function listenPhotos(){ const q=db.collection('photos');
  subs.push(q.onSnapshot(s=>{s.docChanges().forEach(c=>{const d=c.doc.data(),k=d.teamId+'|'+nrm(d.name);if(c.type==='removed')delete PH[k];else PH[k]=d.img});if($('phd').open)drawPh()}))
 }
 async function resizePhoto(file){
@@ -2554,8 +2588,11 @@ async function posterMatch(r,h,a){
      if(!g.n)continue;
      const rawIm=photoOf(t,g.n);
      const im=rawIm?await imgOf(rawIm):null;
-     out.push({n:g.n,m:g.m,k:g.k||1,im});
+     if(im){
+       out.push({n:g.n,m:g.m,k:g.k||1,im});
+     }
    }
+   out.sort((a,b)=>(+(a.m||999))-(+(b.m||999)));
    return out;
  };
  // left=away(a)→v.ga | right=home(h)→v.gh
