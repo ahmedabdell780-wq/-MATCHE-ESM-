@@ -657,6 +657,50 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
 <p class="hint" id="vInfo" style="text-align:center;margin:6px 0"></p>
 <div class="act" style="margin-top:8px"><button class="btn" id="vGo" style="flex:1">⏺ إنشاء الفيديو</button><button class="btn" id="vShare" style="flex:1" hidden>📤 مشاركة (فيسبوك…)</button><button class="btn alt" id="vDl" style="flex:1" hidden>⬇️ تحميل</button></div>
 <div class="act" style="margin-top:8px"><button class="btn alt" id="vX" style="flex:1">إغلاق</button></div></dialog>
+
+<!-- نافذة تعديل صلاحيات الحساب (خاص بالمشرف العام) -->
+<dialog id="userPermModal" style="max-width:440px;width:92%;padding:18px 20px;border-radius:18px;border:1.5px solid var(--ln);box-shadow:0 20px 50px rgba(0,0,0,0.35);font-family:inherit;text-align:right">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;border-bottom:1px solid var(--ln);padding-bottom:10px">
+    <h3 style="margin:0;font-size:17px;color:#0f2a1c">🛡️ تعديل صلاحيات الحساب</h3>
+    <button type="button" id="closeUserPermModal" style="background:none;border:none;font-size:20px;cursor:pointer;color:#64748b">&times;</button>
+  </div>
+  
+  <div style="margin-bottom:12px">
+    <b id="upmUserName" style="font-size:15px;color:#0f2a1c"></b><br>
+    <small id="upmUserPhone" style="color:#64748b"></small>
+  </div>
+
+  <label style="font-weight:700;font-size:13px;display:block;margin-bottom:4px">الفريق التابع له:</label>
+  <select id="upmTeamSel" class="f" style="margin-bottom:12px">
+    <option value="0">👁️ زائر (بدون فريق محدد)</option>
+  </select>
+
+  <label style="font-weight:700;font-size:13px;display:block;margin-bottom:4px">الرتبة والدور (Role):</label>
+  <select id="upmRoleSel" class="f" style="margin-bottom:12px">
+    <option value="manager">مسؤول نادي (يدير ناديه فقط)</option>
+    <option value="admin">👑 مشرف عام (كامل الصلاحيات في المنصة)</option>
+  </select>
+
+  <label style="font-weight:700;font-size:13px;display:block;margin-bottom:4px">صلاحية إدخال وتعديل البيانات:</label>
+  <select id="upmPermSel" class="f" style="margin-bottom:12px">
+    <option value="full">✏️ صلاحية كاملة (تعديل التشكيلات، النتائج، واللاعبين)</option>
+    <option value="view_only">👁️ مشاهدة فقط (ممنوع من تعديل أي شيء)</option>
+  </select>
+
+  <label style="font-weight:700;font-size:13px;display:block;margin-bottom:4px">حالة الحساب (Status):</label>
+  <select id="upmStatusSel" class="f" style="margin-bottom:16px">
+    <option value="approved">✅ معتمد ونشط</option>
+    <option value="pending">⏳ قيد الانتظار</option>
+    <option value="suspended">⏸ مجمّد / معطل مؤقتاً</option>
+    <option value="deleted">🗑 محذوف (في سلة المحذوفات)</option>
+  </select>
+
+  <div class="act" style="margin:0">
+    <button type="button" class="btn" id="saveUserPermBtn" style="flex:1">💾 حفظ التعديلات</button>
+    <button type="button" class="btn alt" id="cancelUserPermBtn">إلغاء</button>
+  </div>
+</dialog>
+
 <div id="toast"></div>
 <select id="rr" hidden><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option></select><select id="upto" hidden><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option></select>
 <script>(function(){
@@ -2358,7 +2402,7 @@ let adminSec = 'users';
 function admin(){
  const p9=u=>String(u.phone||'').replace(/[٠-٩]/g,d=>d.charCodeAt(0)-1632).replace(/\D/g,'').slice(-9),dupP={};U.forEach(u=>{if(u.status!=='deleted'){const k=p9(u);if(k)dupP[k]=(dupP[k]||0)+1}});
  const rowDel=u=>`<div class="card u"><div><b>${esc(u.name)}</b><br><small>${u.kind==='visitor'?'👁️ زائر':esc(T[u.teamId]||'')} · ${esc(u.phone)}</small></div><div class="act" style="margin:0"><button class="btn sm" data-u="${u.id}" data-s="approved">↩ استرجاع واعتماد</button><button class="btn sm alt" data-u="${u.id}" data-s="pending">⏳ للانتظار</button><button class="btn sm red" data-uh="${u.id}" data-un="${esc(u.name)}">❌ حذف نهائي</button></div></div>`;
- const row=u=>u.status==='deleted'?rowDel(u):`<div class="card u"><div><b>${esc(u.name)}</b>${dupP[p9(u)]>1?' <span class="b no">رقم مكرر</span>':''}<br><small>${u.kind==='visitor'?'👁️ زائر (مشاهدة فقط)':esc(T[u.teamId]||'')} · <a href="tel:${esc(u.phone)}">${esc(u.phone)}</a>${u.status==='approved'&&u.kind!=='visitor'&&u.perm==='view_only'?' · 👁 مشاهدة فقط':''}</small></div><div class="act" style="margin:0">${u.status!=='approved'?`<button class="btn sm" data-u="${u.id}" data-s="approved">✅ اعتماد</button>`:''}${u.status==='approved'&&u.kind!=='visitor'?`<button class="btn sm alt" data-up="${u.id}" data-pm="${u.perm==='view_only'?'full':'view_only'}">${u.perm==='view_only'?'✏️ منح التعديل':'👁 مشاهدة فقط'}</button>`:''}${u.status!=='suspended'?`<button class="btn sm red" data-u="${u.id}" data-s="suspended">⏸ ${u.status==='pending'?'رفض':'تجميد'}</button>`:''}<button class="btn sm alt" data-ud="${u.id}" data-un="${esc(u.name)}" aria-label="حذف الحساب">🗑 حذف</button></div></div>`;
+ const row=u=>u.status==='deleted'?rowDel(u):`<div class="card u"><div><b>${esc(u.name)}</b>${dupP[p9(u)]>1?' <span class="b no">رقم مكرر</span>':''}<br><small>${u.kind==='visitor'?'👁️ زائر (مشاهدة فقط)':esc(T[u.teamId]||'')} · <a href="tel:${esc(u.phone)}">${esc(u.phone)}</a>${u.status==='approved'&&u.kind!=='visitor'&&u.perm==='view_only'?' · 👁 مشاهدة فقط':''}</small></div><div class="act" style="margin:0">${u.status!=='approved'?`<button class="btn sm" data-u="${u.id}" data-s="approved">✅ اعتماد</button>`:''}${u.status==='approved'&&u.kind!=='visitor'?`<button class="btn sm alt" data-up="${u.id}" data-pm="${u.perm==='view_only'?'full':'view_only'}">${u.perm==='view_only'?'✏️ منح التعديل':'👁 مشاهدة فقط'}</button>`:''}<button class="btn sm" data-uem="${u.id}" style="background:#0f2a1c;color:#fff" title="تعديل كافة الصلاحيات والفريق">🛡️ الصلاحيات</button>${u.status!=='suspended'?`<button class="btn sm red" data-u="${u.id}" data-s="suspended">⏸ ${u.status==='pending'?'رفض':'تجميد'}</button>`:''}<button class="btn sm alt" data-ud="${u.id}" data-un="${esc(u.name)}" aria-label="حذف الحساب">🗑 حذف</button></div></div>`;
  const pend=U.filter(u=>u.status==='pending'),oth=U.filter(u=>u.status!=='pending'&&u.status!=='deleted'),del=U.filter(u=>u.status==='deleted');
 
  const navBar = `<div class="adm-tabs">
@@ -2378,6 +2422,79 @@ function admin(){
  // Default: users
  return navBar + `<h2>⏳ بانتظار الموافقة (${pend.length})</h2>${pend.map(row).join('')||'<div class="card" style="color:var(--mu)">لا توجد طلبات معلقة</div>'}<h2>👥 الحسابات المعتمدة (${oth.length})</h2>${oth.map(row).join('')||'<div class="card" style="color:var(--mu)">لا توجد حسابات معتمدة</div>'}`;
 }
+
+
+/* ===== إدارة وتعديل صلاحيات الحسابات الشاملة للمشرف العام ===== */
+let activePermUserId = null;
+
+function openUserPermModal(uid){
+  const u = U.find(x => x.id === uid);
+  if(!u) return;
+  activePermUserId = uid;
+  
+  $('upmUserName').textContent = u.name || 'بدون اسم';
+  $('upmUserPhone').textContent = '📞 ' + (u.phone || 'بدون هاتف') + ' · ' + (T[u.teamId] || 'بدون فريق');
+  
+  // ملء خيارات الأندية
+  let teamOpts = '<option value="0">👁️ زائر (بدون فريق محدد)</option>';
+  for(let id in T){
+    teamOpts += `<option value="${id}" ${u.teamId == id ? 'selected' : ''}>⚽ ${T[id]}</option>`;
+  }
+  $('upmTeamSel').innerHTML = teamOpts;
+  
+  $('upmRoleSel').value = u.role || (u.kind === 'visitor' ? 'visitor' : 'manager');
+  $('upmPermSel').value = u.perm || 'full';
+  $('upmStatusSel').value = u.status || 'approved';
+  
+  $('userPermModal').showModal();
+}
+
+function closeUserPermModal(){
+  activePermUserId = null;
+  $('userPermModal').close();
+}
+
+$('closeUserPermModal').onclick = closeUserPermModal;
+$('cancelUserPermBtn').onclick = closeUserPermModal;
+
+$('saveUserPermBtn').onclick = async () => {
+  if(!activePermUserId) return;
+  const btn = $('saveUserPermBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ جارٍ الحفظ…';
+  
+  const teamId = +$('upmTeamSel').value;
+  const role = $('upmRoleSel').value;
+  const perm = $('upmPermSel').value;
+  const status = $('upmStatusSel').value;
+  
+  try{
+    await db.collection('users').doc(activePermUserId).update({
+      teamId: teamId,
+      role: role,
+      perm: perm,
+      status: status
+    });
+    
+    // تحديث الذاكرة المحلية فوراً
+    const u = U.find(x => x.id === activePermUserId);
+    if(u){
+      u.teamId = teamId;
+      u.role = role;
+      u.perm = perm;
+      u.status = status;
+    }
+    
+    closeUserPermModal();
+    draw();
+    toast('✅ تم تحديث كافة صلاحيات الحساب بنجاح');
+  }catch(e){
+    console.error('Update user perm error:', e);
+    toast('⛔ تعذر حفظ الصلاحيات: تحقق من القواعد أو الاتصال');
+  }
+  btn.disabled = false;
+  btn.textContent = '💾 حفظ التعديلات';
+};
 
 /* ---- أحداث ---- */
 document.addEventListener('click',async e=>{
@@ -2407,6 +2524,7 @@ document.addEventListener('click',async e=>{
  else if(b.dataset.e)openEdit(b.dataset.e)
  else if(b.dataset.ok)setSt(b.dataset.ok,'confirmed')
  else if(b.dataset.no)setSt(b.dataset.no,'disputed')
+ else if(b.dataset.uem){openUserPermModal(b.dataset.uem);return}
  else if(b.dataset.ud){const nm=b.dataset.un||'';if(!confirm('نقل حساب «'+nm+'» إلى المحذوفين؟\nيفقد الدخول فوراً، ويمكنك استرجاعه لاحقاً من قسم «المحذوفون».'))return;
      try{await db.collection('users').doc(b.dataset.ud).update({status:'deleted'});toast('🗑 نُقل إلى المحذوفين (يمكن استرجاعه)')}catch(x){toast('⛔ تعذر التنفيذ')}}
     else if(b.dataset.uh){const nm=b.dataset.un||'';if(!confirm('حذف «'+nm+'» نهائياً؟ لا يمكن التراجع، وسيحتاج للتسجيل من جديد.'))return;
