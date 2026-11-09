@@ -1512,7 +1512,14 @@ function getTeamLineupData(teamId) {
   store[key].lineups[teamId] = store[key].lineups[teamId] || { starters: [], bench: [], subs: [] };
   return store[key].lineups[teamId];
 }
+
+function getLeagueSusp(catName){
+  if(typeof window.computeCards === 'function') return window.computeCards(catName);
+  return { susp: [], tot: {}, yc: {}, thr: 3, redG: 1 };
+}
+
 function renderMatchLineupView() {
+
   if (!activeLineupMatch) return;
   const teamId = getActiveTeamId();
   const canEdit = canEditCurrentLineup();
@@ -1559,17 +1566,21 @@ function renderMatchLineupView() {
         // Check if substituted
         const subRecord = (data.subs || []).find(s => s.outName === p.name);
         const subNote = subRecord ? `<span style="color:#dc2626; font-size:10.5px; font-weight:bold; background:#fee2e2; padding:1px 6px; border-radius:4px;">خرج د${subRecord.minute} 🔻</span>` : '';
+        const isS = suspSet.has(nrm(p.name));
+        const suspNote = isS ? `<span style="color:#b91c1c; font-size:10.5px; font-weight:800; background:#fef2f2; border:1px solid #f87171; padding:1px 6px; border-radius:4px;">⚠️ معاقب وموقوف</span>` : '';
         const gkClass = p.isGk ? 'is-gk' : '';
         const capClass = p.isCaptain ? 'is-cap' : '';
 
         return `
-          <div class="lineup-player-chip ${gkClass} ${capClass}">
+          <div class="lineup-player-chip ${gkClass} ${capClass}" style="${isS ? 'border:1.5px solid #ef4444;background:#fff5f5;' : ''}">
             <div style="display:flex; align-items:center; gap:6px; overflow:hidden;">
               <span style="font-weight:900; color:#166534; font-size:13px; min-width:20px;">#${p.num || (idx+1)}</span>
               <span style="font-weight:700; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">${p.name}</span>
             </div>
             <div style="display:flex; align-items:center; gap:4px;">
               ${subNote}
+              ${suspNote}
+              <button type="button" onclick="if(window.openPlayerCard)window.openPlayerCard(${teamId}, '${p.name.replace(/'/g, "\\'")}')" title="بطاقة اللاعب" style="border:none; background:none; cursor:pointer; font-size:14px; padding:2px;">🪪</button>
               ${canEdit ? `
                 <button type="button" onclick="toggleStarterGk(${idx})" title="تحديد كحارس مرمى" style="border:none; background:none; cursor:pointer; font-size:14px; opacity:${p.isGk ? 1 : 0.35};">🧤</button>
                 <button type="button" onclick="toggleStarterCaptain(${idx})" title="تحديد كقائد الفريق" style="border:none; background:none; cursor:pointer; font-size:14px; opacity:${p.isCaptain ? 1 : 0.35};">Ⓒ</button>
@@ -1599,15 +1610,19 @@ function renderMatchLineupView() {
         // Check if entered
         const subRecord = (data.subs || []).find(s => s.inName === p.name);
         const subNote = subRecord ? `<span style="color:#16a34a; font-size:10.5px; font-weight:bold; background:#dcfce7; padding:1px 6px; border-radius:4px;">دخل د${subRecord.minute} 🔺</span>` : '';
+        const isS = suspSet.has(nrm(p.name));
+        const suspNote = isS ? `<span style="color:#b91c1c; font-size:10.5px; font-weight:800; background:#fef2f2; border:1px solid #f87171; padding:1px 6px; border-radius:4px;">⚠️ معاقب وموقوف</span>` : '';
 
         return `
-          <div class="lineup-player-chip">
+          <div class="lineup-player-chip" style="${isS ? 'border:1.5px solid #ef4444;background:#fff5f5;' : ''}">
             <div style="display:flex; align-items:center; gap:6px; overflow:hidden;">
               <span style="font-weight:900; color:#0369a1; font-size:13px; min-width:20px;">#${p.num || (idx+12)}</span>
               <span style="font-weight:700; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">${p.name}</span>
             </div>
             <div style="display:flex; align-items:center; gap:4px;">
               ${subNote}
+              ${suspNote}
+              <button type="button" onclick="if(window.openPlayerCard)window.openPlayerCard(${teamId}, '${p.name.replace(/'/g, "\\'")}')" title="بطاقة اللاعب" style="border:none; background:none; cursor:pointer; font-size:14px; padding:2px;">🪪</button>
               ${canEdit ? `
                 <button type="button" onclick="removeBench(${idx})" title="إزالة من الاحتياط" style="border:none; background:none; cursor:pointer; font-size:13px; color:#ef4444;">🗑️</button>
               ` : ''}
@@ -1660,7 +1675,7 @@ function updateLineupDropdowns() {
   // Compute suspensions for current round
   let suspSet = new Set();
   try {
-    const C_susp = computeCards(cat);
+    const C_susp = getLeagueSusp(cat);
     const r_curr = activeLineupMatch ? activeLineupMatch.round : 1;
     const suspList = (C_susp && C_susp.susp) ? C_susp.susp.filter(x => x.t == teamId && x.rounds.includes(r_curr)) : [];
     suspSet = new Set(suspList.map(x => nrm(x.n)));
@@ -1804,7 +1819,7 @@ function addBenchFromSelect() {
 
   // التحقق من عقوبات اللاعب
   try {
-    const C_susp = computeCards(cat);
+    const C_susp = getLeagueSusp(cat);
     const r_curr = activeLineupMatch ? activeLineupMatch.round : 1;
     if (C_susp && C_susp.susp && C_susp.susp.some(x => x.t == teamId && nrm(x.n) === nrm(name) && x.rounds.includes(r_curr))) {
       alert(`⛔ تحذير انضباطي: اللاعب [${name}] معاقب وموقوف في الجولة ${r_curr} (لتراكم الإنذارات أو بطاقة حمراء) ولا يمكن وضعه في دكة البدلاء!`);
@@ -2330,6 +2345,20 @@ function errTxt(e){const c=(e&&e.code)||'';
 
 
 /* ===== 🪪 بطاقة إحصائيات اللاعب (Player Card) ===== */
+
+function pCardPickerHtml(){
+  const tOpts = Object.keys(T).map(id => `<option value="${id}">${esc(T[id])}</option>`).join('');
+  return `
+  <div class="card" style="margin:10px 0 14px;padding:12px 14px;background:rgba(22,163,74,0.08);border:1.5px solid rgba(34,197,94,0.3);border-radius:14px">
+    <div style="font-size:13px;font-weight:800;color:#4ade80;margin-bottom:8px">🪪 استعراض بطاقة أي لاعب من كافة الأندية:</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <select id="pCardTeamPick" class="f" style="flex:1;min-width:130px"><option value="">اختر النادي...</option>${tOpts}</select>
+      <select id="pCardPlayerPick" class="f" style="flex:1;min-width:140px"><option value="">اختر لاعباً...</option></select>
+      <button type="button" class="btn" id="btnOpenSelectedPCard" style="background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;font-weight:800;padding:6px 16px">🪪 عرض</button>
+    </div>
+  </div>`;
+}
+
 function getPlayerStats(t, n){
   const norm = nrm(n);
   let goalsCat = 0, goalsTotal = 0;
@@ -2389,6 +2418,30 @@ function openPlayerCard(t, n){
   dlg.showModal();
 }
 
+function canvas0(w, h){
+  const cv = document.createElement('canvas');
+  cv.width = w; cv.height = h;
+  const c = cv.getContext('2d');
+  c.direction = 'rtl';
+  return [cv, c];
+}
+function drawText(c, str, x, y, sz, wt, col, align){
+  c.font = (wt || 700) + ' ' + sz + 'px Tajawal, system-ui, sans-serif';
+  c.fillStyle = col || '#ffffff';
+  c.textAlign = align || 'center';
+  c.textBaseline = 'middle';
+  c.fillText(str || '', x, y);
+}
+function fit(c, txt, maxW, maxSz, wt){
+  let sz = maxSz;
+  c.font = (wt || 700) + ' ' + sz + 'px Tajawal, system-ui, sans-serif';
+  while(sz > 10 && c.measureText(txt || '').width > maxW){
+    sz -= 2;
+    c.font = (wt || 700) + ' ' + sz + 'px Tajawal, system-ui, sans-serif';
+  }
+  return sz;
+}
+
 async function downloadPlayerCardImage(t, n){
   toast('⏳ جارٍ تجهيز بطاقة اللاعب كصورة…');
   const stats = getPlayerStats(t, n);
@@ -2423,9 +2476,9 @@ async function downloadPlayerCardImage(t, n){
   if(lgIm) c.drawImage(lgIm, 80, 70, 110, 110);
 
   // Top Banner
-  tx(c, 'رابطة ولاية تيبازة لكرة القدم', W/2, 110, 32, '#4ade80', 'center', 900);
-  tx(c, stats.teamName, W/2, 152, 26, '#e2e8f0', 'center', 700);
-  tx(c, `فئة ${stats.cat} · 2026/2027`, W/2, 188, 20, '#fef08a', 'center', 800);
+  drawText(c, 'رابطة ولاية تيبازة لكرة القدم', W/2, 110, 32, 900, '#4ade80', 'center');
+  drawText(c, stats.teamName, W/2, 152, 26, 700, '#e2e8f0', 'center');
+  drawText(c, `فئة ${stats.cat} · 2026/2027`, W/2, 188, 20, 800, '#fef08a', 'center');
 
   // Player Photo Circle
   const photoSrc = stats.photo;
@@ -2447,12 +2500,12 @@ async function downloadPlayerCardImage(t, n){
   } else {
     c.fillStyle = '#1e293b';
     c.fillRect(px - photoSize/2, py - photoSize/2, photoSize, photoSize);
-    tx(c, '⚽', px, py+35, 120, '#ffffff', 'center', 400);
+    drawText(c, '⚽', px, py, 110, 400, '#ffffff', 'center');
   }
   c.restore();
 
   // Player Name in Gold
-  tx(c, stats.n, W/2, 690, fit(c, stats.n, 800, 64, 900), '#fef08a', 'center', 900);
+  drawText(c, stats.n, W/2, 690, fit(c, stats.n, 800, 60, 900), 900, '#fef08a', 'center');
 
   // Stats Cards
   const boxW = 280, boxH = 170, gap = 30;
@@ -2475,15 +2528,15 @@ async function downloadPlayerCardImage(t, n){
     c.lineWidth = 1.5;
     c.stroke();
 
-    tx(c, st.val, bx + boxW/2, statsY + 75, 48, st.col, 'center', 900);
-    tx(c, st.lbl, bx + boxW/2, statsY + 130, 24, '#94a3b8', 'center', 700);
+    drawText(c, st.val, bx + boxW/2, statsY + 65, 44, 900, st.col, 'center');
+    drawText(c, st.lbl, bx + boxW/2, statsY + 125, 22, 700, '#94a3b8', 'center');
   });
 
   // Extra detail
-  tx(c, `إجمالي أهداف اللاعب في جميع الفئات: ${stats.goalsTotal} هدف`, W/2, 1020, 26, '#cbd5e1', 'center', 700);
+  drawText(c, `إجمالي أهداف اللاعب في جميع الفئات: ${stats.goalsTotal} هدف`, W/2, 1020, 24, 700, '#cbd5e1', 'center');
 
   // Footer
-  tx(c, 'الموقع الرسمي لرابطة تيبازة لكرة القدم', W/2, H-100, 26, '#4ade80', 'center', 800);
+  drawText(c, 'الموقع الرسمي لرابطة تيبازة لكرة القدم', W/2, H-100, 26, 800, '#4ade80', 'center');
 
   await OLD.saveImg(cv, `بطاقة-اللاعب-${stats.n}.png`);
   toast('✅ تم تحميل بطاقة اللاعب بنجاح!');
@@ -2576,9 +2629,9 @@ async function exportAllCatsRoundRecap(r){
   const lgIm = await imgOf(typeof LEAGUE!=='undefined'?LEAGUE:null);
   if(lgIm) c.drawImage(lgIm, W-140, 52, 120, 120);
 
-  tx(c, 'رابطة ولاية تيبازة لكرة القدم', W/2, 85, 34, '#4ade80', 'center', 900);
-  tx(c, `حصيلة نتائج الجولة ${r} · ${r<=11?'(ذهاب)':'(إياب)'}`, W/2, 138, 44, '#ffffff', 'center', 900);
-  tx(c, 'الفئات الشبانية: U15 · U17 · U20 · موسم 2026/2027', W/2, 178, 22, '#fef08a', 'center', 700);
+  drawText(c, 'رابطة ولاية تيبازة لكرة القدم', W/2, 85, 34, 900, '#4ade80', 'center');
+  drawText(c, `حصيلة نتائج الجولة ${r} · ${r<=11?'(ذهاب)':'(إياب)'}`, W/2, 138, 44, 900, '#ffffff', 'center');
+  drawText(c, 'الفئات الشبانية: U15 · U17 · U20 · موسم 2026/2027', W/2, 178, 22, 700, '#fef08a', 'center');
 
   const p = pairs(r);
   const matches = p.m;
@@ -2598,13 +2651,13 @@ async function exportAllCatsRoundRecap(r){
 
     const imH = await imgOf(OLD.DEF[h]);
     if(imH) c.drawImage(imH, W-130, y+35, 75, 75);
-    tx(c, T[h]||'', W-150, y+80, fit(c, T[h]||'', 240, 28, 900), '#ffffff', 'right', 900);
+    drawText(c, T[h]||'', W-150, y+75, fit(c, T[h]||'', 240, 28, 900), 900, '#ffffff', 'right');
 
     const imA = await imgOf(OLD.DEF[a]);
     if(imA) c.drawImage(imA, 55, y+35, 75, 75);
-    tx(c, T[a]||'', 145, y+80, fit(c, T[a]||'', 240, 28, 900), '#ffffff', 'left', 900);
+    drawText(c, T[a]||'', 145, y+75, fit(c, T[a]||'', 240, 28, 900), 900, '#ffffff', 'left');
 
-    tx(c, 'ضد', W/2, y+50, 20, 'rgba(255,255,255,0.5)', 'center', 800);
+    drawText(c, 'ضد', W/2, y+50, 20, 800, 'rgba(255,255,255,0.5)', 'center');
 
     const catBoxWidth = 180;
     const catSpacing = 20;
@@ -2629,22 +2682,21 @@ async function exportAllCatsRoundRecap(r){
       c.fillStyle = '#22c55e';
       rr(c, bx+10, by+10, 50, 24, 6);
       c.fill();
-      tx(c, ct, bx+35, by+27, 14, '#ffffff', 'center', 900);
+      drawText(c, ct, bx+35, by+23, 14, 900, '#ffffff', 'center');
 
-      tx(c, sc, bx+catBoxWidth - 55, by+50, 24, has ? '#fef08a' : '#94a3b8', 'center', 900);
+      drawText(c, sc, bx+catBoxWidth - 55, by+40, 24, 900, has ? '#fef08a' : '#94a3b8', 'center');
     });
   }
 
   if(p.bye){
-    tx(c, `المعفى من الجولة: ${T[p.bye]}`, W/2, H-90, 22, '#cbd5e1', 'center', 700);
+    drawText(c, `المعفى من الجولة: ${T[p.bye]}`, W/2, H-90, 22, 700, '#cbd5e1', 'center');
   }
 
-  tx(c, 'الموقع الرسمي لرابطة تيبازة لكرة القدم · الفئات الصغرى', W/2, H-50, 20, '#4ade80', 'center', 800);
+  drawText(c, 'الموقع الرسمي لرابطة تيبازة لكرة القدم · الفئات الصغرى', W/2, H-50, 20, 800, '#4ade80', 'center');
 
   await OLD.saveImg(cv, `حصيلة-نتائج-الجولة-${r}-الشاملة.png`);
   toast('✅ تم تحميل بوستر حصيلة الجولة الشاملة بنجاح!');
 }
-
 
 function init(){
  const cfg=window.ESM_FIREBASE;
@@ -2758,7 +2810,7 @@ function fixtures(){
   const k=K(cat,round,hm,aw),v=S[k],has=v&&v.sh!==undefined&&v.sh!=='';
   h+=`<div class="card mc" style="--c1:${tcs(hm)};--c2:${tcs(aw)}">${mh(hm,aw,has,v)}
   <div class="meta"><span>${mi(v)}</span>${has?stBadge(v):v&&v.pp?'<span class="b wt">⏳ مؤجلة</span>':v&&v.ex?'<span class="b no">معفاة</span>':''}</div>
-  <div class="act"><button class="btn sm alt" data-lu="${round}-${hm}-${aw}">📋 التشكيلة والتبديلات</button>${me?`<button class="btn sm alt" data-lp="${k}">🎽 ملصق التشكيلة</button>`:''}${me&&(me.role==='admin'||hm==me.teamId||aw==me.teamId)?`<button class="btn sm alt" data-ps="${round}-${hm}-${aw}">🖨 ورقة رسمية</button>`:''}${me&&me.role==='admin'?`<button class="btn sm alt" data-rec="${k}">🎥 تصوير مباشر</button>`:''}<button class="btn sm alt" data-mp="${round}-${hm}-${aw}">📣 ملصق المباراة</button>${me?`<button class="btn sm alt" data-mv="${round}-${hm}-${aw}">🎬 فيديو المباراة</button>`:''}${v&&(v.gh||v.ga)?`<button class="btn sm alt" data-gp="${k}">⚽ ملصق الهدف</button>`:''}${canEdit(hm,aw,v)?`<button class="btn sm" data-e="${k}">✏️ ${has?'تعديل النتيجة':'الموعد / النتيجة'}</button>`:''}${canConfirm(hm,aw,v)&&has?`<button class="btn sm" data-ok="${k}">✅ ${me.role==='admin'?'اعتماد':'تأكيد'}</button>${me.role!=='admin'?`<button class="btn sm red" data-no="${k}">❌ اعتراض</button>`:''}`:''}</div></div>`});
+  <div class="act"><button class="btn sm alt" data-lu="${round}-${hm}-${aw}">📋 التشكيلة والتبديلات</button>${me?`<button class="btn sm alt" data-lp="${k}">🎽 ملصق التشكيلة</button>`:''}${me&&(me.role==='admin'||hm==me.teamId||aw==me.teamId)?`<button class="btn sm alt" data-ps="${round}-${hm}-${aw}">🖨 ورقة رسمية</button>`:''}${me&&me.role==='admin'?`<button class="btn sm alt" data-rec="${k}">🎥 تصوير مباشر</button>`:''}<button class="btn sm alt" data-tl="${k}">⏱️ أحداث اللقاء</button><button class="btn sm alt" data-mp="${round}-${hm}-${aw}">📣 ملصق المباراة</button>${me?`<button class="btn sm alt" data-mv="${round}-${hm}-${aw}">🎬 فيديو المباراة</button>`:''}${v&&(v.gh||v.ga)?`<button class="btn sm alt" data-gp="${k}">⚽ ملصق الهدف</button>`:''}${canEdit(hm,aw,v)?`<button class="btn sm" data-e="${k}">✏️ ${has?'تعديل النتيجة':'الموعد / النتيجة'}</button>`:''}${canConfirm(hm,aw,v)&&has?`<button class="btn sm" data-ok="${k}">✅ ${me.role==='admin'?'اعتماد':'تأكيد'}</button>${me.role!=='admin'?`<button class="btn sm red" data-no="${k}">❌ اعتراض</button>`:''}`:''}</div></div>`});
  return h+`<div class="bye">🛌 مستريحة: ${esc(T[p.bye])}</div>`
 }
 function results(){
@@ -2813,7 +2865,7 @@ function scorers(){
  const[G,C]=OLD.tallies();
  const row=(i,o)=>`<div class="tr" data-pcard="${o.t}|${esc(o.n)}" style="grid-template-columns:30px 1fr 56px;cursor:pointer" title="انقر لعرض بطاقة اللاعب"><span class="rk ${i<3?['g1','g2','g3'][i]:''}">${i+1}</span><span class="nm">${LG[o.t]?lg(o.t):''}<span>${esc(o.n)}<br><small style="font-weight:500;opacity:.7">${esc(T[o.t]||'')}</small></span></span><b class="c p" style="width:auto;border-radius:20px">${o.c} ⚽</b></div>`;
  if(gsub==='c')return cardsPanel();
- let h=chips()+gsw()+`<div class="rh">🥅 ترتيب الهدافين · ${cat}</div>`+(G.length?G.slice(0,30).map((o,i)=>row(i,o)).join(''):'<div class="card" style="text-align:center;color:var(--mu)">لا يوجد هدافون مسجلون بعد</div>');
+ let h=chips()+gsw()+pCardPickerHtml()+`<div class="rh">🥅 ترتيب الهدافين · ${cat}</div>`+(G.length?G.slice(0,30).map((o,i)=>row(i,o)).join(''):'<div class="card" style="text-align:center;color:var(--mu)">لا يوجد هدافون مسجلون بعد</div>');
  if(C.length)h+=`<div class="rh" style="margin-top:14px">🟨🟥 بطاقات فريقنا</div>`+C.map(o=>`<div class="card u"><b>${esc(o.n)}</b><span>🟨 ${o.y} · 🟥 ${o.r}</span></div>`).join('');
  return h
 }
@@ -2920,6 +2972,12 @@ $('saveUserPermBtn').onclick = async () => {
 
 /* ---- أحداث ---- */
 document.addEventListener('click',async e=>{
+ const pc = e.target.closest('[data-pcard]');
+ if(pc && !e.target.closest('button')){
+   const parts = pc.dataset.pcard.split('|');
+   openPlayerCard(+parts[0], parts[1]);
+   return;
+ }
  const b=e.target.closest('button');if(!b)return;
  if(b.dataset.adms){adminSec=b.dataset.adms;draw()}
  else if(b.dataset.c){cat=b.dataset.c;round=firstOpen();up=0;draw()}
@@ -3154,6 +3212,12 @@ function openPh(){phTeam=me.role==='admin'?(+$('phTeamSel').value||5):me.teamId;
 $('phTeamSel').onchange=e=>{phTeam=+e.target.value;drawPh()};
 $('phc').onclick=()=>$('phd').close();
 $('phd').addEventListener('click',async e=>{
+ const pc = e.target.closest('[data-pcard]');
+ if(pc && !e.target.closest('button')){
+   const parts = pc.dataset.pcard.split('|');
+   openPlayerCard(+parts[0], parts[1]);
+   return;
+ }
  const b=e.target.closest('button');if(!b)return;const names=JSON.parse($('phList').dataset.names||'[]');
  if(b.dataset.pu!==undefined){phTarget=names[+b.dataset.pu];$('phf').value='';$('phf').click()}
  else if(b.dataset.pd!==undefined){const n=names[+b.dataset.pd];try{await db.collection('photos').doc(pid(phTeam,n)).delete();delete PH[phTeam+'|'+nrm(n)];drawPh();toast('🗑 حُذفت الصورة')}catch(x){toast('⛔ لا تملك الصلاحية')}}
@@ -3694,7 +3758,10 @@ function pickRow(k,t,inp){const el=$('pk'+k),ns=rosterNamesFor(t);
 function pickAdd(k,inp){const n=$('ps'+k).value,m=$('pm'+k).value.trim();if(!n)return toast('⚠️ اختر لاعباً أولاً');
  const el=$(inp),old=el.value.trim().replace(/[,،\s]+$/,'');el.value=(old?old+' ، ':'')+n+(m?' '+(+m)+"'":'');$('ps'+k).value='';$('pm'+k).value=''}
 const susCfg=()=>{const r=PUB.rules||{};return{thr:Math.max(2,+r.yellow||3),redG:Math.max(1,+r.red||1)}};
+window.computeCards = computeCards;
 function computeCards(c){
+ const susCfg=()=>{const r=PUB.rules||{};return{thr:Math.max(2,+r.yellow||3),redG:Math.max(1,+r.red||1)}};
+
  const{thr,redG}=susCfg(),yc={},tot={},susp=[],TR={};
  const trs=t=>TR[t]||(TR[t]=[...Array(22)].map((_,i)=>i+1).filter(r=>pairs(r).m.some(([h,a])=>h==t||a==t)));
  for(let r=1;r<=22;r++)pairs(r).m.forEach(([h,a])=>{const v=S[K(c,r,h,a)];if(!v||v.pp||v.ex)return;
