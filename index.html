@@ -325,6 +325,16 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
 .sbp{display:flex;align-items:center;gap:8px;min-width:112px;justify-content:center;padding:7px 15px;border-radius:18px;background:linear-gradient(180deg,#1d2b22,#0c1611);color:#fff;font-size:30px;font-weight:900;border:1.5px solid rgba(255,255,255,.14);box-shadow:0 8px 18px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.2)}
 .sbp i{font-style:normal;opacity:.45;font-size:22px}.sbp .gl{opacity:.85}.sbp .gl.w{color:#ffd54a;opacity:1;text-shadow:0 0 14px rgba(255,213,74,.55)}
 .vsb{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(180deg,#ffe27a,#e0a100);color:#1b1300;font-weight:900;font-size:21px;box-shadow:0 8px 18px rgba(224,161,0,.4),inset 0 2px 0 rgba(255,255,255,.55)}
+
+.badge-pill{position:absolute;top:2px;left:50%;transform:translateX(10px);background:#ef4444;color:#fff;font-size:10px;font-weight:900;border-radius:10px;padding:1px 5px;min-width:16px;text-align:center;box-shadow:0 0 6px rgba(239,68,68,0.8);animation:badgePulse 1.8s infinite}
+@keyframes badgePulse{0%,100%{transform:translateX(10px) scale(1)}50%{transform:translateX(10px) scale(1.15)}}
+
+
+.adm-tabs{display:flex;gap:6px;margin:0 0 14px;background:#e2e8f0;padding:4px;border-radius:12px}
+.adm-tab{flex:1;border:0;background:transparent;padding:10px 8px;border-radius:9px;font-family:inherit;font-weight:800;font-size:13px;color:#475569;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .18s}
+.adm-tab.active{background:#fff;color:#0f2a1c;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.adm-tab .badge-count{background:#ef4444;color:#fff;font-size:11px;padding:1px 6px;border-radius:10px;font-weight:900}
+
 </style>
 <script>window.ESM_FIREBASE={apiKey:"AIzaSyBSDRAZwpChKIXpRPVIUp0JtdfflLqPRfU",authDomain:"moubarati-l-w-t.firebaseapp.com",projectId:"moubarati-l-w-t",messagingSenderId:"582704281935",appId:"1:582704281935:web:aeb821d64b4de733386d3a"};</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -1068,9 +1078,18 @@ async function imgTbl(u){const S=standings(u),played=S.some(x=>x.p),n=S.length,r
  for(let row=-1,yy=-40;yy<H+200;row++,yy+=190){for(let xx=-120+(row%2?150:0);xx<W+200;xx+=300){c.save();c.translate(xx,yy);c.rotate(-0.42);c.fillStyle='rgba(15,107,58,.05)';c.fillText('ESM',0,0);c.lineWidth=4;c.strokeStyle='rgba(242,182,50,.14)';c.strokeText('ESM',0,0);c.restore()}}
  c.restore();
  c.strokeStyle='rgba(184,115,51,.12)';c.lineWidth=40;c.beginPath();c.arc(W*.97,H*.06,300,0,7);c.stroke();c.beginPath();c.arc(W*.02,H*.97,280,0,7);c.stroke();
- const[L,LG,CR]=await Promise.all([Promise.all(S.map(x=>img(x.id))),leagueImg(),crestImg()]);if(CR){const cw=104,ch=cw*CR.height/CR.width;c.drawImage(CR,26,10,cw,ch)}
+ const userTeamId = (currentUser && currentUser.teamId) ? currentUser.teamId : (typeof team !== 'undefined' ? team : 5);
+ const userTeamName = T[userTeamId] || 'الوفاق الرياضي مسلمون';
+ const userTeamSubtitle = (userTeamId == 5) ? 'الوفاق الرياضي مسلمون · ESM' : userTeamName;
+ const userCrest = (userTeamId == 5) ? await crestImg() : await img(userTeamId);
+ const[L,LG]=await Promise.all([Promise.all(S.map(x=>img(x.id))),leagueImg()]);
+ if(userCrest){
+   const cw=104,ch=cw*(userCrest.height||1)/(userCrest.width||1);
+   c.drawImage(userCrest,26,10,cw,Math.min(104,ch));
+ }
  c.fillStyle='#1e3f7a';rr(c,260,50,640,120,42);c.fill();
- tx(c,'ترتيب',580,98,66,'#fff','center',900);tx(c,'الوفاق الرياضي مسلمون · ESM',580,148,32,'#f2d27a','center',800);
+ tx(c,'ترتيب',580,98,66,'#fff','center',900);
+ tx(c,userTeamSubtitle,580,148,32,'#f2d27a','center',800);
  c.fillStyle='#fdf8ec';rr(c,400,180,360,58,29);c.fill();c.strokeStyle='#1e3f7a';c.lineWidth=3;rr(c,400,180,360,58,29);c.stroke();tx(c,'الموسم 2026/2027',580,211,32,'#1e3f7a','center',900);
  const LX=1108,LY=62;c.fillStyle='#fdf8ec';c.beginPath();c.arc(LX,LY,52,0,7);c.fill();c.save();c.beginPath();c.arc(LX,LY,52,0,7);c.clip();
  if(LG)c.drawImage(LG,LX-52,LY-52,104,104);c.restore();
@@ -2184,7 +2203,7 @@ function init(){
  /* للزائر: رفع hidden عن التطبيق مباشرة */
  $('app').hidden=false;
  draw();
- if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+ logVisitorPresence(); if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
 async function onAuth(u){
  if(reg)return;
@@ -2195,7 +2214,31 @@ async function onAuth(u){
  if(!p||(p.role!=='admin'&&p.status!=='approved')){
   await auth.signOut();say('le',p&&p.status==='suspended'?'⛔ الحساب معطّل من المشرف العام. تواصل معه عبر الواتساب.':p&&p.status==='deleted'?'⚠️ حُذف حسابك من قِبل المشرف. إن كان ذلك بالخطأ فتواصل معه ليسترجعه.':p?'⏳ حسابك بانتظار موافقة المشرف العام. سيُفعَّل قريباً.':'⚠️ لا توجد بيانات لهذا الحساب. أرسل «طلب إنشاء حساب» أو تواصل مع المشرف.');return}
  me=Object.assign({uid:u.uid},p);
- if(me.role==='admin')subs.push(db.collection('users').onSnapshot(s=>{U=s.docs.filter(d=>d.data().role!=='admin').map(d=>Object.assign({id:d.id},d.data()));draw()}));
+ if(me.role==='admin'){
+  let prevPendingCount = -1;
+  subs.push(db.collection('users').onSnapshot(s=>{
+    U=s.docs.filter(d=>d.data().role!=='admin').map(d=>Object.assign({id:d.id},d.data()));
+    const pendCount = U.filter(u=>u.status==='pending').length;
+    updateAppBadge(pendCount);
+    
+    // إذا وصل طلب جديد وكان التطبيق مفتوحاً
+    if(prevPendingCount !== -1 && pendCount > prevPendingCount){
+      playNotifSound();
+      toast('🔔 لديك ' + (pendCount - prevPendingCount) + ' طلب إنشاء حساب جديد!');
+      if('Notification' in window && Notification.permission === 'granted'){
+        try{
+          new Notification('منصة مباريات رابطة تيبازة', {
+            body: '👤 طلب إنشاء حساب جديد بانتظار موافقتك',
+            icon: 'icon-192.png',
+            badge: 'icon-192.png'
+          });
+        }catch(e){}
+      }
+    }
+    prevPendingCount = pendCount;
+    draw();
+  }));
+}
  const f=firstOpen();round=f;
  OLD.state({user:{role:me.role==='admin'?'admin':(isVis()?'visitor':'official'),teamId:me.teamId,name:me.name}});
  subs.push((me.role==='admin'?db.collection('rosters'):db.collection('rosters').where('teamId','==',me.teamId)).onSnapshot(s=>{
@@ -2290,7 +2333,7 @@ function standings(){
 const loadStart=()=>OLD.load(S);
 async function poster(k){
  if(!up)up=lastRound();
- OLD.load(S);OLD.state({cat,team:me.role==='admin'?5:me.teamId,round,rosters:RO});
+ OLD.load(S);OLD.state({cat,team:me?(me.role==='admin'?5:me.teamId):5,round,rosters:RO,user:me?{role:me.role==='admin'?'admin':'official',teamId:me.teamId,name:me.name}:null});
  $('rr').value=round;$('upto').value=up;toast('⏳ جاري إنشاء الصورة…');
  await OLD.shot(k==='s'?'t':'r')
 }
@@ -2311,20 +2354,38 @@ function scorers(){
 let HL={team:'',color:'#f59e0b'};try{Object.assign(HL,JSON.parse(localStorage.getItem('esm-hl')||'{}'))}catch(e){}
 const hlSave=()=>{try{localStorage.setItem('esm-hl',JSON.stringify(HL))}catch(e){}};
 const HLC=['#f59e0b','#ef4444','#3b82f6','#8b5cf6','#10b981','#ec4899'];
+let adminSec = 'users';
 function admin(){
  const p9=u=>String(u.phone||'').replace(/[٠-٩]/g,d=>d.charCodeAt(0)-1632).replace(/\D/g,'').slice(-9),dupP={};U.forEach(u=>{if(u.status!=='deleted'){const k=p9(u);if(k)dupP[k]=(dupP[k]||0)+1}});
  const rowDel=u=>`<div class="card u"><div><b>${esc(u.name)}</b><br><small>${u.kind==='visitor'?'👁️ زائر':esc(T[u.teamId]||'')} · ${esc(u.phone)}</small></div><div class="act" style="margin:0"><button class="btn sm" data-u="${u.id}" data-s="approved">↩ استرجاع واعتماد</button><button class="btn sm alt" data-u="${u.id}" data-s="pending">⏳ للانتظار</button><button class="btn sm red" data-uh="${u.id}" data-un="${esc(u.name)}">❌ حذف نهائي</button></div></div>`;
  const row=u=>u.status==='deleted'?rowDel(u):`<div class="card u"><div><b>${esc(u.name)}</b>${dupP[p9(u)]>1?' <span class="b no">رقم مكرر</span>':''}<br><small>${u.kind==='visitor'?'👁️ زائر (مشاهدة فقط)':esc(T[u.teamId]||'')} · <a href="tel:${esc(u.phone)}">${esc(u.phone)}</a>${u.status==='approved'&&u.kind!=='visitor'&&u.perm==='view_only'?' · 👁 مشاهدة فقط':''}</small></div><div class="act" style="margin:0">${u.status!=='approved'?`<button class="btn sm" data-u="${u.id}" data-s="approved">✅ اعتماد</button>`:''}${u.status==='approved'&&u.kind!=='visitor'?`<button class="btn sm alt" data-up="${u.id}" data-pm="${u.perm==='view_only'?'full':'view_only'}">${u.perm==='view_only'?'✏️ منح التعديل':'👁 مشاهدة فقط'}</button>`:''}${u.status!=='suspended'?`<button class="btn sm red" data-u="${u.id}" data-s="suspended">⏸ ${u.status==='pending'?'رفض':'تجميد'}</button>`:''}<button class="btn sm alt" data-ud="${u.id}" data-un="${esc(u.name)}" aria-label="حذف الحساب">🗑 حذف</button></div></div>`;
  const pend=U.filter(u=>u.status==='pending'),oth=U.filter(u=>u.status!=='pending'&&u.status!=='deleted'),del=U.filter(u=>u.status==='deleted');
- return`<h2>⏳ بانتظار الموافقة (${pend.length})</h2>${pend.map(row).join('')||'<div class="card" style="color:var(--mu)">لا توجد طلبات</div>'}<h2>👥 الحسابات (${oth.length})</h2>${oth.map(row).join('')||'<div class="card" style="color:var(--mu)">لا توجد حسابات</div>'}${del.length?`<h2>🗑 المحذوفون (${del.length})</h2>${del.map(row).join('')}`:''}<h2>📊 ملصق الترتيب المعتمد</h2><div class="card">${chips()}<select id="us" class="f">${Array.from({length:22},(_,i)=>`<option value="${i+1}" ${i+1===(up||lastRound())?'selected':''}>بعد الجولة ${i+1}</option>`).join('')}</select><label>🎯 تظليل فريق في الملصق (اختياري)</label><select id="hlT" class="f"><option value="">— بدون تظليل —</option>${Object.keys(T).map(i=>`<option value="${i}" ${String(HL.team)===i?'selected':''}>${esc(T[i])}</option>`).join('')}</select><div class="swatches">${HLC.map(c=>`<button type="button" class="sw" data-hc="${c}" style="background:${c}" aria-label="لون" aria-pressed="${HL.color===c}"></button>`).join('')}<input type="color" id="hlC" value="${HL.color}" aria-label="لون مخصص"></div><button class="btn" id="adminPoster" style="width:100%;margin-top:8px">إنشاء الملصق</button></div>${bkCard()}${rulesCard()}<h2>🧰 أدوات</h2><div class="card"><button class="btn" id="mig" style="width:100%;margin-bottom:8px">🔒 نقل التشكيلات القديمة إلى مساحة خاصة</button><button class="btn alt" id="seed" style="width:100%">استيراد نتائج الجولات 1-3 السابقة</button></div>`
+
+ const navBar = `<div class="adm-tabs">
+   <button type="button" class="adm-tab ${adminSec==='users'?'active':''}" data-adms="users">👥 الحسابات والطلبات ${pend.length?`<span class="badge-count">${pend.length}</span>`:''}</button>
+   <button type="button" class="adm-tab ${adminSec==='trash'?'active':''}" data-adms="trash">🗑 سلة المحذوفات ${del.length?`<span class="badge-count" style="background:#64748b">${del.length}</span>`:''}</button>
+   <button type="button" class="adm-tab ${adminSec==='tools'?'active':''}" data-adms="tools">⚙️ الملصق والأدوات</button>
+ </div>`;
+
+ if(adminSec === 'trash'){
+   return navBar + `<h2>🗑 سلة المحذوفات (${del.length})</h2><p class="hint" style="margin-top:-6px;margin-bottom:12px">يمكنك استرجاع أي حساب محذوف وإعادته للعمل فوراً، أو حذفه نهائياً من قاعدة البيانات.</p>${del.map(rowDel).join('')||'<div class="card" style="color:var(--mu);text-align:center;padding:24px">سلة المحذوفات فارغة ✅</div>'}`;
+ }
+
+ if(adminSec === 'tools'){
+   return navBar + `<h2>📊 ملصق الترتيب المعتمد</h2><div class="card">${chips()}<select id="us" class="f">${Array.from({length:22},(_,i)=>`<option value="${i+1}" ${i+1===(up||lastRound())?'selected':''}>بعد الجولة ${i+1}</option>`).join('')}</select><label>🎯 تظليل فريق في الملصق (اختياري)</label><select id="hlT" class="f"><option value="">— بدون تظليل —</option>${Object.keys(T).map(i=>`<option value="${i}" ${String(HL.team)===i?'selected':''}>${esc(T[i])}</option>`).join('')}</select><div class="swatches">${HLC.map(c=>`<button type="button" class="sw" data-hc="${c}" style="background:${c}" aria-label="لون" aria-pressed="${HL.color===c}"></button>`).join('')}<input type="color" id="hlC" value="${HL.color}" aria-label="لون مخصص"></div><button class="btn" id="adminPoster" style="width:100%;margin-top:8px">إنشاء الملصق</button></div>${bkCard()}${rulesCard()}<h2>🧰 أدوات</h2><div class="card"><button class="btn" id="mig" style="width:100%;margin-bottom:8px">🔒 نقل التشكيلات القديمة إلى مساحة خاصة</button><button class="btn alt" id="seed" style="width:100%">استيراد نتائج الجولات 1-3 السابقة</button></div>`;
+ }
+
+ // Default: users
+ return navBar + `<h2>⏳ بانتظار الموافقة (${pend.length})</h2>${pend.map(row).join('')||'<div class="card" style="color:var(--mu)">لا توجد طلبات معلقة</div>'}<h2>👥 الحسابات المعتمدة (${oth.length})</h2>${oth.map(row).join('')||'<div class="card" style="color:var(--mu)">لا توجد حسابات معتمدة</div>'}`;
 }
 
 /* ---- أحداث ---- */
 document.addEventListener('click',async e=>{
  const b=e.target.closest('button');if(!b)return;
- if(b.dataset.c){cat=b.dataset.c;round=firstOpen();up=0;draw()}
+ if(b.dataset.adms){adminSec=b.dataset.adms;draw()}
+ else if(b.dataset.c){cat=b.dataset.c;round=firstOpen();up=0;draw()}
  else if(b.dataset.r){round=+b.dataset.r;draw()}
- else if(b.dataset.t){tab=b.dataset.t;document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-pressed',x===b));draw()}
+ else if(b.dataset.t){tab=b.dataset.t;document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-pressed',x===b));if(tab==='a'&&me&&me.role==='admin'){/* clear or reduce badge */ const p=U.filter(u=>u.status==='pending').length; updateAppBadge(p); } draw()}
  else if(b.dataset.lu){const[r,h,a]=b.dataset.lu.split('-').map(Number);OLD.load(S);OLD.state({cat,round:r,rosters:RO,team:me?(me.role==='admin'?5:me.teamId):5});OLD.lineup(r,h,a)}
  else if(b.dataset.lp)openLp(b.dataset.lp)
  else if(b.dataset.mv){const[r,h,a]=b.dataset.mv.split('-').map(Number);OLD.load(S);OLD.state({cat,rosters:RO});openVid(r,h,a)}
@@ -2497,7 +2558,7 @@ async function put(k,h,a,data){
       const local=JSON.parse(localStorage.getItem('esm_scores')||'{}');
       local[k]={key:k,home:h,away:a,data,by:me.uid,_local:true,_ts:Date.now()};
       localStorage.setItem('esm_scores',JSON.stringify(local));
-      toast('⚠️ حُفظ محلياً — تحقق من صلاحيات Firebase أو اتصالك');
+      toast('⚠️ تعذر الحفظ السحابي (' + (e.code||e.message||'خطأ غير معروف') + ') — تم الحفظ محلياً');
     }catch(le){}
   }
 }
@@ -3115,7 +3176,45 @@ function cardsPanel(){
 function rulesCard(){const c=susCfg();
  return`<h2>🚫 قواعد الإيقاف</h2><div class="card"><label>عدد الإنذارات المؤدية إلى إيقاف مباراة</label><select class="f" id="ruY">${[2,3,4,5].map(n=>`<option ${n===c.thr?'selected':''}>${n}</option>`).join('')}</select><label>مباريات الإيقاف بعد الطرد</label><select class="f" id="ruR">${[1,2,3].map(n=>`<option ${n===c.redG?'selected':''}>${n}</option>`).join('')}</select><button class="btn" id="ruSave" style="width:100%;margin-top:8px">💾 حفظ القواعد</button></div>`}
 async function ruleSave(){try{await db.collection('public').doc('rules').set({yellow:+$('ruY').value,red:+$('ruR').value});toast('✅ حُفظت قواعد الإيقاف')}catch(e){toast('⛔ تعذّر الحفظ: انشر القواعد الجديدة أولاً')}}
-function listenPublic(){db.collection('public').onSnapshot(sn=>{sn.docChanges().forEach(c=>{if(c.type==='removed')delete PUB[c.doc.id];else PUB[c.doc.id]=c.doc.data()});if(typeof pubChanged==='function')pubChanged();draw()},()=>{})}
+
+// تسجيل نشاط الزائر للمشرف
+function logVisitorPresence(){
+  try{
+    if(typeof db !== 'undefined' && db && (!me || me.role !== 'admin')){
+      const visId = localStorage.getItem('esm_vid') || ('v_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,6));
+      localStorage.setItem('esm_vid', visId);
+      db.collection('public').doc('presence').set({
+        lastVisit: Date.now(),
+        visitorId: visId,
+        team: (me && me.teamId) ? T[me.teamId] : 'زائر عام',
+        platform: navigator.userAgent.includes('Mobile') ? 'هاتف' : 'حاسوب'
+      }, { merge: true }).catch(()=>{});
+    }
+  }catch(e){}
+}
+
+
+let lastNotifiedVisit = Date.now();
+function checkVisitorAlert(data){
+  if(me && me.role === 'admin' && data && data.lastVisit){
+    if(data.lastVisit > lastNotifiedVisit + 3000){ // زائر جديد بعد فتح المشرف
+      lastNotifiedVisit = data.lastVisit;
+      playNotifSound();
+      toast('👁️ زائر جديد يتصفح المنصة الآن (' + (data.team || 'زائر') + ' · ' + (data.platform || '') + ')');
+      if('Notification' in window && Notification.permission === 'granted'){
+        try{
+          new Notification('منصة مباريات رابطة تيبازة', {
+            body: '👁️ زائر جديد دخل المنصة الآن (' + (data.team || 'زائر') + ')',
+            icon: 'icon-192.png',
+            badge: 'icon-192.png'
+          });
+        }catch(e){}
+      }
+    }
+  }
+}
+
+function listenPublic(){db.collection('public').onSnapshot(sn=>{sn.docChanges().forEach(c=>{if(c.type==='removed')delete PUB[c.doc.id];else { PUB[c.doc.id]=c.doc.data(); if(c.doc.id==='presence') checkVisitorAlert(c.doc.data()); }});if(typeof pubChanged==='function')pubChanged();draw()},()=>{})}
 
 /* ===== ورقة المباراة الرسمية للطباعة / PDF ===== */
 function printSheet(r,h,a){
@@ -3182,7 +3281,63 @@ $('rcLink').onclick=()=>{const v=prompt('الصق رابط بث المباراة
 /* ===== إشعارات الهاتف (Firebase Cloud Messaging) ===== */
 const PUSH_VAPID='BMgd447Tutv717mdq1iUkEybai4yahbQYn7vZ5LX0FzttB3HZCJGBhoL-MKgYe_lyYYxSX9lSPR44hLHRlNB29Y'; /* الصق هنا مفتاح الويب (VAPID) من Firebase ← Cloud Messaging ← Web Push certificates */
 const relayHttp=()=>{const r=(lsGet(LK.r)||LIVE_RELAY||'').trim().replace(/\/+$/,'').replace(/\/live$/,'');return r?r.replace(/^ws/,'http'):''};
-async function pushNotify(o){try{const base=relayHttp();if(!base||!auth||!auth.currentUser)return;const token=await auth.currentUser.getIdToken();
+async 
+/* ===== نظام الشارات الحمراء (App Badge) والإشعارات الفورية ===== */
+function playNotifSound(){
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+    osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15); // A5
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.35);
+  }catch(e){}
+}
+
+function updateAppBadge(count){
+  try{
+    if('setAppBadge' in navigator){
+      if(count > 0){
+        navigator.setAppBadge(count).catch(()=>{});
+      }else{
+        navigator.clearAppBadge().catch(()=>{});
+      }
+    }
+  }catch(e){}
+  
+  // تحديث الشارة الحمراء على زر الإدارة في الشريط السفلي
+  const btn = $('na');
+  if(btn){
+    let b = btn.querySelector('.badge-pill');
+    if(count > 0){
+      if(!b){
+        b = document.createElement('span');
+        b.className = 'badge-pill';
+        btn.appendChild(b);
+      }
+      b.textContent = count > 99 ? '99+' : count;
+      b.style.display = 'inline-block';
+    }else if(b){
+      b.style.display = 'none';
+    }
+  }
+}
+
+// طلب إذن الإشعارات عند التفاعل
+function askNotifPermission(){
+  if('Notification' in window && Notification.permission === 'default'){
+    Notification.requestPermission().catch(()=>{});
+  }
+}
+document.addEventListener('click', askNotifPermission, { once: true });
+
+function pushNotify(o){try{const base=relayHttp();if(!base||!auth||!auth.currentUser)return;const token=await auth.currentUser.getIdToken();
  fetch(base+'/notify',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(Object.assign({token},o)),keepalive:true}).catch(()=>{})}catch(e){}}
 const pushSupported=()=>'serviceWorker' in navigator&&'Notification' in window&&window.firebase&&firebase.messaging&&firebase.messaging.isSupported&&firebase.messaging.isSupported();
 function pushUi(){const b=$('pushBtn'),h=$('pushHint');if(!b)return;const on=!!lsGet('esmPush')&&('Notification' in window)&&Notification.permission==='granted';
