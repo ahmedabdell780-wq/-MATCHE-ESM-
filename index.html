@@ -3399,7 +3399,7 @@ $('rcLink').onclick=()=>{const v=prompt('الصق رابط بث المباراة
 /* ===== إشعارات الهاتف (Firebase Cloud Messaging) ===== */
 const PUSH_VAPID='BMgd447Tutv717mdq1iUkEybai4yahbQYn7vZ5LX0FzttB3HZCJGBhoL-MKgYe_lyYYxSX9lSPR44hLHRlNB29Y'; /* الصق هنا مفتاح الويب (VAPID) من Firebase ← Cloud Messaging ← Web Push certificates */
 const relayHttp=()=>{const r=(lsGet(LK.r)||LIVE_RELAY||'').trim().replace(/\/+$/,'').replace(/\/live$/,'');return r?r.replace(/^ws/,'http'):''};
-async 
+
 /* ===== نظام الشارات الحمراء (App Badge) والإشعارات الفورية ===== */
 function playNotifSound(){
   try{
@@ -3455,7 +3455,7 @@ function askNotifPermission(){
 }
 document.addEventListener('click', askNotifPermission, { once: true });
 
-function pushNotify(o){try{const base=relayHttp();if(!base||!auth||!auth.currentUser)return;const token=await auth.currentUser.getIdToken();
+async function pushNotify(o){try{const base=relayHttp();if(!base||!auth||!auth.currentUser)return;const token=await auth.currentUser.getIdToken();
  fetch(base+'/notify',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(Object.assign({token},o)),keepalive:true}).catch(()=>{})}catch(e){}}
 const pushSupported=()=>'serviceWorker' in navigator&&'Notification' in window&&window.firebase&&firebase.messaging&&firebase.messaging.isSupported&&firebase.messaging.isSupported();
 function pushUi(){const b=$('pushBtn'),h=$('pushHint');if(!b)return;const on=!!lsGet('esmPush')&&('Notification' in window)&&Notification.permission==='granted';
