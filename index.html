@@ -701,6 +701,79 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
   </div>
 </dialog>
 
+
+<!-- 🪪 بطاقة إحصائيات اللاعب (Player Card) -->
+<dialog id="playerCardModal" style="max-width:390px;width:92%;padding:0;border-radius:24px;border:none;background:transparent;box-shadow:0 25px 60px rgba(0,0,0,0.55);overflow:hidden;font-family:inherit;text-align:right">
+  <div style="background:linear-gradient(150deg, #0b2216 0%, #06150e 60%, #030a07 100%);border:2px solid rgba(74,222,128,0.3);border-radius:24px;padding:24px 20px 20px;position:relative;color:#fff;box-shadow:inset 0 0 50px rgba(34,197,94,0.1)">
+    <button type="button" id="closePlayerCardModal" style="position:absolute;top:14px;left:14px;background:rgba(255,255,255,0.12);border:none;color:#fff;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center">&times;</button>
+    
+    <!-- Top Bar: Club Crest, Category Badge, League Logo -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:14px">
+      <img id="pCardClubLogo" src="" style="width:48px;height:48px;object-fit:contain" alt="">
+      <div style="text-align:center">
+        <span id="pCardCatBadge" style="display:inline-block;background:rgba(34,197,94,0.15);border:1px solid #22c55e;color:#4ade80;font-size:12px;font-weight:900;padding:2px 12px;border-radius:12px;letter-spacing:1px">U15</span>
+        <div id="pCardTeamName" style="font-size:13.5px;font-weight:800;color:#e2e8f0;margin-top:4px">النادي</div>
+      </div>
+      <img id="pCardLeagueLogo" src="icon-192.png" style="width:46px;height:46px;object-fit:contain;border-radius:50%" alt="">
+    </div>
+
+    <!-- Player Photo -->
+    <div style="display:flex;justify-content:center;margin:12px 0 14px">
+      <div style="width:125px;height:125px;border-radius:50%;padding:4px;background:linear-gradient(135deg, #eab308, #22c55e);box-shadow:0 10px 28px rgba(0,0,0,0.5);position:relative">
+        <img id="pCardPhoto" src="" style="width:100%;height:100%;border-radius:50%;object-fit:cover;background:#1e293b" alt="">
+        <span id="pCardRk" style="position:absolute;bottom:-4px;right:4px;background:#eab308;color:#000;font-size:11.5px;font-weight:900;padding:3px 8px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,0.4)">⚽ لاعب</span>
+      </div>
+    </div>
+
+    <!-- Player Name -->
+    <h3 id="pCardPlayerName" style="margin:0;font-size:21px;font-weight:900;text-align:center;color:#fef08a;text-shadow:0 2px 10px rgba(0,0,0,0.6)">اسم اللاعب</h3>
+
+    <!-- Stats Grid -->
+    <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;margin:20px 0 16px">
+      <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:12px 6px;text-align:center">
+        <div style="font-size:22px;font-weight:900;color:#4ade80" id="pCardGoals">0</div>
+        <div style="font-size:11.5px;color:#94a3b8;margin-top:2px;font-weight:700">⚽ الأهداف</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:12px 6px;text-align:center">
+        <div style="font-size:22px;font-weight:900;color:#facc15" id="pCardYellow">0</div>
+        <div style="font-size:11.5px;color:#94a3b8;margin-top:2px;font-weight:700">🟨 إنذارات</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:12px 6px;text-align:center">
+        <div style="font-size:22px;font-weight:900;color:#f87171" id="pCardRed">0</div>
+        <div style="font-size:11.5px;color:#94a3b8;margin-top:2px;font-weight:700">🟥 طرد</div>
+      </div>
+    </div>
+
+    <!-- Status / Suspension Badge -->
+    <div id="pCardSuspBadge" style="display:none;background:rgba(239,68,68,0.18);border:1px solid #ef4444;color:#fca5a5;padding:8px 12px;border-radius:12px;font-size:12.5px;font-weight:800;text-align:center;margin-bottom:16px">
+      ⚠️ اللاعب معاقب وموقوف في الجولة الحالية
+    </div>
+
+    <!-- Actions -->
+    <div style="display:flex;gap:10px">
+      <button type="button" id="btnDownloadPlayerCard" class="btn" style="flex:1;background:linear-gradient(135deg, #16a34a, #15803d);color:#fff;border:none;font-weight:900;font-size:14px;border-radius:14px;padding:12px 16px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 14px rgba(22,163,74,0.35)">
+        <span>📸 حفظ البطاقة كصورة (Story)</span>
+      </button>
+    </div>
+  </div>
+</dialog>
+
+<!-- ⏱️ نافذة تفاصيل وأحداث اللقاء المباشرة (Match Live Timeline) -->
+<dialog id="matchTimelineModal" style="max-width:440px;width:94%;padding:0;border-radius:22px;border:1.5px solid var(--ln);background:var(--card,#122419);box-shadow:0 25px 60px rgba(0,0,0,0.55);overflow:hidden;font-family:inherit;text-align:right">
+  <div style="padding:16px 18px 12px;background:linear-gradient(135deg, #0d3820, #092013);color:#fff;border-bottom:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:space-between">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:24px">⏱️</span>
+      <div>
+        <h3 id="timelineModalTitle" style="margin:0;font-size:16px;font-weight:800;color:#fef08a">أحداث المباراة</h3>
+        <p id="timelineModalSubtitle" style="margin:2px 0 0;font-size:12px;opacity:0.85;color:#cbd5e1">الجولة · الفئة · النتيجة</p>
+      </div>
+    </div>
+    <button type="button" id="closeTimelineModal" style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px">&times;</button>
+  </div>
+  <div id="timelineContainer" style="padding:18px 16px;max-height:60vh;overflow-y:auto">
+  </div>
+</dialog>
+
 <div id="toast"></div>
 <select id="rr" hidden><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option></select><select id="upto" hidden><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option></select>
 <script>(function(){
@@ -1584,19 +1657,34 @@ function updateLineupDropdowns() {
   const benchNames = (data.bench || []).map(p => p.name);
 
   // Quick Starter Dropdown: available players not in starters or bench
+  // Compute suspensions for current round
+  let suspSet = new Set();
+  try {
+    const C_susp = computeCards(cat);
+    const r_curr = activeLineupMatch ? activeLineupMatch.round : 1;
+    const suspList = (C_susp && C_susp.susp) ? C_susp.susp.filter(x => x.t == teamId && x.rounds.includes(r_curr)) : [];
+    suspSet = new Set(suspList.map(x => nrm(x.n)));
+  } catch(e) {}
+
   const starterSel = document.getElementById('quickPickStarterSelect');
   if (starterSel) {
     const avail = fullRoster.filter(n => !starterNames.includes(n) && !benchNames.includes(n));
     starterSel.innerHTML = '<option value="">＋ اختر لاعباً من قائمة النادي...</option>' + 
-      avail.map(n => `<option value="${n}">${n}</option>`).join('');
+      avail.map(n => {
+        const isS = suspSet.has(nrm(n));
+        return `<option value="${n}" ${isS ? 'style="color:#ef4444;font-weight:bold"' : ''}>${isS ? '🚫 [معاقب وموقوف] ' : ''}${n}</option>`;
+      }).join('');
   }
 
   // Quick Bench Dropdown: available players not in starters or bench
   const benchSel = document.getElementById('quickPickBenchSelect');
   if (benchSel) {
     const avail = fullRoster.filter(n => !starterNames.includes(n) && !benchNames.includes(n));
-    benchSel.innerHTML = '<option value="">＋ اختر لاعباً من قائمة النادي...</option>' + 
-      avail.map(n => `<option value="${n}">${n}</option>`).join('');
+    benchSel.innerHTML = '<option value="">＋ اختر لاعباً لدكة البدلاء...</option>' + 
+      avail.map(n => {
+        const isS = suspSet.has(nrm(n));
+        return `<option value="${n}" ${isS ? 'style="color:#ef4444;font-weight:bold"' : ''}>${isS ? '🚫 [معاقب وموقوف] ' : ''}${n}</option>`;
+      }).join('');
   }
 
   // Sub Out Dropdown: current active players on pitch
@@ -1713,6 +1801,16 @@ function addBenchFromSelect() {
     alert('يرجى اختيار لاعب لدكة البدلاء.');
     return;
   }
+
+  // التحقق من عقوبات اللاعب
+  try {
+    const C_susp = computeCards(cat);
+    const r_curr = activeLineupMatch ? activeLineupMatch.round : 1;
+    if (C_susp && C_susp.susp && C_susp.susp.some(x => x.t == teamId && nrm(x.n) === nrm(name) && x.rounds.includes(r_curr))) {
+      alert(`⛔ تحذير انضباطي: اللاعب [${name}] معاقب وموقوف في الجولة ${r_curr} (لتراكم الإنذارات أو بطاقة حمراء) ولا يمكن وضعه في دكة البدلاء!`);
+      return;
+    }
+  } catch(e) {}
 
   data.bench = data.bench || [];
   data.bench.push({
@@ -2230,6 +2328,324 @@ function errTxt(e){const c=(e&&e.code)||'';
  if(c.includes('user-disabled'))return'⛔ هذا الحساب معطّل، تواصل مع المشرف';
  return'⚠️ تعذّر تنفيذ العملية، أعد المحاولة. ('+(c||'خطأ غير معروف')+')'}
 
+
+/* ===== 🪪 بطاقة إحصائيات اللاعب (Player Card) ===== */
+function getPlayerStats(t, n){
+  const norm = nrm(n);
+  let goalsCat = 0, goalsTotal = 0;
+  Object.keys(S).forEach(k => {
+    const v = S[k]; if (!v) return;
+    const parts = k.includes('|') ? [k.split('|')[0], ...k.split('|')[1].split(/[:-]/)] : ['U15', ...k.split(/[:-]/)];
+    const c = parts[0], h = parts[2], a = parts[3];
+    if (h != t && a != t) return;
+    const gh = (h == t ? v.gh : v.ga) || '';
+    parseG(gh).forEach(e => {
+      if (e.n && nrm(e.n) === norm) {
+        goalsTotal += e.k;
+        if (c === cat) goalsCat += e.k;
+      }
+    });
+  });
+  const C = computeCards(cat);
+  const cardData = (C && C.tot && C.tot[t + '|' + norm]) || { y: 0, r: 0 };
+  const isSusp = (C && C.susp && C.susp.some(x => x.t == t && nrm(x.n) === norm && x.rounds.includes(round))) || false;
+  return {
+    t, n, norm, teamName: T[t] || '',
+    photo: photoOf(t, n),
+    goalsCat, goalsTotal,
+    yellow: cardData.y || 0,
+    red: cardData.r || 0,
+    isSusp,
+    cat
+  };
+}
+
+let curPlayerCard = null;
+function openPlayerCard(t, n){
+  const stats = getPlayerStats(t, n);
+  curPlayerCard = { t, n };
+  const dlg = $('playerCardModal');
+  if(!dlg) return;
+  $('pCardClubLogo').src = LG[t] || '';
+  $('pCardTeamName').textContent = stats.teamName;
+  $('pCardCatBadge').textContent = stats.cat;
+  $('pCardPlayerName').textContent = stats.n;
+  $('pCardGoals').textContent = stats.goalsCat;
+  $('pCardYellow').textContent = stats.yellow;
+  $('pCardRed').textContent = stats.red;
+  
+  const photoEl = $('pCardPhoto');
+  if(stats.photo){
+    photoEl.src = stats.photo;
+  } else {
+    photoEl.src = LG[t] || 'icon-192.png';
+  }
+
+  const suspEl = $('pCardSuspBadge');
+  if(suspEl){
+    suspEl.style.display = stats.isSusp ? 'block' : 'none';
+  }
+
+  dlg.showModal();
+}
+
+async function downloadPlayerCardImage(t, n){
+  toast('⏳ جارٍ تجهيز بطاقة اللاعب كصورة…');
+  const stats = getPlayerStats(t, n);
+  const W=1080, H=1440;
+  const[cv, c]=canvas0(W, H);
+
+  // Background
+  const bg=c.createLinearGradient(0, 0, 0, H);
+  bg.addColorStop(0, '#04170d');
+  bg.addColorStop(0.5, '#0b2e1c');
+  bg.addColorStop(1, '#020b06');
+  c.fillStyle=bg;
+  c.fillRect(0, 0, W, H);
+
+  // Golden Card Border
+  c.save();
+  c.strokeStyle='rgba(234, 179, 8, 0.45)';
+  c.lineWidth=6;
+  rr(c, 40, 40, W-80, H-80, 40);
+  c.stroke();
+  c.restore();
+
+  // Inner glow
+  c.fillStyle='rgba(0,0,0,0.3)';
+  rr(c, 50, 50, W-100, H-100, 36);
+  c.fill();
+
+  // Club Crest & League Crest
+  const imClub = await imgOf(OLD.DEF[t]);
+  if(imClub) c.drawImage(imClub, W-190, 70, 110, 110);
+  const lgIm = await imgOf(typeof LEAGUE!=='undefined'?LEAGUE:null);
+  if(lgIm) c.drawImage(lgIm, 80, 70, 110, 110);
+
+  // Top Banner
+  tx(c, 'رابطة ولاية تيبازة لكرة القدم', W/2, 110, 32, '#4ade80', 'center', 900);
+  tx(c, stats.teamName, W/2, 152, 26, '#e2e8f0', 'center', 700);
+  tx(c, `فئة ${stats.cat} · 2026/2027`, W/2, 188, 20, '#fef08a', 'center', 800);
+
+  // Player Photo Circle
+  const photoSrc = stats.photo;
+  const pImg = photoSrc ? await imgOf(photoSrc) : null;
+  const photoSize = 340;
+  const px = W/2;
+  const py = 430;
+
+  c.save();
+  c.beginPath();
+  c.arc(px, py, photoSize/2 + 10, 0, Math.PI*2);
+  c.fillStyle = '#eab308';
+  c.fill();
+  c.beginPath();
+  c.arc(px, py, photoSize/2, 0, Math.PI*2);
+  c.clip();
+  if(pImg){
+    c.drawImage(pImg, px - photoSize/2, py - photoSize/2, photoSize, photoSize);
+  } else {
+    c.fillStyle = '#1e293b';
+    c.fillRect(px - photoSize/2, py - photoSize/2, photoSize, photoSize);
+    tx(c, '⚽', px, py+35, 120, '#ffffff', 'center', 400);
+  }
+  c.restore();
+
+  // Player Name in Gold
+  tx(c, stats.n, W/2, 690, fit(c, stats.n, 800, 64, 900), '#fef08a', 'center', 900);
+
+  // Stats Cards
+  const boxW = 280, boxH = 170, gap = 30;
+  const totalBoxesW = 3*boxW + 2*gap;
+  const startBx = W/2 - totalBoxesW/2;
+  const statsY = 760;
+
+  const statItems = [
+    { val: stats.goalsCat + ' ⚽', lbl: 'الأهداف المسجلة', col: '#4ade80' },
+    { val: stats.yellow + ' 🟨', lbl: 'بطاقات صفراء', col: '#facc15' },
+    { val: stats.red + ' 🟥', lbl: 'بطاقات حمراء', col: '#f87171' }
+  ];
+
+  statItems.forEach((st, idx) => {
+    const bx = startBx + idx*(boxW + gap);
+    c.fillStyle = 'rgba(255,255,255,0.06)';
+    rr(c, bx, statsY, boxW, boxH, 24);
+    c.fill();
+    c.strokeStyle = 'rgba(255,255,255,0.12)';
+    c.lineWidth = 1.5;
+    c.stroke();
+
+    tx(c, st.val, bx + boxW/2, statsY + 75, 48, st.col, 'center', 900);
+    tx(c, st.lbl, bx + boxW/2, statsY + 130, 24, '#94a3b8', 'center', 700);
+  });
+
+  // Extra detail
+  tx(c, `إجمالي أهداف اللاعب في جميع الفئات: ${stats.goalsTotal} هدف`, W/2, 1020, 26, '#cbd5e1', 'center', 700);
+
+  // Footer
+  tx(c, 'الموقع الرسمي لرابطة تيبازة لكرة القدم', W/2, H-100, 26, '#4ade80', 'center', 800);
+
+  await OLD.saveImg(cv, `بطاقة-اللاعب-${stats.n}.png`);
+  toast('✅ تم تحميل بطاقة اللاعب بنجاح!');
+}
+
+/* ===== ⏱️ تفاصيل وأحداث اللقاء المباشرة (Match Live Timeline) ===== */
+function openMatchTimeline(k){
+  const m=/^(?:([A-Z0-9]+)\|)?(\d+)[:-](\d+)-(\d+)$/.exec(k);
+  if(!m)return;
+  const c=m[1]||cat, r=+m[2], h=+m[3], a=+m[4], v=S[k]||{};
+  const dlg = $('matchTimelineModal');
+  if(!dlg)return;
+  $('timelineModalTitle').textContent = `⏱️ أحداث لقاء: ${T[h]} ضد ${T[a]}`;
+  const scoreText = (v.sh!==undefined && v.sh!=='') ? `[ ${v.sh} - ${v.sa} ]` : 'لم تُسجل النتيجة بعد';
+  $('timelineModalSubtitle').textContent = `الجولة ${r} · ${c} · النتيجة: ${scoreText}`;
+  
+  const events = [];
+  parseG(v.gh).forEach(e => events.push({ min: +(e.m || 999), rawMin: e.m, type: 'goal', team: h, text: `⚽ هدف لصالح ${T[h]}: ${e.n}${e.k > 1 ? ` (×${e.k})` : ''}` }));
+  parseG(v.ga).forEach(e => events.push({ min: +(e.m || 999), rawMin: e.m, type: 'goal', team: a, text: `⚽ هدف لصالح ${T[a]}: ${e.n}${e.k > 1 ? ` (×${e.k})` : ''}` }));
+  parseG(v.yh).forEach(e => events.push({ min: +(e.m || 999), rawMin: e.m, type: 'yellow', team: h, text: `🟨 بطاقة صفراء (${T[h]}): ${e.n}` }));
+  parseG(v.ya).forEach(e => events.push({ min: +(e.m || 999), rawMin: e.m, type: 'yellow', team: a, text: `🟨 بطاقة صفراء (${T[a]}): ${e.n}` }));
+  parseG(v.rh).forEach(e => events.push({ min: +(e.m || 999), rawMin: e.m, type: 'red', team: h, text: `🟥 بطاقة حمراء طرد (${T[h]}): ${e.n}` }));
+  parseG(v.ra).forEach(e => events.push({ min: +(e.m || 999), rawMin: e.m, type: 'red', team: a, text: `🟥 بطاقة حمراء طرد (${T[a]}): ${e.n}` }));
+  
+  const lk = LU[k] || {};
+  [h, a].forEach(t => {
+    const subs = (lk[t] && lk[t].subs) || [];
+    subs.forEach(s => {
+      events.push({ min: +(s.minute || 999), rawMin: s.minute, type: 'sub', team: t, text: `🔄 تبديل (${T[t]}): خروج [${s.outName}] ⬅️ دخول [${s.inName}]` });
+    });
+  });
+
+  events.sort((x, y) => x.min - y.min);
+
+  const container = $('timelineContainer');
+  if(!events.length){
+    container.innerHTML = '<div style="text-align:center;padding:30px 10px;color:var(--mu,#94a3b8);font-size:13px">لا توجد أحداث (أهداف أو بطاقات أو تبديلات) مسجلة لهذه المباراة بعد.</div>';
+  } else {
+    container.innerHTML = `
+      <div style="position:relative;padding-right:20px;border-right:2px dashed rgba(34,197,94,0.4);margin-right:12px;display:flex;flex-direction:column;gap:12px">
+        ${events.map(ev => {
+          const color = ev.type==='goal' ? '#4ade80' : ev.type==='yellow' ? '#facc15' : ev.type==='red' ? '#f87171' : '#60a5fa';
+          const icon = ev.type==='goal' ? '⚽' : ev.type==='yellow' ? '🟨' : ev.type==='red' ? '🟥' : '🔄';
+          const minLabel = ev.rawMin ? `${ev.rawMin}'` : '⏱️';
+          return `
+            <div style="position:relative;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:8px 12px;display:flex;align-items:center;justify-content:space-between">
+              <span style="position:absolute;right:-29px;top:50%;transform:translateY(-50%);width:16px;height:16px;border-radius:50%;background:#0f2a1c;border:2px solid ${color}"></span>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:16px">${icon}</span>
+                <span style="font-size:12.5px;font-weight:700;color:#f1f5f9">${esc(ev.text)}</span>
+              </div>
+              <span style="background:rgba(255,255,255,0.08);color:${color};font-size:11.5px;font-weight:900;padding:2px 8px;border-radius:8px">${minLabel}</span>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  }
+  dlg.showModal();
+}
+
+/* ===== 🖼️ بوستر حصيلة الجولة الشامل (Round Recap Poster - U15·U17·U20) ===== */
+async function exportAllCatsRoundRecap(r){
+  toast('⏳ جارٍ تجهيز بوستر حصيلة الجولة الشاملة لكافة الفئات…');
+  const W=1200, H=1920;
+  const[cv, c]=canvas0(W, H);
+  
+  const bg=c.createLinearGradient(0, 0, 0, H);
+  bg.addColorStop(0, '#061c12');
+  bg.addColorStop(0.5, '#0a2e1d');
+  bg.addColorStop(1, '#030f09');
+  c.fillStyle=bg;
+  c.fillRect(0, 0, W, H);
+  
+  c.save();
+  c.strokeStyle='rgba(255,255,255,0.035)';
+  c.lineWidth=3;
+  c.strokeRect(30, 30, W-60, H-60);
+  c.beginPath(); c.arc(W/2, H/2, 220, 0, Math.PI*2); c.stroke();
+  c.beginPath(); c.moveTo(30, H/2); c.lineTo(W-30, H/2); c.stroke();
+  c.restore();
+
+  c.fillStyle='rgba(0,0,0,0.35)';
+  rr(c, 40, 36, W-80, 160, 24);
+  c.fill();
+  c.strokeStyle='rgba(34,197,94,0.3)';
+  c.lineWidth=1.5;
+  c.stroke();
+
+  const lgIm = await imgOf(typeof LEAGUE!=='undefined'?LEAGUE:null);
+  if(lgIm) c.drawImage(lgIm, W-140, 52, 120, 120);
+
+  tx(c, 'رابطة ولاية تيبازة لكرة القدم', W/2, 85, 34, '#4ade80', 'center', 900);
+  tx(c, `حصيلة نتائج الجولة ${r} · ${r<=11?'(ذهاب)':'(إياب)'}`, W/2, 138, 44, '#ffffff', 'center', 900);
+  tx(c, 'الفئات الشبانية: U15 · U17 · U20 · موسم 2026/2027', W/2, 178, 22, '#fef08a', 'center', 700);
+
+  const p = pairs(r);
+  const matches = p.m;
+  const startY = 220;
+  const rowHeight = 245;
+
+  for(let i=0; i<matches.length; i++){
+    const [h, a] = matches[i];
+    const y = startY + i*rowHeight;
+    
+    c.fillStyle='rgba(10, 35, 22, 0.75)';
+    rr(c, 40, y, W-80, rowHeight - 20, 20);
+    c.fill();
+    c.strokeStyle='rgba(255,255,255,0.08)';
+    c.lineWidth=1;
+    c.stroke();
+
+    const imH = await imgOf(OLD.DEF[h]);
+    if(imH) c.drawImage(imH, W-130, y+35, 75, 75);
+    tx(c, T[h]||'', W-150, y+80, fit(c, T[h]||'', 240, 28, 900), '#ffffff', 'right', 900);
+
+    const imA = await imgOf(OLD.DEF[a]);
+    if(imA) c.drawImage(imA, 55, y+35, 75, 75);
+    tx(c, T[a]||'', 145, y+80, fit(c, T[a]||'', 240, 28, 900), '#ffffff', 'left', 900);
+
+    tx(c, 'ضد', W/2, y+50, 20, 'rgba(255,255,255,0.5)', 'center', 800);
+
+    const catBoxWidth = 180;
+    const catSpacing = 20;
+    const catTotalW = 3*catBoxWidth + 2*catSpacing;
+    const catStartX = W/2 - catTotalW/2;
+
+    ['U15', 'U17', 'U20'].forEach((ct, cIdx) => {
+      const bx = catStartX + cIdx*(catBoxWidth + catSpacing);
+      const by = y + 120;
+      const k = K(ct, r, h, a);
+      const v = S[k];
+      const has = v && v.sh!==undefined && v.sh!=='' && v.sh!=null;
+      const sc = v && v.ex ? 'معفاة' : v && v.pp ? 'مؤجلة' : has ? `${v.sh} - ${v.sa}` : '-';
+
+      c.fillStyle='rgba(0,0,0,0.45)';
+      rr(c, bx, by, catBoxWidth, 75, 14);
+      c.fill();
+      c.strokeStyle = has ? '#22c55e' : 'rgba(255,255,255,0.1)';
+      c.lineWidth = 1;
+      c.stroke();
+
+      c.fillStyle = '#22c55e';
+      rr(c, bx+10, by+10, 50, 24, 6);
+      c.fill();
+      tx(c, ct, bx+35, by+27, 14, '#ffffff', 'center', 900);
+
+      tx(c, sc, bx+catBoxWidth - 55, by+50, 24, has ? '#fef08a' : '#94a3b8', 'center', 900);
+    });
+  }
+
+  if(p.bye){
+    tx(c, `المعفى من الجولة: ${T[p.bye]}`, W/2, H-90, 22, '#cbd5e1', 'center', 700);
+  }
+
+  tx(c, 'الموقع الرسمي لرابطة تيبازة لكرة القدم · الفئات الصغرى', W/2, H-50, 20, '#4ade80', 'center', 800);
+
+  await OLD.saveImg(cv, `حصيلة-نتائج-الجولة-${r}-الشاملة.png`);
+  toast('✅ تم تحميل بوستر حصيلة الجولة الشاملة بنجاح!');
+}
+
+
 function init(){
  const cfg=window.ESM_FIREBASE;
  $('rt').innerHTML=Object.keys(T).map(i=>`<option value="${i}">${esc(T[i])}</option>`).join('');
@@ -2346,9 +2762,15 @@ function fixtures(){
  return h+`<div class="bye">🛌 مستريحة: ${esc(T[p.bye])}</div>`
 }
 function results(){
- const p=pairs(round);let h=chips()+rnd()+`<button class="btn alt" data-shot="r" style="width:100%;margin-bottom:10px">📷 حفظ الجولة كصورة</button><div class="rh">نتائج الجولة ${round} · ${round<=11?'ذهاب':'إياب'} · ${cat}</div>`;
- p.m.forEach(([hm,aw])=>{const v=S[K(cat,round,hm,aw)],has=v&&v.sh!==undefined&&v.sh!=='';
-  h+=`<div class="card rs mc" style="--c1:${tcs(hm)};--c2:${tcs(aw)}">${mh(hm,aw,has,v)}${has&&v.status!=='confirmed'?'<div class="meta" style="justify-content:center">'+stBadge(v)+'</div>':''}</div>`});
+ const p=pairs(round);
+ const recapBar = `<div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap"><button class="btn alt" data-shot="r" style="flex:1;min-width:140px">📷 حفظ الفئة (${cat})</button><button class="btn" id="btnAllCatsRecap" style="flex:1;min-width:170px;background:linear-gradient(135deg,#059669,#047857);color:#fff;font-weight:800">🖼️ حصيلة الجولة الشاملة (U15·U17·U20)</button></div>`;
+ let h=chips()+rnd()+recapBar+`<div class="rh">نتائج الجولة ${round} · ${round<=11?'ذهاب':'إياب'} · ${cat}</div>`;
+ p.m.forEach(([hm,aw])=>{
+  const k=K(cat,round,hm,aw),v=S[k],has=v&&v.sh!==undefined&&v.sh!=='';
+  const hasEvents = v&&(v.gh||v.ga||v.yh||v.ya||v.rh||v.ra);
+  h+=`<div class="card rs mc" style="--c1:${tcs(hm)};--c2:${tcs(aw)}">${mh(hm,aw,has,v)}
+  <div class="meta" style="justify-content:center;gap:8px">${has&&v.status!=='confirmed'?stBadge(v):''}${hasEvents?`<button class="btn sm alt" data-tl="${k}" style="padding:2px 10px;font-size:11.5px">⏱️ أحداث اللقاء</button>`:''}</div></div>`
+ });
  return h+`<div class="bye">🛌 معفى من هذه الجولة: ${esc(T[p.bye])}</div>`
 }
 function tbl(c,up){
@@ -2389,7 +2811,7 @@ async function posterAdmin(){
 function scorers(){
  OLD.load(S);OLD.state({cat,team:me?(me.role==='admin'?5:me.teamId):5,rosters:RO||{}});
  const[G,C]=OLD.tallies();
- const row=(i,o)=>`<div class="tr" style="grid-template-columns:30px 1fr 56px"><span class="rk ${i<3?['g1','g2','g3'][i]:''}">${i+1}</span><span class="nm">${LG[o.t]?lg(o.t):''}<span>${esc(o.n)}<br><small style="font-weight:500;opacity:.7">${esc(T[o.t]||'')}</small></span></span><b class="c p" style="width:auto;border-radius:20px">${o.c} ⚽</b></div>`;
+ const row=(i,o)=>`<div class="tr" data-pcard="${o.t}|${esc(o.n)}" style="grid-template-columns:30px 1fr 56px;cursor:pointer" title="انقر لعرض بطاقة اللاعب"><span class="rk ${i<3?['g1','g2','g3'][i]:''}">${i+1}</span><span class="nm">${LG[o.t]?lg(o.t):''}<span>${esc(o.n)}<br><small style="font-weight:500;opacity:.7">${esc(T[o.t]||'')}</small></span></span><b class="c p" style="width:auto;border-radius:20px">${o.c} ⚽</b></div>`;
  if(gsub==='c')return cardsPanel();
  let h=chips()+gsw()+`<div class="rh">🥅 ترتيب الهدافين · ${cat}</div>`+(G.length?G.slice(0,30).map((o,i)=>row(i,o)).join(''):'<div class="card" style="text-align:center;color:var(--mu)">لا يوجد هدافون مسجلون بعد</div>');
  if(C.length)h+=`<div class="rh" style="margin-top:14px">🟨🟥 بطاقات فريقنا</div>`+C.map(o=>`<div class="card u"><b>${esc(o.n)}</b><span>🟨 ${o.y} · 🟥 ${o.r}</span></div>`).join('');
@@ -2522,6 +2944,9 @@ document.addEventListener('click',async e=>{
  else if(b.id==='plBtn'){OLD.load(S);OLD.state({cat,rosters:RO});OLD.players(cat,me.role==='admin'?5:me.teamId)}
  else if(b.dataset.shot)poster(b.dataset.shot)
  else if(b.dataset.e)openEdit(b.dataset.e)
+ else if(b.dataset.tl)openMatchTimeline(b.dataset.tl)
+ else if(b.id==='btnAllCatsRecap')exportAllCatsRoundRecap(round)
+ else if(b.dataset.pcard){const parts=b.dataset.pcard.split('|');openPlayerCard(+parts[0],parts[1])}
  else if(b.dataset.ok)setSt(b.dataset.ok,'confirmed')
  else if(b.dataset.no)setSt(b.dataset.no,'disputed')
  else if(b.dataset.uem){openUserPermModal(b.dataset.uem);return}
@@ -3283,7 +3708,7 @@ function computeCards(c){
 function cardsPanel(){
  const C=computeCards(cat),R0=crd||firstOpen(),now=C.susp.filter(x=>x.rounds.includes(R0)),sid=new Set(now.map(x=>x.t+'|'+nrm(x.n)));
  const near=Object.entries(C.tot).filter(([id,o])=>!sid.has(id)&&C.yc[id]%C.thr===C.thr-1).map(([,o])=>o);
- const line=(x,cls,rs)=>`<div class="sus ${cls}">${LG[x.t]?lg(x.t):''}<div><b>${esc(x.n)}</b><small>${esc(T[x.t]||'')}</small></div><span class="rs">${rs}</span></div>`;
+ const line=(x,cls,rs)=>`<div class="sus ${cls}" data-pcard="${x.t}|${esc(x.n)}" style="cursor:pointer" title="انقر لعرض بطاقة اللاعب">${LG[x.t]?lg(x.t):''}<div><b>${esc(x.n)}</b><small>${esc(T[x.t]||'')}</small></div><span class="rs">${rs}</span></div>`;
  const all=Object.values(C.tot).sort((a,b)=>b.r-a.r||b.y-a.y||a.n.localeCompare(b.n,'ar')).slice(0,40);
  return chips()+gsw()+`<div class="rnd"><button class="btn sm" data-cr="${R0+1}" ${R0>=22?'disabled':''}>›</button><b style="flex:1;text-align:center">الجولة ${R0}</b><button class="btn sm" data-cr="${R0-1}" ${R0<=1?'disabled':''}>‹</button></div>`
  +`<div class="rh">🚫 الموقوفون في الجولة ${R0} · ${cat}</div>`+(now.length?now.map(x=>line(x,'',x.why==='r'?'🟥 طرد (ج'+x.from+')':'🟨 '+C.thr+' إنذارات')).join(''):'<div class="card" style="text-align:center;color:var(--mu)">لا يوجد موقوفون في هذه الجولة</div>')
@@ -3360,7 +3785,10 @@ table{border-collapse:collapse;width:100%}td,th{border:1px solid #555;padding:2p
 .res{display:flex;gap:8px}.res>div{flex:1}.box{border:1px solid #555;min-height:44px;padding:3px 6px;font-size:10.5px}.big{font-size:20px;font-weight:900;text-align:center;letter-spacing:4px}
 .sg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}.sg div{border:1px solid #555;height:62px;padding:3px 6px;font-size:10.5px}
 h3{margin:7px 0 3px;font-size:12px;color:#0f6b3a}.ft{text-align:center;font-size:9px;color:#666;margin-top:6px}</style></head><body>
-<div class="bar"><button onclick="window.print()">🖨 طباعة / حفظ PDF</button></div>
+<div class="bar" style="display:flex;justify-content:center;gap:12px;padding:12px;background:#0d3820;box-shadow:0 4px 12px rgba(0,0,0,0.25)">
+  <button onclick="window.print()" style="font-weight:900;padding:10px 22px;border-radius:10px;background:#22c55e;color:#fff;border:none;cursor:pointer;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,0.3)">🖨️ طباعة الورقة الرسمية أو حفظها PDF (A4)</button>
+  <button onclick="window.close()" style="font-weight:700;padding:10px 18px;border-radius:10px;background:rgba(255,255,255,0.2);color:#fff;border:none;cursor:pointer;font-size:13px">✖ إغلاق</button>
+</div>
 <div class="hd">${lg0}<div><h1>الرابطة الجهوية لكرة القدم — تيبازة</h1><h2>ورقة المباراة الرسمية · الفئة ${esc(cat)} · موسم 2026 / 2027</h2></div>${img(h,52)}</div>
 <table class="info"><tr><td><b>الجولة:</b> ${r}</td><td><b>التاريخ:</b> ${esc(v.date||'')}</td><td><b>التوقيت:</b> ${esc(v.time||'')}</td><td><b>الملعب:</b> ${esc(v.stad||'')}</td></tr>
 <tr><td colspan="2"><b>الحكم:</b></td><td><b>المساعد 1:</b></td><td><b>المساعد 2:</b></td></tr></table>
