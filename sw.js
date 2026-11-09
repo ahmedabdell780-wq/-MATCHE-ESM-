@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = 'esm-messelmoun-v39';
+﻿const CACHE_NAME = 'esm-messelmoun-v40';
 const ASSETS = [
   './',
   './index.html',
@@ -88,9 +88,9 @@ self.addEventListener('notificationclick', (event) => {
   );
 });
 
-// Push notification listener
+// Push notification listener with Badge count support
 self.addEventListener('push', (event) => {
-  let data = { title: 'مباريات وفاق مسلمون ESM', body: 'تنبيه جديد بخصوص المباريات' };
+  let data = { title: 'منصة مباريات رابطة تيبازة', body: 'تنبيه جديد بخصوص المباريات' };
   if (event.data) {
     try { data = event.data.json(); } catch(e) { data.body = event.data.text(); }
   }
@@ -98,11 +98,17 @@ self.addEventListener('push', (event) => {
     body: data.body,
     icon: 'icon-192.png',
     badge: 'icon-192.png',
-    vibrate: [150, 50, 150],
+    vibrate: [200, 100, 200],
     data: { url: './index.html', dateOfArrival: Date.now() },
-    actions: [{ action: 'open', title: 'عرض التفاصيل' }]
+    actions: [{ action: 'open', title: 'فتح التطبيق' }]
   };
-  event.waitUntil(
-    self.registration.showNotification(data.title, options)
-  );
+  
+  const promiseChain = self.registration.showNotification(data.title, options).then(() => {
+    if ('setAppBadge' in navigator) {
+      const count = data.badge || 1;
+      return navigator.setAppBadge(count).catch(() => {});
+    }
+  });
+
+  event.waitUntil(promiseChain);
 });
