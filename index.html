@@ -402,8 +402,8 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
 <div class="srv wait" id="lvSt">⏳ جارٍ فحص الخادم…</div>
 <label for="lvK">مفتاح البث (من فيسبوك)</label><input id="lvK" type="password" autocomplete="off" placeholder="الصق المفتاح هنا">
 <label class="chk"><input type="checkbox" id="lvS" checked> تذكّر المفتاح على هذا الجهاز</label>
-<div class="act" style="margin-top:10px"><button class="btn alt" id="lvFb" style="flex:1">🔗 رابط أخذ المفتاح (من الحاسوب)</button></div>
-<details><summary>كيف أحصل على المفتاح؟</summary><ol><li><b>من الحاسوب:</b> افتح facebook.com/live/producer (على الهاتف يفتح تطبيق فيسبوك ولا يعرض المفتاح).</li><li>اختر صفحتك ثم «برنامج البث / Streaming software».</li><li>انسخ <b>Stream key</b> وأرسله لهاتفك (واتساب لنفسك) والصقه هنا.</li><li>اضغط «ابدأ البث» هنا، ثم <b>Go Live</b> في فيسبوك.</li></ol><p class="hint" style="text-align:right;margin:0">⚠️ لا تضغط «Lancer un direct» في تطبيق فيسبوك: هذا بث بكاميرا الهاتف.</p></details>
+<div class="act" style="margin-top:10px"><button class="btn alt" id="lvFb" style="flex:1">🔗 رابط أخذ المفتاح</button></div>
+<details><summary>كيف أحصل على المفتاح؟</summary><ol><li>اضغط زر «رابط أخذ المفتاح» أعلاه (يفتح facebook.com/live/producer).</li><li><b>على الهاتف:</b> إن فتح الرابط تطبيق فيسبوك فلن يظهر المفتاح. افتح الرابط من Safari أو Chrome ثم اختر «طلب موقع سطح المكتب / Request Desktop Site». ويمكنك أيضاً فتحه من الحاسوب.</li><li>اختر صفحتك ثم «برنامج البث / Streaming software».</li><li>انسخ <b>Stream key</b> والصقه هنا.</li><li>اضغط «ابدأ البث» هنا، ثم <b>Go Live</b> في فيسبوك.</li></ol><p class="hint" style="text-align:right;margin:0">⚠️ لا تضغط «Lancer un direct» في تطبيق فيسبوك: هذا بث بكاميرا الهاتف.</p></details>
 <details id="lvAdv"><summary>⚙️ إعدادات متقدمة</summary>
 <label for="lvT">وجهة البث</label><select class="f" id="lvT"><option value="facebook">فيسبوك</option><option value="youtube">يوتيوب</option><option value="custom">عنوان RTMP مخصص</option></select>
 <div id="lvUW" hidden><label for="lvU">عنوان RTMP الكامل</label><input id="lvU" autocomplete="off" placeholder="rtmps://…"></div>
@@ -3705,7 +3705,10 @@ async function rcPing(){const r=$('lvR').value.trim()||LIVE_RELAY,el=$('lvSt');
 function rcPingLoop(){clearTimeout(lvTm);const go=async()=>{if(!$('liveSet').open)return;const ok=await rcPing();if(!ok&&$('liveSet').open)lvTm=setTimeout(go,4000)};go()}
 $('lvR').onchange=rcPingLoop;
 $('lvX').onclick=()=>{clearTimeout(lvTm);$('liveSet').close()};
-$('lvFb').onclick=async()=>{const u='https://www.facebook.com/live/producer';try{await navigator.clipboard.writeText(u);toast('📋 نُسخ الرابط. افتحه من الحاسوب')}catch(e){}if(!/iPhone|iPad|Android/i.test(navigator.userAgent))window.open(u,'_blank','noopener')};
+$('lvFb').onclick=async()=>{const u='https://www.facebook.com/live/producer';let cp=false;
+ try{await navigator.clipboard.writeText(u);cp=true}catch(e){try{const t=document.createElement('textarea');t.value=u;t.style.cssText='position:fixed;opacity:0';document.body.appendChild(t);t.select();cp=document.execCommand('copy');t.remove()}catch(x){}}
+ const a=document.createElement('a');a.href=u;a.target='_blank';a.rel='noopener noreferrer';document.body.appendChild(a);a.click();a.remove();
+ toast('🔗 جارٍ فتح صفحة المفتاح'+(cp?' (ونُسخ الرابط)':'')+'. على الهاتف افتحها من المتصفح مع «موقع سطح المكتب»')};
 $('lvGo').onclick=()=>{say('lvE','');const t=$('lvT').value,k=$('lvK').value.trim(),u=$('lvU').value.trim(),r=$('lvR').value.trim()||LIVE_RELAY;
  if(!rcWs(r)){$('lvAdv').open=true;return say('lvE','⚠️ أدخل رابط خادم البث في «إعدادات متقدمة»')}
  if(t==='custom'?!u:!k)return say('lvE','⚠️ أدخل '+(t==='custom'?'عنوان RTMP':'مفتاح البث'));
