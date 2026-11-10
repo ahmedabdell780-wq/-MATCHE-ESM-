@@ -10,6 +10,7 @@
  *   ALLOW_TRANSCODE       "1" للسماح بإعادة الترميز عند عدم دعم H.264 (يستهلك معالجاً كثيراً)
  *   FORCE_TRANSCODE       "1" لإعادة الترميز دائماً (مفاتيح إطارات مضبوطة كل ثانيتين)
  *   ALLOW_CUSTOM          "1" للسماح بعنوان RTMP مخصص (غير فيسبوك/يوتيوب)
+ *   FIREBASE_SERVICE_ACCOUNT  محتوى ملف JSON لحساب الخدمة (لتفعيل الإشعارات /notify)
  */
 const http = require('http');
 const dns = require('dns').promises;
@@ -44,12 +45,109 @@ const diag = { ffmpeg: ffmpegPath, state: 'checking' };
   p.on('exit', (c, sig) => { diag.state = sig ? 'CRASH (' + sig + ') عند حلّ أسماء النطاقات' : 'ok'; diag.detail = e.trim().slice(0, 160); console.log('[selftest]', JSON.stringify(diag)); });
 })();
 
-const server = http.createServer((req, res) => {
-  if (req.url === '/diag') {
-    res.writeHead(200, { 'content-type': 'application/json; charset=utf-8', 'access-control-allow-origin': '*' });
-    return res.end(JSON.stringify(diag, null, 1));
+/* ===== الإشعارات (FCM) — تتطلب FIREBASE_SERVICE_ACCOUNT (JSON كامل لحساب الخدمة) ===== */
+let fcm = null;
+(function initAdmin() {
+  const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
+  if (!raw) { console.log('[push] FIREBASE_SERVICE_ACCOUNT غير مضبوط: الإشعارات معطّلة'); return; }
+  try {
+    const admin = require('firebase-admin');
+    admin.initializeApp({ credential: admin.credential.cert(JSON.parse(raw)) });
+    fcm = { messaging: admin.messaging(), db: admin.firestore() };
+    console.log('[push] جاهز');
+  } catch (e) { console.log('[push] فشل التهيئة:', e.message); }
+})();
+
+function corsHeaders(req) {
+  const o = (req.headers.origin || '').replace(/\/+$/, '');
+  const ok = !ORIGINS.length || ORIGINS.includes(o);
+  const h = { 'access-control-allow-methods': 'POST, OPTIONS', 'access-control-allow-headers': 'content-type', 'access-control-max-age': '600', vary: 'Origin' };
+  if (ok && o) h['access-control-allow-origin'] = o;
+  return { h, ok };
+}
+
+function readJson(req, max = 20000) {
+  return new Promise((resolve, reject) => {
+    let b = '';
+    req.on('data', c => { b += c; if (b.length > max) { reject(new Error('too big')); req.destroy(); } });
+    req.on('end', () => { try { resolve(JSON.parse(b || '{}')); } catch (e) { reject(e); } });
+    req.on('error', reject);
+  });
+}
+
+async function pushTo(kind, teams, title, body) {
+  const snap = await fcm.db.collection('pushTokens').get();
+  const tokens = [];
+  snap.forEach(d => {
+    const v = d.data() || {};
+    if (kind === 'live' || v.role === 'admin' || teams.includes(Number(v.teamId))) tokens.push(d.id);
+  });
+  let sent = 0;
+  for (let i = 0; i < tokens.length; i += 500) {
+    const chunk = tokens.slice(i, i + 500);
+    const r = await fcm.messaging.sendEachForMulticast({ tokens: chunk, notification: { title, body }, data: { kind, title, body } });
+    sent += r.successCount;
+    const dead = [];
+    r.responses.forEach((x, j) => { if (!x.success && /registration-token-not-registered|invalid-registration-token|invalid-argument/.test((x.error && x.error.code) || '')) dead.push(chunk[j]); });
+    await Promise.all(dead.map(t => fcm.db.collection('pushTokens').doc(t).delete().catch(() => {})));
   }
-  if (req.url === '/healthz' || req.url === '/') {
+  return sent;
+}
+
+/* تذكير اليوم السابق: يرسل بعد الساعة 18:00 بتوقيت الجزائر لكل مباراة مجدولة غداً (مرة واحدة يومياً) */
+async function runReminders() {
+  if (!fcm) return;
+  try {
+    const now = new Date(Date.now() + 3600e3); // UTC+1
+    if (now.getUTCHours() < 18) return;
+    const today = now.toISOString().slice(0, 10);
+    const tomorrow = new Date(now.getTime() + 86400e3).toISOString().slice(0, 10);
+    const ref = fcm.db.collection('public').doc('remindersSent');
+    const st = await ref.get();
+    if (st.exists && st.data().date === today) return;
+    const snap = await fcm.db.collection('scores').get();
+    for (const d of snap.docs) {
+      const v = d.data() || {}, x = v.data || {};
+      if (x.date !== tomorrow || x.status !== 'scheduled') continue;
+      const m = /^(?:([A-Z0-9]+)\|)?(\d+):/.exec(v.key || '');
+      const title = '📅 تذكير · غداً مباراة' + (m ? ' (الجولة ' + m[2] + ' · ' + (m[1] || 'U15') + ')' : '');
+      const body = [x.time, x.stad].filter(Boolean).join(' · ') || tomorrow;
+      await pushTo('schedule', [Number(v.home), Number(v.away)], title, body);
+    }
+    await ref.set({ date: today });
+  } catch (e) { console.log('[reminders]', e.message); }
+}
+setTimeout(runReminders, 30000);
+setInterval(runReminders, 30 * 60 * 1000);
+
+async function handleNotify(req, res) {
+  const { h, ok } = corsHeaders(req);
+  const send = (code, obj) => { res.writeHead(code, { ...h, 'content-type': 'application/json; charset=utf-8' }); res.end(JSON.stringify(obj)); };
+  if (!ok) return send(403, { error: 'origin' });
+  if (!fcm) return send(503, { error: 'push disabled' });
+  try {
+    const b = await readJson(req);
+    await authorize(String(b.token || ''));
+    const kind = ['result', 'schedule', 'live'].includes(b.kind) ? b.kind : null;
+    if (!kind) return send(400, { error: 'kind' });
+    const title = String(b.title || '').slice(0, 120), body = String(b.body || '').slice(0, 240);
+    const teams = Array.isArray(b.teams) ? b.teams.map(Number).filter(Number.isFinite) : [];
+    const sent = await pushTo(kind, teams, title, body);
+    send(200, { ok: true, sent });
+  } catch (e) { send(400, { error: String(e.message || e).slice(0, 160) }); }
+}
+
+const server = http.createServer((req, res) => {
+  const path = (req.url || '').split('?')[0];
+  if (path === '/notify') {
+    if (req.method === 'OPTIONS') { const { h } = corsHeaders(req); res.writeHead(204, h); return res.end(); }
+    if (req.method === 'POST') return handleNotify(req, res);
+  }
+  if (path === '/diag') {
+    res.writeHead(200, { 'content-type': 'application/json; charset=utf-8', 'access-control-allow-origin': '*' });
+    return res.end(JSON.stringify({ ...diag, push: !!fcm }, null, 1));
+  }
+  if (path === '/healthz' || path === '/') {
     res.writeHead(200, { 'content-type': 'text/plain; charset=utf-8', 'access-control-allow-origin': '*' });
     return res.end('ok');
   }
