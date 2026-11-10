@@ -343,7 +343,7 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js"></script>
 </head>
 <body>
-<header><img src="icon-192.png" alt=""><div><h1>مباريات رابطة تيبازة</h1><small>الفئات الشبانية 2026/2027 · وسط غرب</small></div><span class="sp"></span><span id="who" style="font-size:12px"></span><button class="btn" id="gear" aria-label="المظهر">🎨</button><button class="btn" id="out" hidden>خروج</button><button class="btn" id="inBtn" hidden>🔑 دخول</button></header>
+<header><img src="icon-192.png" alt=""><div><h1>مباريات رابطة تيبازة</h1><small>الفئات الشبانية 2026/2027 · وسط غرب</small></div><span class="sp"></span><span id="who" style="font-size:12px"></span><button class="btn" id="gear" aria-label="المظهر">🎨</button><button class="btn" id="out" hidden>خروج</button></header>
 <div id="gate" class="gate" hidden>
  <div class="gbg" aria-hidden="true"><i class="o1"></i><i class="o2"></i><i class="o3"></i><i class="pitch"></i>
   <svg class="shot" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M12 92C30 8 72 -6 92 78" vector-effect="non-scaling-stroke"/></svg>
@@ -362,7 +362,7 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
   <div class="gtabs" role="tablist"><button class="gtab" id="tl" role="tab" aria-pressed="true">🔑 تسجيل الدخول</button><button class="gtab" id="tr" role="tab" aria-pressed="false">📝 حساب جديد</button></div>
   <div id="fl" class="gf"><label for="lu">رقم الهاتف أو اسم المستخدم</label><input id="lu" autocomplete="username" inputmode="tel"><label for="lp">كلمة المرور</label><input id="lp" type="password" autocomplete="current-password" placeholder="••••••••"><div class="err" id="le" role="alert"></div><button class="btn gbtn" id="bl">تسجيل الدخول</button><div class="glinks"><button class="lk" id="fp" type="button">🔒 نسيت كلمة المرور؟</button><button class="lk" id="gor" type="button">ليس لديك حساب؟ أنشئ حساباً</button></div></div>
   <div id="fr" class="gf" hidden><p class="hint">📝 طلب <b>حساب جديد</b> لنادٍ. يُفعَّل الحساب بعد موافقة المشرف العام.</p><label for="rn">الاسم واللقب</label><input id="rn" autocomplete="name"><label for="rp">رقم الهاتف (للدخول)</label><input id="rp" inputmode="tel" autocomplete="tel"><label for="rk">نوع الحساب</label><select class="f" id="rk"><option value="manager">⚽ مسؤول نادٍ (إدخال النتائج والتشكيلات)</option><option value="visitor">👁️ زائر (مشاهدة فقط)</option></select><div id="rtw"><label for="rt">الفريق</label><select class="f" id="rt"></select></div><p class="hint" id="rkh" hidden>حساب مشاهدة فقط: لا يستطيع تعديل أي بيانات، ويُفعَّل بعد موافقة المشرف العام.</p><label for="rw">كلمة المرور (6 أحرف على الأقل)</label><input id="rw" type="password" autocomplete="new-password"><label for="rc">تأكيد كلمة المرور</label><input id="rc" type="password" autocomplete="new-password"><div class="err" id="re" role="alert"></div><button class="btn gbtn" id="br">📨 إرسال طلب إنشاء الحساب</button><div class="glinks"><button class="lk" id="gol" type="button">لديك حساب؟ سجّل الدخول</button></div></div>
-  <button class="lk" id="guest" type="button" style="display:block;margin:10px auto">👁️ تصفّح كزائر بدون حساب</button><p class="gfoot">للاستفسار واعتماد الحسابات: <a href="https://wa.me/213676108460" target="_blank" rel="noopener">0676108460</a></p>
+  <p class="gfoot">للاستفسار واعتماد الحسابات: <a href="https://wa.me/213676108460" target="_blank" rel="noopener">0676108460</a></p>
  </div>
 </div>
 <div id="liveBar" hidden></div>
@@ -2334,7 +2334,6 @@ const isVis=()=>!!(me&&(me.kind==='visitor'||me.role==='visitor'));
 const rdoc=(n,p)=>{const v=$('rk')&&$('rk').value==='visitor';return{name:n,phone:p,teamId:v?0:+$('rt').value,role:'manager',kind:v?'visitor':'club',status:'pending',perm:v?'view_only':'full',date:new Date().toISOString().slice(0,10)}};
 const mails=v=>{const b=mail(v);return /^\d{9}@esm\.local$/.test(b)?[b,...[2,3,4,5].map(n=>b.replace('@',`.${n}@`))]:(b?[b]:[])};
 let RO={},RS={},LU={},LSS={},auth,db,me=null,S={},U=[],cat='U15',round=1,tab='m',subs=[],reg=false,cur=null;
-let guest=false;
 function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2800)}
 function say(id,t,ok){const e=$(id);e.textContent=t;e.classList.toggle('ok',!!ok)}
 function errTxt(e){const c=(e&&e.code)||'';
@@ -2727,7 +2726,7 @@ async function onAuth(u){
  if(reg)return;
  subs.forEach(f=>f());subs=[];U=[];
  RO={};RS={};LU={};LSS={};PH={};STAFF={};
- if(!u){me=null;OLD.state({user:null});listenPhotos();listenLineups();show();return}
+ if(!u){me=null;OLD.state({user:null});show();return}
  let p=null;try{const s=await db.collection('users').doc(u.uid).get();p=s.exists?s.data():null}catch(e){}
  if(!p||(p.role!=='admin'&&p.status!=='approved')){
   await auth.signOut();say('le',p&&p.status==='suspended'?'⛔ الحساب معطّل من المشرف العام. تواصل معه عبر الواتساب.':p&&p.status==='deleted'?'⚠️ حُذف حسابك من قِبل المشرف. إن كان ذلك بالخطأ فتواصل معه ليسترجعه.':p?'⏳ حسابك بانتظار موافقة المشرف العام. سيُفعَّل قريباً.':'⚠️ لا توجد بيانات لهذا الحساب. أرسل «طلب إنشاء حساب» أو تواصل مع المشرف.');return}
@@ -2773,7 +2772,7 @@ function listenLineups(){
 function firstOpen(){for(let r=1;r<=22;r++)if(pairs(r).m.some(([h,a])=>{const v=S[K(cat,r,h,a)];return!v||v.status!=='confirmed'}))return r;return 22}
 function show(){
  const ok=!!me;
- if(ok)guest=false;$('gate').hidden=ok||guest;$('inBtn').hidden=ok||!guest;
+ $('gate').hidden=ok;
  $('app').hidden=false;   /* دائماً مرئي — الزائر والمسجّل */
  $('out').hidden=!ok;
  $('na').hidden=!(ok&&me.role==='admin');
@@ -3045,9 +3044,7 @@ async function syncLocalScores(){
   if(up)toast('☁️ تمت مزامنة '+up+' نتيجة كانت محفوظة محلياً');
  }catch(e){}
 }
-$('out').onclick=()=>{guest=false;auth.signOut()};
-$('guest').onclick=()=>{guest=true;show()};
-$('inBtn').onclick=()=>{guest=false;show()};
+$('out').onclick=()=>auth.signOut();
 $('playersModalClose').onclick=()=>window.closePlayersModal&&window.closePlayersModal();
 $('closePlayerCardModal').onclick=()=>$('playerCardModal').close();
 $('btnDownloadPlayerCard').onclick=()=>{if(curPlayerCard)downloadPlayerCardImage(curPlayerCard.t,curPlayerCard.n)};
@@ -3527,10 +3524,10 @@ async function openStudio(k){
  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.MediaRecorder||!HTMLCanvasElement.prototype.captureStream)return toast('⚠️ هذا المتصفح لا يدعم التصوير. استعمل Safari أو Chrome حديثاً');
  Object.assign(RC,{on:true,k,cat:m[1]||'U15',round:+m[2],h:+m[3],a:+m[4],goals:[],clk:{base:0,start:0,run:false,period:1,half:45,ended:false},swap:true,q:720,facing:'environment',rec:null,recording:false,stopping:false,parts:[],bytes:0,banner:null,flash:{h:0,a:0},stream:null,ar:0,live:{on:false}});
  toast('⏳ جارٍ تشغيل الكاميرا…');
+ $('rcQ').value='720';$('rcQ').disabled=false;$('rec').classList.add('min');$('rec').hidden=false;
+ try{await rcCam()}catch(e){rcTeardown();const n=e&&e.name;return toast(n==='NotAllowedError'||n==='SecurityError'?'⛔ الكاميرا مرفوضة. على iPhone: الإعدادات ← Safari ← الكاميرا ← اسمح، ثم افتح الموقع من Safari':n==='NotFoundError'?'⚠️ لا توجد كاميرا في هذا الجهاز':n==='NotReadableError'?'⚠️ الكاميرا مستعملة من تطبيق آخر، أغلقه وأعد المحاولة':'⚠️ تعذّر تشغيل الكاميرا')}
  RC.imgs={h:await imgOf(LG[RC.h]),a:await imgOf(LG[RC.a]),l:await imgOf(typeof LEAGUE!=='undefined'?LEAGUE:null)};
  RC.col={h:await tcol(RC.h),a:await tcol(RC.a)};
- $('rcQ').value='720';$('rcQ').disabled=false;$('rec').classList.add('min');$('rec').hidden=false;
- try{await rcCam()}catch(e){rcTeardown();return toast((e&&e.name==='NotAllowedError')?'⛔ اسمح للموقع بالكاميرا والميكروفون من إعدادات المتصفح':'⚠️ تعذّر تشغيل الكاميرا')}
  try{RC.wl=await navigator.wakeLock.request('screen')}catch(e){}
  RC.ui=setInterval(rcUi,400);rcUi();
  const step=()=>{if(!RC.on)return;try{rcFrame()}catch(e){}RC.raf=requestAnimationFrame(step)};RC.raf=requestAnimationFrame(step);
@@ -3538,8 +3535,13 @@ async function openStudio(k){
 }
 async function rcCam(){
  if(RC.stream)RC.stream.getTracks().forEach(t=>t.stop());
- const st=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:RC.facing},width:{ideal:1920},height:{ideal:1080},frameRate:{ideal:30}},audio:{echoCancellation:true}});
- RC.stream=st;const v=$('recVid');v.srcObject=st;v.muted=true;await v.play();
+ const vid={facingMode:{ideal:RC.facing},width:{ideal:1920},height:{ideal:1080},frameRate:{ideal:30}};
+ const tries=[{video:vid,audio:{echoCancellation:true}},{video:true,audio:true},{video:true,audio:false}];
+ let st=null,err=null;
+ for(const c of tries){try{st=await navigator.mediaDevices.getUserMedia(c);break}catch(e){err=e}}
+ if(!st)throw err;
+ if(!st.getAudioTracks().length)toast('⚠️ الميكروفون غير مسموح: سيعمل التصوير بدون صوت');
+ RC.stream=st;const v=$('recVid');v.srcObject=st;v.muted=true;try{await v.play()}catch(e){}
  if(!v.videoWidth)await new Promise(r=>{v.onloadedmetadata=r;setTimeout(r,1500)});
  rcSize()
 }
