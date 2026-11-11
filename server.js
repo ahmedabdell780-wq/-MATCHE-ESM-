@@ -15,9 +15,11 @@
 const http = require('http');
 const dns = require('dns').promises;
 const net = require('net');
+const tls = require('tls');
+const fs = require('fs');
 const { spawn } = require('child_process');
 const { WebSocketServer } = require('ws');
-const ffmpegPath = process.env.FFMPEG_PATH || require('ffmpeg-static');
+const ffmpegPath = process.env.FFMPEG_PATH || (fs.existsSync('/usr/bin/ffmpeg') ? '/usr/bin/ffmpeg' : require('ffmpeg-static'));
 
 const PORT = +process.env.PORT || 8080;
 const API_KEY = process.env.FIREBASE_API_KEY || '';
@@ -35,14 +37,14 @@ const TARGETS = {
 };
 const active = new Map(); // uid -> {kill}
 
-/* فحص ذاتي: بعض نسخ ffmpeg الثابتة تتعطّل عند حلّ أسماء النطاقات (DNS). النتيجة على /diag */
-const diag = { ffmpeg: ffmpegPath, state: 'checking' };
+/* فحص ذاتي: التحقق من جاهزية ffmpeg عبر المنفذ المحلي */
+const diag = { ffmpeg: ffmpegPath, state: 'checking', tunnel: true };
 (function selfTest() {
   let e = '';
-  const p = spawn(ffmpegPath, ['-hide_banner', '-loglevel', 'error', '-f', 'lavfi', '-i', 'nullsrc=s=16x16:d=0.1', '-f', 'flv', 'rtmp://dns-selftest.invalid:1935/x/y'], { stdio: ['ignore', 'ignore', 'pipe'] });
+  const p = spawn(ffmpegPath, ['-hide_banner', '-loglevel', 'error', '-f', 'lavfi', '-i', 'nullsrc=s=16x16:d=0.1', '-f', 'flv', 'rtmp://127.0.0.1:9/x/y'], { stdio: ['ignore', 'ignore', 'pipe'] });
   p.stderr.on('data', b => { e += b; });
   p.on('error', er => { diag.state = 'error: ' + er.message; console.log('[selftest]', JSON.stringify(diag)); });
-  p.on('exit', (c, sig) => { diag.state = sig ? 'CRASH (' + sig + ') عند حلّ أسماء النطاقات' : 'ok'; diag.detail = e.trim().slice(0, 160); console.log('[selftest]', JSON.stringify(diag)); });
+  p.on('exit', (c, sig) => { diag.state = sig ? 'CRASH (' + sig + ')' : 'ok'; diag.detail = e.trim().slice(0, 160); console.log('[selftest]', JSON.stringify(diag)); });
 })();
 
 /* ===== الإشعارات (FCM) — تتطلب FIREBASE_SERVICE_ACCOUNT (JSON كامل لحساب الخدمة) ===== */
@@ -187,7 +189,73 @@ async function safeHost(url) {
   return url;
 }
 
-function buildArgs(url, mime) {
+function createRtmpTunnel(targetUrl) {
+  return new Promise((resolve, reject) => {
+    let u;
+    try {
+      u = new URL(targetUrl);
+    } catch (e) {
+      return reject(new Error('عنوان البث غير صالح: ' + e.message));
+    }
+    const isTls = u.protocol === 'rtmps:';
+    const remoteHost = u.hostname;
+    const remotePort = +u.port || (isTls ? 443 : 1935);
+
+    let activeRemote = null;
+    let activeClient = null;
+
+    const srv = net.createServer(client => {
+      activeClient = client;
+      let remote;
+      const opts = { host: remoteHost, port: remotePort };
+      if (isTls) {
+        opts.servername = remoteHost;
+        remote = tls.connect(opts);
+      } else {
+        remote = net.connect(opts);
+      }
+      activeRemote = remote;
+
+      client.pipe(remote);
+      remote.pipe(client);
+
+      remote.on('error', err => {
+        console.log('[rtmp tunnel remote error]', err.message);
+        try { client.destroy(); } catch (x) {}
+      });
+      client.on('error', err => {
+        console.log('[rtmp tunnel client error]', err.message);
+        try { remote.destroy(); } catch (x) {}
+      });
+      remote.on('close', () => {
+        try { client.end(); } catch (x) {}
+      });
+      client.on('close', () => {
+        try { remote.end(); } catch (x) {}
+      });
+    });
+
+    srv.listen(0, '127.0.0.1', () => {
+      const port = srv.address().port;
+      const localUrl = `rtmp://127.0.0.1:${port}${u.pathname}${u.search || ''}`;
+      const appPath = u.pathname.split('/').slice(0, 2).join('/') || '/rtmp';
+      const tcUrl = `${isTls ? 'rtmps' : 'rtmp'}://${remoteHost}:${remotePort}${appPath}`;
+      resolve({
+        url: localUrl,
+        tcUrl: tcUrl,
+        close: () => {
+          try { if (activeClient) activeClient.destroy(); } catch (e) {}
+          try { if (activeRemote) activeRemote.destroy(); } catch (e) {}
+          try { srv.close(); } catch (e) {}
+        }
+      });
+    });
+
+    srv.on('error', reject);
+  });
+}
+
+function buildArgs(url, tcUrl, mime) {
   const h264 = /h264|avc|mp4/i.test(mime || '');
   const transcode = FORCE_TRANSCODE || !h264;
   if (transcode && !FORCE_TRANSCODE && !ALLOW_TRANSCODE) throw new Error('متصفحك لا يرسل H.264. استعمل Safari أو Chrome حديثاً.');
@@ -195,16 +263,18 @@ function buildArgs(url, mime) {
   const video = transcode
     ? ['-c:v', 'libx264', '-preset', 'ultrafast', '-tune', 'zerolatency', '-pix_fmt', 'yuv420p', '-b:v', '1500k', '-maxrate', '1800k', '-bufsize', '3000k', '-g', '60', '-keyint_min', '60', '-sc_threshold', '0', '-r', '30']
     : ['-c:v', 'copy'];
-  return [...base, ...video, '-c:a', 'aac', '-b:a', '128k', '-ar', '44100', '-ac', '2', '-f', 'flv', url];
+  const rtmpOpts = tcUrl ? ['-rtmp_tcurl', tcUrl] : [];
+  return [...base, ...video, '-c:a', 'aac', '-b:a', '128k', '-ar', '44100', '-ac', '2', ...rtmpOpts, '-f', 'flv', url];
 }
 
 wss.on('connection', (ws, req) => {
   const origin = req.headers.origin || '';
   if (ORIGINS.length && !ORIGINS.includes(origin)) { ws.close(1008, 'origin'); return; }
   const send = o => { try { ws.readyState === 1 && ws.send(JSON.stringify(o)); } catch (e) {} };
-  let ff = null, uid = null, started = false, timer = null, beat = null, rx = 0, st = { frames: 0, fps: 0, kbps: 0 }, statT = null, secret = '';
+  let ff = null, uid = null, started = false, timer = null, beat = null, rx = 0, st = { frames: 0, fps: 0, kbps: 0 }, statT = null, secret = '', tunnel = null;
   const stop = () => {
     clearTimeout(timer); clearInterval(beat); clearInterval(statT);
+    if (tunnel) { try { tunnel.close(); } catch (e) {} tunnel = null; }
     if (uid && active.get(uid) === stop) active.delete(uid);
     if (ff) { try { ff.stdin.end(); } catch (e) {} const p = ff; ff = null; setTimeout(() => { try { p.kill('SIGKILL'); } catch (e) {} }, 4000); }
   };
@@ -232,7 +302,14 @@ wss.on('connection', (ws, req) => {
       else throw new Error('وجهة غير معروفة');
       const prev = active.get(uid); if (prev) prev();           // بث واحد لكل حساب
       active.set(uid, stop);
-      ff = spawn(ffmpegPath, buildArgs(url, m.mime), { stdio: ['pipe', 'ignore', 'pipe'] });
+      try {
+        tunnel = await createRtmpTunnel(url);
+      } catch (err) {
+        console.log('[rtmp tunnel fallback]', err.message);
+      }
+      const streamUrl = tunnel ? tunnel.url : url;
+      const tcUrl = tunnel ? tunnel.tcUrl : '';
+      ff = spawn(ffmpegPath, buildArgs(streamUrl, tcUrl, m.mime), { stdio: ['pipe', 'ignore', 'pipe'] });
       let tail = ''; secret = key;
       const mask = t => (secret ? t.split(secret).join('***') : t);
       ff.stderr.on('data', b => {
