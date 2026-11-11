@@ -3801,9 +3801,23 @@ function rcLiveConnect(){
   L.state='retry';setTimeout(()=>{if(RC.live===L&&L.on&&!L.user)rcLiveConnect()},3000)};
  ws.onerror=()=>{}
 }
+let _rcSilentTrack=null;
+function rcGetAudioTrack(){
+ const tracks=(RC.stream&&RC.stream.getAudioTracks())||[];
+ if(tracks.length>0&&tracks[0].readyState==='live')return tracks[0];
+ try{
+  if(_rcSilentTrack&&_rcSilentTrack.readyState==='live')return _rcSilentTrack;
+  const AC=window.AudioContext||window.webkitAudioContext;
+  if(!AC)return null;
+  const ctx=new AC(),osc=ctx.createOscillator(),dst=ctx.createMediaStreamDestination(),gain=ctx.createGain();
+  gain.gain.value=0.0001;osc.connect(gain);gain.connect(dst);osc.start();
+  _rcSilentTrack=dst.stream.getAudioTracks()[0];
+  return _rcSilentTrack;
+ }catch(e){return null}
+}
 function rcLiveRec(){
  const L=RC.live;rcLiveRecStop();
- try{const ms=new MediaStream([...$('recCv').captureStream(30).getVideoTracks(),...RC.stream.getAudioTracks()]),o={videoBitsPerSecond:RC.q>=720?1800000:1000000,audioBitsPerSecond:96000};if(L.mime)o.mimeType=L.mime;
+ try{const aud=rcGetAudioTrack(),audTracks=aud?[aud]:[];const ms=new MediaStream([...$('recCv').captureStream(30).getVideoTracks(),...audTracks]),o={videoBitsPerSecond:RC.q>=720?1800000:1000000,audioBitsPerSecond:96000};if(L.mime)o.mimeType=L.mime;
   const r=new MediaRecorder(ms,o);
   r.ondataavailable=e=>{const w=L.ws;if(!e.data||!e.data.size||!w||w.readyState!==1)return;
    L.slow=w.bufferedAmount>3e6;if(w.bufferedAmount>12e6){try{w.close()}catch(x){}return}w.send(e.data)};

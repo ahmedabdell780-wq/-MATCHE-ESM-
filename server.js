@@ -23,8 +23,8 @@ const PORT = +process.env.PORT || 8080;
 const API_KEY = process.env.FIREBASE_API_KEY || '';
 const PROJECT = process.env.FIREBASE_PROJECT_ID || '';
 const ORIGINS = (process.env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim().replace(/\/+$/, '')).filter(Boolean);
-const ALLOW_TRANSCODE = process.env.ALLOW_TRANSCODE === '1';
-const FORCE_TRANSCODE = process.env.FORCE_TRANSCODE === '1';
+const ALLOW_TRANSCODE = process.env.ALLOW_TRANSCODE !== '0';
+const FORCE_TRANSCODE = process.env.FORCE_TRANSCODE !== '0';
 const ALLOW_CUSTOM = process.env.ALLOW_CUSTOM === '1';
 const MAX_HOURS = 3;
 const MAX_BACKLOG = 8 * 1024 * 1024; // 8MB
@@ -193,7 +193,7 @@ function buildArgs(url, mime) {
   if (transcode && !FORCE_TRANSCODE && !ALLOW_TRANSCODE) throw new Error('متصفحك لا يرسل H.264. استعمل Safari أو Chrome حديثاً.');
   const base = ['-hide_banner', '-loglevel', 'info', '-fflags', '+genpts+nobuffer', '-probesize', '1000000', '-analyzeduration', '1000000', '-i', 'pipe:0'];
   const video = transcode
-    ? ['-c:v', 'libx264', '-preset', 'veryfast', '-tune', 'zerolatency', '-pix_fmt', 'yuv420p', '-b:v', '1800k', '-maxrate', '1800k', '-bufsize', '3600k', '-g', '60', '-keyint_min', '60', '-sc_threshold', '0']
+    ? ['-c:v', 'libx264', '-preset', 'ultrafast', '-tune', 'zerolatency', '-pix_fmt', 'yuv420p', '-b:v', '1500k', '-maxrate', '1800k', '-bufsize', '3000k', '-g', '60', '-keyint_min', '60', '-sc_threshold', '0', '-r', '30']
     : ['-c:v', 'copy'];
   return [...base, ...video, '-c:a', 'aac', '-b:a', '128k', '-ar', '44100', '-ac', '2', '-f', 'flv', url];
 }
