@@ -774,6 +774,40 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
   </div>
 </dialog>
 
+
+<!-- 🎥 نافذة المساعدة وإذن الكاميرا والميكروفون -->
+<dialog id="cameraHelpModal" style="max-width:460px;width:94%;padding:0;border-radius:22px;border:1.5px solid var(--ln);background:var(--card,#122419);box-shadow:0 25px 60px rgba(0,0,0,0.6);overflow:hidden;font-family:inherit;text-align:right">
+  <div style="padding:16px 20px;background:linear-gradient(135deg, #1b382b, #0f241a);color:#fff;border-bottom:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:space-between">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:26px">📷</span>
+      <div>
+        <h3 style="margin:0;font-size:17px;font-weight:900;color:#fef08a">إذن الكاميرا والميكروفون مطلوب</h3>
+        <p style="margin:2px 0 0;font-size:12px;color:#cbd5e1">المتصفح حظر الوصول للكاميرا أو الميكروفون</p>
+      </div>
+    </div>
+    <button type="button" onclick="$('cameraHelpModal').close()" style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px">&times;</button>
+  </div>
+  <div style="padding:18px 20px;color:var(--tx,#e2e8f0);font-size:13.5px;line-height:1.6">
+    <div style="background:rgba(239,68,68,0.12);border:1px solid #ef4444;border-radius:12px;padding:12px;color:#fca5a5;margin-bottom:14px;font-weight:700">
+      ⛔ الكاميرا محظورة حالياً في إعدادات المتصفح لهذا الموقع.
+    </div>
+    
+    <div style="font-weight:800;color:#facc15;margin-bottom:6px">📌 كيفية السماح بالكاميرا بسهولة:</div>
+    <ol style="margin:0 0 16px;padding-right:20px;display:flex;flex-direction:column;gap:6px">
+      <li>انظر إلى <b>شريط العنوان في أعلى المتصفح</b> (بجانب رابط الموقع).</li>
+      <li>اضغط على <b>أيقونة الكاميرا المحظورة 🚫 أو القفل 🔒</b>.</li>
+      <li>اختر <b>«سماح دائماً» (Always Allow)</b> للكاميرا والميكروفون.</li>
+      <li>اضغط «تم» ثم اضغط زر إعادة المحاولة بالأسفل.</li>
+    </ol>
+
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <button type="button" class="btn" id="btnRetryCam" style="background:#22c55e;color:#fff;font-weight:900;padding:10px;border-radius:12px;cursor:pointer">🔄 إعادة تشغيل الكاميرا الآن</button>
+      <button type="button" class="btn alt" id="btnScreenShareCam" style="font-weight:800;padding:10px;border-radius:12px;cursor:pointer">🖥️ تجربة الاستوديو بمشاركة الشاشة (بدون كاميرا)</button>
+      <button type="button" class="btn" onclick="$('cameraHelpModal').close()" style="background:rgba(255,255,255,0.1);color:#fff;border-radius:12px;cursor:pointer">إلغاء</button>
+    </div>
+  </div>
+</dialog>
+
 <div id="toast"></div>
 <select id="rr" hidden><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option></select><select id="upto" hidden><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option></select>
 <script>(function(){
@@ -3525,7 +3559,16 @@ async function openStudio(k){
  Object.assign(RC,{on:true,k,cat:m[1]||'U15',round:+m[2],h:+m[3],a:+m[4],goals:[],clk:{base:0,start:0,run:false,period:1,half:45,ended:false},swap:true,q:720,facing:'environment',rec:null,recording:false,stopping:false,parts:[],bytes:0,banner:null,flash:{h:0,a:0},stream:null,ar:0,live:{on:false}});
  toast('⏳ جارٍ تشغيل الكاميرا…');
  $('rcQ').value='720';$('rcQ').disabled=false;$('rec').classList.add('min');$('rec').hidden=false;
- try{await rcCam()}catch(e){rcTeardown();const n=e&&e.name;return toast(n==='NotAllowedError'||n==='SecurityError'?'⛔ الكاميرا مرفوضة. على iPhone: الإعدادات ← Safari ← الكاميرا ← اسمح، ثم افتح الموقع من Safari':n==='NotFoundError'?'⚠️ لا توجد كاميرا في هذا الجهاز':n==='NotReadableError'?'⚠️ الكاميرا مستعملة من تطبيق آخر، أغلقه وأعد المحاولة':'⚠️ تعذّر تشغيل الكاميرا')}
+ try{await rcCam()}catch(e){
+   rcTeardown();
+   const n=e&&e.name;
+   if(n==='NotAllowedError'||n==='SecurityError'||n==='NotFoundError'){
+     if($('cameraHelpModal')) $('cameraHelpModal').showModal();
+     else toast('⛔ اسمح للموقع بالكاميرا والميكروفون من إعدادات المتصفح');
+     return;
+   }
+   return toast(n==='NotReadableError'?'⚠️ الكاميرا مستعملة من تطبيق آخر، أغلقه وأعد المحاولة':'⚠️ تعذّر تشغيل الكاميرا');
+ }
  RC.imgs={h:await imgOf(LG[RC.h]),a:await imgOf(LG[RC.a]),l:await imgOf(typeof LEAGUE!=='undefined'?LEAGUE:null)};
  RC.col={h:await tcol(RC.h),a:await tcol(RC.a)};
  try{RC.wl=await navigator.wakeLock.request('screen')}catch(e){}
@@ -3533,17 +3576,43 @@ async function openStudio(k){
  const step=()=>{if(!RC.on)return;try{rcFrame()}catch(e){}RC.raf=requestAnimationFrame(step)};RC.raf=requestAnimationFrame(step);
  toast('📱 أدر الهاتف أفقياً ثم اضغط «بدء التسجيل»')
 }
-async function rcCam(){
- if(RC.stream)RC.stream.getTracks().forEach(t=>t.stop());
- const vid={facingMode:{ideal:RC.facing},width:{ideal:1920},height:{ideal:1080},frameRate:{ideal:30}};
- const tries=[{video:vid,audio:{echoCancellation:true}},{video:true,audio:true},{video:true,audio:false}];
- let st=null,err=null;
- for(const c of tries){try{st=await navigator.mediaDevices.getUserMedia(c);break}catch(e){err=e}}
- if(!st)throw err;
- if(!st.getAudioTracks().length)toast('⚠️ الميكروفون غير مسموح: سيعمل التصوير بدون صوت');
- RC.stream=st;const v=$('recVid');v.srcObject=st;v.muted=true;try{await v.play()}catch(e){}
- if(!v.videoWidth)await new Promise(r=>{v.onloadedmetadata=r;setTimeout(r,1500)});
- rcSize()
+async function rcCam(useScreenShare = false){
+ if(RC.stream) RC.stream.getTracks().forEach(t=>t.stop());
+ let st = null, err = null;
+ 
+ if(useScreenShare && navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia){
+   try {
+     st = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+   } catch(e) {
+     st = await navigator.mediaDevices.getDisplayMedia({ video: true });
+   }
+ } else {
+   const vid = { facingMode: { ideal: RC.facing }, width: { ideal: 1920 }, height: { ideal: 1080 }, frameRate: { ideal: 30 } };
+   const tries = [
+     { video: vid, audio: { echoCancellation: true } },
+     { video: true, audio: true },
+     { video: vid, audio: false },
+     { video: true, audio: false }
+   ];
+   for(const c of tries){
+     try {
+       st = await navigator.mediaDevices.getUserMedia(c);
+       break;
+     } catch(e) {
+       err = e;
+     }
+   }
+ }
+ 
+ if(!st) throw err;
+ if(!st.getAudioTracks().length) toast('⚠️ الميكروفون غير مسموح: سيعمل التصوير بدون صوت');
+ RC.stream = st;
+ const v = $('recVid');
+ v.srcObject = st;
+ v.muted = true;
+ try { await v.play(); } catch(e){}
+ if(!v.videoWidth) await new Promise(r => { v.onloadedmetadata = r; setTimeout(r, 1500); });
+ rcSize();
 }
 function rcSize(){const v=$('recVid'),vw=v.videoWidth||1280,vh=v.videoHeight||720,f=Math.min(1,RC.q/Math.min(vw,vh)),cv=$('recCv');
  cv.width=Math.round(vw*f/2)*2;cv.height=Math.round(vh*f/2)*2;RC.ctx=cv.getContext('2d');RC.ar=vw/vh}
