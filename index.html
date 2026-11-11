@@ -3754,7 +3754,7 @@ $('rcX').onclick=()=>{if(RC.live&&RC.live.on){if(!confirm('البث المباش
 document.addEventListener('visibilitychange',async()=>{if(RC.on&&!document.hidden){try{RC.wl=await navigator.wakeLock.request('screen')}catch(e){}}});
 
 /* ===== البث المباشر إلى فيسبوك/يوتيوب عبر خادم وسيط (RTMP) ===== */
-const LIVE_RELAY='https://esm-live-relay.onrender.com'; /* غيّره إن سمّيت الخدمة باسم آخر */
+const LIVE_RELAY='https://esm-live-relay-5mw0.onrender.com'; /* غيّره إن سمّيت الخدمة باسم آخر */
 const LK={t:'esmLiveTarget',k:'esmLiveKey',r:'esmLiveRelay'};
 const lsGet=k=>{try{return localStorage.getItem(k)||''}catch(e){return''}},lsSet=(k,v)=>{try{v?localStorage.setItem(k,v):localStorage.removeItem(k)}catch(e){}};
 const rcWs=r=>{r=(r||'').trim().replace(/\/+$/,'').replace(/\/live$/,'');if(!r)return'';if(!/^(wss?|https?):\/\//.test(r))r='https://'+r;return r.replace(/^http/,'ws')+'/live'};
