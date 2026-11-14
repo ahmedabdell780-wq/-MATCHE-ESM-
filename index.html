@@ -336,6 +336,38 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
 .adm-tab.active{background:#fff;color:#0f2a1c;box-shadow:0 2px 6px rgba(0,0,0,.08)}
 .adm-tab .badge-count{background:#ef4444;color:#fff;font-size:11px;padding:1px 6px;border-radius:10px;font-weight:900}
 
+
+/* ===== مراسلة المشرف ↔ رؤساء النوادي ===== */
+#msgBtn{position:relative}
+.mbadge{position:absolute;top:-5px;left:-5px;background:#ef4444;color:#fff;font-size:10px;font-weight:900;border-radius:10px;padding:1px 5px;min-width:17px;text-align:center;box-shadow:0 0 6px rgba(239,68,68,.8);animation:badgePulse 1.8s infinite}
+.mdlg{padding:0;width:min(94vw,440px);border:1.5px solid var(--ln);overflow:hidden}
+.mdlg[open]{display:flex;flex-direction:column;height:min(82vh,640px)}
+.mdlg .mh{display:flex;align-items:center;gap:8px;padding:12px;background:linear-gradient(135deg,var(--g),#0f3a20);color:#fff}
+.mdlg .mh .btn{background:#ffffff26;color:#fff;border:0}
+.mdlg .mt{flex:1;display:flex;flex-direction:column;line-height:1.3;min-width:0}.mdlg .mt b{font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mdlg .mt small{opacity:.8;font-size:11.5px}
+.mbody{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:6px;background:var(--bg)}
+.mrow{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--ln);border-radius:12px;background:var(--card);cursor:pointer;width:100%;text-align:right;color:var(--tx);font:inherit}
+.mrow .lg{width:38px;height:38px;border-radius:50%;object-fit:contain;flex:none;background:#fff}
+.mrow .mi{flex:1;min-width:0;display:flex;flex-direction:column}.mrow .mi b{font-size:14px}.mrow .mi span{font-size:12.5px;color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mrow .mm{display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-size:11px;color:var(--mu);flex:none}
+.mrow .mu{background:#ef4444;color:#fff;font-weight:900;font-size:11px;border-radius:10px;padding:1px 7px;min-width:18px;text-align:center}
+.mrow.un{border-color:#ef4444aa}
+.mday{align-self:center;font-size:11.5px;color:var(--mu);background:#ffffff12;border-radius:99px;padding:2px 12px;margin:6px 0}
+.bub{max-width:82%;padding:8px 11px 6px;border-radius:14px;font-size:14px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+.bub.me{align-self:flex-start;background:var(--g);color:#fff;border-bottom-right-radius:4px}
+.bub.th{align-self:flex-end;background:var(--card);border:1px solid var(--ln);color:var(--tx);border-bottom-left-radius:4px}
+.bub .sn{display:block;font-size:11px;font-weight:800;color:var(--gold);margin-bottom:2px}
+.bub .tm2{display:block;font-size:10.5px;opacity:.7;margin-top:3px;text-align:left}
+.mempty{margin:auto;text-align:center;color:var(--mu);font-size:13.5px;padding:20px}
+.mcomp{display:flex;gap:8px;align-items:flex-end;padding:10px;border-top:1px solid var(--ln);background:var(--card)}
+.mcomp textarea{flex:1;resize:none;border:1.5px solid var(--ln);border-radius:12px;padding:10px 12px;background:var(--bg);color:var(--tx);font:inherit;max-height:110px;outline:0}
+.mcomp textarea:focus{border-color:var(--g2)}
+.mdlg .err{margin:0;padding:0 12px 6px;min-height:0}
+.mbn{position:fixed;top:calc(8px + var(--sa));inset-inline:10px;margin:0 auto;max-width:430px;z-index:95;display:none;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;background:#0f2a1ce6;color:#fff;border:1px solid #6fe39a66;box-shadow:0 14px 40px #000a;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);cursor:pointer;animation:mbIn .35s cubic-bezier(.2,.8,.2,1)}
+.mbn.on{display:flex}
+.mbn .mic{font-size:24px;flex:none}.mbn .mtx{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.35}.mbn .mtx b{font-size:13.5px}.mbn .mtx span{font-size:12.5px;opacity:.85;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mbn .mx{background:none;border:0;color:#fff;opacity:.7;font-size:16px;cursor:pointer;padding:4px}
+@keyframes mbIn{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:none}}
 </style>
 <script>window.ESM_FIREBASE={apiKey:"AIzaSyBSDRAZwpChKIXpRPVIUp0JtdfflLqPRfU",authDomain:"moubarati-l-w-t.firebaseapp.com",projectId:"moubarati-l-w-t",messagingSenderId:"582704281935",appId:"1:582704281935:web:aeb821d64b4de733386d3a"};</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -344,7 +376,7 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js"></script>
 </head>
 <body>
-<header><img src="icon-192.png" alt=""><div><h1>مباريات رابطة تيبازة</h1><small>الفئات الشبانية 2026/2027 · وسط غرب</small></div><span class="sp"></span><span id="who" style="font-size:12px"></span><button class="btn" id="gear" aria-label="المظهر">🎨</button><button class="btn" id="out" hidden>خروج</button></header>
+<header><img src="icon-192.png" alt=""><div><h1>مباريات رابطة تيبازة</h1><small>الفئات الشبانية 2026/2027 · وسط غرب</small></div><span class="sp"></span><span id="who" style="font-size:12px"></span><button class="btn" id="msgBtn" aria-label="الرسائل" hidden>💬<span class="mbadge" id="msgBadge" hidden></span></button><button class="btn" id="gear" aria-label="المظهر">🎨</button><button class="btn" id="out" hidden>خروج</button></header>
 <div id="gate" class="gate" hidden>
  <div class="gbg" aria-hidden="true"><i class="o1"></i><i class="o2"></i><i class="o3"></i><i class="pitch"></i>
   <svg class="shot" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M12 92C30 8 72 -6 92 78" vector-effect="non-scaling-stroke"/></svg>
@@ -848,6 +880,13 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
   </div>
 </dialog>
 
+<dialog id="msgDlg" class="mdlg">
+ <div class="mh"><button class="btn sm" id="msgBack" aria-label="رجوع" hidden>→</button><div class="mt"><b id="msgTitle">💬 الرسائل</b><small id="msgSub"></small></div><button class="btn sm" id="msgClose" aria-label="إغلاق">✕</button></div>
+ <div class="mbody" id="msgBody"></div>
+ <div class="mcomp" id="msgComp" hidden><textarea id="msgTxt" rows="1" maxlength="1000" dir="auto" placeholder="اكتب رسالتك…"></textarea><button class="btn" id="msgSend">إرسال ➤</button></div>
+ <div class="err" id="msgErr" role="alert"></div>
+</dialog>
+<div class="mbn" id="msgBanner" role="status" aria-live="polite"><span class="mic">💬</span><div class="mtx"><b id="mbT"></b><span id="mbB"></span></div><button class="btn sm" id="mbOpen">فتح</button><button class="mx" id="mbX" aria-label="إغلاق">✕</button></div>
 <div id="toast"></div>
 <select id="rr" hidden><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option></select><select id="upto" hidden><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option></select>
 <script>(function(){
@@ -2407,7 +2446,7 @@ const mail=v=>{v=String(v||'').trim().toLowerCase();if(v.includes('@'))return v;
 const isVis=()=>!!(me&&(me.kind==='visitor'||me.role==='visitor'));
 const rdoc=(n,p)=>{const v=$('rk')&&$('rk').value==='visitor';return{name:n,phone:p,teamId:v?0:+$('rt').value,role:'manager',kind:v?'visitor':'club',status:'pending',perm:v?'view_only':'full',date:new Date().toISOString().slice(0,10)}};
 const mails=v=>{const b=mail(v);return /^\d{9}@esm\.local$/.test(b)?[b,...[2,3,4,5].map(n=>b.replace('@',`.${n}@`))]:(b?[b]:[])};
-let RO={},RS={},LU={},LSS={},auth,db,me=null,S={},U=[],cat='U15',round=1,tab='m',subs=[],reg=false,cur=null;
+let RO={},RS={},LU={},LSS={},auth,db,me=null,S={},U=[],cat='U15',round=1,tab='m',subs=[],reg=false,cur=null,MSG=[],MSGn=0,MSGopen=null;
 function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2800)}
 function say(id,t,ok){const e=$(id);e.textContent=t;e.classList.toggle('ok',!!ok)}
 function errTxt(e){const c=(e&&e.code)||'';
@@ -2799,7 +2838,7 @@ function init(){
 async function onAuth(u){
  if(reg)return;
  subs.forEach(f=>f());subs=[];U=[];
- RO={};RS={};LU={};LSS={};PH={};STAFF={};
+ RO={};RS={};LU={};LSS={};PH={};STAFF={};MSG=[];MSGn=0;MSGopen=null;
  if(!u){me=null;OLD.state({user:null});show();return}
  let p=null;try{const s=await db.collection('users').doc(u.uid).get();p=s.exists?s.data():null}catch(e){}
  if(!p||(p.role!=='admin'&&p.status!=='approved')){
@@ -2834,7 +2873,7 @@ async function onAuth(u){
  OLD.state({user:{role:me.role==='admin'?'admin':(isVis()?'visitor':'official'),teamId:me.teamId,name:me.name}});
  subs.push((me.role==='admin'?db.collection('rosters'):db.collection('rosters').where('teamId','==',me.teamId)).onSnapshot(s=>{
   s.docs.forEach(d=>{const r=d.data();RO[r.teamId]=RO[r.teamId]||{};RO[r.teamId][r.cat]=r.roster||[];RS[d.id]=JSON.stringify(r.roster||[])})}));
-listenLineups();listenPhotos();listenStaff();
+listenLineups();listenPhotos();listenStaff();listenMsgs();
  show();
 }
 function listenLineups(){
@@ -2851,7 +2890,7 @@ function show(){
  $('out').hidden=!ok;
  $('na').hidden=!(ok&&me.role==='admin');
 if(ok){setTimeout(pushResume,2500);setTimeout(syncLocalScores,3500);if(!isVis())rcWake(lsGet(LK.r)||LIVE_RELAY)}
- $('who').textContent=ok?(me.role==='admin'?'👑 المشرف':isVis()?'👁️ زائر':'⚽ '+(T[me.teamId]||'')):'👁️ زائر';
+ msgUi();$('who').textContent=ok?(me.role==='admin'?'👑 المشرف':isVis()?'👁️ زائر':'⚽ '+(T[me.teamId]||'')):'👁️ زائر';
  draw()
 }
 
@@ -4113,8 +4152,8 @@ function playNotifSound(){
 function updateAppBadge(count){
   try{
     if('setAppBadge' in navigator){
-      if(count > 0){
-        navigator.setAppBadge(count).catch(()=>{});
+      if(count + MSGn > 0){
+        navigator.setAppBadge(count + MSGn).catch(()=>{});
       }else{
         navigator.clearAppBadge().catch(()=>{});
       }
@@ -4948,6 +4987,132 @@ $('pd').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)re
  if(b.dataset.th){PS.t=b.dataset.th;savePref('esm-theme',PS.t);applyPrefs()}
  else if(b.dataset.s){PS.s=b.dataset.s;savePref('esm-pstyle',PS.s);applyPrefs()}});
 $('fnSel').onchange=e=>{PS.f=e.target.value;savePref('esm-font',PS.f);applyPrefs()};
+
+/* ===== مراسلة المشرف ↔ رؤساء النوادي (Firestore: messages) ===== */
+const msgSide=()=>me&&me.role==='admin'?'admin':'club';
+const msgOk=()=>!!me&&!isVis()&&(me.role==='admin'||!!me.teamId);
+const msgPend=()=>me&&me.role==='admin'?U.filter(u=>u.status==='pending').length:0;
+function msgUi(){
+ const b=$('msgBtn');if(b)b.hidden=!msgOk();
+ msgBadge();
+ if(msgOk()&&location.hash==='#msg'){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}setTimeout(()=>msgOpen(me.role==='admin'?null:+me.teamId),700)}
+}
+function msgBadge(){
+ const e=$('msgBadge');if(e){e.textContent=MSGn>99?'99+':MSGn;e.hidden=!(MSGn>0&&msgOk())}
+ document.title=(MSGn>0&&msgOk()?'('+MSGn+') ':'')+'منصة مباريات رابطة تيبازة';
+}
+function msgRecount(){
+ const s=msgSide();MSGn=msgOk()?MSG.filter(m=>m.to===s&&!m.read).length:0;
+ msgBadge();updateAppBadge(msgPend());
+}
+function listenMsgs(){
+ if(!msgOk()||!db)return;
+ const q=me.role==='admin'?db.collection('messages'):db.collection('messages').where('teamId','==',+me.teamId);
+ let first=true;
+ subs.push(q.onSnapshot(s=>{
+  const fresh=[];
+  s.docChanges().forEach(c=>{
+   const d=Object.assign({id:c.doc.id},c.doc.data());
+   if(c.type==='removed'){MSG=MSG.filter(x=>x.id!==d.id);return}
+   const i=MSG.findIndex(x=>x.id===d.id);
+   if(i<0){MSG.push(d);if(!first&&!c.doc.metadata.hasPendingWrites&&d.to===msgSide()&&!d.read&&d.fromUid!==me.uid)fresh.push(d)}
+   else MSG[i]=d;
+  });
+  first=false;
+  MSG.sort((a,b)=>(a.t||0)-(b.t||0));
+  msgRecount();
+  if(fresh.length)msgIncoming(fresh);
+  if($('msgDlg').open)msgRender();
+ },()=>{}));
+}
+function msgIncoming(L){
+ const m=L[L.length-1];if(!m)return;
+ const viewing=$('msgDlg').open&&MSGopen===m.teamId&&!document.hidden;
+ if(viewing){msgMarkRead(m.teamId);return}
+ playNotifSound();
+ const who=me.role==='admin'?'رئيس نادي '+(T[m.teamId]||''):'المشرف العام';
+ const title='💬 رسالة جديدة من '+who+(L.length>1?' ('+L.length+')':'');
+ const body=String(m.text||'');const pv=body.length>90?body.slice(0,90)+'…':body;
+ msgBanner(title,pv,m.teamId);
+ try{navigator.vibrate&&navigator.vibrate([120,60,120])}catch(e){}
+ if(document.hidden)msgSysNotify(title,pv,m.teamId);
+}
+async function msgSysNotify(title,body,tid){
+ if(!('Notification' in window)||Notification.permission!=='granted')return;
+ const o={body,icon:'icon-192.png',badge:'icon-192.png',tag:'esm-msg-'+tid,renotify:true,vibrate:[200,100,200],data:{kind:'message',teamId:tid,url:'./index.html#msg'}};
+ try{const r=await navigator.serviceWorker.getRegistration();if(r){await r.showNotification(title,o);return}}catch(e){}
+ try{new Notification(title,o)}catch(e){}
+}
+let mbTm;
+function msgBanner(t,b,tid){
+ const e=$('msgBanner');$('mbT').textContent=t;$('mbB').textContent=b;e.dataset.t=tid;
+ e.classList.add('on');clearTimeout(mbTm);mbTm=setTimeout(()=>e.classList.remove('on'),8000);
+}
+function msgMarkRead(tid){
+ const s=msgSide(),L=MSG.filter(m=>m.teamId===tid&&m.to===s&&!m.read);if(!L.length)return;
+ try{const bt=db.batch();L.forEach(m=>bt.update(db.collection('messages').doc(m.id),{read:true}));bt.commit().catch(()=>{})}catch(e){}
+}
+function msgOpen(tid){
+ if(!msgOk())return;
+ if(me.role!=='admin')tid=+me.teamId;
+ MSGopen=(tid==null||isNaN(+tid))?null:+tid;
+ say('msgErr','');$('msgBanner').classList.remove('on');
+ if(!$('msgDlg').open)$('msgDlg').showModal();
+ msgRender();
+ if(MSGopen!=null){msgMarkRead(MSGopen);setTimeout(()=>{try{$('msgTxt').focus({preventScroll:true})}catch(e){}},150)}
+}
+function msgTime(t){try{return new Date(t).toLocaleTimeString('ar-DZ',{hour:'2-digit',minute:'2-digit'})}catch(e){return''}}
+function msgRender(){
+ if(!msgOk())return;
+ const adm=me.role==='admin',B=$('msgBody'),tid=MSGopen;
+ $('msgBack').hidden=!(adm&&tid!=null);
+ $('msgComp').hidden=tid==null;
+ if(tid==null){
+  $('msgTitle').textContent='💬 رسائل رؤساء النوادي';
+  $('msgSub').textContent=MSGn?MSGn+' رسالة غير مقروءة':'لا توجد رسائل جديدة';
+  const rows=Object.keys(T).map(k=>{const id=+k,L=MSG.filter(m=>m.teamId===id);return{id,last:L[L.length-1],un:L.filter(m=>m.to==='admin'&&!m.read).length}})
+   .sort((a,b)=>(b.last?b.last.t||0:0)-(a.last?a.last.t||0:0)||a.id-b.id);
+  B.innerHTML=rows.map(r=>{
+   const pv=r.last?(r.last.from==='admin'?'أنت: ':'')+String(r.last.text||'').replace(/\s+/g,' '):'ابدأ محادثة مع رئيس النادي';
+   return `<button class="mrow${r.un?' un':''}" data-mt="${r.id}">${lg(r.id)}<span class="mi"><b>${esc(T[r.id])}</b><span>${esc(pv)}</span></span><span class="mm">${r.last?esc(msgTime(r.last.t)):''}${r.un?`<span class="mu">${r.un}</span>`:''}</span></button>`}).join('');
+  B.scrollTop=0;return;
+ }
+ $('msgTitle').textContent=adm?'🏟️ '+(T[tid]||''):'👑 المشرف العام';
+ $('msgSub').textContent=adm?'محادثة مع رئيس النادي':'مراسلة مباشرة مع المشرف';
+ const side=msgSide(),L=MSG.filter(m=>m.teamId===tid);
+ if(!L.length){B.innerHTML=`<div class="mempty">✉️<br>لا توجد رسائل بعد.<br>${adm?'اكتب أول رسالة لرئيس هذا النادي.':'اكتب رسالتك وسيصل المشرف إشعار فوري.'}</div>`;return}
+ const near=B.scrollHeight-B.scrollTop-B.clientHeight<90;
+ let day='',h='';
+ L.forEach(m=>{
+  const d=new Date(m.t||Date.now()),dk=d.toDateString();
+  if(dk!==day){day=dk;let lb='';try{lb=d.toLocaleDateString('ar-DZ',{weekday:'long',day:'numeric',month:'long'})}catch(e){}h+=`<div class="mday">${esc(lb)}</div>`}
+  const mine=m.from===side;
+  h+=`<div class="bub ${mine?'me':'th'}">${mine?'':`<span class="sn">${esc(m.from==='admin'?'المشرف العام':(m.fromName||'رئيس النادي'))}</span>`}${esc(m.text)}<span class="tm2">${esc(msgTime(m.t))}${mine?(m.read?' ✓✓':' ✓'):''}</span></div>`});
+ const first=!B.dataset.k||B.dataset.k!==String(tid);
+ B.innerHTML=h;B.dataset.k=String(tid);
+ if(first||near)B.scrollTop=B.scrollHeight;
+}
+function msgSend(){
+ const t=$('msgTxt').value.trim();if(!t||MSGopen==null||!msgOk())return;
+ if(t.length>1000)return say('msgErr','⚠️ الرسالة طويلة (1000 حرف كحد أقصى)');
+ const adm=me.role==='admin',tid=+MSGopen;say('msgErr','');
+ const p=db.collection('messages').add({teamId:tid,from:adm?'admin':'club',to:adm?'club':'admin',fromUid:me.uid,fromName:adm?'المشرف العام':(me.name||''),text:t,t:Date.now(),read:false});
+ $('msgTxt').value='';msgGrow();
+ p.then(()=>{
+  pushNotify({kind:'message',to:adm?'club':'admin',teams:[tid],title:adm?'💬 رسالة من المشرف العام':'💬 رسالة من رئيس نادي '+(T[tid]||''),body:t.length>120?t.slice(0,120)+'…':t,url:'./index.html#msg'});
+ }).catch(()=>{say('msgErr','⚠️ تعذّر إرسال الرسالة. تحقق من الاتصال أو من صلاحيات قاعدة البيانات.')});
+}
+function msgGrow(){const e=$('msgTxt');e.style.height='auto';e.style.height=Math.min(e.scrollHeight,110)+'px'}
+$('msgBtn').onclick=()=>msgOpen(me&&me.role==='admin'?null:me&&+me.teamId);
+$('msgClose').onclick=()=>$('msgDlg').close();
+$('msgDlg').addEventListener('close',()=>{MSGopen=null});
+$('msgBack').onclick=()=>{MSGopen=null;$('msgBody').dataset.k='';msgRender()};
+$('msgSend').onclick=msgSend;
+$('msgTxt').addEventListener('input',msgGrow);
+$('msgTxt').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&matchMedia('(pointer:fine)').matches){e.preventDefault();msgSend()}});
+$('msgBody').addEventListener('click',e=>{const b=e.target.closest('[data-mt]');if(b){$('msgBody').dataset.k='';msgOpen(+b.dataset.mt)}});
+$('msgBanner').addEventListener('click',e=>{if(e.target.closest('#mbX')){$('msgBanner').classList.remove('on');return}msgOpen(+$('msgBanner').dataset.t)});
+if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('message',e=>{const d=e.data||{};if(d.type==='open-message'&&msgOk())msgOpen(me.role==='admin'?(d.teamId==null?null:+d.teamId):null)});
 applyPrefs();
 init();
 </script>
