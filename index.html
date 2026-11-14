@@ -2446,7 +2446,7 @@ const mail=v=>{v=String(v||'').trim().toLowerCase();if(v.includes('@'))return v;
 const isVis=()=>!!(me&&(me.kind==='visitor'||me.role==='visitor'));
 const rdoc=(n,p)=>{const v=$('rk')&&$('rk').value==='visitor';return{name:n,phone:p,teamId:v?0:+$('rt').value,role:'manager',kind:v?'visitor':'club',status:'pending',perm:v?'view_only':'full',date:new Date().toISOString().slice(0,10)}};
 const mails=v=>{const b=mail(v);return /^\d{9}@esm\.local$/.test(b)?[b,...[2,3,4,5].map(n=>b.replace('@',`.${n}@`))]:(b?[b]:[])};
-let RO={},RS={},LU={},LSS={},auth,db,me=null,S={},U=[],cat='U15',round=1,tab='m',subs=[],reg=false,cur=null,MSG=[],MSGn=0,MSGopen=null;
+let RO={},RS={},LU={},LSS={},auth,db,me=null,S={},U=[],cat='U15',round=1,tab='m',subs=[],reg=false,cur=null,MSG=[],MSGn=0,MSGopen=null,ACT={},ACTT=0;
 function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2800)}
 function say(id,t,ok){const e=$(id);e.textContent=t;e.classList.toggle('ok',!!ok)}
 function errTxt(e){const c=(e&&e.code)||'';
@@ -2838,7 +2838,7 @@ function init(){
 async function onAuth(u){
  if(reg)return;
  subs.forEach(f=>f());subs=[];U=[];
- RO={};RS={};LU={};LSS={};PH={};STAFF={};MSG=[];MSGn=0;MSGopen=null;
+ RO={};RS={};LU={};LSS={};PH={};STAFF={};MSG=[];MSGn=0;MSGopen=null;ACT={};clearInterval(ACTT);
  if(!u){me=null;OLD.state({user:null});show();return}
  let p=null;try{const s=await db.collection('users').doc(u.uid).get();p=s.exists?s.data():null}catch(e){}
  if(!p||(p.role!=='admin'&&p.status!=='approved')){
@@ -2846,6 +2846,7 @@ async function onAuth(u){
  me=Object.assign({uid:u.uid},p);
  if(me.role==='admin'){
   let prevPendingCount = -1;
+   subs.push(db.collection('activity').onSnapshot(s=>{ACT={};s.docs.forEach(d=>{ACT[d.id]=d.data()});if(tab==='a'&&adminSec==='act')draw()},()=>{}));
   subs.push(db.collection('users').onSnapshot(s=>{
     U=s.docs.filter(d=>d.data().role!=='admin').map(d=>Object.assign({id:d.id},d.data()));
     const pendCount = U.filter(u=>u.status==='pending').length;
@@ -2873,7 +2874,7 @@ async function onAuth(u){
  OLD.state({user:{role:me.role==='admin'?'admin':(isVis()?'visitor':'official'),teamId:me.teamId,name:me.name}});
  subs.push((me.role==='admin'?db.collection('rosters'):db.collection('rosters').where('teamId','==',me.teamId)).onSnapshot(s=>{
   s.docs.forEach(d=>{const r=d.data();RO[r.teamId]=RO[r.teamId]||{};RO[r.teamId][r.cat]=r.roster||[];RS[d.id]=JSON.stringify(r.roster||[])})}));
-listenLineups();listenPhotos();listenStaff();listenMsgs();
+listenLineups();listenPhotos();listenStaff();listenMsgs();actLogin();
  show();
 }
 function listenLineups(){
@@ -2999,6 +3000,7 @@ function admin(){
  const navBar = `<div class="adm-tabs">
    <button type="button" class="adm-tab ${adminSec==='users'?'active':''}" data-adms="users">👥 الحسابات والطلبات ${pend.length?`<span class="badge-count">${pend.length}</span>`:''}</button>
    <button type="button" class="adm-tab ${adminSec==='trash'?'active':''}" data-adms="trash">🗑 سلة المحذوفات ${del.length?`<span class="badge-count" style="background:#64748b">${del.length}</span>`:''}</button>
+   <button type="button" class="adm-tab ${adminSec==='act'?'active':''}" data-adms="act">🕒 سجل الدخول</button>
    <button type="button" class="adm-tab ${adminSec==='tools'?'active':''}" data-adms="tools">⚙️ الملصق والأدوات</button>
  </div>`;
 
@@ -3009,6 +3011,17 @@ function admin(){
  if(adminSec === 'tools'){
    return navBar + `<h2>📊 ملصق الترتيب المعتمد</h2><div class="card">${chips()}<select id="us" class="f">${Array.from({length:22},(_,i)=>`<option value="${i+1}" ${i+1===(up||lastRound())?'selected':''}>بعد الجولة ${i+1}</option>`).join('')}</select><label>🎯 تظليل فريق في الملصق (اختياري)</label><select id="hlT" class="f"><option value="">— بدون تظليل —</option>${Object.keys(T).map(i=>`<option value="${i}" ${String(HL.team)===i?'selected':''}>${esc(T[i])}</option>`).join('')}</select><div class="swatches">${HLC.map(c=>`<button type="button" class="sw" data-hc="${c}" style="background:${c}" aria-label="لون" aria-pressed="${HL.color===c}"></button>`).join('')}<input type="color" id="hlC" value="${HL.color}" aria-label="لون مخصص"></div><button class="btn" id="adminPoster" style="width:100%;margin-top:8px">إنشاء الملصق</button></div>${bkCard()}${rulesCard()}<h2>🧰 أدوات</h2><div class="card"><button class="btn" id="mig" style="width:100%;margin-bottom:8px">🔒 نقل التشكيلات القديمة إلى مساحة خاصة</button><button class="btn alt" id="seed" style="width:100%">استيراد نتائج الجولات 1-3 السابقة</button></div>`;
  }
+
+  if(adminSec === 'act'){
+    const now=Date.now(),ONL=4*60e3,d0=new Date();d0.setHours(0,0,0,0);
+    const isOn=a=>!!(a&&a.lastSeen>now-ONL);
+    const dt=t=>{try{return new Date(t).toLocaleString('ar-DZ',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}catch(e){return''}};
+    const rows=oth.filter(u=>u.status==='approved').map(u=>({u,a:ACT[u.id]||null}));
+    rows.sort((x,y)=>(isOn(y.a)?1:0)-(isOn(x.a)?1:0)||((y.a?y.a.lastLogin:0)-(x.a?x.a.lastLogin:0)));
+    const on=rows.filter(r=>isOn(r.a)).length,today=rows.filter(r=>r.a&&r.a.lastLogin>=d0.getTime()).length,never=rows.filter(r=>!r.a).length;
+    const card=({u,a})=>`<div class="card u"><div><b>${isOn(a)?'🟢':'⚪'} ${esc(u.name)}</b><br><small>${u.kind==='visitor'?'👁️ زائر':'⚽ '+esc(T[u.teamId]||'')}${a?` · آخر دخول: ${esc(dt(a.lastLogin))} · ${a.logins||1} مرة`:''}</small></div><div>${isOn(a)?'<span class="b ok">متصل الآن</span>':a?`<span class="b wt">آخر ظهور ${esc(dt(a.lastSeen))}</span>`:'<span class="b no">لم يدخل بعد</span>'}</div></div>`;
+    return navBar + `<h2>🕒 سجل دخول الحسابات</h2><div class="card">🟢 متصلون الآن: <b>${on}</b> · 📅 دخلوا اليوم: <b>${today}</b> · 👥 الحسابات المعتمدة: <b>${rows.length}</b> · ⚪ لم يدخلوا بعد: <b>${never}</b></div><p class="hint" style="margin:-4px 0 10px;text-align:right">يُسجَّل الدخول ابتداءً من هذا التحديث، لذلك يظهر الجميع «لم يدخل بعد» حتى يفتح كل حساب التطبيق مرة. «مرة» = عدد مرات فتح التطبيق وهو مسجَّل الدخول.</p>${rows.map(card).join('')||'<div class="card" style="color:var(--mu);text-align:center;padding:24px">لا توجد حسابات معتمدة</div>'}`;
+  }
 
  // Default: users
  return navBar + `<h2>⏳ بانتظار الموافقة (${pend.length})</h2>${pend.map(row).join('')||'<div class="card" style="color:var(--mu)">لا توجد طلبات معلقة</div>'}<h2>👥 الحسابات المعتمدة (${oth.length})</h2>${oth.map(row).join('')||'<div class="card" style="color:var(--mu)">لا توجد حسابات معتمدة</div>'}`;
@@ -5113,6 +5126,18 @@ $('msgTxt').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&matc
 $('msgBody').addEventListener('click',e=>{const b=e.target.closest('[data-mt]');if(b){$('msgBody').dataset.k='';msgOpen(+b.dataset.mt)}});
 $('msgBanner').addEventListener('click',e=>{if(e.target.closest('#mbX')){$('msgBanner').classList.remove('on');return}msgOpen(+$('msgBanner').dataset.t)});
 if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('message',e=>{const d=e.data||{};if(d.type==='open-message'&&msgOk())msgOpen(me.role==='admin'?(d.teamId==null?null:+d.teamId):null)});
+
+/* ===== سجل دخول الحسابات (Firestore: activity) ===== */
+function actLogin(){
+ clearInterval(ACTT);
+ if(!me||me.role==='admin'||!db)return;
+ const ref=db.collection('activity').doc(me.uid),t=Date.now();
+ ref.set({uid:me.uid,name:me.name||'',teamId:+me.teamId||0,role:me.role||'manager',kind:me.kind||'club',lastLogin:t,lastSeen:t,logins:firebase.firestore.FieldValue.increment(1)},{merge:true}).catch(()=>{});
+ const beat=()=>{if(me&&me.uid&&!document.hidden)ref.update({lastSeen:Date.now()}).catch(()=>{})};
+ ACTT=setInterval(beat,120000);
+ document.addEventListener('visibilitychange',beat);
+}
+setInterval(()=>{if(me&&me.role==='admin'&&tab==='a'&&adminSec==='act')draw()},60000);
 applyPrefs();
 init();
 </script>
