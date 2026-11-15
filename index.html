@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
@@ -749,7 +749,7 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
 
   <label style="font-weight:700;font-size:13px;display:block;margin-bottom:4px">الرتبة والدور (Role):</label>
   <select id="upmRoleSel" class="f" style="margin-bottom:12px">
-    <option value="manager">مسؤول نادي (يدير ناديه فقط)</option>
+    <option value="manager">⚽ مسؤول نادٍ (إدخال وتعديل النتائج وإدارة فريقه)</option>
     <option value="admin">👑 مشرف عام (كامل الصلاحيات في المنصة)</option>
   </select>
 
@@ -2872,7 +2872,7 @@ async function onAuth(u){
 }
  const f=firstOpen();round=f;
  OLD.state({user:{role:me.role==='admin'?'admin':(isVis()?'visitor':'official'),teamId:me.teamId,name:me.name}});
- subs.push((me.role==='admin'?db.collection('rosters'):db.collection('rosters').where('teamId','==',me.teamId)).onSnapshot(s=>{
+ subs.push((me.role==='admin'||!isVis()?db.collection('rosters'):db.collection('rosters').where('teamId','==',me.teamId)).onSnapshot(s=>{
   s.docs.forEach(d=>{const r=d.data();RO[r.teamId]=RO[r.teamId]||{};RO[r.teamId][r.cat]=r.roster||[];RS[d.id]=JSON.stringify(r.roster||[])})}));
 listenLineups();listenPhotos();listenStaff();listenMsgs();actLogin();
  show();
@@ -2897,11 +2897,12 @@ if(ok){setTimeout(pushResume,2500);setTimeout(syncLocalScores,3500);if(!isVis())
 
 /* ---- صلاحيات ---- */
 function canEdit(h,a,v){
- if(!me)return false;if(me.role==='admin')return true;
- if(me.perm==='view_only'||(me.teamId!=h&&me.teamId!=a))return false;
- return!(v&&v.status==='confirmed')
+ if(!me||isVis())return false;
+ if(me.perm==='view_only')return false;
+ if(me.role==='admin'||me.role==='manager'||!!me.teamId)return true;
+ return false;
 }
-const canConfirm=(h,a,v)=>me&&v&&v.status!=='confirmed'&&(me.role==='admin'||((me.teamId==h||me.teamId==a)&&me.teamId!=v.enteredBy&&v.status==='pending_confirm'&&me.perm!=='view_only'));
+const canConfirm=(h,a,v)=>me&&v&&v.status!=='confirmed'&&!isVis()&&me.perm!=='view_only'&&(me.role==='admin'||((me.role==='manager'||!!me.teamId)&&me.teamId!=v.enteredBy&&v.status==='pending_confirm'));
 
 /* ---- رسم الواجهة ---- */
 function draw(){if(!me&&tab==='a')return;$('app').innerHTML=tab==='m'?fixtures():tab==='r'?results():tab==='s'?standings():tab==='g'?scorers():admin()}
@@ -2940,7 +2941,7 @@ function results(){
   const k=K(cat,round,hm,aw),v=S[k],has=v&&v.sh!==undefined&&v.sh!=='';
   const hasEvents = v&&(v.gh||v.ga||v.yh||v.ya||v.rh||v.ra);
   h+=`<div class="card rs mc" style="--c1:${tcs(hm)};--c2:${tcs(aw)}">${mh(hm,aw,has,v)}
-  <div class="meta" style="justify-content:center;gap:8px">${has&&v.status!=='confirmed'?stBadge(v):''}${hasEvents?`<button class="btn sm alt" data-tl="${k}" style="padding:2px 10px;font-size:11.5px">⏱️ أحداث اللقاء</button>`:''}</div></div>`
+  <div class="meta" style="justify-content:center;gap:8px">${has&&v.status!=='confirmed'?stBadge(v):''}${hasEvents?`<button class="btn sm alt" data-tl="${k}" style="padding:2px 10px;font-size:11.5px">⏱️ أحداث اللقاء</button>`:''}${canEdit(hm,aw,v)?`<button class="btn sm" data-e="${k}" style="padding:2px 10px;font-size:11.5px">✏️ ${has?'تعديل النتيجة':'إدخال النتيجة'}</button>`:''}</div></div>`
  });
  return h+`<div class="bye">🛌 معفى من هذه الجولة: ${esc(T[p.bye])}</div>`
 }
@@ -3274,7 +3275,7 @@ $('ds').onclick=async()=>{
  const adm=me.role==='admin',old=S[cur.k]||{},d=Object.assign({},old);delete d._hid;delete d.lineups;
  Object.assign(d,{sh:done?String(+x):'',sa:done?String(+y):'',pp,ex,date:ex?'':$('sd').value,time:ex?'':$('stm').value,stad:ex?'':$('sst').value.trim(),
   gh:done?$('gh').value.trim():'',ga:done?$('ga').value.trim():'',
-  status:done?(adm?'confirmed':'pending_confirm'):'scheduled',enteredBy:done?(adm?'admin':me.teamId):(old.enteredBy||'')});
+  status:done?(adm?'confirmed':(old.status==='confirmed'?'confirmed':'pending_confirm')):'scheduled',enteredBy:done?(adm?'admin':me.teamId):(old.enteredBy||'')});
  ['yh','ya','rh','ra'].forEach(k=>{d[k]=done?$('c'+k).value.trim():''});
  await put(cur.k,cur.h,cur.a,d);$('dg').close();
  try{const mk=/^(?:([A-Z0-9]+)\|)?(\d+):/.exec(cur.k),rd=mk?mk[2]:'',ct=(mk&&mk[1])||'U15';
