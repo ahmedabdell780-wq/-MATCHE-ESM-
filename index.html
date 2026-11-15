@@ -2899,7 +2899,8 @@ if(ok){setTimeout(pushResume,2500);setTimeout(syncLocalScores,3500);if(!isVis())
 function canEdit(h,a,v){
  if(!me||isVis())return false;
  if(me.perm==='view_only')return false;
- if(me.role==='admin'||me.role==='manager'||!!me.teamId)return true;
+ if(me.role==='admin')return true;
+ if((me.role==='manager'||!!me.teamId)&&(me.teamId==h||me.teamId==a))return true;
  return false;
 }
 const canConfirm=(h,a,v)=>me&&v&&v.status!=='confirmed'&&!isVis()&&me.perm!=='view_only'&&(me.role==='admin'||((me.role==='manager'||!!me.teamId)&&me.teamId!=v.enteredBy&&v.status==='pending_confirm'));
@@ -3251,6 +3252,7 @@ $('stm').addEventListener('input',()=>{tmAuto=false});
 $('tmDef').onclick=()=>{const d=defTime(edCat,$('sd').value);if(d){$('stm').value=d;tmAuto=true}};
 function openEdit(k){
  const m=/^(?:([A-Z0-9]+)\|)?(\d+):(\d+)-(\d+)$/.exec(k);cur={k,h:+m[3],a:+m[4]};const v=S[k]||{};
+ if(!canEdit(cur.h,cur.a,v)){toast('⛔ عذراً، لا تملك صلاحية تعديل نتيجة هذه المباراة (خاصة بفريقك فقط).');return}
  $('dt').textContent=T[cur.h]+' ضد '+T[cur.a];$('sh').value=v.sh??'';$('sa').value=v.sa??'';$('sd').value=v.date||'';edCat=m[1]||'U15';$('stm').value=v.time||defTime(edCat,v.date)||'';tmAuto=!v.time;$('sst').value=v.stad||'';stadInit(cur.h,cur.a,v.stad||'');tmUi();
  const has0=v.sh!==undefined&&v.sh!==''&&v.sh!=null;$('ms').value=v.ex?'ex':v.pp?'pp':has0?'done':'sched';$('gh').value=v.gh||'';$('ga').value=v.ga||'';$('nh').textContent=T[cur.h];$('na2').textContent=T[cur.a];
   ['yh','ya','rh','ra'].forEach(k=>$('c'+k).value=v[k]||'');
