@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
@@ -85,7 +85,6 @@ nav button[aria-pressed=true]{color:#6fe39a;box-shadow:inset 0 3px 0 #6fe39a}
 .stprev{width:62px;height:78px;object-fit:cover;border-radius:12px;border:1px solid var(--ln)}
 #rec{position:fixed;inset:0;z-index:9000;background:#000;display:flex;flex-direction:column;color:#fff;touch-action:manipulation}
 #rec[hidden]{display:none}
-#rcAsk{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.65)}#rcAsk[hidden]{display:none}#rcAsk .rgs{background:#1d2230;color:#fff;border-radius:16px;padding:16px;width:min(420px,92vw);box-sizing:border-box}#rcAsk p{margin:0 0 8px;font-weight:700;line-height:1.6}#rcAsk input{width:100%;box-sizing:border-box;font:inherit;font-size:20px;padding:10px;border:0;border-radius:10px;margin:0 0 10px;text-align:center}#rcAsk .ra{display:flex;gap:8px}#rcAsk button{flex:1;padding:12px;border:0;border-radius:12px;font:inherit;font-weight:700;color:#fff;background:#2b3350}#rcAsk #rcAskOk{background:#16a34a}
 #recVid{position:absolute;width:2px;height:2px;opacity:0;pointer-events:none}
 #recCv{flex:1;min-height:0;width:100%;object-fit:contain;background:#000}
 .rpanel{background:linear-gradient(0deg,#000e,#000a);padding:8px 8px max(8px,env(safe-area-inset-bottom));display:grid;gap:7px}
@@ -336,38 +335,6 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
 .adm-tab.active{background:#fff;color:#0f2a1c;box-shadow:0 2px 6px rgba(0,0,0,.08)}
 .adm-tab .badge-count{background:#ef4444;color:#fff;font-size:11px;padding:1px 6px;border-radius:10px;font-weight:900}
 
-
-/* ===== مراسلة المشرف ↔ رؤساء النوادي ===== */
-#msgBtn{position:relative}
-.mbadge{position:absolute;top:-5px;left:-5px;background:#ef4444;color:#fff;font-size:10px;font-weight:900;border-radius:10px;padding:1px 5px;min-width:17px;text-align:center;box-shadow:0 0 6px rgba(239,68,68,.8);animation:badgePulse 1.8s infinite}
-.mdlg{padding:0;width:min(94vw,440px);border:1.5px solid var(--ln);overflow:hidden}
-.mdlg[open]{display:flex;flex-direction:column;height:min(82vh,640px)}
-.mdlg .mh{display:flex;align-items:center;gap:8px;padding:12px;background:linear-gradient(135deg,var(--g),#0f3a20);color:#fff}
-.mdlg .mh .btn{background:#ffffff26;color:#fff;border:0}
-.mdlg .mt{flex:1;display:flex;flex-direction:column;line-height:1.3;min-width:0}.mdlg .mt b{font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mdlg .mt small{opacity:.8;font-size:11.5px}
-.mbody{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:6px;background:var(--bg)}
-.mrow{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--ln);border-radius:12px;background:var(--card);cursor:pointer;width:100%;text-align:right;color:var(--tx);font:inherit}
-.mrow .lg{width:38px;height:38px;border-radius:50%;object-fit:contain;flex:none;background:#fff}
-.mrow .mi{flex:1;min-width:0;display:flex;flex-direction:column}.mrow .mi b{font-size:14px}.mrow .mi span{font-size:12.5px;color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.mrow .mm{display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-size:11px;color:var(--mu);flex:none}
-.mrow .mu{background:#ef4444;color:#fff;font-weight:900;font-size:11px;border-radius:10px;padding:1px 7px;min-width:18px;text-align:center}
-.mrow.un{border-color:#ef4444aa}
-.mday{align-self:center;font-size:11.5px;color:var(--mu);background:#ffffff12;border-radius:99px;padding:2px 12px;margin:6px 0}
-.bub{max-width:82%;padding:8px 11px 6px;border-radius:14px;font-size:14px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
-.bub.me{align-self:flex-start;background:var(--g);color:#fff;border-bottom-right-radius:4px}
-.bub.th{align-self:flex-end;background:var(--card);border:1px solid var(--ln);color:var(--tx);border-bottom-left-radius:4px}
-.bub .sn{display:block;font-size:11px;font-weight:800;color:var(--gold);margin-bottom:2px}
-.bub .tm2{display:block;font-size:10.5px;opacity:.7;margin-top:3px;text-align:left}
-.mempty{margin:auto;text-align:center;color:var(--mu);font-size:13.5px;padding:20px}
-.mcomp{display:flex;gap:8px;align-items:flex-end;padding:10px;border-top:1px solid var(--ln);background:var(--card)}
-.mcomp textarea{flex:1;resize:none;border:1.5px solid var(--ln);border-radius:12px;padding:10px 12px;background:var(--bg);color:var(--tx);font:inherit;max-height:110px;outline:0}
-.mcomp textarea:focus{border-color:var(--g2)}
-.mdlg .err{margin:0;padding:0 12px 6px;min-height:0}
-.mbn{position:fixed;top:calc(8px + var(--sa));inset-inline:10px;margin:0 auto;max-width:430px;z-index:95;display:none;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;background:#0f2a1ce6;color:#fff;border:1px solid #6fe39a66;box-shadow:0 14px 40px #000a;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);cursor:pointer;animation:mbIn .35s cubic-bezier(.2,.8,.2,1)}
-.mbn.on{display:flex}
-.mbn .mic{font-size:24px;flex:none}.mbn .mtx{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.35}.mbn .mtx b{font-size:13.5px}.mbn .mtx span{font-size:12.5px;opacity:.85;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.mbn .mx{background:none;border:0;color:#fff;opacity:.7;font-size:16px;cursor:pointer;padding:4px}
-@keyframes mbIn{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:none}}
 </style>
 <script>window.ESM_FIREBASE={apiKey:"AIzaSyBSDRAZwpChKIXpRPVIUp0JtdfflLqPRfU",authDomain:"moubarati-l-w-t.firebaseapp.com",projectId:"moubarati-l-w-t",messagingSenderId:"582704281935",appId:"1:582704281935:web:aeb821d64b4de733386d3a"};</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -376,7 +343,7 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js"></script>
 </head>
 <body>
-<header><img src="icon-192.png" alt=""><div><h1>مباريات رابطة تيبازة</h1><small>الفئات الشبانية 2026/2027 · وسط غرب</small></div><span class="sp"></span><span id="who" style="font-size:12px"></span><button class="btn" id="msgBtn" aria-label="الرسائل" hidden>💬<span class="mbadge" id="msgBadge" hidden></span></button><button class="btn" id="gear" aria-label="المظهر">🎨</button><button class="btn" id="out" hidden>خروج</button></header>
+<header><img src="icon-192.png" alt=""><div><h1>مباريات رابطة تيبازة</h1><small>الفئات الشبانية 2026/2027 · وسط غرب</small></div><span class="sp"></span><span id="who" style="font-size:12px"></span><button class="btn" id="gear" aria-label="المظهر">🎨</button><button class="btn" id="out" hidden>خروج</button></header>
 <div id="gate" class="gate" hidden>
  <div class="gbg" aria-hidden="true"><i class="o1"></i><i class="o2"></i><i class="o3"></i><i class="pitch"></i>
   <svg class="shot" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M12 92C30 8 72 -6 92 78" vector-effect="non-scaling-stroke"/></svg>
@@ -413,10 +380,25 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
 <label>🟥 طرد <span id="cn4"></span></label><input id="cra"><div class="gp" id="pkRa"></div></div></div>
 <p class="hint" id="msHint"></p>
 <div class="act" style="margin-top:14px"><button class="btn" id="ds" style="flex:1">حفظ</button><button class="btn alt" id="dc">إلغاء</button></div></dialog>
-<div id="rec" hidden>
+<dialog id="mgEditDlg">
+  <h2 style="margin-top:0">✏️ طلب تعديل النتيجة</h2>
+  <div id="mgEditTitle" style="font-weight:700;font-size:14px;margin-bottom:10px;color:var(--mu)"></div>
+  <div class="sec">
+    <label>النتيجة النهائية</label>
+    <div class="sc2"><input id="mgSh" type="number" min="0" inputmode="numeric"><b>-</b><input id="mgSa" type="number" min="0" inputmode="numeric"></div>
+    <label>هدافو <span id="mgNh"></span></label><input id="mgGh">
+    <label>هدافو <span id="mgNa"></span></label><input id="mgGa">
+    <label>🟨 إنذارات <span id="mgCn1"></span></label><input id="mgYh">
+    <label>🟥 طرد <span id="mgCn2"></span></label><input id="mgRh">
+    <label>🟨 إنذارات <span id="mgCn3"></span></label><input id="mgYa">
+    <label>🟥 طرد <span id="mgCn4"></span></label><input id="mgRa">
+  </div>
+  <p class="hint" style="text-align:right;margin:8px 0">⏳ سيُحفظ الطلب بحالة «في انتظار التأكيد» وسيراجعه المشرف العام قبل الاعتماد.</p>
+  <div class="err" id="mgEditErr" role="alert"></div>
+  <div class="act" style="margin-top:14px"><button class="btn" id="mgEditSave" style="flex:1">💾 إرسال طلب التعديل</button><button class="btn alt" id="mgEditCancel">إلغاء</button></div>
+</dialog><div id="rec" hidden>
  <video id="recVid" playsinline muted autoplay></video>
  <canvas id="recCv"></canvas>
- <div id="rcAsk" hidden><div class="rgs"><p id="rcAskMsg"></p><input id="rcAskIn" autocomplete="off" inputmode="decimal"><div class="ra"><button id="rcAskOk">موافق</button><button id="rcAskNo">إلغاء</button></div></div></div>
  <div id="recGoal" hidden><div class="rgs"><h3 id="rgT"></h3><select class="f" id="rgS" aria-label="الهدّاف"></select><input id="rgN" placeholder="اكتب اسم الهدّاف أو رقمه" autocomplete="off"><div class="hint" id="rgH" style="margin:0;text-align:right"></div><input id="rgM" type="number" min="1" max="130" inputmode="numeric" placeholder="الدقيقة"><div class="act"><button class="btn" id="rgOk" style="flex:1">⚽ تسجيل الهدف</button><button class="btn alt" id="rgNo">إلغاء</button></div></div></div>
  <div class="rpanel">
   <div class="rinfo" id="rcInfo"></div>
@@ -432,20 +414,14 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
 <p class="hint" style="text-align:right;margin:6px 0">⚠️ الاسترجاع يكتب فوق السجلات المطابقة بالمعرّف، ولا يحذف سجلات أخرى موجودة.</p>
 <div class="err" id="bkErr" role="alert"></div>
 <div class="act"><button class="btn" id="bkRun" style="flex:1">⬆ ابدأ الاسترجاع</button><button class="btn alt" id="bkX">إلغاء</button></div></dialog>
-<dialog id="fbHelp"><h2 style="margin-top:0">🔗 رابط أخذ المفتاح</h2>
-<p class="hint" style="text-align:right;margin:0 0 8px">⚠️ الأفضل فتح الرابط من <b>حاسوب</b>: نسخة الهاتف من فيسبوك لا تدعم البث ببرنامج خارجي. لا تضغط على الرابط من الهاتف (يفتح تطبيق فيسبوك)، بل الصقه في شريط عنوان المتصفح:</p>
-<input id="fbUrl" readonly dir="ltr" value="https://www.facebook.com/live/producer" style="text-align:left">
-<ol style="margin:10px 0;padding-inline-start:20px;line-height:1.9"><li>اضغط «نسخ الرابط» ثم أرسله لنفسك (واتساب) وافتحه من الحاسوب.</li><li>اختر صفحتك ← <b>Go Live</b> ← <b>Streaming software</b>.</li><li>فعّل <b>Persistent stream key</b> وانسخ <b>Stream key</b>.</li><li>الصقه في خانة «مفتاح البث» هنا: يُحفظ، فلا تكرر ذلك.</li></ol>
-<div class="act"><button class="btn" id="fbCp" style="flex:1">📋 نسخ الرابط</button><button class="btn alt" id="fbX">إغلاق</button></div></dialog>
 <dialog id="liveSet"><h2 style="margin-top:0">📡 بث مباشر على فيسبوك</h2>
 <div class="srv wait" id="lvSt">⏳ جارٍ فحص الخادم…</div>
-<div id="lvKW"><label for="lvK">مفتاح البث (من فيسبوك)</label><input id="lvK" type="password" autocomplete="off" placeholder="الصق المفتاح هنا">
+<label for="lvK">مفتاح البث (من فيسبوك)</label><input id="lvK" type="password" autocomplete="off" placeholder="الصق المفتاح هنا">
 <label class="chk"><input type="checkbox" id="lvS" checked> تذكّر المفتاح على هذا الجهاز</label>
 <div class="act" style="margin-top:10px"><button class="btn alt" id="lvFb" style="flex:1">🔗 رابط أخذ المفتاح</button></div>
-<details><summary>كيف أحصل على المفتاح؟</summary><ol><li>افتح <b>facebook.com/live/producer من حاسوب</b>: نسخة الهاتف لا تدعم البث ببرنامج خارجي.</li><li>اختر صفحتك ← <b>Go Live</b> ← <b>Streaming software</b> وفعّل <b>Persistent stream key</b> (مفتاح دائم).</li><li>انسخ <b>Stream key</b> والصقه هنا (يُحفظ على هذا الجهاز، فتفعل ذلك مرة واحدة فقط).</li><li>اضغط «ابدأ البث» هنا ثم <b>Go Live</b> من الحاسوب أو من هاتف آخر.</li></ol><p class="hint" style="text-align:right;margin:0">⚠️ لا تغادر هذه الصفحة أثناء البث: iOS يجمّد الكاميرا عند التبديل إلى تطبيق أو تبويب آخر. ولا تضغط «Lancer un direct» في تطبيق فيسبوك.</p></details></div>
-<div id="lvAutoNote" class="hint" style="text-align:right;margin:8px 0" hidden>✅ بث تلقائي: يُنشئ الخادم البث على صفحتك ويبدؤه مباشرة، فلا تحتاج مفتاحاً ولا Go Live ولا مغادرة هذه الصفحة. (يتطلب ضبط FB_PAGE_ID وFB_PAGE_TOKEN على الخادم)</div>
+<details><summary>كيف أحصل على المفتاح؟</summary><ol><li>اضغط زر «رابط أخذ المفتاح» أعلاه (يفتح facebook.com/live/producer).</li><li><b>على الهاتف:</b> إن فتح الرابط تطبيق فيسبوك فلن يظهر المفتاح. افتح الرابط من Safari أو Chrome ثم اختر «طلب موقع سطح المكتب / Request Desktop Site». ويمكنك أيضاً فتحه من الحاسوب.</li><li>اختر صفحتك ثم «برنامج البث / Streaming software».</li><li>انسخ <b>Stream key</b> والصقه هنا.</li><li>اضغط «ابدأ البث» هنا، ثم <b>Go Live</b> في فيسبوك.</li></ol><p class="hint" style="text-align:right;margin:0">⚠️ لا تضغط «Lancer un direct» في تطبيق فيسبوك: هذا بث بكاميرا الهاتف.</p></details>
 <details id="lvAdv"><summary>⚙️ إعدادات متقدمة</summary>
-<label for="lvT">وجهة البث</label><select class="f" id="lvT"><option value="facebook">فيسبوك (بمفتاح)</option><option value="facebook_auto">فيسبوك — تلقائي (بدون مفتاح)</option><option value="youtube">يوتيوب</option><option value="custom">عنوان RTMP مخصص</option></select>
+<label for="lvT">وجهة البث</label><select class="f" id="lvT"><option value="facebook">فيسبوك</option><option value="youtube">يوتيوب</option><option value="custom">عنوان RTMP مخصص</option></select>
 <div id="lvUW" hidden><label for="lvU">عنوان RTMP الكامل</label><input id="lvU" autocomplete="off" placeholder="rtmps://…"></div>
 <label for="lvR">رابط خادم البث</label><input id="lvR" inputmode="url" autocomplete="off" placeholder="https://esm-live-relay.onrender.com"></details>
 <div class="err" id="lvE" role="alert"></div>
@@ -689,38 +665,6 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
 <p class="hint" id="lpInfo" style="text-align:right;margin:8px 0"></p>
 <div class="act" style="margin-top:10px"><button class="btn" id="lpPitch" style="flex:1 1 100%">🏟 تشكيلة على الملعب (خطة اللعب)</button><button class="btn" id="lpGo" style="flex:1">🎽 تشكيلة المباراة</button><button class="btn alt" id="lpCard" style="flex:1">👤 بطاقة المدرب</button></div>
 <div class="act" style="margin-top:8px"><button class="btn alt" id="lpX" style="flex:1">إغلاق</button></div></dialog>
-<dialog id="mk"><h2 id="mkTitle" style="margin-top:0"></h2>
-<div class="chips" id="mkCat"><button class="chip" data-mc="U15" aria-pressed="true">U15</button><button class="chip" data-mc="U17" aria-pressed="false">U17</button><button class="chip" data-mc="U20" aria-pressed="false">U20</button></div>
-<div class="rnd" id="mkRoundRow" style="margin:0 0 8px"><button class="btn sm" id="mkNextR">›</button><b id="mkRound" style="flex:1;text-align:center"></b><button class="btn sm" id="mkPrevR">‹</button></div>
-<div id="mkPickRow" hidden><label>اللاعب</label><select class="f" id="mkPick"></select></div>
-<div id="mkXiRow" hidden><label>الخطة</label><select class="f" id="mkForm"><option>4-3-3</option><option>4-4-2</option><option>3-5-2</option><option>4-2-3-1</option></select><p class="hint" id="mkXiHint" style="text-align:right;margin:6px 0"></p><div id="mkSlots"></div><div class="act" style="margin-top:8px"><button class="btn alt" id="mkXiSave" style="flex:1">💾 حفظ التشكيلة</button></div></div>
-<div class="chips" id="mkFmt"><button class="chip" data-mf="45" aria-pressed="true">4:5 · منشور</button><button class="chip" data-mf="916" aria-pressed="false">9:16 · ستوري / ريلز</button></div>
-<label class="ck"><input type="checkbox" id="mkSnd" checked> 🔊 مؤثرات صوتية</label>
-<div id="mkStage" style="margin:8px auto;max-width:300px"><canvas id="mkc" width="1080" height="1350" style="width:100%;height:auto;border-radius:14px;background:#050709;display:block"></canvas><div style="height:6px;border-radius:4px;background:var(--ln);margin-top:8px;overflow:hidden"><div id="mkBar" style="height:100%;width:0;background:var(--g)"></div></div></div>
-<video id="mkPrev" playsinline controls hidden style="width:100%;max-width:300px;margin:8px auto;display:block;border-radius:14px"></video>
-<p class="hint" id="mkInfo" style="text-align:center;margin:6px 0"></p>
-<div class="act" style="margin-top:8px"><button class="btn" id="mkGo" style="flex:1">⏺ إنشاء الفيديو</button><button class="btn" id="mkShare" style="flex:1" hidden>📤 مشاركة</button><button class="btn alt" id="mkDl" style="flex:1" hidden>⬇️ تحميل</button></div>
-<div class="act" style="margin-top:8px"><button class="btn alt" id="mkPng" style="flex:1">🖼 حفظ كصورة</button><button class="btn alt" id="mkPost" style="flex:1">📝 منشور فيسبوك</button></div>
-<div class="act" style="margin-top:8px"><button class="btn alt" id="mkX" style="flex:1">إغلاق</button></div></dialog>
-<dialog id="fpd"><h2 id="fpTitle" style="margin-top:0">📝 منشور</h2><textarea id="fpTxt" rows="14" dir="auto" style="width:100%;box-sizing:border-box;border:1px solid var(--ln);border-radius:12px;padding:10px;font:inherit"></textarea>
-<div class="act" style="margin-top:8px"><button class="btn" id="fpCopy" style="flex:1">📋 نسخ</button><button class="btn alt" id="fpShare" style="flex:1">📤 مشاركة</button><button class="btn alt" id="fpX">إغلاق</button></div></dialog>
-<dialog id="gv"><h2 style="margin-top:0">🎬 فيديو الهدف</h2>
-<div class="chips" id="gvFmt"><button class="chip" data-gf="45" aria-pressed="true">4:5 · منشور</button><button class="chip" data-gf="916" aria-pressed="false">9:16 · ستوري / ريلز</button></div>
-<label class="ck"><input type="checkbox" id="gvSnd" checked> 🔊 مؤثرات صوتية (ضربة وجمهور وعدّاد)</label>
-<div id="gvStage" style="margin:8px auto;max-width:300px"><canvas id="gvc" width="1080" height="1350" style="width:100%;height:auto;border-radius:14px;background:#050709;display:block"></canvas><div style="height:6px;border-radius:4px;background:var(--ln);margin-top:8px;overflow:hidden"><div id="gvBar" style="height:100%;width:0;background:var(--g)"></div></div></div>
-<video id="gvPrev" playsinline controls hidden style="width:100%;max-width:300px;margin:8px auto;display:block;border-radius:14px"></video>
-<p class="hint" id="gvInfo" style="text-align:center;margin:6px 0"></p>
-<div class="act" style="margin-top:8px"><button class="btn" id="gvGo" style="flex:1">⏺ إنشاء الفيديو</button><button class="btn" id="gvShare" style="flex:1" hidden>📤 مشاركة (فيسبوك…)</button><button class="btn alt" id="gvDl" style="flex:1" hidden>⬇️ تحميل</button></div>
-<div class="act" style="margin-top:8px"><button class="btn alt" id="gvX" style="flex:1">إغلاق</button></div></dialog>
-<dialog id="rv"><h2 style="margin-top:0">🎞️ فيديو الجولة</h2>
-<div class="rnd" style="margin:0 0 8px"><button class="btn sm" id="rvNextR">›</button><b id="rvRound" style="flex:1;text-align:center"></b><button class="btn sm" id="rvPrevR">‹</button></div>
-<div class="chips" id="rvCat"><button class="chip" data-rc="U15" aria-pressed="true">U15</button><button class="chip" data-rc="U17" aria-pressed="false">U17</button><button class="chip" data-rc="U20" aria-pressed="false">U20</button></div>
-<div class="chips" id="rvFmt"><button class="chip" data-rf="23" aria-pressed="true">2:3 · منشور</button><button class="chip" data-rf="916" aria-pressed="false">9:16 · ستوري / ريلز</button></div>
-<div id="rvStage" style="margin:8px auto;max-width:300px"><canvas id="rvc" width="720" height="1080" style="width:100%;height:auto;border-radius:14px;background:#e8eefc;display:block"></canvas><div style="height:6px;border-radius:4px;background:var(--ln);margin-top:8px;overflow:hidden"><div id="rvBar" style="height:100%;width:0;background:var(--g)"></div></div></div>
-<video id="rvPrev" playsinline controls hidden style="width:100%;max-width:300px;margin:8px auto;display:block;border-radius:14px"></video>
-<p class="hint" id="rvInfo" style="text-align:center;margin:6px 0"></p>
-<div class="act" style="margin-top:8px"><button class="btn" id="rvGo" style="flex:1">⏺ إنشاء الفيديو</button><button class="btn" id="rvShare" style="flex:1" hidden>📤 مشاركة (فيسبوك…)</button><button class="btn alt" id="rvDl" style="flex:1" hidden>⬇️ تحميل</button></div>
-<div class="act" style="margin-top:8px"><button class="btn alt" id="rvX" style="flex:1">إغلاق</button></div></dialog>
 <dialog id="vd"><h2 style="margin-top:0">🎬 فيديو ملصق المباراة</h2>
 <div class="chips" id="vFmt"><button class="chip" data-vf="45" aria-pressed="true">4:5 · منشور</button><button class="chip" data-vf="916" aria-pressed="false">9:16 · ستوري / ريلز</button></div>
 <label class="ck"><input type="checkbox" id="vSnd" checked> 🔊 مؤثرات صوتية</label>
@@ -880,13 +824,6 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
   </div>
 </dialog>
 
-<dialog id="msgDlg" class="mdlg">
- <div class="mh"><button class="btn sm" id="msgBack" aria-label="رجوع" hidden>→</button><div class="mt"><b id="msgTitle">💬 الرسائل</b><small id="msgSub"></small></div><button class="btn sm" id="msgClose" aria-label="إغلاق">✕</button></div>
- <div class="mbody" id="msgBody"></div>
- <div class="mcomp" id="msgComp" hidden><textarea id="msgTxt" rows="1" maxlength="1000" dir="auto" placeholder="اكتب رسالتك…"></textarea><button class="btn" id="msgSend">إرسال ➤</button></div>
- <div class="err" id="msgErr" role="alert"></div>
-</dialog>
-<div class="mbn" id="msgBanner" role="status" aria-live="polite"><span class="mic">💬</span><div class="mtx"><b id="mbT"></b><span id="mbB"></span></div><button class="btn sm" id="mbOpen">فتح</button><button class="mx" id="mbX" aria-label="إغلاق">✕</button></div>
 <div id="toast"></div>
 <select id="rr" hidden><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option></select><select id="upto" hidden><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option></select>
 <script>(function(){
@@ -2446,7 +2383,7 @@ const mail=v=>{v=String(v||'').trim().toLowerCase();if(v.includes('@'))return v;
 const isVis=()=>!!(me&&(me.kind==='visitor'||me.role==='visitor'));
 const rdoc=(n,p)=>{const v=$('rk')&&$('rk').value==='visitor';return{name:n,phone:p,teamId:v?0:+$('rt').value,role:'manager',kind:v?'visitor':'club',status:'pending',perm:v?'view_only':'full',date:new Date().toISOString().slice(0,10)}};
 const mails=v=>{const b=mail(v);return /^\d{9}@esm\.local$/.test(b)?[b,...[2,3,4,5].map(n=>b.replace('@',`.${n}@`))]:(b?[b]:[])};
-let RO={},RS={},LU={},LSS={},auth,db,me=null,S={},U=[],cat='U15',round=1,tab='m',subs=[],reg=false,cur=null,MSG=[],MSGn=0,MSGopen=null,ACT={},ACTT=0;
+let RO={},RS={},LU={},LSS={},auth,db,me=null,S={},U=[],cat='U15',round=1,tab='m',subs=[],reg=false,cur=null;
 function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2800)}
 function say(id,t,ok){const e=$(id);e.textContent=t;e.classList.toggle('ok',!!ok)}
 function errTxt(e){const c=(e&&e.code)||'';
@@ -2838,7 +2775,7 @@ function init(){
 async function onAuth(u){
  if(reg)return;
  subs.forEach(f=>f());subs=[];U=[];
- RO={};RS={};LU={};LSS={};PH={};STAFF={};MSG=[];MSGn=0;MSGopen=null;ACT={};clearInterval(ACTT);
+ RO={};RS={};LU={};LSS={};PH={};STAFF={};
  if(!u){me=null;OLD.state({user:null});show();return}
  let p=null;try{const s=await db.collection('users').doc(u.uid).get();p=s.exists?s.data():null}catch(e){}
  if(!p||(p.role!=='admin'&&p.status!=='approved')){
@@ -2846,7 +2783,6 @@ async function onAuth(u){
  me=Object.assign({uid:u.uid},p);
  if(me.role==='admin'){
   let prevPendingCount = -1;
-   subs.push(db.collection('activity').onSnapshot(s=>{ACT={};s.docs.forEach(d=>{ACT[d.id]=d.data()});if(tab==='a'&&adminSec==='act')draw()},()=>{}));
   subs.push(db.collection('users').onSnapshot(s=>{
     U=s.docs.filter(d=>d.data().role!=='admin').map(d=>Object.assign({id:d.id},d.data()));
     const pendCount = U.filter(u=>u.status==='pending').length;
@@ -2874,7 +2810,7 @@ async function onAuth(u){
  OLD.state({user:{role:me.role==='admin'?'admin':(isVis()?'visitor':'official'),teamId:me.teamId,name:me.name}});
  subs.push((me.role==='admin'?db.collection('rosters'):db.collection('rosters').where('teamId','==',me.teamId)).onSnapshot(s=>{
   s.docs.forEach(d=>{const r=d.data();RO[r.teamId]=RO[r.teamId]||{};RO[r.teamId][r.cat]=r.roster||[];RS[d.id]=JSON.stringify(r.roster||[])})}));
-listenLineups();listenPhotos();listenStaff();listenMsgs();actLogin();
+listenLineups();listenPhotos();listenStaff();
  show();
 }
 function listenLineups(){
@@ -2891,7 +2827,7 @@ function show(){
  $('out').hidden=!ok;
  $('na').hidden=!(ok&&me.role==='admin');
 if(ok){setTimeout(pushResume,2500);setTimeout(syncLocalScores,3500);if(!isVis())rcWake(lsGet(LK.r)||LIVE_RELAY)}
- msgUi();$('who').textContent=ok?(me.role==='admin'?'👑 المشرف':isVis()?'👁️ زائر':'⚽ '+(T[me.teamId]||'')):'👁️ زائر';
+ $('who').textContent=ok?(me.role==='admin'?'👑 المشرف':isVis()?'👁️ زائر':'⚽ '+(T[me.teamId]||'')):'👁️ زائر';
  draw()
 }
 
@@ -2902,6 +2838,7 @@ function canEdit(h,a,v){
  return!(v&&v.status==='confirmed')
 }
 const canConfirm=(h,a,v)=>me&&v&&v.status!=='confirmed'&&(me.role==='admin'||((me.teamId==h||me.teamId==a)&&me.teamId!=v.enteredBy&&v.status==='pending_confirm'&&me.perm!=='view_only'));
+const canManagerRequestEdit=(h,a,v)=>me&&me.role==='manager'&&me.perm!=='view_only'&&(me.teamId==h||me.teamId==a)&&v&&v.status==='confirmed';
 
 /* ---- رسم الواجهة ---- */
 function draw(){if(!me&&tab==='a')return;$('app').innerHTML=tab==='m'?fixtures():tab==='r'?results():tab==='s'?standings():tab==='g'?scorers():admin()}
@@ -2924,12 +2861,12 @@ function mh(hm,aw,has,v){
 }
 const mi=v=>'📅 '+(v&&v.date?esc(v.date):'غير محدد')+((v&&(v.time||defTime(cat,v.date)))?' · '+esc(v.time||defTime(cat,v.date)):'')+(v&&v.stad?' · '+esc(v.stad):'');
 function fixtures(){
- const p=pairs(round);let h=chips()+(me&&!isVis()?`<div class="act" style="margin:0 0 10px"><button class="btn alt" id="plBtn" style="flex:1">👥 إدارة اللاعبين</button><button class="btn alt" id="phBtn" style="flex:1">📷 صور اللاعبين</button></div><div class="act" style="margin:0 0 10px"><button class="btn alt" id="stBtn" style="flex:1">🧑‍💼 الطاقم الفني والإداري</button></div>`:'')+rnd()+rvBar();
+ const p=pairs(round);let h=chips()+(me&&!isVis()?`<div class="act" style="margin:0 0 10px"><button class="btn alt" id="plBtn" style="flex:1">👥 إدارة اللاعبين</button><button class="btn alt" id="phBtn" style="flex:1">📷 صور اللاعبين</button></div><div class="act" style="margin:0 0 10px"><button class="btn alt" id="stBtn" style="flex:1">🧑‍💼 الطاقم الفني والإداري</button></div>`:'')+rnd();
  p.m.forEach(([hm,aw])=>{
   const k=K(cat,round,hm,aw),v=S[k],has=v&&v.sh!==undefined&&v.sh!=='';
   h+=`<div class="card mc" style="--c1:${tcs(hm)};--c2:${tcs(aw)}">${mh(hm,aw,has,v)}
   <div class="meta"><span>${mi(v)}</span>${has?stBadge(v):v&&v.pp?'<span class="b wt">⏳ مؤجلة</span>':v&&v.ex?'<span class="b no">معفاة</span>':''}</div>
-  <div class="act"><button class="btn sm alt" data-lu="${round}-${hm}-${aw}">📋 التشكيلة والتبديلات</button>${me?`<button class="btn sm alt" data-lp="${k}">🎽 ملصق التشكيلة</button>`:''}${me&&(me.role==='admin'||hm==me.teamId||aw==me.teamId)?`<button class="btn sm alt" data-ps="${round}-${hm}-${aw}">🖨 ورقة رسمية</button>`:''}${me&&me.role==='admin'?`<button class="btn sm alt" data-rec="${k}">🎥 تصوير مباشر</button>`:''}<button class="btn sm alt" data-tl="${k}">⏱️ أحداث اللقاء</button><button class="btn sm alt" data-mp="${round}-${hm}-${aw}">📣 ملصق المباراة</button>${me?`<button class="btn sm alt" data-mv="${round}-${hm}-${aw}">🎬 فيديو المباراة</button>`:''}${v&&(v.gh||v.ga)?`<button class="btn sm alt" data-gp="${k}">⚽ ملصق / فيديو الهدف</button>`:''}<button class="btn sm alt" data-fp="${k}">📝 منشور</button>${canEdit(hm,aw,v)?`<button class="btn sm" data-e="${k}">✏️ ${has?'تعديل النتيجة':'الموعد / النتيجة'}</button>`:''}${canConfirm(hm,aw,v)&&has?`<button class="btn sm" data-ok="${k}">✅ ${me.role==='admin'?'اعتماد':'تأكيد'}</button>${me.role!=='admin'?`<button class="btn sm red" data-no="${k}">❌ اعتراض</button>`:''}`:''}</div></div>`});
+  <div class="act"><button class="btn sm alt" data-lu="${round}-${hm}-${aw}">📋 التشكيلة والتبديلات</button>${me?`<button class="btn sm alt" data-lp="${k}">🎽 ملصق التشكيلة</button>`:''}${me&&(me.role==='admin'||hm==me.teamId||aw==me.teamId)?`<button class="btn sm alt" data-ps="${round}-${hm}-${aw}">🖨 ورقة رسمية</button>`:''}${me&&me.role==='admin'?`<button class="btn sm alt" data-rec="${k}">🎥 تصوير مباشر</button>`:''}<button class="btn sm alt" data-tl="${k}">⏱️ أحداث اللقاء</button><button class="btn sm alt" data-mp="${round}-${hm}-${aw}">📣 ملصق المباراة</button>${me?`<button class="btn sm alt" data-mv="${round}-${hm}-${aw}">🎬 فيديو المباراة</button>`:''}${v&&(v.gh||v.ga)?`<button class="btn sm alt" data-gp="${k}">⚽ ملصق الهدف</button>`:''}${canEdit(hm,aw,v)?`<button class="btn sm" data-e="${k}">✏️ ${has?'تعديل النتيجة':'الموعد / النتيجة'}</button>`:''}`${canManagerRequestEdit(hm,aw,v)?`<button class="btn sm" data-mge="${k}">✏️ طلب تعديل النتيجة</button>`:'}${canConfirm(hm,aw,v)&&has?`<button class="btn sm" data-ok="${k}">✅ ${me.role==='admin'?'اعتماد':'تأكيد'}</button>${me.role!=='admin'?`<button class="btn sm red" data-no="${k}">❌ اعتراض</button>`:''}`:''}</div></div>`});
  return h+`<div class="bye">🛌 مستريحة: ${esc(T[p.bye])}</div>`
 }
 function results(){
@@ -2957,7 +2894,7 @@ function standings(){
  if(!up)up=lastRound();const rows=tbl(cat,up),n=rows.length;
  const rc=i=>i==0?'g1':i==1?'g2':i==2?'g3':i>=n-3?'lo':'';
  return chips()+`<div class="rnd"><select id="us">${Array.from({length:22},(_,i)=>`<option value="${i+1}" ${i+1===up?'selected':''}>بعد الجولة ${i+1}</option>`).join('')}</select></div>
- ${me?'<button class="btn alt" data-shot="s" style="width:100%;margin-bottom:10px">📷 حفظ الترتيب كصورة</button>':''}<div class="act" style="margin:0 0 10px;flex-wrap:wrap"><button class="btn alt sm" data-mk="table">🎞️ فيديو الترتيب</button><button class="btn alt sm" data-pt="1">📝 منشور الترتيب</button></div>
+ ${me?'<button class="btn alt" data-shot="s" style="width:100%;margin-bottom:10px">📷 حفظ الترتيب كصورة</button>':''}
  <div class="tophd"><div class="yr">2026<br>2027</div><div class="ttl"><b>الترتيب</b><span>${cat} · مجموعة وسط غرب</span></div><img class="lgimg" src="${LEAGUE}" alt=""></div>
  <div class="subl">بعد نهاية الجولة ${String(up).padStart(2,'0')}</div>
  <div class="thd"><span>#</span><span>الفريق</span><span>لعب</span><span>فاز</span><span>تعادل</span><span>خسر</span><span>نقاط</span></div>
@@ -2983,7 +2920,7 @@ function scorers(){
  const[G,C]=OLD.tallies();
  const row=(i,o)=>`<div class="tr" data-pcard="${o.t}|${esc(o.n)}" style="grid-template-columns:30px 1fr 56px;cursor:pointer" title="انقر لعرض بطاقة اللاعب"><span class="rk ${i<3?['g1','g2','g3'][i]:''}">${i+1}</span><span class="nm">${LG[o.t]?lg(o.t):''}<span>${esc(o.n)}<br><small style="font-weight:500;opacity:.7">${esc(T[o.t]||'')}</small></span></span><b class="c p" style="width:auto;border-radius:20px">${o.c} ⚽</b></div>`;
  if(gsub==='c')return cardsPanel();
- let h=chips()+gsw()+pCardPickerHtml()+`<div class="act" style="margin:0 0 10px;flex-wrap:wrap"><button class="btn alt sm" data-mk="scorers">🎞️ فيديو الهدافين</button><button class="btn alt sm" data-pg="1">📝 منشور الهدافين</button></div><div class="rh">🥅 ترتيب الهدافين · ${cat}</div>`+(G.length?G.slice(0,30).map((o,i)=>row(i,o)).join(''):'<div class="card" style="text-align:center;color:var(--mu)">لا يوجد هدافون مسجلون بعد</div>');
+ let h=chips()+gsw()+pCardPickerHtml()+`<div class="rh">🥅 ترتيب الهدافين · ${cat}</div>`+(G.length?G.slice(0,30).map((o,i)=>row(i,o)).join(''):'<div class="card" style="text-align:center;color:var(--mu)">لا يوجد هدافون مسجلون بعد</div>');
  if(C.length)h+=`<div class="rh" style="margin-top:14px">🟨🟥 بطاقات فريقنا</div>`+C.map(o=>`<div class="card u"><b>${esc(o.n)}</b><span>🟨 ${o.y} · 🟥 ${o.r}</span></div>`).join('');
  return h
 }
@@ -3000,7 +2937,6 @@ function admin(){
  const navBar = `<div class="adm-tabs">
    <button type="button" class="adm-tab ${adminSec==='users'?'active':''}" data-adms="users">👥 الحسابات والطلبات ${pend.length?`<span class="badge-count">${pend.length}</span>`:''}</button>
    <button type="button" class="adm-tab ${adminSec==='trash'?'active':''}" data-adms="trash">🗑 سلة المحذوفات ${del.length?`<span class="badge-count" style="background:#64748b">${del.length}</span>`:''}</button>
-   <button type="button" class="adm-tab ${adminSec==='act'?'active':''}" data-adms="act">🕒 سجل الدخول</button>
    <button type="button" class="adm-tab ${adminSec==='tools'?'active':''}" data-adms="tools">⚙️ الملصق والأدوات</button>
  </div>`;
 
@@ -3011,17 +2947,6 @@ function admin(){
  if(adminSec === 'tools'){
    return navBar + `<h2>📊 ملصق الترتيب المعتمد</h2><div class="card">${chips()}<select id="us" class="f">${Array.from({length:22},(_,i)=>`<option value="${i+1}" ${i+1===(up||lastRound())?'selected':''}>بعد الجولة ${i+1}</option>`).join('')}</select><label>🎯 تظليل فريق في الملصق (اختياري)</label><select id="hlT" class="f"><option value="">— بدون تظليل —</option>${Object.keys(T).map(i=>`<option value="${i}" ${String(HL.team)===i?'selected':''}>${esc(T[i])}</option>`).join('')}</select><div class="swatches">${HLC.map(c=>`<button type="button" class="sw" data-hc="${c}" style="background:${c}" aria-label="لون" aria-pressed="${HL.color===c}"></button>`).join('')}<input type="color" id="hlC" value="${HL.color}" aria-label="لون مخصص"></div><button class="btn" id="adminPoster" style="width:100%;margin-top:8px">إنشاء الملصق</button></div>${bkCard()}${rulesCard()}<h2>🧰 أدوات</h2><div class="card"><button class="btn" id="mig" style="width:100%;margin-bottom:8px">🔒 نقل التشكيلات القديمة إلى مساحة خاصة</button><button class="btn alt" id="seed" style="width:100%">استيراد نتائج الجولات 1-3 السابقة</button></div>`;
  }
-
-  if(adminSec === 'act'){
-    const now=Date.now(),ONL=4*60e3,d0=new Date();d0.setHours(0,0,0,0);
-    const isOn=a=>!!(a&&a.lastSeen>now-ONL);
-    const dt=t=>{try{return new Date(t).toLocaleString('ar-DZ',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}catch(e){return''}};
-    const rows=oth.filter(u=>u.status==='approved').map(u=>({u,a:ACT[u.id]||null}));
-    rows.sort((x,y)=>(isOn(y.a)?1:0)-(isOn(x.a)?1:0)||((y.a?y.a.lastLogin:0)-(x.a?x.a.lastLogin:0)));
-    const on=rows.filter(r=>isOn(r.a)).length,today=rows.filter(r=>r.a&&r.a.lastLogin>=d0.getTime()).length,never=rows.filter(r=>!r.a).length;
-    const card=({u,a})=>`<div class="card u"><div><b>${isOn(a)?'🟢':'⚪'} ${esc(u.name)}</b><br><small>${u.kind==='visitor'?'👁️ زائر':'⚽ '+esc(T[u.teamId]||'')}${a?` · آخر دخول: ${esc(dt(a.lastLogin))} · ${a.logins||1} مرة`:''}</small></div><div>${isOn(a)?'<span class="b ok">متصل الآن</span>':a?`<span class="b wt">آخر ظهور ${esc(dt(a.lastSeen))}</span>`:'<span class="b no">لم يدخل بعد</span>'}</div></div>`;
-    return navBar + `<h2>🕒 سجل دخول الحسابات</h2><div class="card">🟢 متصلون الآن: <b>${on}</b> · 📅 دخلوا اليوم: <b>${today}</b> · 👥 الحسابات المعتمدة: <b>${rows.length}</b> · ⚪ لم يدخلوا بعد: <b>${never}</b></div><p class="hint" style="margin:-4px 0 10px;text-align:right">يُسجَّل الدخول ابتداءً من هذا التحديث، لذلك يظهر الجميع «لم يدخل بعد» حتى يفتح كل حساب التطبيق مرة. «مرة» = عدد مرات فتح التطبيق وهو مسجَّل الدخول.</p>${rows.map(card).join('')||'<div class="card" style="color:var(--mu);text-align:center;padding:24px">لا توجد حسابات معتمدة</div>'}`;
-  }
 
  // Default: users
  return navBar + `<h2>⏳ بانتظار الموافقة (${pend.length})</h2>${pend.map(row).join('')||'<div class="card" style="color:var(--mu)">لا توجد طلبات معلقة</div>'}<h2>👥 الحسابات المعتمدة (${oth.length})</h2>${oth.map(row).join('')||'<div class="card" style="color:var(--mu)">لا توجد حسابات معتمدة</div>'}`;
@@ -3132,6 +3057,7 @@ document.addEventListener('click',async e=>{
  else if(b.id==='plBtn'){OLD.load(S);OLD.state({cat,rosters:RO});OLD.players(cat,me.role==='admin'?5:me.teamId)}
  else if(b.dataset.shot)poster(b.dataset.shot)
  else if(b.dataset.e)openEdit(b.dataset.e)
+ else if(b.dataset.mge)openManagerEdit(b.dataset.mge)
  else if(b.dataset.tl)openMatchTimeline(b.dataset.tl)
  else if(b.id==='btnAllCatsRecap')exportAllCatsRoundRecap(round)
  else if(b.id==='btnOpenSelectedPCard'){const t=+($('pCardTeamPick')||{}).value,n=($('pCardPlayerPick')||{}).value;if(t&&n)openPlayerCard(t,n);else toast('اختر النادي واللاعب')}
@@ -3256,6 +3182,39 @@ function openEdit(k){
   ['cn1','cn2'].forEach(i=>$(i).textContent=T[cur.h]);['cn3','cn4'].forEach(i=>$(i).textContent=T[cur.a]);
  buildPick('h',cur.h);buildPick('a',cur.a);pickRow('Yh',cur.h,'cyh');pickRow('Rh',cur.h,'crh');pickRow('Ya',cur.a,'cya');pickRow('Ra',cur.a,'cra');msUi();$('dg').showModal()
 }
+/* ---- طلب تعديل النتيجة (مسؤول النادي) ---- */
+let mgCur={};
+function openManagerEdit(k){
+ const m=/^(?:([A-Z0-9]+)\|)?(\d+):(\d+)-(\d+)$/.exec(k);
+ if(!m)return;
+ mgCur={k,h:+m[3],a:+m[4]};
+ const v=S[k]||{};
+ $('mgEditTitle').textContent=T[mgCur.h]+' ضد '+T[mgCur.a];
+ $('mgNh').textContent=T[mgCur.h];$('mgNa').textContent=T[mgCur.a];
+ $('mgCn1').textContent=T[mgCur.h];$('mgCn2').textContent=T[mgCur.h];
+ $('mgCn3').textContent=T[mgCur.a];$('mgCn4').textContent=T[mgCur.a];
+ $('mgSh').value=v.sh??'';$('mgSa').value=v.sa??'';
+ $('mgGh').value=v.gh||'';$('mgGa').value=v.ga||'';
+ $('mgYh').value=v.yh||'';$('mgRh').value=v.rh||'';
+ $('mgYa').value=v.ya||'';$('mgRa').value=v.ra||'';
+ say('mgEditErr','');$('mgEditDlg').showModal();
+}
+$('mgEditSave').onclick=async()=>{
+ const x=$('mgSh').value,y=$('mgSa').value;
+ if(x===''||y===''||+x<0||+y<0)return say('mgEditErr','⚠️ أدخل نتيجة صحيحة');
+ const old=S[mgCur.k]||{},d=Object.assign({},old);delete d._hid;delete d.lineups;
+ Object.assign(d,{sh:String(+x),sa:String(+y),pp:false,ex:false,
+  gh:$('mgGh').value.trim(),ga:$('mgGa').value.trim(),
+  yh:$('mgYh').value.trim(),rh:$('mgRh').value.trim(),
+  ya:$('mgYa').value.trim(),ra:$('mgRa').value.trim(),
+  status:'pending_confirm',enteredBy:me.teamId,
+  editRequestBy:me.teamId,editRequestAt:Date.now()});
+ await put(mgCur.k,mgCur.h,mgCur.a,d);$('mgEditDlg').close();
+ try{const mk=/^(?:([A-Z0-9]+)\|)?(\d+):/.exec(mgCur.k),rd=mk?mk[2]:'',ct=(mk&&mk[1])||'U15';
+  pushNotify({kind:'result',teams:[mgCur.h,mgCur.a],title:'📝 طلب تعديل نتيجة · '+ct,body:T[mgCur.h]+' '+d.sh+' - '+d.sa+' '+T[mgCur.a]+' (الجولة '+rd+') — طلب من مسؤول النادي'})}catch(e){}
+};
+$('mgEditCancel').onclick=()=>$('mgEditDlg').close();
+
 function rosterNamesFor(t){try{OLD.state({cat,rosters:RO});return(OLD.rosterList(cat,t)||[]).map(x=>typeof x==='string'?x:(x&&x.name)||'').filter(Boolean)}catch(e){return[]}}
 function buildPick(side,t){const el=$('gp'+side),ns=rosterNamesFor(t);
  el.innerHTML=ns.length?`<select class="f" id="gs${side}" aria-label="اختر اللاعب"><option value="">👤 اختر لاعباً</option>${ns.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('')}</select><input id="gm${side}" type="number" min="1" max="130" inputmode="numeric" placeholder="الدقيقة" aria-label="الدقيقة"><button type="button" class="btn sm" data-gadd="${side}" aria-label="إضافة هدّاف">➕</button>`
@@ -3459,10 +3418,10 @@ async function posterGoal(key,side,idx){
 
 /* ---- ملصق المباراة ---- */
 async function openGoal(k){const v=S[k]||{},L=[];parseG(v.gh).forEach((g,i)=>L.push(['h',i,g]));parseG(v.ga).forEach((g,i)=>L.push(['a',i,g]));
- $('gList').innerHTML=L.map(([s,i,g],j)=>`<div style="display:flex;gap:6px;margin-bottom:6px"><button class="btn alt" style="flex:1" data-gk="${s}|${i}">⚽ ${esc(g.n)}${g.m?' · '+g.m+"'":''}</button><button class="btn" style="width:64px" data-gv="${s}|${i}" title="فيديو الهدف">🎬</button></div>`).join('')||'<div class="card">لا يوجد هدافون مسجلون</div>';
+ $('gList').innerHTML=L.map(([s,i,g],j)=>`<button class="btn alt" style="width:100%;margin-bottom:6px" data-gk="${s}|${i}">⚽ ${esc(g.n)}${g.m?' · '+g.m+"'":''}</button>`).join('')||'<div class="card">لا يوجد هدافون مسجلون</div>';
  $('gd').dataset.k=k;$('gd').showModal()}
 $('gc').onclick=()=>$('gd').close();
-$('gd').addEventListener('click',e=>{const bv=e.target.closest('button[data-gv]');if(bv){const[s2,i2]=bv.dataset.gv.split('|'),k2=$('gd').dataset.k;$('gd').close();openGV(k2,s2,+i2);return}const b=e.target.closest('button[data-gk]');if(!b)return;const[s,i]=b.dataset.gk.split('|');const k=$('gd').dataset.k;$('gd').close();OLD.load(S);OLD.state({cat,rosters:RO});posterGoal(k,s,+i)});
+$('gd').addEventListener('click',e=>{const b=e.target.closest('button[data-gk]');if(!b)return;const[s,i]=b.dataset.gk.split('|');const k=$('gd').dataset.k;$('gd').close();OLD.load(S);OLD.state({cat,rosters:RO});posterGoal(k,s,+i)});
 async function posterMatch(r,h,a){
  const key=(cat==='U15'?'':cat+'|')+r+':'+h+'-'+a,v=S[key]||{};
  toast('⏳ جاري تصميم ملصق المباراة…');
@@ -3666,7 +3625,6 @@ async function openStudio(k){
  try{RC.wl=await navigator.wakeLock.request('screen')}catch(e){}
  RC.ui=setInterval(rcUi,400);rcUi();
  const step=()=>{if(!RC.on)return;try{rcFrame()}catch(e){}RC.raf=requestAnimationFrame(step)};RC.raf=requestAnimationFrame(step);
-  clearInterval(RC.fb);RC.fb=setInterval(()=>{if(RC.on&&document.hidden){try{rcFrame()}catch(e){}}},40);
  toast('📱 أدر الهاتف أفقياً ثم اضغط «بدء التسجيل»')
 }
 async function rcCam(useScreenShare = false){
@@ -3774,7 +3732,7 @@ function rcUi(){
  const lb=$('rcLive');lb.classList.toggle('on-air',L.state==='live');
  lb.textContent=!liveOn?'📡 بث':L.state==='live'?'📡 '+rcMS((Date.now()-L.t0)/1000)+(L.slow?' ⚠':''):L.state==='retry'?'🔄 إعادة':'⏳ اتصال';
  const inf=[];
- if(liveOn){inf.push((L.target==='facebook_auto'?'فيسبوك (تلقائي)':L.target==='facebook'?'فيسبوك':L.target==='youtube'?'يوتيوب':'بث مخصص')+(L.state==='live'?' · مباشر':L.state==='retry'?' · إعادة الاتصال ('+L.tries+')':' · جارٍ الاتصال'));
+ if(liveOn){inf.push((L.target==='facebook'?'فيسبوك':L.target==='youtube'?'يوتيوب':'بث مخصص')+(L.state==='live'?' · مباشر':L.state==='retry'?' · إعادة الاتصال ('+L.tries+')':' · جارٍ الاتصال'));
   if(L.stat&&L.stat.rx!=null)inf.push('↑ '+(L.stat.rx/1048576).toFixed(1)+' MB');if(L.stat&&L.stat.kbps)inf.push(Math.round(L.stat.kbps)+' kbps');if(L.stat&&L.stat.fps)inf.push(Math.round(L.stat.fps)+' fps');if(L.slow)inf.push('⚠ الشبكة بطيئة');
   if(L.state==='live'&&Date.now()-L.t0>15000&&!(L.stat&&L.stat.kbps))inf.push('⏳ الإشارة لم تصل فيسبوك بعد')}
  if(RC.recording)inf.push('🎞 '+Math.round(RC.bytes/1048576)+' MB');
@@ -3783,18 +3741,9 @@ function rcUi(){
  const mt=RC.stream&&RC.stream.getAudioTracks()[0];$('rcMic').textContent=mt&&!mt.enabled?'🔇 مكتوم':'🎙 الصوت'
 }
 $('rcClk').onclick=()=>{const c=RC.clk;if(c.ended){c.ended=false}if(!c.run){c.start=Date.now();c.run=true}else{c.base=rcEl();c.run=false}rcUi()};
-/* نوافذ سؤال/تأكيد داخل الصفحة: لا تجمّد الرسم ولا التسجيل ولا البث (prompt/confirm الأصليان يجمّدان كل شيء) */
-let rcAskCb=null;
-function rcAsk(msg,def,cb){
- if($('rec').hidden||document.querySelector('dialog[open]')){const v=def===null?(confirm(msg)?'1':null):prompt(msg,def);if(v!==null)cb(v);return}
- $('rcAskMsg').textContent=msg;const i=$('rcAskIn');i.hidden=def===null;i.value=def===null?'':def;i.inputMode=/^[\d.]*$/.test(String(def))?'decimal':'url';rcAskCb=cb;$('rcAsk').hidden=false;if(def!==null)setTimeout(()=>{try{i.focus();i.select()}catch(e){}},60)}
-const rcConfirm=(msg,cb)=>rcAsk(msg,null,cb);
-$('rcAskOk').onclick=()=>{const v=$('rcAskIn').value,cb=rcAskCb;rcAskCb=null;$('rcAsk').hidden=true;if(cb)cb(v)};
-$('rcAskNo').onclick=()=>{rcAskCb=null;$('rcAsk').hidden=true};
-$('rcAskIn').onkeydown=e=>{if(e.key==='Enter')$('rcAskOk').click()};
-$('rcSet').onclick=()=>{const c=RC.clk;rcAsk('أدخل الدقيقة الحالية (مثال: 12 أو 45):',Math.floor(rcEl()/60),v=>{const n=parseFloat(v);if(isNaN(n)||n<0)return toast('⚠️ دقيقة غير صحيحة');c.base=n*60;c.start=Date.now()})};
-$('rcH2').onclick=()=>{const c=RC.clk;rcAsk('مدة الشوط الواحد بالدقائق (ليبدأ الشوط الثاني منها):',c.half,v=>{const n=parseFloat(v);if(isNaN(n)||n<=0)return toast('⚠️ مدة غير صحيحة');c.half=n;c.period=2;c.ended=false;c.base=n*60;c.run=false;rcUi();toast('🔁 الشوط الثاني جاهز. اضغط «تشغيل الوقت» عند الانطلاق')})};
-$('rcEnd').onclick=()=>{const c=RC.clk;rcConfirm('إنهاء المباراة وإيقاف الوقت؟',()=>{c.base=rcEl();c.run=false;c.ended=true;rcUi()})};
+$('rcSet').onclick=()=>{const c=RC.clk,v=prompt('أدخل الدقيقة الحالية (مثال: 12 أو 45):',Math.floor(rcEl()/60));if(v===null)return;const n=parseFloat(v);if(isNaN(n)||n<0)return toast('⚠️ دقيقة غير صحيحة');c.base=n*60;c.start=Date.now()};
+$('rcH2').onclick=()=>{const c=RC.clk,v=prompt('مدة الشوط الواحد بالدقائق (ليبدأ الشوط الثاني منها):',c.half);if(v===null)return;const n=parseFloat(v);if(isNaN(n)||n<=0)return toast('⚠️ مدة غير صحيحة');c.half=n;c.period=2;c.ended=false;c.base=n*60;c.run=false;rcUi();toast('🔁 الشوط الثاني جاهز. اضغط «تشغيل الوقت» عند الانطلاق')};
+$('rcEnd').onclick=()=>{const c=RC.clk;if(!confirm('إنهاء المباراة وإيقاف الوقت؟'))return;c.base=rcEl();c.run=false;c.ended=true;rcUi()};
 $('rcMin').onclick=()=>$('rec').classList.toggle('min');
 $('rcSwap').onclick=()=>{RC.swap=!RC.swap};
 $('rcQ').onchange=()=>{if(RC.recording||(RC.live&&RC.live.on))return;RC.q=+$('rcQ').value;rcSize()};
@@ -3827,7 +3776,7 @@ function rcNew(){
  RC.segTm=setTimeout(()=>{if(RC.recording&&RC.rec&&RC.rec.state==='recording')RC.rec.stop()},20*60*1000)
 }
 $('rcRec').onclick=()=>{
- if(RC.recording){rcConfirm('إيقاف التسجيل وحفظ الفيديو؟',()=>{RC.stopping=true;RC.recording=false;clearTimeout(RC.segTm);RC.rec.stop()});return}
+ if(RC.recording){if(confirm('إيقاف التسجيل وحفظ الفيديو؟')){RC.stopping=true;RC.recording=false;clearTimeout(RC.segTm);RC.rec.stop()}return}
  try{RC.ms=new MediaStream([...$('recCv').captureStream(30).getVideoTracks(),...RC.stream.getAudioTracks()]);RC.mime=rcMime();RC.recording=true;RC.stopping=false;RC.t0=Date.now();rcNew();rcUi()}
  catch(e){RC.recording=false;toast('⚠️ تعذّر بدء التسجيل على هذا الجهاز')}};
 function rcDone(){RC.stopping=false;RC.recording=false;
@@ -3837,46 +3786,35 @@ async function rcShare(i){const p=RC.parts[i];if(!p)return;const f=new File([p.b
  if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:'تصوير المباراة'});return}catch(e){if(e.name==='AbortError')return}}
  const a=document.createElement('a');a.href=URL.createObjectURL(p.blob);a.download=p.name;document.body.appendChild(a);a.click();a.remove()}
 $('recDone').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&b.dataset.rsh!==undefined)rcShare(+b.dataset.rsh)});
-async function rcSaveResult(go){
+async function rcSaveResult(){
  if(!RC.goals.length)return toast('⚠️ لم تُسجَّل أي أهداف بعد');
  const adm=me.role==='admin';if(!adm&&me.teamId!=RC.h&&me.teamId!=RC.a)return toast('⛔ لا تملك صلاحية تعديل هذه المباراة');
- const old=S[RC.k]||{};if(!go&&old.sh!==undefined&&old.sh!==''){rcConfirm('توجد نتيجة مسجّلة لهذه المباراة. هل تريد استبدالها بنتيجة التصوير؟',()=>rcSaveResult(true));return}
+ const old=S[RC.k]||{};if(old.sh!==undefined&&old.sh!==''&&!confirm('توجد نتيجة مسجّلة لهذه المباراة. هل تريد استبدالها بنتيجة التصوير؟'))return;
  const fmt=sd=>RC.goals.filter(g=>g.side===sd&&g.name).map(g=>g.name+(g.min?' '+g.min+"'":'')).join(' ، ');
  const d=Object.assign({},old);delete d._hid;delete d.lineups;
  Object.assign(d,{sh:String(rcCnt('h')),sa:String(rcCnt('a')),pp:false,ex:false,gh:fmt('h'),ga:fmt('a'),status:adm?'confirmed':'pending_confirm',enteredBy:adm?'admin':me.teamId,date:old.date||new Date().toISOString().slice(0,10)});
  await put(RC.k,RC.h,RC.a,d)}
-$('rcSave').onclick=()=>rcSaveResult();$('rdSave').onclick=()=>rcSaveResult();
-function rcTeardown(){try{rcLiveStop(true)}catch(e){}RC.on=false;cancelAnimationFrame(RC.raf);clearInterval(RC.ui);clearInterval(RC.fb);clearTimeout(RC.segTm);
+$('rcSave').onclick=rcSaveResult;$('rdSave').onclick=rcSaveResult;
+function rcTeardown(){try{rcLiveStop(true)}catch(e){}RC.on=false;cancelAnimationFrame(RC.raf);clearInterval(RC.ui);clearTimeout(RC.segTm);
  try{RC.stream&&RC.stream.getTracks().forEach(t=>t.stop())}catch(e){}try{RC.wl&&RC.wl.release()}catch(e){}
  $('recVid').srcObject=null;$('rec').hidden=true;$('recGoal').hidden=true;RC.parts=[];RC.stream=null}
 $('rdClose').onclick=()=>{$('recDone').close();rcTeardown()};
-$('rcX').onclick=()=>{
- const step3=()=>{if(!RC.goals.length)return rcTeardown();rcConfirm('الخروج من وضع التصوير؟ (الأهداف غير المحفوظة ستُفقد، يمكنك حفظها بزر «حفظ النتيجة» أولاً)',rcTeardown)};
- const step2=()=>{if(RC.recording){rcConfirm('التسجيل جارٍ. إيقافه وحفظ الفيديو؟',()=>{RC.stopping=true;RC.recording=false;clearTimeout(RC.segTm);RC.rec.stop()});return}step3()};
- if(RC.live&&RC.live.on){rcConfirm('البث المباشر جارٍ. إيقافه والخروج؟',()=>{rcLiveStop(true);step2()});return}
- step2()};
+$('rcX').onclick=()=>{if(RC.live&&RC.live.on){if(!confirm('البث المباشر جارٍ. إيقافه والخروج؟'))return;rcLiveStop(true)}
+ if(RC.recording){if(confirm('التسجيل جارٍ. إيقافه وحفظ الفيديو؟')){RC.stopping=true;RC.recording=false;clearTimeout(RC.segTm);RC.rec.stop()}return}
+ if(!RC.goals.length||confirm('الخروج من وضع التصوير؟ (الأهداف غير المحفوظة ستُفقد، يمكنك حفظها بزر «حفظ النتيجة» أولاً)'))rcTeardown()};
 document.addEventListener('visibilitychange',async()=>{if(RC.on&&!document.hidden){try{RC.wl=await navigator.wakeLock.request('screen')}catch(e){}}});
 
-/* استئناف البث عند العودة للصفحة أو رجوع الشبكة */
-function rcLiveResume(why){const L=RC.live;if(!L||!L.on||L.user||document.hidden)return;
- if(!L.ws||L.ws.readyState>1){L.tries=0;rcLiveConnect();if(why==='vis')toast('🔄 جارٍ استئناف البث…')}
- else if(L.ws.readyState===1&&L.state==='live'&&(!L.rec||L.rec.state==='inactive'))rcLiveRec()}
-document.addEventListener('visibilitychange',()=>{const L=RC.live;if(L&&L.on){if(document.hidden)L.hiddenAt=Date.now();else{if(L.hiddenAt&&Date.now()-L.hiddenAt>4000)toast('⚠️ غادرتَ الصفحة فتوقف الإرسال مؤقتاً. ابقَ هنا أثناء البث');L.hiddenAt=0;rcLiveResume('vis')}}});
-window.addEventListener('online',()=>rcLiveResume('net'));
 /* ===== البث المباشر إلى فيسبوك/يوتيوب عبر خادم وسيط (RTMP) ===== */
 const LIVE_RELAY='https://esm-live-relay-5mw0.onrender.com'; /* غيّره إن سمّيت الخدمة باسم آخر */
 const LK={t:'esmLiveTarget',k:'esmLiveKey',r:'esmLiveRelay'};
 const lsGet=k=>{try{return localStorage.getItem(k)||''}catch(e){return''}},lsSet=(k,v)=>{try{v?localStorage.setItem(k,v):localStorage.removeItem(k)}catch(e){}};
 const rcWs=r=>{r=(r||'').trim().replace(/\/+$/,'').replace(/\/live$/,'');if(!r)return'';if(!/^(wss?|https?):\/\//.test(r))r='https://'+r;return r.replace(/^http/,'ws')+'/live'};
 const rcLiveMime=()=>['video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/mp4','video/webm;codecs=h264,opus','video/webm;codecs=h264','video/webm;codecs=vp8,opus','video/webm'].find(t=>{try{return MediaRecorder.isTypeSupported(t)}catch(e){return false}})||'';
-/* هل الفيديو المُرسَل H.264؟ (يتيح للخادم تمريره بلا إعادة ترميز). «video/mp4» العام يُعدّ H.264 على أجهزة آبل (WebKit) فقط */
-function rcLiveCodec(m){m=m||'';if(/avc1|h264/i.test(m))return'h264';const ua=navigator.userAgent;if(/^video\/mp4/i.test(m)&&/iPhone|iPad|iPod|Macintosh/i.test(ua)&&!/Chrome|Chromium|Edg|Firefox/i.test(ua))return'h264';return'other'}
 function rcWake(r){try{fetch(rcWs(r).replace(/^ws/,'http').replace(/\/live$/,'')+'/healthz',{mode:'no-cors'}).catch(()=>{})}catch(e){}}
 function rcLiveOpen(){
  const t=lsGet(LK.t)||'facebook';$('lvT').value=t;$('lvK').value=lsGet(LK.k);$('lvS').checked=true;$('lvR').value=lsGet(LK.r);$('lvU').value='';
- lvSync();say('lvE','');$('liveSet').showModal();rcPingLoop()}
-function lvSync(){const t=$('lvT').value;$('lvUW').hidden=t!=='custom';$('lvKW').hidden=t==='facebook_auto';$('lvAutoNote').hidden=t!=='facebook_auto'}
-$('lvT').onchange=lvSync;
+ $('lvUW').hidden=t!=='custom';say('lvE','');$('liveSet').showModal();rcPingLoop()}
+$('lvT').onchange=()=>{$('lvUW').hidden=$('lvT').value!=='custom'};
 let lvTm=null;
 async function rcPing(){const r=$('lvR').value.trim()||LIVE_RELAY,el=$('lvSt');
  if(!rcWs(r)){el.className='srv bad';el.textContent='⚠️ أدخل رابط الخادم في «إعدادات متقدمة»';$('lvAdv').open=true;return true}
@@ -3887,40 +3825,31 @@ async function rcPing(){const r=$('lvR').value.trim()||LIVE_RELAY,el=$('lvSt');
 function rcPingLoop(){clearTimeout(lvTm);const go=async()=>{if(!$('liveSet').open)return;const ok=await rcPing();if(!ok&&$('liveSet').open)lvTm=setTimeout(go,4000)};go()}
 $('lvR').onchange=rcPingLoop;
 $('lvX').onclick=()=>{clearTimeout(lvTm);$('liveSet').close()};
-const FB_URL='https://www.facebook.com/live/producer';
-const isMob=()=>/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||(navigator.maxTouchPoints>1&&/Mac/i.test(navigator.platform||''));
-async function fbCopy(){let ok=false;
- try{await navigator.clipboard.writeText(FB_URL);ok=true}catch(e){try{const i=$('fbUrl');i.focus();i.select();i.setSelectionRange(0,200);ok=document.execCommand('copy')}catch(x){}}
- return ok}
-$('lvFb').onclick=async()=>{
- if(isMob()){const ok=await fbCopy();$('fbHelp').showModal();toast(ok?'📋 نُسخ الرابط. افتحه من الحاسوب':'⚠️ انسخ الرابط من الخانة');return}
- await fbCopy();
- const a=document.createElement('a');a.href=FB_URL;a.target='_blank';a.rel='noopener noreferrer';document.body.appendChild(a);a.click();a.remove();
- toast('🔗 جارٍ فتح صفحة المفتاح')};
-$('fbCp').onclick=async()=>toast((await fbCopy())?'📋 نُسخ الرابط':'⚠️ حدّد الرابط في الخانة وانسخه يدوياً');
-$('fbX').onclick=()=>$('fbHelp').close();
-$('fbUrl').onfocus=e=>e.target.select();
+$('lvFb').onclick=async()=>{const u='https://www.facebook.com/live/producer';let cp=false;
+ try{await navigator.clipboard.writeText(u);cp=true}catch(e){try{const t=document.createElement('textarea');t.value=u;t.style.cssText='position:fixed;opacity:0';document.body.appendChild(t);t.select();cp=document.execCommand('copy');t.remove()}catch(x){}}
+ const a=document.createElement('a');a.href=u;a.target='_blank';a.rel='noopener noreferrer';document.body.appendChild(a);a.click();a.remove();
+ toast('🔗 جارٍ فتح صفحة المفتاح'+(cp?' (ونُسخ الرابط)':'')+'. على الهاتف افتحها من المتصفح مع «موقع سطح المكتب»')};
 $('lvGo').onclick=()=>{say('lvE','');const t=$('lvT').value,k=$('lvK').value.trim(),u=$('lvU').value.trim(),r=$('lvR').value.trim()||LIVE_RELAY;
  if(!rcWs(r)){$('lvAdv').open=true;return say('lvE','⚠️ أدخل رابط خادم البث في «إعدادات متقدمة»')}
- if(t==='custom'?!u:(t!=='facebook_auto'&&!k))return say('lvE','⚠️ أدخل '+(t==='custom'?'عنوان RTMP':'مفتاح البث'));
+ if(t==='custom'?!u:!k)return say('lvE','⚠️ أدخل '+(t==='custom'?'عنوان RTMP':'مفتاح البث'));
  if(!auth||!auth.currentUser)return say('lvE','⚠️ سجّل الدخول أولاً');
- clearTimeout(lvTm);lsSet(LK.r,$('lvR').value.trim());lsSet(LK.t,t);if(t==='facebook'||t==='youtube')lsSet(LK.k,$('lvS').checked?k:'');
- $('liveSet').close();rcLiveStart({target:t,key:k,url:u,relay:rcWs(r),title:(T[RC.h]||'')+' × '+(T[RC.a]||'')+' · '+(RC.cat||'')})};
-$('rcLive').onclick=()=>{if(RC.live&&RC.live.on){rcConfirm('إيقاف البث المباشر؟',()=>rcLiveStop(false));return}rcLiveOpen()};
-function rcLiveStart(o){RC.live={on:true,state:'connecting',target:o.target,key:o.key,url:o.url,relay:o.relay,title:o.title||'',t0:0,tries:0,stat:{},user:false,fatal:false,slow:false};rcLiveConnect();rcUi()}
+ clearTimeout(lvTm);lsSet(LK.r,$('lvR').value.trim());lsSet(LK.t,t);lsSet(LK.k,$('lvS').checked&&t!=='custom'?k:'');
+ $('liveSet').close();rcLiveStart({target:t,key:k,url:u,relay:rcWs(r)})};
+$('rcLive').onclick=()=>{if(RC.live&&RC.live.on){if(confirm('إيقاف البث المباشر؟'))rcLiveStop(false);return}rcLiveOpen()};
+function rcLiveStart(o){RC.live={on:true,state:'connecting',target:o.target,key:o.key,url:o.url,relay:o.relay,t0:0,tries:0,stat:{},user:false,fatal:false,slow:false};rcLiveConnect();rcUi()}
 function rcLiveConnect(){
  const L=RC.live;if(!L||!L.on)return;
  let ws;try{ws=new WebSocket(L.relay)}catch(e){return rcLiveEnd('⚠️ رابط الخادم الوسيط غير صالح')}
  L.ws=ws;L.state=L.tries?'retry':'connecting';
- ws.onopen=async()=>{try{const token=await auth.currentUser.getIdToken();L.mime=rcLiveMime();ws.send(JSON.stringify({type:'start',token,target:L.target,key:L.key,url:L.url,mime:L.mime,codec:rcLiveCodec(L.mime),title:L.title}))}catch(e){L.fatal=true;L.endMsg='⚠️ تعذّر التحقق من حسابك';ws.close()}};
+ ws.onopen=async()=>{try{const token=await auth.currentUser.getIdToken();L.mime=rcLiveMime();ws.send(JSON.stringify({type:'start',token,target:L.target,key:L.key,url:L.url,mime:L.mime}))}catch(e){L.fatal=true;L.endMsg='⚠️ تعذّر التحقق من حسابك';ws.close()}};
  ws.onmessage=e=>{let m;try{m=JSON.parse(e.data)}catch(x){return}
-  if(m.type==='ready'){L.state='live';L.tries=0;L.mode=m.mode;if(!L.t0){L.t0=Date.now();rcPub(true);pushNotify({kind:'live',title:'🔴 مباشر الآن · '+RC.cat,body:T[RC.h]+' × '+T[RC.a]})}L.watch=m.watch||L.watch;rcLiveRec();toast(m.auto?'📡 البث مباشر الآن على صفحة فيسبوك تلقائياً. أبقِ هذه الصفحة مفتوحة':'📡 البث متصل. اضغط Go Live في فيسبوك (من حاسوب أو هاتف آخر) وأبقِ هذه الصفحة مفتوحة')}
+  if(m.type==='ready'){L.state='live';L.tries=0;L.mode=m.mode;if(!L.t0){L.t0=Date.now();rcPub(true);pushNotify({kind:'live',title:'🔴 مباشر الآن · '+RC.cat,body:T[RC.h]+' × '+T[RC.a]})}rcLiveRec();toast('📡 البث متصل. اضغط Go Live في فيسبوك، ثم 🔗 لنشر رابط المشاهدة للجمهور')}
   else if(m.type==='stats')L.stat=m;
   else if(m.type==='error'){L.fatal=true;L.endMsg='⛔ '+m.msg}
   else if(m.type==='ended'){if(m.msg&&/رفضت|الحد|متصفحك|تعطّل/.test(m.msg))L.fatal=true;L.endMsg=m.msg+(m.detail?' ['+m.detail.slice(-90)+']':'')}};
  ws.onclose=()=>{rcLiveRecStop();if(!L.on||L.ws!==ws)return;if(L.user)return;if(L.fatal)return rcLiveEnd(L.endMsg||'انتهى البث');
-  if(++L.tries>15)return rcLiveEnd('⚠️ انقطع البث وتعذّرت إعادة الاتصال');
-  L.state='retry';setTimeout(()=>{if(RC.live===L&&L.on&&!L.user&&(!L.ws||L.ws.readyState>1))rcLiveConnect()},2500)};
+  if(++L.tries>6)return rcLiveEnd('⚠️ انقطع البث وتعذّرت إعادة الاتصال');
+  L.state='retry';setTimeout(()=>{if(RC.live===L&&L.on&&!L.user)rcLiveConnect()},3000)};
  ws.onerror=()=>{}
 }
 let _rcSilentTrack=null;
@@ -3943,12 +3872,12 @@ function rcLiveRec(){
   const r=new MediaRecorder(ms,o);
   r.ondataavailable=e=>{const w=L.ws;if(!e.data||!e.data.size||!w||w.readyState!==1)return;
    L.slow=w.bufferedAmount>3e6;if(w.bufferedAmount>12e6){try{w.close()}catch(x){}return}w.send(e.data)};
-  r.onerror=()=>{try{L.ws&&L.ws.close()}catch(x){}};r.start(500);L.rec=r}
+  r.start(500);L.rec=r}
  catch(e){L.fatal=true;L.endMsg='⚠️ تعذّر ترميز الفيديو للبث على هذا الجهاز';try{L.ws.close()}catch(x){}}
 }
 function rcLiveRecStop(){const L=RC.live;if(L&&L.rec&&L.rec.state!=='inactive'){try{L.rec.stop()}catch(e){}}if(L)L.rec=null}
 function rcLiveEnd(msg){const L=RC.live;if(!L)return;if(L.t0)rcPub(false);L.on=false;L.state='idle';rcLiveRecStop();if(msg)toast(msg);rcUi()}
-function rcLiveStop(silent){const L=RC.live;if(!L||!L.on)return;rcPub(false);L.user=true;rcLiveRecStop();try{if(L.ws&&L.ws.readyState===1)L.ws.send(JSON.stringify({type:'stop'}))}catch(e){}try{L.ws&&L.ws.close()}catch(e){}L.on=false;L.state='idle';if(!silent)toast('⏹ أُوقف البث. أنهِ البث في فيسبوك أيضاً');rcUi()}
+function rcLiveStop(silent){const L=RC.live;if(!L||!L.on)return;rcPub(false);L.user=true;rcLiveRecStop();try{L.ws&&L.ws.close()}catch(e){}L.on=false;L.state='idle';if(!silent)toast('⏹ أُوقف البث. أنهِ البث في فيسبوك أيضاً');rcUi()}
 $('rcMic').onclick=()=>{const t=RC.stream&&RC.stream.getAudioTracks();if(!t||!t.length)return toast('⚠️ لا يوجد ميكروفون');t.forEach(x=>x.enabled=!x.enabled);rcUi()};
 
 /* ===== النسخ الاحتياطي والاسترجاع (للمشرف العام) ===== */
@@ -4028,7 +3957,7 @@ function cardsPanel(){
  const line=(x,cls,rs)=>`<div class="sus ${cls}" data-pcard="${x.t}|${esc(x.n)}" style="cursor:pointer" title="انقر لعرض بطاقة اللاعب">${LG[x.t]?lg(x.t):''}<div><b>${esc(x.n)}</b><small>${esc(T[x.t]||'')}</small></div><span class="rs">${rs}</span></div>`;
  const all=Object.values(C.tot).sort((a,b)=>b.r-a.r||b.y-a.y||a.n.localeCompare(b.n,'ar')).slice(0,40);
  return chips()+gsw()+`<div class="rnd"><button class="btn sm" data-cr="${R0+1}" ${R0>=22?'disabled':''}>›</button><b style="flex:1;text-align:center">الجولة ${R0}</b><button class="btn sm" data-cr="${R0-1}" ${R0<=1?'disabled':''}>‹</button></div>`
- +`<div class="act" style="margin:0 0 10px;flex-wrap:wrap"><button class="btn alt sm" data-mk="susp">🎞️ ملصق / فيديو الموقوفين</button><button class="btn alt sm" data-pu="1">📝 منشور الموقوفين</button></div><div class="rh">🚫 الموقوفون في الجولة ${R0} · ${cat}</div>`+(now.length?now.map(x=>line(x,'',x.why==='r'?'🟥 طرد (ج'+x.from+')':'🟨 '+C.thr+' إنذارات')).join(''):'<div class="card" style="text-align:center;color:var(--mu)">لا يوجد موقوفون في هذه الجولة</div>')
+ +`<div class="rh">🚫 الموقوفون في الجولة ${R0} · ${cat}</div>`+(now.length?now.map(x=>line(x,'',x.why==='r'?'🟥 طرد (ج'+x.from+')':'🟨 '+C.thr+' إنذارات')).join(''):'<div class="card" style="text-align:center;color:var(--mu)">لا يوجد موقوفون في هذه الجولة</div>')
  +(near.length?`<div class="rh" style="margin-top:12px">⚠️ إنذار واحد يفصلهم عن الإيقاف</div>`+near.map(o=>line(o,'warn','🟨 '+C.yc[o.t+'|'+nrm(o.n)])).join(''):'')
  +`<div class="rh" style="margin-top:12px">🟨🟥 سجل البطاقات · ${cat}</div>`+(all.length?all.map(o=>`<div class="card u"><div>${LG[o.t]?lg(o.t):''} <b>${esc(o.n)}</b><br><small>${esc(T[o.t]||'')}</small></div><span>🟨 ${o.y} · 🟥 ${o.r}</span></div>`).join(''):'<div class="card" style="text-align:center;color:var(--mu)">لا توجد بطاقات مسجّلة بعد</div>')
  +`<p class="hint" style="text-align:center">القاعدة المعتمدة: ${C.thr} إنذارات = إيقاف مباراة، والطرد = إيقاف ${C.redG} ${C.redG>1?'مباريات':'مباراة'}.</p>`
@@ -4137,8 +4066,9 @@ async function rcPub(on){
   const same=PUB.live&&PUB.live.on&&PUB.live.key===RC.k;
   await db.collection('public').doc('live').set({on:!!on,key:RC.k,h:RC.h,a:RC.a,cat:RC.cat,round:RC.round,sh:rcCnt('h'),sa:rcCnt('a'),url:lsGet('esmFbLink')||'',t:same?PUB.live.t:Date.now()})}catch(e){}
 }
-$('rcLink').onclick=()=>{rcAsk('الصق رابط بث المباراة من فيسبوك (يظهر للجمهور في زر «شاهد الآن»):',lsGet('esmFbLink')||'https://www.facebook.com/',v=>{const u=v.trim();if(u&&!/^https:\/\/([a-z0-9-]+\.)?(facebook|fb)\.(com|watch)\//i.test(u))return toast('⚠️ الرابط يجب أن يكون من فيسبوك (https://…)');
- lsSet('esmFbLink',u);if(RC.live&&RC.live.on)rcPub(true);toast(u?'✅ حُفظ الرابط':'🗑 أُزيل الرابط')})};
+$('rcLink').onclick=()=>{const v=prompt('الصق رابط بث المباراة من فيسبوك (يظهر للجمهور في زر «شاهد الآن»):',lsGet('esmFbLink')||'https://www.facebook.com/');
+ if(v===null)return;const u=v.trim();if(u&&!/^https:\/\/([a-z0-9-]+\.)?(facebook|fb)\.(com|watch)\//i.test(u))return toast('⚠️ الرابط يجب أن يكون من فيسبوك (https://…)');
+ lsSet('esmFbLink',u);if(RC.live&&RC.live.on)rcPub(true);toast(u?'✅ حُفظ الرابط':'🗑 أُزيل الرابط')};
 
 /* ===== إشعارات الهاتف (Firebase Cloud Messaging) ===== */
 const PUSH_VAPID='BMgd447Tutv717mdq1iUkEybai4yahbQYn7vZ5LX0FzttB3HZCJGBhoL-MKgYe_lyYYxSX9lSPR44hLHRlNB29Y'; /* الصق هنا مفتاح الويب (VAPID) من Firebase ← Cloud Messaging ← Web Push certificates */
@@ -4165,8 +4095,8 @@ function playNotifSound(){
 function updateAppBadge(count){
   try{
     if('setAppBadge' in navigator){
-      if(count + MSGn > 0){
-        navigator.setAppBadge(count + MSGn).catch(()=>{});
+      if(count > 0){
+        navigator.setAppBadge(count).catch(()=>{});
       }else{
         navigator.clearAppBadge().catch(()=>{});
       }
@@ -4514,458 +4444,6 @@ $('vd').addEventListener('click',async e=>{const b=e.target.closest('button');if
  else if(b.id==='vShare'&&vBlob){const f=vFile();try{if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],title:f.name});else toast('⚠️ المشاركة غير مدعومة هنا، استعمل «تحميل»')}catch(x){}}
  else if(b.id==='vX'&&!vRun){$('vd').close()}});
 $('vd').addEventListener('cancel',e=>{if(vRun)e.preventDefault()});
-/* ===== لوحة الوسائط: فيديو + ملصق (الترتيب · الهدافون · لاعب الجولة · تشكيلة الجولة · الموقوفون) ومنشورات فيسبوك ===== */
-const MK={kind:'table',c:'U15',r:1,f:'45',run:false,blob:null,url:null,tok:0,pick:'',form:'4-3-3',slots:Array(11).fill(null),A:null};
-const MK_TTL={table:'📊 فيديو الترتيب',scorers:'🥇 فيديو الهدافين',potr:'🏅 لاعب الجولة',xi:'⭐ تشكيلة الجولة',susp:'🚫 الموقوفون'};
-const MK_FORM={
- '4-3-3':[['حارس المرمى',.5,.9],['ظهير أيسر',.13,.71],['قلب دفاع',.37,.74],['قلب دفاع',.63,.74],['ظهير أيمن',.87,.71],['وسط',.27,.5],['وسط ارتكاز',.5,.54],['وسط',.73,.5],['جناح أيسر',.15,.22],['مهاجم',.5,.15],['جناح أيمن',.85,.22]],
- '4-4-2':[['حارس المرمى',.5,.9],['ظهير أيسر',.13,.71],['قلب دفاع',.37,.74],['قلب دفاع',.63,.74],['ظهير أيمن',.87,.71],['جناح أيسر',.14,.46],['وسط',.38,.5],['وسط',.62,.5],['جناح أيمن',.86,.46],['مهاجم',.36,.17],['مهاجم',.64,.17]],
- '3-5-2':[['حارس المرمى',.5,.9],['قلب دفاع',.25,.74],['قلب دفاع',.5,.77],['قلب دفاع',.75,.74],['جناح أيسر',.1,.48],['وسط',.3,.52],['وسط ارتكاز',.5,.56],['وسط',.7,.52],['جناح أيمن',.9,.48],['مهاجم',.36,.17],['مهاجم',.64,.17]],
- '4-2-3-1':[['حارس المرمى',.5,.9],['ظهير أيسر',.13,.71],['قلب دفاع',.37,.74],['قلب دفاع',.63,.74],['ظهير أيمن',.87,.71],['وسط ارتكاز',.36,.56],['وسط ارتكاز',.64,.56],['جناح أيسر',.17,.34],['صانع ألعاب',.5,.37],['جناح أيمن',.83,.34],['مهاجم',.5,.14]]};
-const mkDim=()=>({W:1080,H:MK.f==='916'?1920:1350});
-const mkCv=(w,h)=>{const e=document.createElement('canvas');e.width=w;e.height=h;const q=e.getContext('2d');q.direction='rtl';return[e,q]};
-const mkImgs=async ids=>{const o={};await Promise.all([...new Set(ids)].map(async id=>{o[id]=await imgOf((OLD.DEF&&OLD.DEF[id])||LG[id])}));return o};
-const mkNum=n=>['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟','1️⃣1️⃣'][n]||(n+1)+'.';
-const mkRL=r=>`الجولة ${r} (${r<=11?'ذهاب':'إياب'})`;
-const mkHT=(c,...x)=>'\n\n#رابطة_تيبازة #الفئات_الشبانية #'+c+' #كرة_القدم_الجزائرية'+x.filter(Boolean).map(s=>' #'+String(s).replace(/\s+/g,'_')).join('');
-const mkGs=s=>parseG(s).map(e=>e.n+(e.k>1?` ×${e.k}`:'')+(e.m?` (${e.m}')`:'')).join('، ');
-const mkOk=v=>v&&v.sh!==undefined&&v.sh!==''&&v.sh!==null&&!v.pp&&!v.ex;
-function mkRoundGoals(c,r){const out={};pairs(r).m.forEach(([h,a])=>{const v=S[K(c,r,h,a)];if(!v)return;[[h,a,'gh'],[a,h,'ga']].forEach(([t,o,f])=>parseG(v[f]).forEach(e=>{if(!e.n)return;const id=t+'|'+nrm(e.n),q=out[id]=out[id]||{id,n:e.n,t,k:0,vs:[]};q.k+=e.k;q.vs.push(o)}))});return Object.values(out).sort((x,y)=>y.k-x.k||x.n.localeCompare(y.n,'ar'))}
-function mkRoundPlayers(c,r){const seen={},out=[];const add=(t,n,w)=>{n=String(n||'').trim();if(!n)return;const id=t+'|'+nrm(n);if(seen[id]){seen[id].w+=w;return}out.push(seen[id]={id,n,t,w})};
- mkRoundGoals(c,r).forEach(g=>add(g.t,g.n,10*g.k));
- pairs(r).m.forEach(([h,a])=>{const k=K(c,r,h,a),lk=LU[k]||{},v=S[k]||{};[h,a].forEach(t=>{const win=mkOk(v)&&((t==h&&+v.sh>+v.sa)||(t==a&&+v.sa>+v.sh));((lk[t]&&lk[t].starters)||[]).forEach(s=>add(t,typeof s==='string'?s:(s&&s.n),win?2:1))})});
- return out.sort((x,y)=>y.w-x.w||x.n.localeCompare(y.n,'ar'))}
-const mkXiKey=()=>'xi_'+MK.c+'_'+MK.r;
-function mkLoadXi(){const d=(PUB||{})[mkXiKey()];if(d){MK.form=d.form||'4-3-3';MK.slots=Array.from({length:11},(_,i)=>(d.slots&&d.slots[i])||null)}else{MK.slots=Array(11).fill(null)}}
-function mkSuspData(c,R){const C=computeCards(c),now=C.susp.filter(x=>x.rounds.includes(R)),sid=new Set(now.map(x=>x.t+'|'+nrm(x.n)));
- const near=Object.entries(C.tot).filter(([id])=>!sid.has(id)&&C.yc[id]%C.thr===C.thr-1).map(([,o])=>o);return{C,now,near}}
-/* ---------- نصوص منشورات فيسبوك ---------- */
-function mkPostMatch(k){const m=/^(?:([A-Z0-9]+)\|)?(\d+):(\d+)-(\d+)$/.exec(k),c=m[1]||'U15',r=+m[2],h=+m[3],a=+m[4],v=S[k]||{};
- let t=mkOk(v)?`⚽ ${T[h]} ${v.sh} - ${v.sa} ${T[a]}\n🏆 ${mkRL(r)} · ${c}`:`📅 موعد مباراة\n⚽ ${T[h]} × ${T[a]}\n🏆 ${mkRL(r)} · ${c}`;
- if(v.pp)t+='\n⏸ المباراة مؤجلة';
- if(mkOk(v)){if(v.gh)t+=`\n\n🥅 أهداف ${T[h]}: ${mkGs(v.gh)}`;if(v.ga)t+=`\n🥅 أهداف ${T[a]}: ${mkGs(v.ga)}`;
-  const y=[v.yh&&`${T[h]}: ${mkGs(v.yh)}`,v.ya&&`${T[a]}: ${mkGs(v.ya)}`].filter(Boolean),rd=[v.rh&&`${T[h]}: ${mkGs(v.rh)}`,v.ra&&`${T[a]}: ${mkGs(v.ra)}`].filter(Boolean);
-  if(y.length)t+='\n\n🟨 إنذارات\n'+y.join('\n');if(rd.length)t+='\n\n🟥 طرد\n'+rd.join('\n')}
- const info=[v.date&&'📅 '+dAr(v.date),'⏰ '+dtm(v,c),v.stad&&'📍 '+v.stad].filter(Boolean);t+='\n\n'+info.join(' · ');
- return t+mkHT(c,T[h],T[a])}
-function mkPostRound(c,r){const p=pairs(r);let t=`📋 مباريات ${mkRL(r)} · ${c}\n`;
- p.m.forEach(([h,a])=>{const v=S[K(c,r,h,a)]||{};t+='\n'+(mkOk(v)?`✅ ${T[h]} ${v.sh} - ${v.sa} ${T[a]}`:v.pp?`⏸ ${T[h]} × ${T[a]} (مؤجلة)`:`🕒 ${T[h]} × ${T[a]}${v.date?' — '+dAr(v.date)+' '+dtm(v,c):''}`)});
- if(p.bye!=null)t+=`\n\n😴 مستريحة: ${T[p.bye]}`;return t+mkHT(c)}
-function mkPostTable(c,u){const rows=tbl(c,u);let t=`📊 ترتيب الفئة ${c} بعد الجولة ${u}\n`;rows.forEach((r,i)=>{t+=`\n${mkNum(i)} ${T[r.id]} — ${r.pts} نقطة (لعب ${r.p} · فارق ${r.f-r.a>0?'+':''}${r.f-r.a})`});return t+mkHT(c)}
-function mkScorers(c){const c0=cat;OLD.state({cat:c});OLD.load(S);const G=OLD.tallies()[0];OLD.state({cat:c0});return G}
-function mkPostScorers(c){const G=mkScorers(c).slice(0,10);let t=`🥇 ترتيب هدافي الفئة ${c}\n`;if(!G.length)t+='\nلا هدافون مسجلون بعد';G.forEach((o,i)=>{t+=`\n${mkNum(i)} ${o.n} (${T[o.t]}) — ${o.c} ⚽`});return t+mkHT(c)}
-function mkPostPotr(c,r){const g=mkRoundGoals(c,r),p=g.find(x=>x.id===MK.pick)||g[0];if(!p)return`🏅 لاعب ${mkRL(r)}\n\nلا أهداف مسجلة في هذه الجولة`+mkHT(c);
- return`🏅 لاعب ${mkRL(r)} · ${c}\n\n⭐ ${p.n} (${T[p.t]})\n⚽ ${p.k>1?p.k+' أهداف':'هدف'} ${p.vs.length?'ضد '+[...new Set(p.vs.map(o=>T[o]))].join(' و'):''}\n\nمبروك للاعب والنادي 👏`+mkHT(c,T[p.t])}
-function mkPostXi(c,r){const f=MK_FORM[MK.form];let t=`⭐ تشكيلة ${mkRL(r)} · ${c}\n🧩 الخطة: ${MK.form}\n`;MK.slots.forEach((s,i)=>{t+=`\n${i===0?'🧤':'▫️'} ${f[i][0]}: ${s?s.n+' ('+T[s.t]+')':'—'}`});return t+'\n\nمبروك للمختارين 👏'+mkHT(c)}
-function mkPostSusp(c,R){const{now,near}=mkSuspData(c,R);let t=`🚫 الموقوفون في ${mkRL(R)} · ${c}\n`;
- if(now.length)now.forEach(x=>{t+=`\n❌ ${x.n} (${T[x.t]}) — ${x.why==='r'?'🟥 طرد':'🟨 تراكم إنذارات'}`});else t+='\n✅ لا موقوفون في هذه الجولة';
- if(near.length){t+='\n\n⚠️ إنذار واحد يفصلهم عن الإيقاف:';near.slice(0,10).forEach(o=>{t+=`\n▫️ ${o.n} (${T[o.t]})`})}
- return t+mkHT(c)}
-function mkPostCur(){const k=MK.kind;return k==='table'?mkPostTable(MK.c,MK.r):k==='scorers'?mkPostScorers(MK.c):k==='potr'?mkPostPotr(MK.c,MK.r):k==='xi'?mkPostXi(MK.c,MK.r):mkPostSusp(MK.c,MK.r)}
-function openPost(title,text){$('fpTitle').textContent=title;$('fpTxt').value=text;$('fpd').showModal()}
-/* ---------- تجهيز العناصر ---------- */
-async function mkAssets(){
- const{W,H}=mkDim(),dy=(H-1350)/2,kind=MK.kind,c=MK.c;OLD.load(S);
- const L=await imgOf(typeof LEAGUE!=='undefined'?LEAGUE:null),A={W,H,dy,kind,c,L};
- let col=[31,90,52];
- if(kind==='table'){const u=MK.r;A.up=u;A.rows=tbl(c,u);A.ims=await mkImgs(A.rows.map(r=>r.id));A.D=1+.22*(A.rows.length-1)+.55+2.4}
- else if(kind==='scorers'){const G=mkScorers(c).slice(0,7);A.G=G;A.ims=await mkImgs(G.map(o=>o.t));A.ph={};await Promise.all(G.map(async o=>{A.ph[o.id=o.t+'|'+o.n]=await imgOf(photoOf(o.t,o.n))}));A.max=Math.max(1,...G.map(o=>o.c));A.D=1+.3*Math.max(0,G.length-1)+.7+2.4}
- else if(kind==='potr'){const g=mkRoundGoals(c,MK.r),p=g.find(x=>x.id===MK.pick)||g[0];if(!p)throw new Error('nogoals');A.p=p;col=await tcol(p.t);A.ims=await mkImgs([p.t,...p.vs]);A.ph=await imgOf(photoOf(p.t,p.n));A.D=6.6}
- else if(kind==='xi'){const f=MK_FORM[MK.form];A.f=f;A.sl=MK.slots;A.ims=await mkImgs(MK.slots.filter(Boolean).map(s=>s.t));A.ph=await Promise.all(MK.slots.map(s=>s?imgOf(photoOf(s.t,s.n)):null));A.D=1+.3*10+.6+2.4}
- else if(kind==='susp'){const d=mkSuspData(c,MK.r);A.rows=[...d.now.map(x=>({x,s:1})),...d.near.map(x=>({x,s:0}))].slice(0,8);A.nNow=d.now.length;A.ims=await mkImgs(A.rows.map(r=>r.x.t));A.ph=await Promise.all(A.rows.map(r=>imgOf(photoOf(r.x.t,r.x.n))));A.D=1+.35*Math.max(0,A.rows.length-1)+.6+2.4}
- const[bg,bx]=mkCv(W,H);bgBase(bx,W,H,col);if(kind==='potr'&&A.ims[A.p.t]){bx.save();bx.globalAlpha=.1;bx.drawImage(A.ims[A.p.t],W-720,260+dy,760,760);bx.restore()}A.bg=bg;A.col=col;
- const[ft,fq]=mkCv(W,160);await footer(fq,W,160,L);A.ft=ft;
- if(kind==='potr'){ // بطاقة اللاعب
-  const PW=580,PH2=640,cut=80,cm=100,P=[[cut,0],[PW,0],[PW,PH2-cut],[PW-cut,PH2],[0,PH2],[0,cut]].map(q=>[q[0]+cm,q[1]+cm]),lt=A.ims[A.p.t];
-  const[card,cq]=mkCv(PW+2*cm,PH2+2*cm);cq.save();cq.shadowColor=rgba(col,.9);cq.shadowBlur=70;poly(cq,P);cq.fillStyle='#0b0f17';cq.fill();cq.restore();cq.save();poly(cq,P);cq.clip();
-  if(A.ph)cover(cq,A.ph,cm,cm,PW,PH2,.2);else{const gg=cq.createLinearGradient(0,cm,0,cm+PH2);gg.addColorStop(0,rgba(col,.9));gg.addColorStop(1,'#05070c');cq.fillStyle=gg;cq.fillRect(cm,cm,PW,PH2);if(lt){cq.globalAlpha=.35;cq.drawImage(lt,cm+40,cm+60,PW-80,PW-80);cq.globalAlpha=1}tx(cq,(A.p.n||'?')[0],cm+PW/2,cm+PH2*.55,F(900,300),'rgba(255,255,255,.22)')}
-  const gr=cq.createLinearGradient(0,cm+PH2*.5,0,cm+PH2);gr.addColorStop(0,'rgba(5,7,12,0)');gr.addColorStop(1,'rgba(5,7,12,.96)');cq.fillStyle=gr;cq.fillRect(cm,cm,PW,PH2);cq.restore();cq.save();poly(cq,P);cq.lineWidth=9;cq.strokeStyle='#fff';cq.stroke();cq.restore();
-  A.card=card;A.cm=cm;A.PW=PW;A.PH2=PH2;const[lgS,lq]=mkCv(240,240);if(lt){lq.shadowColor='#000';lq.shadowBlur=30;lq.drawImage(lt,35,35,170,170)}A.lgS=lgS}
- return A}
-/* ---------- رسم الإطارات ---------- */
-const mkAv=(x,im,letter,cx,cy,r,ring)=>{x.save();x.beginPath();x.arc(cx,cy,r,0,7);x.fillStyle='#1b2540';x.fill();x.clip();
- if(im)cover(x,im,cx-r,cy-r,2*r,2*r,.15);else tx(x,(letter||'?')[0],cx,cy+r*.12,F(900,r*1.1),'rgba(255,255,255,.4)');x.restore();x.beginPath();x.arc(cx,cy,r,0,7);x.lineWidth=5;x.strokeStyle=ring||'#fff';x.stroke()};
-function mkHead(x,A,t,title,sub){const{W,dy,L}=A,u=rvEase(vpr(t,0,.6));x.save();x.globalAlpha=u;x.translate(0,(1-u)*-50);
- x.save();x.shadowColor='rgba(0,0,0,.6)';x.shadowBlur=24;tx(x,title,W/2,150+dy,F(900,88),'#fff','center',W-300);x.restore();tx(x,sub,W/2,232+dy,F(700,36),'#ffd54a','center',W-160);
- if(L){x.beginPath();x.arc(W-90,120+dy,50,0,7);x.fillStyle='#fff';x.fill();x.save();x.beginPath();x.arc(W-90,120+dy,46,0,7);x.clip();x.drawImage(L,W-136,74+dy,92,92);x.restore()}x.restore()}
-function mkFoot(x,A,t,at){const u=rvEase(vpr(t,at,at+.5));if(u<=0)return;x.save();x.globalAlpha=u;x.drawImage(A.ft,0,A.H-160+(1-u)*110);x.restore()}
-function mkShine(x,A,t){const{W,H}=A,u=vpr(t,A.D-2.2,A.D-1.3);if(u>0&&u<1){x.save();x.translate(-W*.4+u*W*1.8,0);x.rotate(.35);const g=x.createLinearGradient(-90,0,90,0);g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(.5,'rgba(255,255,255,.14)');g.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=g;x.fillRect(-90,-200,180,H+400);x.restore()}}
-function mkTable(x,A,t){const{W,dy,rows}=A,n=rows.length;mkHead(x,A,t,'الترتيب العام',`بعد الجولة ${A.up} · ${A.c} · 2026/2027`);
- const top=330+dy,rh=Math.min(74,Math.floor(840/n)),gap=6,uh=rvEase(vpr(t,.7,1.1));
- x.save();x.globalAlpha=uh;[['نقاط',130],['خسر',235],['تعادل',320],['فاز',405],['لعب',490]].forEach(([s,cx])=>tx(x,s,cx,top-14,F(700,24),'rgba(255,255,255,.6)'));tx(x,'الفريق',W-92,top-14,F(700,24),'rgba(255,255,255,.6)','right');x.restore();
- rows.forEach((r,i)=>{const s=1+i*.22,u=rvEase(vpr(t,s,s+.55));if(u<=0)return;const y=top+i*(rh+gap),cy=y+rh/2,lo=i>=n-3;
-  x.save();x.globalAlpha=u;x.translate((1-u)*230,0);
-  rr(x,50,y,W-100,rh,18);x.fillStyle=i===0?'rgba(255,213,74,.24)':'rgba(255,255,255,.08)';x.fill();x.lineWidth=2;x.strokeStyle=i===0?'rgba(255,213,74,.8)':'rgba(255,255,255,.16)';x.stroke();
-  x.beginPath();x.arc(W-100,cy,rh*.34,0,7);x.fillStyle=i===0?'#ffd54a':i===1?'#cfd8dc':i===2?'#e0a070':lo?'#ef6b6b':'rgba(255,255,255,.2)';x.fill();tx(x,String(i+1),W-100,cy+2,F(900,rh*.4),i<3?'#1b1300':'#fff');
-  const ls=rh-16,lx=W-100-rh*.34-12-ls,im=A.ims[r.id];if(im){x.save();rr(x,lx,y+8,ls,ls,12);x.fillStyle='#fff';x.fill();x.clip();const k=Math.min((ls-8)/im.width,(ls-8)/im.height);x.drawImage(im,lx+ls/2-im.width*k/2,y+8+ls/2-im.height*k/2,im.width*k,im.height*k);x.restore()}
-  tx(x,T[r.id]||'',lx-14,cy+2,F(800,Math.round(rh*.42)),'#fff','right',lx-14-530);
-  const cu=rvEase(vpr(t,s+.2,s+.9));[[r.l,235],[r.d,320],[r.w,405],[r.p,490]].forEach(([v,cx])=>tx(x,String(v),cx,cy+2,F(700,Math.round(rh*.42)),'rgba(255,255,255,.85)'));
-  tx(x,String(Math.round(r.pts*cu)),130,cy+2,F(900,Math.round(rh*.56)),i===0?'#ffd54a':'#fff');x.restore()});
- mkFoot(x,A,t,A.D-2.4);mkShine(x,A,t)}
-function mkScorersF(x,A,t){const{W,dy,G}=A;mkHead(x,A,t,'ترتيب الهدافين',`الفئة ${A.c} · 2026/2027`);
- if(!G.length){const u=rvEase(vpr(t,.8,1.3));x.save();x.globalAlpha=u;tx(x,'لا يوجد هدافون مسجلون بعد',W/2,700+dy,F(800,50),'#fff');x.restore()}
- const top=300+dy,rh=112,gap=12;
- G.forEach((o,i)=>{const s=1+i*.3,u=rvEase(vpr(t,s,s+.6));if(u<=0)return;const y=top+i*(rh+gap),cy=y+rh/2,gold=i===0;
-  x.save();x.globalAlpha=u;x.translate((1-u)*240,0);
-  rr(x,50,y,W-100,rh,24);x.fillStyle=gold?'rgba(255,213,74,.22)':'rgba(255,255,255,.08)';x.fill();x.lineWidth=2;x.strokeStyle=gold?'rgba(255,213,74,.85)':'rgba(255,255,255,.16)';x.stroke();
-  x.beginPath();x.arc(W-98,cy,30,0,7);x.fillStyle=gold?'#ffd54a':i===1?'#cfd8dc':i===2?'#e0a070':'rgba(255,255,255,.2)';x.fill();tx(x,String(i+1),W-98,cy+2,F(900,34),i<3?'#1b1300':'#fff');
-  mkAv(x,A.ph[o.id],o.n,W-186,cy,44,gold?'#ffd54a':'#fff');
-  tx(x,o.n,W-252,cy-16,F(900,36),'#fff','right',470);
-  const im=A.ims[o.t];if(im)x.drawImage(im,W-252-34,cy+8,34,34);tx(x,T[o.t]||'',W-252-42,cy+26,F(700,24),'rgba(255,255,255,.7)','right',380);
-  const bw=300,fill=bw*(o.c/A.max)*rvEase(vpr(t,s+.2,s+1)),bx=96;rr(x,bx,cy+44,bw,8,4);x.fillStyle='rgba(255,255,255,.12)';x.fill();if(fill>1){rr(x,bx,cy+44,fill,8,4);x.fillStyle=gold?'#ffd54a':'#5fe08f';x.fill()}
-  tx(x,String(Math.round(o.c*rvEase(vpr(t,s+.2,s+1)))),150,cy-12,F(900,64),gold?'#ffd54a':'#fff');tx(x,'هدف',150,cy+20,F(700,24),'rgba(255,255,255,.65)');
-  x.restore()});
- mkFoot(x,A,t,A.D-2.4);mkShine(x,A,t)}
-function mkPotr(x,A,t){const{W,H,dy,p,col}=A,GOLD='#ffd54a',ut=vpr(t,.08,.5);
- const sk=t>.1&&t<.6?Math.pow(1-(t-.1)/.5,2):0,zm=1+.03*vcl(t/A.D);x.save();x.translate(W/2+Math.sin(t*95)*14*sk,H/2+Math.cos(t*80)*10*sk);x.scale(zm,zm);x.translate(-W/2,-H/2);
- x.drawImage(A.bg,0,0);
- if(ut>0){x.save();x.globalAlpha=.08*ut;x.translate(W/2,175+dy);x.rotate(t*.18);x.fillStyle='#fff';for(let i=0;i<14;i++){x.rotate(Math.PI*2/14);x.beginPath();x.moveTo(0,0);x.lineTo(W*1.1,-70);x.lineTo(W*1.1,70);x.closePath();x.fill()}x.restore()}
- if(ut>0){const e=gvBack(ut),sc=2.4-1.4*e;x.save();x.globalAlpha=vpr(t,.08,.2);x.translate(W/2,165+dy);x.scale(sc,sc);x.shadowColor=rgba(col,1);x.shadowBlur=50;tx(x,'لاعب الجولة',0,0,F(900,150),'#fff','center',W-120);x.restore()}
- const us=rvEase(vpr(t,.75,1.2));if(us>0){x.save();x.globalAlpha=us;tx(x,`⭐ ${mkRL(MK.r)} · ${A.c}`,W/2,300+dy+(1-us)*30,F(700,38),GOLD,'center',W-160);x.restore()}
- const PX=250,PY=360,uc=rvEase(vpr(t,.9,1.6));if(uc>0){x.save();x.globalAlpha=uc;x.translate(PX+A.PW/2,PY+A.PH2/2+dy+(1-uc)*230);x.scale(.9+.1*uc,.9+.1*uc);x.drawImage(A.card,-A.PW/2-A.cm,-A.PH2/2-A.cm);x.restore()}
- const un=rvEase(vpr(t,1.45,2));if(un>0){x.save();x.globalAlpha=un;tx(x,p.n,W/2,PY+A.PH2-95+dy+(1-un)*36,F(900,74),'#fff','center',A.PW-60);x.restore()}
- const up=gvBack(vpr(t,1.75,2.2));if(up>0){x.save();x.translate(W/2,PY+A.PH2-16+dy);x.scale(up,up);rr(x,-170,-48,340,64,32);x.fillStyle=rgba(col,.95);x.fill();tx(x,`⚽ ${Math.round(p.k*rvEase(vpr(t,1.85,2.5)))} ${p.k>1?'أهداف':'هدف'}`,0,0,F(800,34),'#fff');x.restore()}
- const ul=rvEase(vpr(t,1.5,2.1));if(ul>0){x.save();x.globalAlpha=ul;x.translate(-(1-ul)*160,0);x.drawImage(A.lgS,35,PY+30-35+dy);tx(x,T[p.t],155,PY+235+dy,F(800,30),'#fff','center',200);x.restore()}
- const ub=rvEase(vpr(t,2.4,3)),SY=1070+dy;if(ub>0){x.save();x.globalAlpha=ub;x.translate(0,(1-ub)*170);rr(x,70,SY,W-140,150,40);x.fillStyle='rgba(255,255,255,.09)';x.fill();x.lineWidth=3;x.strokeStyle='rgba(255,255,255,.25)';x.stroke();
-  const vs=[...new Set(p.vs)].slice(0,2),tw=80+vs.length*200;let xr=W/2+tw/2;tx(x,'ضد',xr,SY+75,F(800,34),'rgba(255,255,255,.75)','right');xr-=90;vs.forEach(o=>{const im=A.ims[o];if(im)x.drawImage(im,xr-96,SY+16,96,96);tx(x,T[o]||'',xr-48,SY+132,F(700,22),'#fff','center',180);xr-=200});x.restore()}
- mkFoot(x,A,t,2.9);mkShine(x,A,t);
- if(t>.12){const age=t-.12;let sd=7;const rnd=()=>(sd=(sd*16807)%2147483647)/2147483647,cols=[GOLD,'#fff',rgba(col,1),'#ffe9a0'];for(let i=0;i<70;i++){const an=-Math.PI/2+(rnd()-.5)*2.5,sp=520+rnd()*1000,rot=rnd()*6.3,rs=(rnd()-.5)*14,sz=10+rnd()*16,fade=1-vcl((age-1.8)/1.4);if(fade<=0)continue;x.save();x.globalAlpha=fade;x.translate(W/2+Math.cos(an)*sp*age,330+dy+Math.sin(an)*sp*age+700*age*age);x.rotate(rot+rs*age);x.fillStyle=cols[i%4];x.fillRect(-sz/2,-sz/4,sz,sz/2);x.restore()}}
- x.restore();const fl=t<.4?Math.pow(1-t/.4,2)*.8:0;if(fl>0){x.save();x.globalAlpha=fl;x.fillStyle='#fff';x.fillRect(0,0,W,H);x.restore()}}
-function mkXi(x,A,t){const{W,dy,f,sl}=A;mkHead(x,A,t,'تشكيلة الجولة',`${mkRL(MK.r)} · ${A.c} · ${MK.form}`);
- const px=60,py=300+dy,pw=W-120,ph=880,up=rvEase(vpr(t,.5,1));x.save();x.globalAlpha=up;
- rr(x,px,py,pw,ph,26);let g=x.createLinearGradient(0,py,0,py+ph);g.addColorStop(0,'#1f7a43');g.addColorStop(1,'#14572e');x.fillStyle=g;x.fill();x.save();rr(x,px,py,pw,ph,26);x.clip();for(let i=0;i<8;i+=2){x.fillStyle='rgba(255,255,255,.045)';x.fillRect(px,py+i*ph/8,pw,ph/8)}x.restore();
- x.lineWidth=4;x.strokeStyle='rgba(255,255,255,.7)';rr(x,px+16,py+16,pw-32,ph-32,18);x.stroke();x.beginPath();x.arc(px+pw/2,py+16,110,0,Math.PI);x.stroke();x.strokeRect(px+pw/2-260,py+ph-16-190,520,190);x.strokeRect(px+pw/2-120,py+ph-16-80,240,80);x.restore();
- f.forEach((q,i)=>{const s=1+i*.3,u=gvBack(vpr(t,s,s+.5));if(u<=0)return;const cx=px+40+(pw-80)*q[1],cy=py+75+(ph-200)*q[2],s0=sl[i];x.save();x.translate(cx,cy);x.scale(u,u);
-  if(s0){x.save();x.shadowColor='rgba(0,0,0,.6)';x.shadowBlur=18;x.beginPath();x.arc(0,0,54,0,7);x.fillStyle='#0b0f17';x.fill();x.restore();mkAv(x,A.ph[i],s0.n,0,0,50,i===0?'#ffd54a':'#fff');
-   const im=A.ims[s0.t];if(im){x.beginPath();x.arc(38,38,22,0,7);x.fillStyle='#fff';x.fill();x.drawImage(im,20,20,36,36)}
-   const nm=s0.n.split(/\s+/).slice(0,2).join(' ');rr(x,-92,58,184,36,18);x.fillStyle='rgba(5,7,12,.82)';x.fill();tx(x,nm,0,77,F(800,22),'#fff','center',170)}
-  else{x.beginPath();x.arc(0,0,50,0,7);x.fillStyle='rgba(255,255,255,.12)';x.fill();x.setLineDash([8,8]);x.lineWidth=3;x.strokeStyle='rgba(255,255,255,.5)';x.stroke();x.setLineDash([]);tx(x,q[0],0,8,F(700,22),'rgba(255,255,255,.8)','center',100)}
-  x.restore()});
- mkFoot(x,A,t,A.D-2.4);mkShine(x,A,t)}
-function mkSusp(x,A,t){const{W,dy,rows}=A,R=MK.r;mkHead(x,A,t,'الموقوفون',`${mkRL(R)} · ${A.c}`);
- if(!A.nNow){const u=rvEase(vpr(t,.8,1.3));x.save();x.globalAlpha=u;x.translate(0,(1-u)*30);x.beginPath();x.arc(W/2,420+dy,70,0,7);x.fillStyle='#2ecc71';x.fill();x.lineWidth=12;x.strokeStyle='#fff';x.beginPath();x.moveTo(W/2-34,422+dy);x.lineTo(W/2-8,450+dy);x.lineTo(W/2+38,390+dy);x.stroke();tx(x,'لا موقوفون في هذه الجولة',W/2,560+dy,F(900,56),'#fff','center',W-120);x.restore()}
- const top=(A.nNow?300:610)+dy,rh=104,gap=12;
- rows.forEach((r,i)=>{const s=1+i*.35,u=rvEase(vpr(t,s,s+.55));if(u<=0)return;const y=top+i*(rh+gap),cy=y+rh/2,o=r.x,red=r.s&&o.why==='r';
-  x.save();x.globalAlpha=u;x.translate((1-u)*240,0);rr(x,50,y,W-100,rh,24);x.fillStyle=r.s?'rgba(239,68,68,.16)':'rgba(255,193,7,.12)';x.fill();x.lineWidth=2;x.strokeStyle=r.s?'rgba(239,68,68,.7)':'rgba(255,193,7,.55)';x.stroke();
-  mkAv(x,A.ph[i],o.n,W-110,cy,42,r.s?'#ef4444':'#ffc107');tx(x,o.n,W-175,cy-14,F(900,36),'#fff','right',430);
-  const im=A.ims[o.t];if(im)x.drawImage(im,W-175-32,cy+6,32,32);tx(x,T[o.t]||'',W-175-40,cy+23,F(700,24),'rgba(255,255,255,.7)','right',330);
-  const lab=r.s?(red?'🟥 طرد':'🟨 تراكم إنذارات'):'⚠️ إنذار يفصله';rr(x,70,cy-30,250,60,30);x.fillStyle=r.s?'#ef4444':'#d99a00';x.fill();tx(x,lab,195,cy+2,F(800,26),'#fff','center',230);x.restore()});
- mkFoot(x,A,t,A.D-2.4);mkShine(x,A,t)}
-function mkFrame(x,A,t){x.setTransform(1,0,0,1,0,0);x.globalAlpha=1;x.direction='rtl';x.clearRect(0,0,A.W,A.H);
- if(A.kind==='potr'){mkPotr(x,A,t);return}
- x.drawImage(A.bg,0,0);({table:mkTable,scorers:mkScorersF,xi:mkXi,susp:mkSusp})[A.kind](x,A,t)}
-/* ---------- الواجهة والتسجيل ---------- */
-function mkReset(){MK.blob=null;if(MK.url){URL.revokeObjectURL(MK.url);MK.url=null}$('mkPrev').hidden=true;$('mkPrev').removeAttribute('src');$('mkStage').hidden=false;$('mkBar').style.width='0';['mkShare','mkDl'].forEach(i=>$(i).hidden=true);$('mkGo').hidden=false;$('mkGo').disabled=false}
-function mkXiUi(){const cand=mkRoundPlayers(MK.c,MK.r),map={};cand.forEach(p=>map[p.id]=p);MK.slots.forEach(s=>{if(s){const id=s.t+'|'+nrm(s.n);if(!map[id]){map[id]={id,n:s.n,t:s.t};cand.push(map[id])}}});MK.cand=map;
- const f=MK_FORM[MK.form],adm=me&&me.role==='admin',opts='<option value="">— اختر —</option>'+cand.map(p=>`<option value="${esc(p.id)}">${esc(p.n)} · ${esc(T[p.t]||'')}</option>`).join('');
- $('mkSlots').innerHTML=f.map((q,i)=>`<label style="display:block;margin-top:6px">${i+1}. ${q[0]}</label><select class="f" data-slot="${i}" ${adm?'':'disabled'}>${opts}</select>`).join('');
- $('mkSlots').querySelectorAll('select').forEach((s,i)=>{const sl=MK.slots[i];s.value=sl?sl.t+'|'+nrm(sl.n):''});$('mkForm').value=MK.form;$('mkForm').disabled=!adm;$('mkXiSave').hidden=!adm;
- $('mkXiHint').textContent=adm?'اختر 11 لاعباً من لاعبي الجولة (الهدافون ولاعبو الفرق الفائزة في الأعلى)، ثم احفظ ليراها الجميع.':(PUB[mkXiKey()]?'':'لم تُحدَّد تشكيلة هذه الجولة بعد.')}
-function mkSync(){const k=MK.kind;$('mkTitle').textContent=MK_TTL[k];$('mkRoundRow').hidden=k==='scorers';
- $('mkRound').textContent=(k==='table'?'بعد الجولة ':'الجولة ')+MK.r;$('mkPrevR').disabled=MK.r<=1;$('mkNextR').disabled=MK.r>=22;
- document.querySelectorAll('#mkCat .chip').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mc===MK.c));document.querySelectorAll('#mkFmt .chip').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mf===MK.f));
- $('mkPickRow').hidden=k!=='potr';$('mkXiRow').hidden=k!=='xi';
- if(k==='potr'){const g=mkRoundGoals(MK.c,MK.r);if(!g.find(x=>x.id===MK.pick))MK.pick=g[0]?g[0].id:'';$('mkPick').innerHTML=g.length?g.map(p=>`<option value="${esc(p.id)}">${esc(p.n)} · ${esc(T[p.t]||'')} (${p.k} ⚽)</option>`).join(''):'<option value="">لا أهداف في هذه الجولة</option>';$('mkPick').value=MK.pick}
- if(k==='xi')mkXiUi()}
-function mkOpen(kind){MK.kind=kind;MK.c=cat;MK.f='45';MK.pick='';MK.r=kind==='table'?(up||lastRound()):kind==='susp'?(crd||firstOpen()):round;if(kind==='xi')mkLoadXi();mkReset();mkSync();$('mk').showModal();mkPreview()}
-async function mkPreview(){const tok=++MK.tok;$('mkInfo').textContent='⏳ تجهيز المعاينة…';
- try{const A=await mkAssets();if(tok!==MK.tok)return;MK.A=A;const cv=$('mkc');cv.width=A.W;cv.height=A.H;mkFrame(cv.getContext('2d'),A,A.D-.2);$('mkInfo').textContent=`يستغرق التسجيل نحو ${Math.ceil(A.D)} ثوانٍ. اترك الشاشة مفتوحة حتى ينتهي.`}
- catch(e){if(tok!==MK.tok)return;MK.A=null;$('mkInfo').textContent=e.message==='nogoals'?'ℹ️ لا أهداف مسجلة في هذه الجولة لاختيار لاعب لها.':'⚠️ تعذّر تجهيز المعاينة';console.log(e)}}
-function mkSfx(ac,dst,b,A){if(A.kind==='potr')return gvSfx(ac,dst,b);
- const blip=(tm,f,v)=>{const o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(0,b+tm);g.gain.linearRampToValueAtTime(v,b+tm+.01);g.gain.exponentialRampToValueAtTime(.001,b+tm+.3);o.connect(g);g.connect(dst);o.start(b+tm);o.stop(b+tm+.34)};
- const nbuf=ac.createBuffer(1,Math.ceil(ac.sampleRate*.7),ac.sampleRate),nd=nbuf.getChannelData(0);for(let i=0;i<nd.length;i++)nd[i]=Math.random()*2-1;
- const w=ac.createBufferSource();w.buffer=nbuf;const hp=ac.createBiquadFilter();hp.type='highpass';hp.frequency.setValueAtTime(300,b+.05);hp.frequency.exponentialRampToValueAtTime(5000,b+.6);const wg=ac.createGain();wg.gain.setValueAtTime(0,b+.05);wg.gain.linearRampToValueAtTime(.25,b+.3);wg.gain.linearRampToValueAtTime(0,b+.7);w.connect(hp);hp.connect(wg);wg.connect(dst);w.start(b+.05);
- const n=A.kind==='xi'?11:(A.rows?A.rows.length:A.G?A.G.length:0),st=A.kind==='table'?.22:A.kind==='xi'?.3:A.kind==='scorers'?.3:.35;
- for(let i=0;i<n;i++)blip(1+i*st+.05,520+i*38,.2);
- [880,1318.5].forEach((f,i)=>blip(A.D-2.2+i*.09,f,.28))}
-async function mkStart(){
- if(MK.run)return;MK.run=true;$('mkGo').disabled=true;$('mkInfo').textContent='⏳ تجهيز العناصر…';
- let ac=null,dst=null;if($('mkSnd').checked){try{ac=new(window.AudioContext||window.webkitAudioContext)();ac.resume();dst=ac.createMediaStreamDestination()}catch(e){ac=null;dst=null}}
- try{
-  const A=MK.A||await mkAssets(),cv=$('mkc');cv.width=A.W;cv.height=A.H;const x=cv.getContext('2d');mkFrame(x,A,0);
-  const stream=cv.captureStream(30);if(dst)dst.stream.getAudioTracks().forEach(tr=>stream.addTrack(tr));
-  const mime=vMime(!!dst),rec=new MediaRecorder(stream,Object.assign({videoBitsPerSecond:7000000},mime?{mimeType:mime}:{})),ch=[];
-  rec.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};const done=new Promise(r=>rec.onstop=r);
-  if(ac)mkSfx(ac,dst,ac.currentTime+.08,A);
-  rec.start();$('mkInfo').textContent='🔴 جاري التسجيل… لا تغلق الشاشة';const T0=performance.now();
-  await new Promise(res=>{const tick=()=>{const t=(performance.now()-T0)/1000;mkFrame(x,A,Math.min(t,A.D));$('mkBar').style.width=Math.min(100,t/A.D*100)+'%';if(t<A.D+.3)requestAnimationFrame(tick);else res()};requestAnimationFrame(tick)});
-  rec.stop();await done;try{ac&&ac.close()}catch(e){}
-  const type=(rec.mimeType||mime||'video/webm').split(';')[0];MK.blob=new Blob(ch,{type});if(MK.url)URL.revokeObjectURL(MK.url);MK.url=URL.createObjectURL(MK.blob);
-  const pv=$('mkPrev');pv.src=MK.url;pv.hidden=false;$('mkStage').hidden=true;['mkShare','mkDl'].forEach(i=>$(i).hidden=false);$('mkGo').hidden=true;
-  $('mkInfo').textContent=`✅ جاهز (${(MK.blob.size/1048576).toFixed(1)} م.ب · ${type.includes('mp4')?'MP4':'WebM'})`+(type.includes('mp4')?'':' — فيسبوك يفضّل MP4، وبعض الأجهزة تنتج WebM.')
- }catch(e){$('mkInfo').textContent='⚠️ تعذّر إنشاء الفيديو على هذا المتصفح.';$('mkGo').disabled=false;try{ac&&ac.close()}catch(x){}console.log(e)}
- MK.run=false}
-const mkName=ext=>`${{table:'ترتيب',scorers:'هدافون',potr:'لاعب-الجولة',xi:'تشكيلة-الجولة',susp:'الموقوفون'}[MK.kind]}-${MK.c}-${MK.r}.${ext}`;
-const mkFile=()=>new File([MK.blob],mkName(MK.blob.type.includes('mp4')?'mp4':'webm'),{type:MK.blob.type});
-async function mkPng(){try{const A=MK.A||await mkAssets(),[cv,q]=mkCv(A.W,A.H);mkFrame(q,A,A.D-.2);await OLD.saveImg(cv,mkName('png'))}catch(e){toast('⚠️ تعذّر إنشاء الصورة')}}
-$('mk').addEventListener('click',async e=>{const b=e.target.closest('button');if(!b||MK.run&&b.id!=='mkX')return;
- const re=()=>{mkReset();mkSync();mkPreview()};
- if(b.dataset.mc){MK.c=b.dataset.mc;MK.pick='';if(MK.kind==='xi')mkLoadXi();re()}
- else if(b.dataset.mf){MK.f=b.dataset.mf;re()}
- else if(b.id==='mkPrevR'&&MK.r>1){MK.r--;MK.pick='';if(MK.kind==='xi')mkLoadXi();re()}
- else if(b.id==='mkNextR'&&MK.r<22){MK.r++;MK.pick='';if(MK.kind==='xi')mkLoadXi();re()}
- else if(b.id==='mkGo')mkStart();
- else if(b.id==='mkPng')mkPng();
- else if(b.id==='mkPost')openPost(MK_TTL[MK.kind]+' · منشور فيسبوك',mkPostCur());
- else if(b.id==='mkXiSave'){try{await db.collection('public').doc(mkXiKey()).set({c:MK.c,r:MK.r,form:MK.form,slots:MK.slots.map(s=>s||null),at:Date.now()});toast('💾 حُفظت تشكيلة الجولة')}catch(x){toast('⛔ تعذّر الحفظ (للمشرف فقط)')}}
- else if(b.id==='mkDl'&&MK.blob){const f=mkFile(),a=document.createElement('a');a.href=MK.url;a.download=f.name;document.body.appendChild(a);a.click();a.remove()}
- else if(b.id==='mkShare'&&MK.blob){const f=mkFile();try{if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],title:f.name});else toast('⚠️ المشاركة غير مدعومة هنا، استعمل «تحميل»')}catch(x){}}
- else if(b.id==='mkX'&&!MK.run)$('mk').close()});
-$('mk').addEventListener('change',e=>{const t=e.target;
- if(t.id==='mkPick'){MK.pick=t.value;mkReset();mkPreview()}
- else if(t.id==='mkForm'){MK.form=t.value;mkReset();mkXiUi();mkPreview()}
- else if(t.dataset&&t.dataset.slot!==undefined){const p=MK.cand[t.value];MK.slots[+t.dataset.slot]=p?{t:p.t,n:p.n}:null;mkReset();mkPreview()}});
-$('mk').addEventListener('cancel',e=>{if(MK.run)e.preventDefault()});
-$('fpCopy').onclick=async()=>{const t=$('fpTxt');let ok=false;try{await navigator.clipboard.writeText(t.value);ok=true}catch(e){try{t.focus();t.select();ok=document.execCommand('copy')}catch(x){}}toast(ok?'📋 نُسخ المنشور، الصقه في فيسبوك':'⚠️ حدّد النص وانسخه يدوياً')};
-$('fpShare').onclick=async()=>{try{if(navigator.share)await navigator.share({text:$('fpTxt').value});else toast('⚠️ المشاركة غير مدعومة، استعمل «نسخ»')}catch(e){}};
-$('fpX').onclick=()=>$('fpd').close();
-document.addEventListener('click',e=>{const b=e.target.closest('[data-mk],[data-fp],[data-pr],[data-pt],[data-pg],[data-pu]');if(!b)return;
- if(b.dataset.mk)mkOpen(b.dataset.mk);
- else if(b.dataset.fp)openPost('📝 منشور المباراة',mkPostMatch(b.dataset.fp));
- else if(b.dataset.pr)openPost('📝 منشور الجولة',mkPostRound(cat,round));
- else if(b.dataset.pt)openPost('📝 منشور الترتيب',mkPostTable(cat,up||lastRound()));
- else if(b.dataset.pg)openPost('📝 منشور الهدافين',mkPostScorers(cat));
- else if(b.dataset.pu)openPost('📝 منشور الموقوفين',mkPostSusp(cat,crd||firstOpen()))});
-
-/* ===== فيديو الهدف: نسخة متحركة من ملصق الهدف (عنوان، بطاقة اللاعب، عدّاد الدقيقة، قلب النتيجة) ===== */
-const GV={k:null,s:'h',i:0,f:'45',snd:true,run:false,blob:null,url:null,tok:0},GVD=6.6;
-const gvDim=()=>({W:1080,H:GV.f==='916'?1920:1350});
-const gvBack=u=>{u=vcl(u);const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(u-1,3)+c1*Math.pow(u-1,2)};
-function gvReset(){GV.blob=null;if(GV.url){URL.revokeObjectURL(GV.url);GV.url=null}
- $('gvPrev').hidden=true;$('gvPrev').removeAttribute('src');$('gvStage').hidden=false;$('gvBar').style.width='0';
- ['gvShare','gvDl'].forEach(i=>$(i).hidden=true);$('gvGo').hidden=false;$('gvGo').disabled=false;
- $('gvInfo').textContent='يستغرق التسجيل نحو 7 ثوانٍ. اترك الشاشة مفتوحة حتى ينتهي.'}
-function gvSync(){document.querySelectorAll('#gvFmt .chip').forEach(b=>b.setAttribute('aria-pressed',b.dataset.gf===GV.f));$('gvSnd').checked=GV.snd}
-function openGV(k,s,i){GV.k=k;GV.s=s;GV.i=i;GV.f='45';gvReset();gvSync();$('gv').showModal();gvPreview()}
-async function gvAssets(){
- OLD.load(S);OLD.state({cat,rosters:RO});
- const key=GV.k,m=/^(?:([A-Z0-9]+)\|)?(\d+):(\d+)-(\d+)$/.exec(key),v=S[key]||{},h=+m[3],a=+m[4],side=GV.s,tid=side==='h'?h:a,g=parseG(side==='h'?v.gh:v.ga)[GV.i];
- if(!g)throw new Error('goal not found');
- const GS=goalState(v,side,GV.i),{W,H}=gvDim(),dy=(H-1350)/2,c=await tcol(tid);
- const[lh,la,ph,L]=await Promise.all([imgOf(OLD.DEF[h]),imgOf(OLD.DEF[a]),imgOf(photoOf(tid,g.n)),imgOf(typeof LEAGUE!=='undefined'?LEAGUE:null)]),lt=side==='h'?lh:la;
- const cv=(w,hh)=>{const e=document.createElement('canvas');e.width=w;e.height=hh;const q=e.getContext('2d');q.direction='rtl';return[e,q]};
- // الخلفية الثابتة
- const[bg,bx]=cv(W,H);bgBase(bx,W,H,c);if(lt){bx.save();bx.globalAlpha=.1;bx.drawImage(lt,W-720,260+dy,760,760);bx.restore()}tx(bx,'GOAL',W/2,250+dy,F(900,330),'rgba(255,255,255,.07)');
- // العنوان
- const[ttl,tq]=cv(1000,320);tq.shadowColor=rgba(c,1);tq.shadowBlur=60;tx(tq,'هــدف!',500,160,F(900,190),'#fff');
- // بطاقة اللاعب
- const PX=250,PY=360,PW=580,PH2=640,cut=80,cm=100,P=[[cut,0],[PW,0],[PW,PH2-cut],[PW-cut,PH2],[0,PH2],[0,cut]].map(q=>[q[0]+cm,q[1]+cm]);
- const[card,cq]=cv(PW+2*cm,PH2+2*cm);cq.save();cq.shadowColor=rgba(c,.9);cq.shadowBlur=70;poly(cq,P);cq.fillStyle='#0b0f17';cq.fill();cq.restore();
- cq.save();poly(cq,P);cq.clip();
- if(ph)cover(cq,ph,cm,cm,PW,PH2,.2);else{const gg=cq.createLinearGradient(0,cm,0,cm+PH2);gg.addColorStop(0,rgba(c,.9));gg.addColorStop(1,'#05070c');cq.fillStyle=gg;cq.fillRect(cm,cm,PW,PH2);if(lt){cq.globalAlpha=.35;cq.drawImage(lt,cm+40,cm+60,PW-80,PW-80);cq.globalAlpha=1}tx(cq,(g.n||'?')[0],cm+PW/2,cm+PH2*.55,F(900,300),'rgba(255,255,255,.22)')}
- const gr=cq.createLinearGradient(0,cm+PH2*.5,0,cm+PH2);gr.addColorStop(0,'rgba(5,7,12,0)');gr.addColorStop(1,'rgba(5,7,12,.96)');cq.fillStyle=gr;cq.fillRect(cm,cm,PW,PH2);cq.restore();
- cq.save();poly(cq,P);cq.lineWidth=9;cq.strokeStyle='#fff';cq.stroke();cq.restore();
- // شعار الفريق
- const[lgS,lq]=cv(240,240);if(lt){lq.shadowColor='#000';lq.shadowBlur=30;lq.drawImage(lt,35,35,170,170)}
- // شريط النتيجة (بلا أرقام)
- const[bar,rq]=cv(W,230);rr(rq,70,30,W-140,170,40);rq.fillStyle='rgba(255,255,255,.09)';rq.fill();rq.lineWidth=3;rq.strokeStyle='rgba(255,255,255,.25)';rq.stroke();
- if(lh)rq.drawImage(lh,W-70-150,40,130,130);if(la)rq.drawImage(la,90,40,130,130);tx(rq,T[h],W-70-85,180,F(700,24),'#fff','center',170);tx(rq,T[a],155,180,F(700,24),'#fff','center',170);
- // التذييل
- const[ft,fq]=cv(W,160);await footer(fq,W,160,L);
- return{W,H,dy,c,g,GS,side,tid,m,h,a,bg,ttl,card,cm,PX,PY,PW,PH2,lgS,bar,ft,own0:GS.own-(g.k||1),minute:g.m&&!isNaN(+g.m)?+g.m:null}}
-function gvFrame(x,A,t){
- const{W,H,dy,c,g,GS,side,tid,m}=A,GOLD='#ffd54a',tt=vcl(t/GVD);
- x.setTransform(1,0,0,1,0,0);x.globalAlpha=1;x.direction='rtl';x.clearRect(0,0,W,H);
- // اهتزاز الضربة + تقريب بطيء
- const sk=t>.1&&t<.6?Math.pow(1-(t-.1)/.5,2):0,sx=Math.sin(t*95)*16*sk,sy=Math.cos(t*80)*12*sk,zm=1+.035*tt;
- x.save();x.translate(W/2+sx,H/2+sy);x.scale(zm,zm);x.translate(-W/2,-H/2);
- x.drawImage(A.bg,0,0);
- // أشعة خلف العنوان
- const ut=vpr(t,.08,.5);if(ut>0){x.save();x.globalAlpha=.08*ut;x.translate(W/2,175+dy);x.rotate(t*.18);x.fillStyle='#fff';for(let i=0;i<14;i++){x.rotate(Math.PI*2/14);x.beginPath();x.moveTo(0,0);x.lineTo(W*1.1,-70);x.lineTo(W*1.1,70);x.closePath();x.fill()}x.restore()}
- // العنوان
- if(ut>0){const e=gvBack(ut),sc=2.7-1.7*e;x.save();x.globalAlpha=vpr(t,.08,.2);x.translate(W/2,170+dy);x.scale(sc,sc);x.drawImage(A.ttl,-500,-160);x.restore()}
- // سطر «الهدف N لـ…»
- const us=rvEase(vpr(t,.75,1.2));if(us>0){x.save();x.globalAlpha=us;tx(x,'⚽ '+(g.k>1?`سجّل ${g.k} أهداف`:`الهدف ${ordAr(GS.own)} لـ${T[tid]}`),W/2,300+dy+(1-us)*30,F(700,38),GOLD,'center',W-160);x.restore()}
- // بطاقة اللاعب
- const uc=rvEase(vpr(t,.9,1.6));if(uc>0){const cm=A.cm;x.save();x.globalAlpha=uc;x.translate(A.PX+A.PW/2,A.PY+A.PH2/2+dy+(1-uc)*230);x.scale(.9+.1*uc,.9+.1*uc);x.drawImage(A.card,-A.PW/2-cm,-A.PH2/2-cm);x.restore()}
- // الاسم
- const un=rvEase(vpr(t,1.45,2.0));if(un>0){x.save();x.globalAlpha=un;tx(x,g.n,W/2,A.PY+A.PH2-95+dy+(1-un)*36,F(900,74),'#fff','center',A.PW-60);x.restore()}
- // الدقيقة مع عدّاد
- if(g.m){const up=gvBack(vpr(t,1.75,2.2));if(up>0){const cur=A.minute!==null?Math.round(A.minute*rvEase(vpr(t,1.85,2.7))):g.m,cy=A.PY+A.PH2-16+dy;x.save();x.translate(W/2,cy);x.scale(up,up);rr(x,-150,-48,300,64,32);x.fillStyle=rgba(c,.95);x.fill();tx(x,`⏱ الدقيقة ${cur}'`,0,0,F(800,32),'#fff');x.restore()}}
- // شعار الفريق
- const ul=rvEase(vpr(t,1.5,2.1));if(ul>0){x.save();x.globalAlpha=ul;x.translate(-(1-ul)*160,0);x.drawImage(A.lgS,70-35,A.PY+30-35+dy);tx(x,T[tid],155,A.PY+235+dy,F(800,30),'#fff','center',200);x.restore()}
- // شريط النتيجة
- const ub=rvEase(vpr(t,2.3,2.9)),SY=1050+dy;
- if(ub>0){x.save();x.globalAlpha=ub;x.translate(0,(1-ub)*170);x.drawImage(A.bar,0,SY-30);
-  const flip=vpr(t,3.1,3.6),hot=side==='h';
-  const num=(cx,oldV,newV,scorer)=>{
-   if(!scorer||flip<=0){tx(x,String(scorer?oldV:newV),cx,SY+85,F(900,96),'#fff');return}
-   const e=rvEase(flip);x.save();x.globalAlpha=1-e;tx(x,String(oldV),cx,SY+85-e*70,F(900,96),'#fff');x.restore();
-   const pop=1+.45*Math.sin(Math.PI*vcl(flip*1.15));x.save();x.translate(cx,SY+85+(1-e)*70);x.scale(pop,pop);x.globalAlpha=e;x.shadowColor=GOLD;x.shadowBlur=40*Math.sin(Math.PI*vcl(flip));tx(x,String(newV),0,0,F(900,96),GOLD);x.restore()};
-  if(GS.opp===null){tx(x,'الهدف',W/2,SY+35,F(700,28),'#cfe3ff');num(W/2,A.own0,GS.own,true)}
-  else{const hs=hot?GS.own:GS.opp,as=hot?GS.opp:GS.own,ho=hot?A.own0:GS.opp,ao=hot?GS.opp:A.own0;x.direction='ltr';num(W/2-100,ao,as,!hot);tx(x,'-',W/2,SY+85,F(900,80),'rgba(255,255,255,.7)');num(W/2+100,ho,hs,hot);x.direction='rtl'}
-  tx(x,`الجولة ${m[2]} · ${(+m[2])<=11?'ذهاب':'إياب'} · ${m[1]||'U15'}${GS.opp!==null?' · النتيجة لحظة الهدف':''}`,W/2,1245+dy,F(700,30),'#cfe3ff','center',W-120);x.restore()}
- // التذييل
- const uf=rvEase(vpr(t,2.9,3.4));if(uf>0){x.save();x.globalAlpha=uf;x.drawImage(A.ft,0,H-160+(1-uf)*110);x.restore()}
- // لمعة تعبر الشاشة
- const ul2=vpr(t,3.9,4.8);if(ul2>0&&ul2<1){x.save();x.translate(-W*.4+ul2*W*1.8,0);x.rotate(.35);const g2=x.createLinearGradient(-90,0,90,0);g2.addColorStop(0,'rgba(255,255,255,0)');g2.addColorStop(.5,'rgba(255,255,255,.16)');g2.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=g2;x.fillRect(-90,-200,180,H+400);x.restore()}
- // مفرقعات
- if(t>.12){const age=t-.12;let sd=11;const rnd=()=>(sd=(sd*16807)%2147483647)/2147483647,cols=[GOLD,'#fff',rgba(c,1),'#ffe9a0'];
-  for(let i=0;i<80;i++){const an=-Math.PI/2+(rnd()-.5)*2.5,sp=520+rnd()*1050,rot=rnd()*6.3,rs=(rnd()-.5)*14,sz=10+rnd()*16,col=cols[i%4],fade=1-vcl((age-1.8)/1.4);if(fade<=0)continue;
-   const px=W/2+Math.cos(an)*sp*age,py=330+dy+Math.sin(an)*sp*age+1400*age*age*.5;x.save();x.globalAlpha=fade;x.translate(px,py);x.rotate(rot+rs*age);x.fillStyle=col;x.fillRect(-sz/2,-sz/4,sz,sz/2);x.restore()}}
- x.restore();
- // وميض الضربة
- const fl=t<.4?Math.pow(1-t/.4,2)*.8:0;if(fl>0){x.save();x.globalAlpha=fl;x.fillStyle='#fff';x.fillRect(0,0,W,H);x.restore()}}
-function gvSfx(ac,dst,b){
- const nb=d=>{const f=ac.createBuffer(1,Math.ceil(ac.sampleRate*d),ac.sampleRate),a=f.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=Math.random()*2-1;return f};
- const env=(g,pts)=>{g.gain.setValueAtTime(0,b+pts[0][0]);pts.forEach(([tm,v])=>g.gain.linearRampToValueAtTime(v,b+tm))};
- // ضربة عميقة
- const o=ac.createOscillator(),og=ac.createGain();o.type='sine';o.frequency.setValueAtTime(150,b+.1);o.frequency.exponentialRampToValueAtTime(38,b+.6);env(og,[[.1,0],[.12,.9],[.7,0]]);o.connect(og);og.connect(dst);o.start(b+.1);o.stop(b+.8);
- // ضجيج جمهور
- const n=ac.createBufferSource();n.buffer=nb(3.4);const bp=ac.createBiquadFilter();bp.type='bandpass';bp.frequency.value=950;bp.Q.value=.5;const ng=ac.createGain();env(ng,[[.1,0],[.6,.34],[1.8,.2],[3.5,0]]);n.connect(bp);bp.connect(ng);ng.connect(dst);n.start(b+.1);
- // وووش لدخول البطاقة
- const w=ac.createBufferSource();w.buffer=nb(.6);const hp=ac.createBiquadFilter();hp.type='highpass';hp.frequency.setValueAtTime(300,b+.9);hp.frequency.exponentialRampToValueAtTime(5000,b+1.5);const wg=ac.createGain();env(wg,[[.9,0],[1.2,.25],[1.55,0]]);w.connect(hp);hp.connect(wg);wg.connect(dst);w.start(b+.9);
- // نقرات عدّاد الدقيقة
- for(let i=0;i<9;i++){const k=ac.createOscillator(),kg=ac.createGain(),tm=1.85+i*.095;k.type='square';k.frequency.value=1500+i*40;kg.gain.setValueAtTime(0,b+tm);kg.gain.linearRampToValueAtTime(.07,b+tm+.004);kg.gain.linearRampToValueAtTime(0,b+tm+.04);k.connect(kg);kg.connect(dst);k.start(b+tm);k.stop(b+tm+.06)}
- // رنّة تحديث النتيجة
- [880,1318.5].forEach((f,i)=>{const k=ac.createOscillator(),kg=ac.createGain(),tm=3.1+i*.09;k.type='triangle';k.frequency.value=f;kg.gain.setValueAtTime(0,b+tm);kg.gain.linearRampToValueAtTime(.3,b+tm+.01);kg.gain.exponentialRampToValueAtTime(.001,b+tm+.9);k.connect(kg);kg.connect(dst);k.start(b+tm);k.stop(b+tm+1)})}
-async function gvPreview(){const tok=++GV.tok;$('gvInfo').textContent='⏳ تجهيز المعاينة…';
- try{const A=await gvAssets();if(tok!==GV.tok)return;const cv=$('gvc');cv.width=A.W;cv.height=A.H;gvFrame(cv.getContext('2d'),A,GVD-.2);$('gvInfo').textContent='يستغرق التسجيل نحو 7 ثوانٍ. اترك الشاشة مفتوحة حتى ينتهي.'}catch(e){console.log(e);$('gvInfo').textContent='⚠️ تعذّر تجهيز المعاينة'}}
-async function gvStart(){
- if(GV.run)return;GV.run=true;$('gvGo').disabled=true;$('gvInfo').textContent='⏳ تجهيز العناصر…';
- let ac=null,dst=null;if($('gvSnd').checked){try{ac=new(window.AudioContext||window.webkitAudioContext)();ac.resume();dst=ac.createMediaStreamDestination()}catch(e){ac=null;dst=null}}
- try{
-  const A=await gvAssets(),cv=$('gvc');cv.width=A.W;cv.height=A.H;const x=cv.getContext('2d');
-  gvFrame(x,A,0);
-  const stream=cv.captureStream(30);if(dst)dst.stream.getAudioTracks().forEach(tr=>stream.addTrack(tr));
-  const mime=vMime(!!dst),rec=new MediaRecorder(stream,Object.assign({videoBitsPerSecond:7000000},mime?{mimeType:mime}:{})),ch=[];
-  rec.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};const done=new Promise(r=>rec.onstop=r);
-  if(ac)gvSfx(ac,dst,ac.currentTime+.08);
-  rec.start();$('gvInfo').textContent='🔴 جاري التسجيل… لا تغلق الشاشة';
-  const T0=performance.now();
-  await new Promise(res=>{const tick=()=>{const t=(performance.now()-T0)/1000;gvFrame(x,A,Math.min(t,GVD));$('gvBar').style.width=Math.min(100,t/GVD*100)+'%';if(t<GVD+.3)requestAnimationFrame(tick);else res()};requestAnimationFrame(tick)});
-  rec.stop();await done;try{ac&&ac.close()}catch(e){}
-  const type=(rec.mimeType||mime||'video/webm').split(';')[0];GV.blob=new Blob(ch,{type});
-  if(GV.url)URL.revokeObjectURL(GV.url);GV.url=URL.createObjectURL(GV.blob);
-  const pv=$('gvPrev');pv.src=GV.url;pv.hidden=false;$('gvStage').hidden=true;['gvShare','gvDl'].forEach(i=>$(i).hidden=false);$('gvGo').hidden=true;
-  $('gvInfo').textContent=`✅ جاهز (${(GV.blob.size/1048576).toFixed(1)} م.ب · ${type.includes('mp4')?'MP4':'WebM'})`+(type.includes('mp4')?'':' — فيسبوك يفضّل MP4، وبعض الأجهزة تنتج WebM.')
- }catch(e){$('gvInfo').textContent='⚠️ تعذّر إنشاء الفيديو على هذا المتصفح.';$('gvGo').disabled=false;try{ac&&ac.close()}catch(x){}console.log(e)}
- GV.run=false}
-const gvFile=()=>{const ext=GV.blob.type.includes('mp4')?'mp4':'webm',g=parseG(((S[GV.k]||{})[GV.s==='h'?'gh':'ga'])||'')[GV.i];return new File([GV.blob],`هدف-${(g&&g.n)||'لاعب'}.${ext}`,{type:GV.blob.type})};
-$('gv').addEventListener('click',async e=>{const b=e.target.closest('button');if(!b||GV.run&&b.id!=='gvX')return;
- if(b.dataset.gf){GV.f=b.dataset.gf;gvReset();gvSync();gvPreview()}
- else if(b.id==='gvGo')gvStart();
- else if(b.id==='gvDl'&&GV.blob){const f=gvFile(),a=document.createElement('a');a.href=GV.url;a.download=f.name;document.body.appendChild(a);a.click();a.remove()}
- else if(b.id==='gvShare'&&GV.blob){const f=gvFile();try{if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],title:f.name});else toast('⚠️ المشاركة غير مدعومة هنا، استعمل «تحميل»')}catch(x){}}
- else if(b.id==='gvX'&&!GV.run)$('gv').close()});
-$('gvSnd').addEventListener('change',()=>{GV.snd=$('gvSnd').checked});
-$('gv').addEventListener('cancel',e=>{if(GV.run)e.preventDefault()});
-
-/* ===== فيديو الجولة: جدول/نتائج مباريات الجولة متحرك (يُنزَّل MP4/WebM) ===== */
-const RV={r:1,c:'U15',f:'23',run:false,blob:null,url:null,tok:0};
-const rvDim=()=>({W:720,H:RV.f==='916'?1280:1080});
-const rvTiming=n=>{const t0=1.15,gap=.42,last=t0+gap*Math.max(0,n-1)+.55;return{t0,gap,total:last+2.4}};
-const rvEase=u=>1-Math.pow(1-vcl(u),3);
-function rvBar(){return `<div class="act" style="margin:0 0 10px;flex-wrap:wrap"><button class="btn alt sm" id="rvBtn">🎞️ فيديو الجولة ${round}</button><button class="btn alt sm" data-pr="1">📝 منشور الجولة</button><button class="btn alt sm" data-mk="potr">🏅 لاعب الجولة</button><button class="btn alt sm" data-mk="xi">⭐ تشكيلة الجولة</button></div>`}
-function rvReset(){RV.blob=null;if(RV.url){URL.revokeObjectURL(RV.url);RV.url=null}
- $('rvPrev').hidden=true;$('rvPrev').removeAttribute('src');$('rvStage').hidden=false;$('rvBar').style.width='0';
- ['rvShare','rvDl'].forEach(i=>$(i).hidden=true);$('rvGo').hidden=false;$('rvGo').disabled=false;
- $('rvInfo').textContent='يستغرق التسجيل نحو 7 ثوانٍ. اترك الشاشة مفتوحة حتى ينتهي.'}
-function openRV(){RV.r=round;RV.c=cat;rvReset();rvSync();$('rv').showModal();rvPreview()}
-function rvSync(){$('rvRound').textContent='الجولة '+RV.r+(RV.r>11?' (إياب)':' (ذهاب)');
- document.querySelectorAll('#rvCat .chip').forEach(b=>b.setAttribute('aria-pressed',b.dataset.rc===RV.c));
- document.querySelectorAll('#rvFmt .chip').forEach(b=>b.setAttribute('aria-pressed',b.dataset.rf===RV.f));
- $('rvPrevR').disabled=RV.r<=1;$('rvNextR').disabled=RV.r>=22}
-async function rvAssets(){
- const{W,H}=rvDim(),p=pairs(RV.r),rows=p.m.map(([h,a])=>{const v=S[K(RV.c,RV.r,h,a)]||{},has=v.sh!==undefined&&v.sh!==''&&v.sa!==undefined&&v.sa!==''&&!v.pp&&!v.ex;
-  const date=v.date||'',day=date?(()=>{try{return new Date(date+'T12:00').toLocaleDateString('ar-DZ',{weekday:'long'})}catch(e){return''}})():'';
-  return{h,a,v,has,date,day,time:(dtm(v,RV.c)||'').replace(':','H'),stad:v.stad||STAD[h]||'',pp:!!v.pp,ex:!!v.ex}});
- const ids=[...new Set(rows.flatMap(r=>[r.h,r.a]))],ims={};
- await Promise.all([...ids.map(async id=>{ims[id]=await imgOf((OLD.DEF&&OLD.DEF[id])||LG[id])}),(async()=>{ims.L=await imgOf(typeof LEAGUE!=='undefined'?LEAGUE:null)})()]);
- const bg=document.createElement('canvas');bg.width=W;bg.height=H;const b=bg.getContext('2d');
- let g=b.createLinearGradient(0,0,0,H);g.addColorStop(0,'#f7f9ff');g.addColorStop(1,'#dbe3f9');b.fillStyle=g;b.fillRect(0,0,W,H);
- b.save();b.globalAlpha=.07;b.strokeStyle='#2146c9';b.fillStyle='#2146c9';b.lineWidth=3;
- for(let yy=0,ro=0;yy<H+60;yy+=96,ro++)for(let xx=(ro%2)*48;xx<W+60;xx+=96){b.beginPath();b.arc(xx,yy,22,0,7);b.stroke();b.beginPath();for(let k=0;k<5;k++){const an=-Math.PI/2+k*Math.PI*2/5;b.lineTo(xx+Math.cos(an)*9,yy+Math.sin(an)*9)}b.closePath();b.fill()}
- b.restore();
- return{W,H,rows,ims,bye:p.bye,bg}}
-function rvPoly(x,P){x.beginPath();P.forEach((q,i)=>i?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1]));x.closePath()}
-function rvFrame(x,A,t){
- const{W,H,rows,ims}=A,n=rows.length,tm=rvTiming(n),NAVY='#12286b',BL1='#2d56e0',BL2='#1a34a8';
- x.setTransform(1,0,0,1,0,0);x.globalAlpha=1;x.direction='rtl';x.clearRect(0,0,W,H);x.drawImage(A.bg,0,0);
- // الرأس
- const u0=rvEase(vpr(t,0,.55));x.save();x.globalAlpha=u0;x.translate(0,(1-u0)*-60);
- x.save();x.shadowColor='rgba(33,70,201,.28)';x.shadowBlur=18;x.shadowOffsetY=6;rr(x,W-40-100,36,100,100,24);x.fillStyle='#fff';x.fill();x.restore();
- rr(x,W-40-100,36,100,100,24);x.lineWidth=3;x.strokeStyle='#5b78e6';x.stroke();
- if(ims.L){x.save();rr(x,W-40-100+8,44,84,84,18);x.clip();x.drawImage(ims.L,W-40-100+8,44,84,84);x.restore()}
- tx(x,'مباريات رابطة تيبازة',W-40-100-22,70,F(900,42),NAVY,'right',470);
- tx(x,'الفئات الشبانية · 2026/2027 · وسط غرب',W-40-100-22,112,F(700,22),'#5a6aa3','right',470);
- x.restore();
- // شارة الجولة
- const u1=rvEase(vpr(t,.4,1)),py=190;x.save();x.globalAlpha=u1;x.translate((1-u1)*140,0);
- x.save();x.shadowColor='rgba(33,70,201,.35)';x.shadowBlur=16;x.shadowOffsetY=6;rr(x,W-40-340,py,340,82,41);let g=x.createLinearGradient(W-380,0,W-40,0);g.addColorStop(0,BL2);g.addColorStop(1,BL1);x.fillStyle=g;x.fill();x.restore();
- tx(x,'مباريات الجولة',W-40-34-110,py+42,F(900,34),'#fff','center',200);
- const cx=W-380+8+41;x.beginPath();x.arc(cx,py+41,50,0,7);x.fillStyle='#fff';x.fill();x.lineWidth=6;x.strokeStyle=BL1;x.stroke();
- tx(x,String(RV.r),cx,py+44,F(900,String(RV.r).length>1?46:54),NAVY,'center');
- x.restore();
- x.save();x.globalAlpha=rvEase(vpr(t,.7,1.3));tx(x,'2026/2027',W-40-340-26,py+30,F(900,34),NAVY,'right');tx(x,RV.c+' · '+(RV.r>11?'الإياب':'الذهاب'),W-40-340-26,py+66,F(700,22),'#5a6aa3','right');x.restore();
- // الصفوف
- const top=330,bot=H-180,avail=bot-top,pitch=Math.min(150,avail/Math.max(1,n+(A.bye?.7:0))),rh=Math.round(pitch*.66),y0=top+Math.max(0,(avail-pitch*(n+(A.bye?.7:0)))/2);
- const X0=40,X1=W-40,LG=rh,cw=158,gap=8,bw=(X1-X0-2*LG-2*gap-cw)/2,sl=16;
- rows.forEach((r,i)=>{
-  const s=tm.t0+tm.gap*i,u=rvEase(vpr(t,s,s+.5));if(u<=0)return;
-  const y=y0+i*pitch;x.save();x.globalAlpha=u;
-  // المضيف على اليمين: يدخل من اليمين
-  x.save();x.translate((1-u)*170,0);
-  const lx=X1-LG;x.save();x.shadowColor='rgba(33,70,201,.25)';x.shadowBlur=10;x.shadowOffsetY=3;rr(x,lx,y,LG,rh,16);x.fillStyle='#fff';x.fill();x.restore();rr(x,lx,y,LG,rh,16);x.lineWidth=2;x.strokeStyle='#c4d0f4';x.stroke();
-  if(ims[r.h]){x.save();rr(x,lx+5,y+5,LG-10,rh-10,12);x.clip();const im=ims[r.h],k=Math.min((LG-10)/im.width,(rh-10)/im.height);x.drawImage(im,lx+LG/2-im.width*k/2,y+rh/2-im.height*k/2,im.width*k,im.height*k);x.restore()}
-  const bx1=lx-gap,bx0=bx1-bw;g=x.createLinearGradient(bx0,0,bx1,0);g.addColorStop(0,BL2);g.addColorStop(1,BL1);rvPoly(x,[[bx1,y],[bx0+sl,y],[bx0,y+rh],[bx1,y+rh]]);x.fillStyle=g;x.fill();
-  tx(x,T[r.h]||'',bx1-14,y+rh/2+1,F(800,Math.round(rh*.36)),'#fff','right',bw-sl-24);
-  x.restore();
-  // الضيف على اليسار: يدخل من اليسار
-  x.save();x.translate((1-u)*-170,0);
-  x.save();x.shadowColor='rgba(33,70,201,.25)';x.shadowBlur=10;x.shadowOffsetY=3;rr(x,X0,y,LG,rh,16);x.fillStyle='#fff';x.fill();x.restore();rr(x,X0,y,LG,rh,16);x.lineWidth=2;x.strokeStyle='#c4d0f4';x.stroke();
-  if(ims[r.a]){x.save();rr(x,X0+5,y+5,LG-10,rh-10,12);x.clip();const im=ims[r.a],k=Math.min((LG-10)/im.width,(rh-10)/im.height);x.drawImage(im,X0+LG/2-im.width*k/2,y+rh/2-im.height*k/2,im.width*k,im.height*k);x.restore()}
-  const ax0=X0+LG+gap,ax1=ax0+bw;g=x.createLinearGradient(ax0,0,ax1,0);g.addColorStop(0,BL1);g.addColorStop(1,BL2);rvPoly(x,[[ax0,y],[ax1,y],[ax1-sl,y+rh],[ax0,y+rh]]);x.fillStyle=g;x.fill();
-  tx(x,T[r.a]||'',ax0+14,y+rh/2+1,F(800,Math.round(rh*.36)),'#fff','left',bw-sl-24);
-  x.restore();
-  // مركز: التاريخ/التوقيت أو النتيجة
-  const cxm=(X0+X1)/2,sc=.8+.2*u;x.save();x.translate(cxm,y+rh/2);x.scale(sc,sc);x.translate(-cxm,-(y+rh/2));
-  x.save();x.shadowColor='rgba(33,70,201,.25)';x.shadowBlur=10;x.shadowOffsetY=3;rr(x,cxm-cw/2,y,cw,rh,16);x.fillStyle='#fff';x.fill();x.restore();rr(x,cxm-cw/2,y,cw,rh,16);x.lineWidth=2;x.strokeStyle='#c4d0f4';x.stroke();
-  if(r.has){x.direction='ltr';tx(x,r.v.sa+' - '+r.v.sh,cxm,y+rh/2+1,F(900,Math.round(rh*.5)),NAVY,'center',cw-14);x.direction='rtl'}
-  else if(r.pp||r.ex){tx(x,r.ex?'معفاة':'مؤجلة',cxm,y+rh/2,F(900,Math.round(rh*.3)),'#b45309','center',cw-14)}
-  else{tx(x,(r.day&&r.date?r.day+' '+r.date.slice(8,10)+'/'+r.date.slice(5,7):'لم يحدد'),cxm,y+rh*.3,F(700,Math.round(rh*.2)),'#5a6aa3','center',cw-14);tx(x,r.time||'',cxm,y+rh*.68,F(900,Math.round(rh*.42)),NAVY,'center',cw-14)}
-  x.restore();
-  if(r.stad){rr(x,cxm-170,y+rh+4,340,Math.round(pitch-rh-8),10);x.fillStyle='rgba(255,255,255,.75)';x.fill();tx(x,r.stad,cxm,y+rh+4+Math.round(pitch-rh-8)/2+1,F(700,Math.max(14,Math.round((pitch-rh)*.42))),'#5a6aa3','center',320)}
-  x.restore()});
- if(A.bye!==undefined&&A.bye!==null){const sb=tm.t0+tm.gap*n,ub=rvEase(vpr(t,sb,sb+.5));if(ub>0){x.save();x.globalAlpha=ub;tx(x,'🛌 مستريحة: '+(T[A.bye]||''),W/2,y0+n*pitch+pitch*.2,F(800,26),'#5a6aa3','center',W-120);x.restore()}}
- // التذييل
- const u2=rvEase(vpr(t,.9,1.5));x.save();x.globalAlpha=u2;x.translate(0,(1-u2)*90);
- x.save();x.shadowColor='rgba(33,70,201,.35)';x.shadowBlur=14;x.shadowOffsetY=5;rr(x,60,H-120,W-120,66,33);g=x.createLinearGradient(60,0,W-60,0);g.addColorStop(0,BL2);g.addColorStop(1,BL1);x.fillStyle=g;x.fill();x.restore();
- tx(x,'الرابطة الجهوية لكرة القدم · تيبازة · ESM',W/2,H-87,F(800,26),'#fff','center',W-200);
- x.restore()}
-let rvAs=null;
-async function rvPreview(){const tok=++RV.tok;$('rvInfo').textContent='⏳ تجهيز المعاينة…';
- try{const A=await rvAssets();if(tok!==RV.tok)return;rvAs=A;const cv=$('rvc');cv.width=A.W;cv.height=A.H;const x=cv.getContext('2d');rvFrame(x,A,rvTiming(A.rows.length).total);$('rvInfo').textContent='يستغرق التسجيل نحو '+Math.ceil(rvTiming(A.rows.length).total)+' ثوانٍ. اترك الشاشة مفتوحة حتى ينتهي.'}catch(e){console.log(e);$('rvInfo').textContent='⚠️ تعذّر تجهيز المعاينة'}}
-async function rvStart(){
- if(RV.run)return;RV.run=true;$('rvGo').disabled=true;$('rvInfo').textContent='⏳ تجهيز العناصر…';
- try{
-  const A=await rvAssets(),cv=$('rvc');cv.width=A.W;cv.height=A.H;const x=cv.getContext('2d'),D=rvTiming(A.rows.length).total;
-  rvFrame(x,A,0);
-  const stream=cv.captureStream(30),mime=vMime(false),rec=new MediaRecorder(stream,Object.assign({videoBitsPerSecond:6000000},mime?{mimeType:mime}:{})),ch=[];
-  rec.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};const done=new Promise(r=>rec.onstop=r);
-  rec.start();$('rvInfo').textContent='🔴 جاري التسجيل… لا تغلق الشاشة';
-  const T0=performance.now();
-  await new Promise(res=>{const tick=()=>{const t=(performance.now()-T0)/1000;rvFrame(x,A,Math.min(t,D));$('rvBar').style.width=Math.min(100,t/D*100)+'%';if(t<D+.3)requestAnimationFrame(tick);else res()};requestAnimationFrame(tick)});
-  rec.stop();await done;
-  const type=(rec.mimeType||mime||'video/webm').split(';')[0];RV.blob=new Blob(ch,{type});
-  if(RV.url)URL.revokeObjectURL(RV.url);RV.url=URL.createObjectURL(RV.blob);
-  const pv=$('rvPrev');pv.src=RV.url;pv.hidden=false;$('rvStage').hidden=true;['rvShare','rvDl'].forEach(i=>$(i).hidden=false);$('rvGo').hidden=true;
-  $('rvInfo').textContent=`✅ جاهز (${(RV.blob.size/1048576).toFixed(1)} م.ب · ${type.includes('mp4')?'MP4':'WebM'})`+(type.includes('mp4')?'':' — فيسبوك يفضّل MP4، وبعض الأجهزة تنتج WebM.')
- }catch(e){$('rvInfo').textContent='⚠️ تعذّر إنشاء الفيديو على هذا المتصفح.';$('rvGo').disabled=false;console.log(e)}
- RV.run=false}
-const rvFile=()=>{const ext=RV.blob.type.includes('mp4')?'mp4':'webm';return new File([RV.blob],`الجولة-${RV.r}-${RV.c}.${ext}`,{type:RV.blob.type})};
-document.addEventListener('click',e=>{if(e.target.closest('#rvBtn'))openRV()});
-$('rv').addEventListener('click',async e=>{const b=e.target.closest('button');if(!b||RV.run&&b.id!=='rvX')return;
- if(b.dataset.rc){RV.c=b.dataset.rc;rvReset();rvSync();rvPreview()}
- else if(b.dataset.rf){RV.f=b.dataset.rf;rvReset();rvSync();rvPreview()}
- else if(b.id==='rvPrevR'&&RV.r>1){RV.r--;rvReset();rvSync();rvPreview()}
- else if(b.id==='rvNextR'&&RV.r<22){RV.r++;rvReset();rvSync();rvPreview()}
- else if(b.id==='rvGo')rvStart();
- else if(b.id==='rvDl'&&RV.blob){const f=rvFile(),a=document.createElement('a');a.href=RV.url;a.download=f.name;document.body.appendChild(a);a.click();a.remove()}
- else if(b.id==='rvShare'&&RV.blob){const f=rvFile();try{if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],title:f.name});else toast('⚠️ المشاركة غير مدعومة هنا، استعمل «تحميل»')}catch(x){}}
- else if(b.id==='rvX'&&!RV.run)$('rv').close()});
-$('rv').addEventListener('cancel',e=>{if(RV.run)e.preventDefault()});
-
 
 /* ---- المظهر ---- */
 const THS=[['th-green','🌿 أخضر'],['th-light','☀️ فاتح'],['th-blue','🔵 أزرق'],['th-purple','🟣 بنفسجي'],['th-dark','🌙 ليلي'],['th-gold','🟡 ذهبي']],FNS=['Tajawal','Cairo','Almarai','Noto Kufi Arabic','Amiri','Changa'];
@@ -5000,144 +4478,6 @@ $('pd').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)re
  if(b.dataset.th){PS.t=b.dataset.th;savePref('esm-theme',PS.t);applyPrefs()}
  else if(b.dataset.s){PS.s=b.dataset.s;savePref('esm-pstyle',PS.s);applyPrefs()}});
 $('fnSel').onchange=e=>{PS.f=e.target.value;savePref('esm-font',PS.f);applyPrefs()};
-
-/* ===== مراسلة المشرف ↔ رؤساء النوادي (Firestore: messages) ===== */
-const msgSide=()=>me&&me.role==='admin'?'admin':'club';
-const msgOk=()=>!!me&&!isVis()&&(me.role==='admin'||!!me.teamId);
-const msgPend=()=>me&&me.role==='admin'?U.filter(u=>u.status==='pending').length:0;
-function msgUi(){
- const b=$('msgBtn');if(b)b.hidden=!msgOk();
- msgBadge();
- if(msgOk()&&location.hash==='#msg'){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}setTimeout(()=>msgOpen(me.role==='admin'?null:+me.teamId),700)}
-}
-function msgBadge(){
- const e=$('msgBadge');if(e){e.textContent=MSGn>99?'99+':MSGn;e.hidden=!(MSGn>0&&msgOk())}
- document.title=(MSGn>0&&msgOk()?'('+MSGn+') ':'')+'منصة مباريات رابطة تيبازة';
-}
-function msgRecount(){
- const s=msgSide();MSGn=msgOk()?MSG.filter(m=>m.to===s&&!m.read).length:0;
- msgBadge();updateAppBadge(msgPend());
-}
-function listenMsgs(){
- if(!msgOk()||!db)return;
- const q=me.role==='admin'?db.collection('messages'):db.collection('messages').where('teamId','==',+me.teamId);
- let first=true;
- subs.push(q.onSnapshot(s=>{
-  const fresh=[];
-  s.docChanges().forEach(c=>{
-   const d=Object.assign({id:c.doc.id},c.doc.data());
-   if(c.type==='removed'){MSG=MSG.filter(x=>x.id!==d.id);return}
-   const i=MSG.findIndex(x=>x.id===d.id);
-   if(i<0){MSG.push(d);if(!first&&!c.doc.metadata.hasPendingWrites&&d.to===msgSide()&&!d.read&&d.fromUid!==me.uid)fresh.push(d)}
-   else MSG[i]=d;
-  });
-  first=false;
-  MSG.sort((a,b)=>(a.t||0)-(b.t||0));
-  msgRecount();
-  if(fresh.length)msgIncoming(fresh);
-  if($('msgDlg').open)msgRender();
- },()=>{}));
-}
-function msgIncoming(L){
- const m=L[L.length-1];if(!m)return;
- const viewing=$('msgDlg').open&&MSGopen===m.teamId&&!document.hidden;
- if(viewing){msgMarkRead(m.teamId);return}
- playNotifSound();
- const who=me.role==='admin'?'رئيس نادي '+(T[m.teamId]||''):'المشرف العام';
- const title='💬 رسالة جديدة من '+who+(L.length>1?' ('+L.length+')':'');
- const body=String(m.text||'');const pv=body.length>90?body.slice(0,90)+'…':body;
- msgBanner(title,pv,m.teamId);
- try{navigator.vibrate&&navigator.vibrate([120,60,120])}catch(e){}
- if(document.hidden)msgSysNotify(title,pv,m.teamId);
-}
-async function msgSysNotify(title,body,tid){
- if(!('Notification' in window)||Notification.permission!=='granted')return;
- const o={body,icon:'icon-192.png',badge:'icon-192.png',tag:'esm-msg-'+tid,renotify:true,vibrate:[200,100,200],data:{kind:'message',teamId:tid,url:'./index.html#msg'}};
- try{const r=await navigator.serviceWorker.getRegistration();if(r){await r.showNotification(title,o);return}}catch(e){}
- try{new Notification(title,o)}catch(e){}
-}
-let mbTm;
-function msgBanner(t,b,tid){
- const e=$('msgBanner');$('mbT').textContent=t;$('mbB').textContent=b;e.dataset.t=tid;
- e.classList.add('on');clearTimeout(mbTm);mbTm=setTimeout(()=>e.classList.remove('on'),8000);
-}
-function msgMarkRead(tid){
- const s=msgSide(),L=MSG.filter(m=>m.teamId===tid&&m.to===s&&!m.read);if(!L.length)return;
- try{const bt=db.batch();L.forEach(m=>bt.update(db.collection('messages').doc(m.id),{read:true}));bt.commit().catch(()=>{})}catch(e){}
-}
-function msgOpen(tid){
- if(!msgOk())return;
- if(me.role!=='admin')tid=+me.teamId;
- MSGopen=(tid==null||isNaN(+tid))?null:+tid;
- say('msgErr','');$('msgBanner').classList.remove('on');
- if(!$('msgDlg').open)$('msgDlg').showModal();
- msgRender();
- if(MSGopen!=null){msgMarkRead(MSGopen);setTimeout(()=>{try{$('msgTxt').focus({preventScroll:true})}catch(e){}},150)}
-}
-function msgTime(t){try{return new Date(t).toLocaleTimeString('ar-DZ',{hour:'2-digit',minute:'2-digit'})}catch(e){return''}}
-function msgRender(){
- if(!msgOk())return;
- const adm=me.role==='admin',B=$('msgBody'),tid=MSGopen;
- $('msgBack').hidden=!(adm&&tid!=null);
- $('msgComp').hidden=tid==null;
- if(tid==null){
-  $('msgTitle').textContent='💬 رسائل رؤساء النوادي';
-  $('msgSub').textContent=MSGn?MSGn+' رسالة غير مقروءة':'لا توجد رسائل جديدة';
-  const rows=Object.keys(T).map(k=>{const id=+k,L=MSG.filter(m=>m.teamId===id);return{id,last:L[L.length-1],un:L.filter(m=>m.to==='admin'&&!m.read).length}})
-   .sort((a,b)=>(b.last?b.last.t||0:0)-(a.last?a.last.t||0:0)||a.id-b.id);
-  B.innerHTML=rows.map(r=>{
-   const pv=r.last?(r.last.from==='admin'?'أنت: ':'')+String(r.last.text||'').replace(/\s+/g,' '):'ابدأ محادثة مع رئيس النادي';
-   return `<button class="mrow${r.un?' un':''}" data-mt="${r.id}">${lg(r.id)}<span class="mi"><b>${esc(T[r.id])}</b><span>${esc(pv)}</span></span><span class="mm">${r.last?esc(msgTime(r.last.t)):''}${r.un?`<span class="mu">${r.un}</span>`:''}</span></button>`}).join('');
-  B.scrollTop=0;return;
- }
- $('msgTitle').textContent=adm?'🏟️ '+(T[tid]||''):'👑 المشرف العام';
- $('msgSub').textContent=adm?'محادثة مع رئيس النادي':'مراسلة مباشرة مع المشرف';
- const side=msgSide(),L=MSG.filter(m=>m.teamId===tid);
- if(!L.length){B.innerHTML=`<div class="mempty">✉️<br>لا توجد رسائل بعد.<br>${adm?'اكتب أول رسالة لرئيس هذا النادي.':'اكتب رسالتك وسيصل المشرف إشعار فوري.'}</div>`;return}
- const near=B.scrollHeight-B.scrollTop-B.clientHeight<90;
- let day='',h='';
- L.forEach(m=>{
-  const d=new Date(m.t||Date.now()),dk=d.toDateString();
-  if(dk!==day){day=dk;let lb='';try{lb=d.toLocaleDateString('ar-DZ',{weekday:'long',day:'numeric',month:'long'})}catch(e){}h+=`<div class="mday">${esc(lb)}</div>`}
-  const mine=m.from===side;
-  h+=`<div class="bub ${mine?'me':'th'}">${mine?'':`<span class="sn">${esc(m.from==='admin'?'المشرف العام':(m.fromName||'رئيس النادي'))}</span>`}${esc(m.text)}<span class="tm2">${esc(msgTime(m.t))}${mine?(m.read?' ✓✓':' ✓'):''}</span></div>`});
- const first=!B.dataset.k||B.dataset.k!==String(tid);
- B.innerHTML=h;B.dataset.k=String(tid);
- if(first||near)B.scrollTop=B.scrollHeight;
-}
-function msgSend(){
- const t=$('msgTxt').value.trim();if(!t||MSGopen==null||!msgOk())return;
- if(t.length>1000)return say('msgErr','⚠️ الرسالة طويلة (1000 حرف كحد أقصى)');
- const adm=me.role==='admin',tid=+MSGopen;say('msgErr','');
- const p=db.collection('messages').add({teamId:tid,from:adm?'admin':'club',to:adm?'club':'admin',fromUid:me.uid,fromName:adm?'المشرف العام':(me.name||''),text:t,t:Date.now(),read:false});
- $('msgTxt').value='';msgGrow();
- p.then(()=>{
-  pushNotify({kind:'message',to:adm?'club':'admin',teams:[tid],title:adm?'💬 رسالة من المشرف العام':'💬 رسالة من رئيس نادي '+(T[tid]||''),body:t.length>120?t.slice(0,120)+'…':t,url:'./index.html#msg'});
- }).catch(()=>{say('msgErr','⚠️ تعذّر إرسال الرسالة. تحقق من الاتصال أو من صلاحيات قاعدة البيانات.')});
-}
-function msgGrow(){const e=$('msgTxt');e.style.height='auto';e.style.height=Math.min(e.scrollHeight,110)+'px'}
-$('msgBtn').onclick=()=>msgOpen(me&&me.role==='admin'?null:me&&+me.teamId);
-$('msgClose').onclick=()=>$('msgDlg').close();
-$('msgDlg').addEventListener('close',()=>{MSGopen=null});
-$('msgBack').onclick=()=>{MSGopen=null;$('msgBody').dataset.k='';msgRender()};
-$('msgSend').onclick=msgSend;
-$('msgTxt').addEventListener('input',msgGrow);
-$('msgTxt').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&matchMedia('(pointer:fine)').matches){e.preventDefault();msgSend()}});
-$('msgBody').addEventListener('click',e=>{const b=e.target.closest('[data-mt]');if(b){$('msgBody').dataset.k='';msgOpen(+b.dataset.mt)}});
-$('msgBanner').addEventListener('click',e=>{if(e.target.closest('#mbX')){$('msgBanner').classList.remove('on');return}msgOpen(+$('msgBanner').dataset.t)});
-if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('message',e=>{const d=e.data||{};if(d.type==='open-message'&&msgOk())msgOpen(me.role==='admin'?(d.teamId==null?null:+d.teamId):null)});
-
-/* ===== سجل دخول الحسابات (Firestore: activity) ===== */
-function actLogin(){
- clearInterval(ACTT);
- if(!me||me.role==='admin'||!db)return;
- const ref=db.collection('activity').doc(me.uid),t=Date.now();
- ref.set({uid:me.uid,name:me.name||'',teamId:+me.teamId||0,role:me.role||'manager',kind:me.kind||'club',lastLogin:t,lastSeen:t,logins:firebase.firestore.FieldValue.increment(1)},{merge:true}).catch(()=>{});
- const beat=()=>{if(me&&me.uid&&!document.hidden)ref.update({lastSeen:Date.now()}).catch(()=>{})};
- ACTT=setInterval(beat,120000);
- document.addEventListener('visibilitychange',beat);
-}
-setInterval(()=>{if(me&&me.role==='admin'&&tab==='a'&&adminSec==='act')draw()},60000);
 applyPrefs();
 init();
 </script>

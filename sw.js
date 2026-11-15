@@ -1,4 +1,4 @@
-const CACHE_NAME = 'esm-messelmoun-v56';
+﻿const CACHE_NAME = 'esm-messelmoun-v49';
 const ASSETS = [
   './',
   './index.html',
@@ -73,13 +73,11 @@ self.addEventListener('fetch', (event) => {
 // Handling Notification Click (Focus window or open app)
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  const d = event.notification.data || {};
-  const urlToOpen = d.url ? d.url : './index.html';
+  const urlToOpen = (event.notification.data && event.notification.data.url) ? event.notification.data.url : './index.html';
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
       for (let client of windowClients) {
-        if (client.url.startsWith(self.registration.scope) && 'focus' in client) {
-          if (d.kind === 'message') client.postMessage({ type: 'open-message', teamId: d.teamId });
+        if (client.url.includes('index.html') && 'focus' in client) {
           return client.focus();
         }
       }
@@ -92,7 +90,7 @@ self.addEventListener('notificationclick', (event) => {
 
 // Push notification listener with Badge count support
 self.addEventListener('push', (event) => {
-  let data = { title: 'منصة مباريات رابطة تيبازة', body: 'تنبيه جديد بخصوص المباريات' };
+  let data = { title: 'Ù…Ù†ØµØ© Ù…Ø¨Ø§Ø±ÙŠØ§Øª Ø±Ø§Ø¨Ø·Ø© ØªÙŠØ¨Ø§Ø²Ø©', body: 'ØªÙ†Ø¨ÙŠÙ‡ Ø¬Ø¯ÙŠØ¯ Ø¨Ø®ØµÙˆØµ Ø§Ù„Ù…Ø¨Ø§Ø±ÙŠØ§Øª' };
   if (event.data) {
     try { data = event.data.json(); } catch(e) { data.body = event.data.text(); }
   }
@@ -101,10 +99,8 @@ self.addEventListener('push', (event) => {
     icon: 'icon-192.png',
     badge: 'icon-192.png',
     vibrate: [200, 100, 200],
-    tag: data.tag || (data.kind === 'message' ? 'esm-msg' : undefined),
-    renotify: !!(data.tag || data.kind === 'message'),
-    data: { url: data.url || (data.kind === 'message' ? './index.html#msg' : './index.html'), kind: data.kind, teamId: data.teamId, dateOfArrival: Date.now() },
-    actions: [{ action: 'open', title: 'فتح التطبيق' }]
+    data: { url: './index.html', dateOfArrival: Date.now() },
+    actions: [{ action: 'open', title: 'ÙØªØ­ Ø§Ù„ØªØ·Ø¨ÙŠÙ‚' }]
   };
   
   const promiseChain = self.registration.showNotification(data.title, options).then(() => {
