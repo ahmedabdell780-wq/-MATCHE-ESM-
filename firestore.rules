@@ -21,19 +21,25 @@ service cloud.firestore {
       return (isAdmin() || isManager()) && myDoc().get('perm', 'full') != 'view_only';
     }
 
+    // عضو نادٍ معتمد (ليس زائراً) ينتمي للنادي tid
+    function isClubMember(tid) {
+      return isManager() && myDoc().get('kind', 'club') != 'visitor' && myDoc().teamId == tid;
+    }
+
     // ===== حسابات المستخدمين =====
     match /users/{uid} {
       allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
       allow create: if signedIn() && request.auth.uid == uid
         && request.resource.data.role == 'manager'
         && request.resource.data.status == 'pending'
-        && request.resource.data.teamId is int;
+        && request.resource.data.teamId is int
+        && request.resource.data.keys().hasOnly(['name','phone','teamId','role','kind','status','perm','date']);
       allow update, delete: if isAdmin();
     }
 
     // ===== النتائج =====
     // قراءة مفتوحة للجميع (بما فيهم الزوار)
-    // الكتابة: المشرف العام بحرية كاملة، أو مسؤول النادي لمباريات فريقه فقط (ذهاباً أو إياباً)
+    // الكتابة: المشرف العام بحرية كاملة، أو مسؤول النادي لمباريات فريقه فقط (سواء كان المستضيف أو الضيف)
     match /scores/{k} {
       allow read: if true;
       allow delete: if isAdmin();
@@ -81,6 +87,73 @@ service cloud.firestore {
         || (canWrite() && request.resource.data.teamId == myDoc().teamId);
       allow delete: if isAdmin()
         || (canWrite() && resource.data.teamId == myDoc().teamId);
+    }
+
+    // ===== بيانات عامة: البث المباشر، قواعد الإيقاف، حضور الزوار =====
+    match /public/{d} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /public/presence {
+      allow create, update: if request.resource.data.keys().hasOnly(['lastVisit', 'visitorId', 'team', 'platform']);
+    }
+
+    // ===== رموز الإشعارات (القراءة عبر الخادم فقط) =====
+    match /pushTokens/{t} {
+      allow create, update: if signedIn() && request.resource.data.uid == request.auth.uid;
+      allow delete: if signedIn() && (resource.data.uid == request.auth.uid || isAdmin());
+    }
+
+    // ===== المراسلة: المشرف ↔️ رؤساء النوادي =====
+    match /messages/{id} {
+      allow read: if isAdmin() || (signedIn() && isClubMember(resource.data.teamId));
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['teamId','from','to','fromUid','fromName','text','t','read'])
+        && request.resource.data.fromUid == request.auth.uid
+        && request.resource.data.teamId is int
+        && request.resource.data.text is string
+        && request.resource.data.text.size() > 0
+        && request.resource.data.text.size() <= 1000
+        && request.resource.data.read == false
+        && ((isAdmin() && request.resource.data.from == 'admin' && request.resource.data.to == 'club')
+            || (isClubMember(request.resource.data.teamId) && request.resource.data.from == 'club' && request.resource.data.to == 'admin'));
+      allow update: if signedIn()
+        && ((isAdmin() && resource.data.to == 'admin')
+            || (isClubMember(resource.data.teamId) && resource.data.to == 'club'))
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read'])
+        && request.resource.data.read == true;
+      allow delete: if isAdmin();
+    }
+
+    // ===== طلبات تعديل النتائج المعتمدة (تحتاج موافقة المشرف) =====
+    // القراءة: المشرف الكل، والنادي طلبات ناديه فقط
+    // الإنشاء: عضو النادي (غير المقيَّد بالمشاهدة) لناديه فقط وبحالة pending
+    // التعديل: المشرف بحرية (موافقة/رفض)، والنادي لإعادة الإرسال أو الإلغاء فقط
+    match /editRequests/{id} {
+      allow read: if isAdmin() || (signedIn() && isClubMember(resource.data.teamId));
+      allow create: if canWrite()
+        && isClubMember(request.resource.data.teamId)
+        && request.resource.data.status == 'pending'
+        && request.resource.data.by == request.auth.uid;
+      allow update: if isAdmin()
+        || (canWrite()
+            && isClubMember(resource.data.teamId)
+            && request.resource.data.teamId == resource.data.teamId
+            && request.resource.data.by == request.auth.uid
+            && request.resource.data.status in ['pending', 'cancelled']);
+      allow delete: if isAdmin();
+    }
+
+    // ===== سجل دخول الحسابات (يقرأه المشرف فقط) =====
+    match /activity/{uid} {
+      allow read: if isAdmin();
+      allow create, update: if isManager() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['uid','name','teamId','role','kind','lastLogin','lastSeen','logins'])
+        && request.resource.data.uid == uid
+        && request.resource.data.name == myDoc().get('name', '')
+        && request.resource.data.teamId == myDoc().get('teamId', 0)
+        && request.resource.data.logins is int;
+      allow delete: if isAdmin();
     }
 
     // ===== الإشعارات (Notifications) — إن وُجدت =====
