@@ -331,10 +331,16 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
 @keyframes badgePulse{0%,100%{transform:translateX(10px) scale(1)}50%{transform:translateX(10px) scale(1.15)}}
 
 
-.adm-tabs{display:flex;gap:6px;margin:0 0 14px;background:#e2e8f0;padding:4px;border-radius:12px}
-.adm-tab{flex:1;border:0;background:transparent;padding:10px 8px;border-radius:9px;font-family:inherit;font-weight:800;font-size:13px;color:#475569;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .18s}
+.adm-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px;background:#e2e8f0;padding:4px;border-radius:12px}
+.adm-tab{flex:1 1 30%;border:0;background:transparent;padding:10px 8px;border-radius:9px;font-family:inherit;font-weight:800;font-size:13px;color:#475569;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .18s}
 .adm-tab.active{background:#fff;color:#0f2a1c;box-shadow:0 2px 6px rgba(0,0,0,.08)}
 .adm-tab .badge-count{background:#ef4444;color:#fff;font-size:11px;padding:1px 6px;border-radius:10px;font-weight:900}
+.erq .erh{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.erq .ern{font-size:13px;color:var(--mu);margin:6px 0}
+.erq .erd{background:var(--bg,#f8fafc);border:1px solid var(--ln);border-radius:10px;padding:4px 10px;margin:8px 0}
+.erq .erl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px;padding:6px 0;border-bottom:1px dashed var(--ln)}
+.erq .erl:last-child{border:0}.erq .erl span{font-weight:800;min-width:96px}.erq .erl s{color:#b91c1c}.erq .erl b{color:#047857}
+#erNote{width:100%;padding:11px;border:1.5px solid var(--ln);border-radius:10px;background:var(--card);color:var(--tx);font-family:inherit;font-size:14px;resize:vertical}
 
 
 /* ===== مراسلة المشرف ↔ رؤساء النوادي ===== */
@@ -411,6 +417,7 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
 <label>🟥 طرد <span id="cn2"></span></label><input id="crh"><div class="gp" id="pkRh"></div>
 <label>🟨 إنذارات <span id="cn3"></span></label><input id="cya"><div class="gp" id="pkYa"></div>
 <label>🟥 طرد <span id="cn4"></span></label><input id="cra"><div class="gp" id="pkRa"></div></div></div>
+<div id="erBox" class="sec" hidden><label>📝 سبب طلب التعديل (يراه المشرف)</label><textarea id="erNote" rows="2" maxlength="300" placeholder="مثال: خطأ في تسجيل هدّاف الدقيقة 34"></textarea><p class="hint" style="margin:6px 0 0">🔒 تبقى النتيجة المعتمدة كما هي إلى أن يوافق المشرف العام على الطلب.</p></div>
 <p class="hint" id="msHint"></p>
 <div class="act" style="margin-top:14px"><button class="btn" id="ds" style="flex:1">حفظ</button><button class="btn alt" id="dc">إلغاء</button></div></dialog>
 <div id="rec" hidden>
@@ -2446,7 +2453,7 @@ const mail=v=>{v=String(v||'').trim().toLowerCase();if(v.includes('@'))return v;
 const isVis=()=>!!(me&&(me.kind==='visitor'||me.role==='visitor'));
 const rdoc=(n,p)=>{const v=$('rk')&&$('rk').value==='visitor';return{name:n,phone:p,teamId:v?0:+$('rt').value,role:'manager',kind:v?'visitor':'club',status:'pending',perm:v?'view_only':'full',date:new Date().toISOString().slice(0,10)}};
 const mails=v=>{const b=mail(v);return /^\d{9}@esm\.local$/.test(b)?[b,...[2,3,4,5].map(n=>b.replace('@',`.${n}@`))]:(b?[b]:[])};
-let RO={},RS={},LU={},LSS={},auth,db,me=null,S={},U=[],cat='U15',round=1,tab='m',subs=[],reg=false,cur=null,MSG=[],MSGn=0,MSGopen=null,ACT={},ACTT=0;
+let RO={},RS={},LU={},LSS={},auth,db,me=null,S={},U=[],cat='U15',round=1,tab='m',subs=[],reg=false,cur=null,MSG=[],MSGn=0,MSGopen=null,ACT={},ACTT=0,ER={};
 function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2800)}
 function say(id,t,ok){const e=$(id);e.textContent=t;e.classList.toggle('ok',!!ok)}
 function errTxt(e){const c=(e&&e.code)||'';
@@ -2838,7 +2845,7 @@ function init(){
 async function onAuth(u){
  if(reg)return;
  subs.forEach(f=>f());subs=[];U=[];
- RO={};RS={};LU={};LSS={};PH={};STAFF={};MSG=[];MSGn=0;MSGopen=null;ACT={};clearInterval(ACTT);
+ RO={};RS={};LU={};LSS={};PH={};STAFF={};MSG=[];MSGn=0;MSGopen=null;ACT={};ER={};clearInterval(ACTT);
  if(!u){me=null;OLD.state({user:null});show();return}
  let p=null;try{const s=await db.collection('users').doc(u.uid).get();p=s.exists?s.data():null}catch(e){}
  if(!p||(p.role!=='admin'&&p.status!=='approved')){
@@ -2874,7 +2881,7 @@ async function onAuth(u){
  OLD.state({user:{role:me.role==='admin'?'admin':(isVis()?'visitor':'official'),teamId:me.teamId,name:me.name}});
  subs.push((me.role==='admin'||!isVis()?db.collection('rosters'):db.collection('rosters').where('teamId','==',me.teamId)).onSnapshot(s=>{
   s.docs.forEach(d=>{const r=d.data();RO[r.teamId]=RO[r.teamId]||{};RO[r.teamId][r.cat]=r.roster||[];RS[d.id]=JSON.stringify(r.roster||[])})}));
-listenLineups();listenPhotos();listenStaff();listenMsgs();actLogin();
+listenLineups();listenPhotos();listenStaff();listenMsgs();listenEdits();actLogin();
  show();
 }
 function listenLineups(){
@@ -2900,10 +2907,130 @@ function canEdit(h,a,v){
  if(!me||isVis())return false;
  if(me.perm==='view_only')return false;
  if(me.role==='admin')return true;
- if((me.role==='manager'||!!me.teamId)&&(me.teamId==h||me.teamId==a))return true;
+ if((me.role==='manager'||!!me.teamId)&&(me.teamId==h||me.teamId==a))return!(v&&v.status==='confirmed');
  return false;
 }
 const canConfirm=(h,a,v)=>me&&v&&v.status!=='confirmed'&&!isVis()&&me.perm!=='view_only'&&(me.role==='admin'||((me.role==='manager'||!!me.teamId)&&me.teamId!=v.enteredBy&&v.status==='pending_confirm'));
+
+/* ---- طلبات تعديل النتائج المعتمدة (تحتاج موافقة المشرف) ---- */
+const ER_F=['sh','sa','pp','ex','date','time','stad','gh','ga','yh','ya','rh','ra'];
+const erId=(k,t)=>k.replace('|','_')+'_'+(+t);
+const erMine=k=>(me&&me.role!=='admin'&&me.teamId)?ER[erId(k,me.teamId)]:null;
+const erList=()=>Object.keys(ER).map(i=>Object.assign({id:i},ER[i],{id:i}));
+const erPend=()=>erList().filter(r=>r.status==='pending');
+const erCanReq=(h,a,v)=>!!(me&&me.role!=='admin'&&!isVis()&&me.perm!=='view_only'&&(me.teamId==h||me.teamId==a)&&v&&v.status==='confirmed');
+function erBtns(h,a,v,k){
+ if(!erCanReq(h,a,v))return'';
+ const r=erMine(k);
+ if(r&&r.status==='pending')return`<button class="btn sm red" data-erx="${k}">✖ إلغاء طلب التعديل</button>`;
+ return`<button class="btn sm" data-er="${k}">📝 طلب تعديل (بموافقة المشرف)</button>`
+}
+function erBadge(k){
+ if(!me)return'';
+ if(me.role==='admin'){const n=erPend().filter(r=>r.key===k).length;return n?`<span class="b wt">📝 ${n>1?n+' طلبات تعديل':'طلب تعديل'} بانتظارك</span>`:''}
+ const r=erMine(k);if(!r)return'';
+ if(r.status==='pending')return'<span class="b wt">📝 طلب تعديل بانتظار المشرف</span>';
+ if(r.status==='rejected'&&Date.now()-(r.decidedAt||0)<7*864e5)return`<span class="b no">❌ رُفض طلب التعديل${r.reason?': '+esc(r.reason):''}</span>`;
+ return''
+}
+function erDiff(o,n,h,a){
+ const st=x=>x.ex?'معفاة':x.pp?'مؤجلة':(x.sh!==''&&x.sh!=null)?'منتهية':'مبرمجة';
+ const sc=x=>(x.sh!==''&&x.sh!=null)?T[h]+' '+x.sh+' - '+x.sa+' '+T[a]:'';
+ const L=[],add=(lb,x,y)=>{x=x==null?'':String(x);y=y==null?'':String(y);if(x!==y)L.push([lb,x||'—',y||'—'])};
+ add('الحالة',st(o),st(n));add('النتيجة',sc(o),sc(n));
+ add('التاريخ',o.date,n.date);add('التوقيت',o.time,n.time);add('الملعب',o.stad,n.stad);
+ add('⚽ هدافو '+T[h],o.gh,n.gh);add('⚽ هدافو '+T[a],o.ga,n.ga);
+ add('🟨 إنذارات '+T[h],o.yh,n.yh);add('🟥 طرد '+T[h],o.rh,n.rh);
+ add('🟨 إنذارات '+T[a],o.ya,n.ya);add('🟥 طرد '+T[a],o.ra,n.ra);
+ return L
+}
+function openEditReq(k){
+ const m=/^(?:[A-Z0-9]+\|)?\d+:(\d+)-(\d+)$/.exec(k);
+ if(!m||!erCanReq(+m[1],+m[2],S[k]))return toast('⛔ لا يمكنك طلب تعديل هذه المباراة');
+ openEdit(k);cur.req=true;
+ $('dt').textContent='📝 طلب تعديل: '+T[cur.h]+' ضد '+T[cur.a];
+ $('erBox').hidden=false;$('erNote').value='';$('ds').textContent='📨 إرسال الطلب للمشرف'
+}
+async function submitEditReq(d,old){
+ const h=cur.h,a=cur.a,k=cur.k,note=$('erNote').value.trim();
+ const nz=(o,f)=>f==='pp'||f==='ex'?!!o[f]:(o[f]==null?'':String(o[f]));
+ const prev={},neu={};ER_F.forEach(f=>{prev[f]=nz(old,f);neu[f]=nz(d,f)});
+ prev.time=old.ex?'':String(old.time||defTime(edCat,old.date)||'');
+ prev.stad=old.ex?'':String(old.stad||STAD[h]||'');
+ if(!erDiff(prev,neu,h,a).length)return toast('⚠️ لم تغيّر أي شيء في بيانات المباراة');
+ if(note.length<3)return toast('⚠️ اكتب سبب طلب التعديل');
+ try{
+  await db.collection('editRequests').doc(erId(k,me.teamId)).set({key:k,home:h,away:a,teamId:+me.teamId,by:me.uid,byName:me.name||'',status:'pending',t:Date.now(),note,old:prev,neu});
+  $('dg').close();toast('📨 أُرسل طلب التعديل إلى المشرف');
+  pushNotify({kind:'message',to:'admin',teams:[+me.teamId],title:'📝 طلب تعديل من '+(T[me.teamId]||''),body:T[h]+' × '+T[a]+' — '+note.slice(0,100),url:'./index.html#edits'})
+ }catch(e){console.error('editRequests',e);toast('⛔ تعذّر إرسال الطلب — تأكد من نشر قواعد Firestore الجديدة')}
+}
+async function erCancel(k){
+ const r=erMine(k);if(!r||r.status!=='pending')return;
+ if(!confirm('إلغاء طلب التعديل؟'))return;
+ try{await db.collection('editRequests').doc(erId(k,me.teamId)).update({status:'cancelled'});toast('تم إلغاء الطلب')}catch(e){toast('⛔ تعذّر الإلغاء')}
+}
+async function erDecide(id,ok){
+ const r=ER[id];if(!r||!me||me.role!=='admin'||r.status!=='pending')return;
+ const k=r.key,h=+r.home,a=+r.away;let reason='';
+ if(ok){if(!confirm('تطبيق هذا التعديل على المباراة واعتماده؟'))return}
+ else{const x=prompt('سبب الرفض (اختياري):','');if(x===null)return;reason=x.trim()}
+ try{
+  let d=null;
+  if(ok){
+   d=Object.assign({},S[k]||{},r.neu||{});delete d._hid;delete d.lineups;
+   d.status=(d.sh!==''&&d.sh!=null)?'confirmed':'scheduled';d.enteredBy='admin';d.confirmedBy='admin';
+   await db.collection('scores').doc(k.replace('|','_')).set({key:k,home:h,away:a,data:d,by:me.uid,updatedAt:Date.now()});
+   S[k]=d
+  }
+  await db.collection('editRequests').doc(id).update({status:ok?'approved':'rejected',reason,decidedAt:Date.now(),decidedBy:me.uid});
+  toast(ok?'✅ طُبّق التعديل واعتُمدت النتيجة':'تم رفض الطلب');
+  try{
+   pushNotify({kind:'message',to:'club',teams:[+r.teamId],title:ok?'✅ وافق المشرف على طلب تعديلك':'❌ رفض المشرف طلب تعديلك',body:T[h]+' × '+T[a]+(reason?' — '+reason:''),url:'./index.html#edits'});
+   if(ok&&d&&d.sh!==''&&d.sh!=null){const mk=/^(?:([A-Z0-9]+)\|)?(\d+):/.exec(k);pushNotify({kind:'result',teams:[h,a],title:'📋 نتيجة معدّلة · '+((mk&&mk[1])||'U15'),body:T[h]+' '+d.sh+' - '+d.sa+' '+T[a]+' (الجولة '+(mk?mk[2]:'')+')'})}
+  }catch(e){}
+ }catch(e){console.error('erDecide',e);toast('⛔ تعذّر تنفيذ العملية: '+(e.code||e.message||''))}
+ draw()
+}
+function erSection(){
+ const dt=t=>{try{return new Date(t).toLocaleString('ar-DZ',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}catch(e){return''}};
+ const card=(r,pend)=>{
+  const h=+r.home,a=+r.away,m=/^(?:([A-Z0-9]+)\|)?(\d+):/.exec(r.key||''),diff=erDiff(r.old||{},r.neu||{},h,a);
+  const foot=pend?`<div class="act" style="margin:6px 0 0"><button class="btn sm" data-ero="${esc(r.id)}">✅ موافقة وتطبيق</button><button class="btn sm red" data-erj="${esc(r.id)}">❌ رفض</button></div>`
+   :`<div class="ern">${r.status==='approved'?'<span class="b ok">✅ تمت الموافقة</span>':r.status==='rejected'?'<span class="b no">❌ مرفوض</span>'+(r.reason?' '+esc(r.reason):''):'<span class="b wt">أُلغي</span>'} · ${esc(dt(r.decidedAt||r.t))}</div>`;
+  return`<div class="card erq"><div class="erh"><b>${esc(T[h])} ضد ${esc(T[a])}</b><small>${esc((m&&m[1])||'U15')} · الجولة ${m?m[2]:''}</small></div>
+<div class="ern">🏷 الطالب: <b>${esc(T[r.teamId]||'')}</b>${r.byName?' · '+esc(r.byName):''} · ${esc(dt(r.t))}</div>
+${r.note?`<div class="ern">💬 ${esc(r.note)}</div>`:''}
+<div class="erd">${diff.map(([lb,x,y])=>`<div class="erl"><span>${esc(lb)}</span><s>${esc(x)}</s><i>←</i><b>${esc(y)}</b></div>`).join('')||'<small class="hint">لا توجد فروق</small>'}</div>${foot}</div>`};
+ const all=erList(),pend=all.filter(r=>r.status==='pending').sort((x,y)=>(x.t||0)-(y.t||0));
+ const done=all.filter(r=>r.status!=='pending').sort((x,y)=>(y.decidedAt||y.t||0)-(x.decidedAt||x.t||0)).slice(0,15);
+ return`<h2>📝 طلبات تعديل النتائج (${pend.length})</h2><p class="hint" style="margin:-6px 0 12px;text-align:right">لا تتغيّر النتيجة المعتمدة إلا بعد موافقتك. عند الموافقة تُطبَّق القيم الجديدة وتُعتمد مباشرة.</p>${pend.map(r=>card(r,true)).join('')||'<div class="card" style="color:var(--mu);text-align:center;padding:24px">لا توجد طلبات معلّقة ✅</div>'}${done.length?`<h2>🕘 آخر القرارات</h2>${done.map(r=>card(r,false)).join('')}`:''}`
+}
+function openEditsTab(){
+ if(!me)return;
+ tab=me.role==='admin'?'a':'m';if(me.role==='admin')adminSec='edits';
+ document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.t===tab));draw()
+}
+function listenEdits(){
+ if(!db||!me||isVis()||(me.role!=='admin'&&!me.teamId))return;
+ const q=me.role==='admin'?db.collection('editRequests'):db.collection('editRequests').where('teamId','==',+me.teamId);
+ let first=true;
+ subs.push(q.onSnapshot(s=>{
+  const fresh=[],dec=[];
+  s.docChanges().forEach(c=>{
+   if(c.type==='removed'){delete ER[c.doc.id];return}
+   const d=c.doc.data(),was=ER[c.doc.id];ER[c.doc.id]=d;
+   if(first||c.doc.metadata.hasPendingWrites)return;
+   if(me.role==='admin'){if(d.status==='pending'&&(!was||was.status!=='pending'))fresh.push(d)}
+   else if(was&&was.status==='pending'&&(d.status==='approved'||d.status==='rejected'))dec.push(d)
+  });
+  const f0=first;first=false;
+  if(fresh.length){try{playNotifSound()}catch(e){}toast('📝 طلب تعديل جديد من '+(T[fresh[0].teamId]||''))}
+  dec.forEach(d=>toast(d.status==='approved'?'✅ وافق المشرف على طلب تعديلك':'❌ رفض المشرف طلب التعديل'+(d.reason?': '+d.reason:'')));
+  if(f0&&location.hash==='#edits'){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}openEditsTab()}
+  else draw()
+ },()=>{}))
+}
 
 /* ---- رسم الواجهة ---- */
 function draw(){if(!me&&tab==='a')return;$('app').innerHTML=tab==='m'?fixtures():tab==='r'?results():tab==='s'?standings():tab==='g'?scorers():admin()}
@@ -2930,8 +3057,8 @@ function fixtures(){
  p.m.forEach(([hm,aw])=>{
   const k=K(cat,round,hm,aw),v=S[k],has=v&&v.sh!==undefined&&v.sh!=='';
   h+=`<div class="card mc" style="--c1:${tcs(hm)};--c2:${tcs(aw)}">${mh(hm,aw,has,v)}
-  <div class="meta"><span>${mi(v)}</span>${has?stBadge(v):v&&v.pp?'<span class="b wt">⏳ مؤجلة</span>':v&&v.ex?'<span class="b no">معفاة</span>':''}</div>
-  <div class="act"><button class="btn sm alt" data-lu="${round}-${hm}-${aw}">📋 التشكيلة والتبديلات</button>${me?`<button class="btn sm alt" data-lp="${k}">🎽 ملصق التشكيلة</button>`:''}${me&&(me.role==='admin'||hm==me.teamId||aw==me.teamId)?`<button class="btn sm alt" data-ps="${round}-${hm}-${aw}">🖨 ورقة رسمية</button>`:''}${me&&me.role==='admin'?`<button class="btn sm alt" data-rec="${k}">🎥 تصوير مباشر</button>`:''}<button class="btn sm alt" data-tl="${k}">⏱️ أحداث اللقاء</button><button class="btn sm alt" data-mp="${round}-${hm}-${aw}">📣 ملصق المباراة</button>${me?`<button class="btn sm alt" data-mv="${round}-${hm}-${aw}">🎬 فيديو المباراة</button>`:''}${v&&(v.gh||v.ga)?`<button class="btn sm alt" data-gp="${k}">⚽ ملصق / فيديو الهدف</button>`:''}<button class="btn sm alt" data-fp="${k}">📝 منشور</button>${canEdit(hm,aw,v)?`<button class="btn sm" data-e="${k}">✏️ ${has?'تعديل النتيجة':'الموعد / النتيجة'}</button>`:''}${canConfirm(hm,aw,v)&&has?`${me.role==='admin'?`<button class="btn sm" data-ok="${k}">✅ اعتماد</button>`:`<button class="btn sm red" data-no="${k}">❌ اعتراض</button>`}`:''}</div></div>`});
+  <div class="meta"><span>${mi(v)}</span>${has?stBadge(v):v&&v.pp?'<span class="b wt">⏳ مؤجلة</span>':v&&v.ex?'<span class="b no">معفاة</span>':''}${erBadge(k)}</div>
+  <div class="act"><button class="btn sm alt" data-lu="${round}-${hm}-${aw}">📋 التشكيلة والتبديلات</button>${me?`<button class="btn sm alt" data-lp="${k}">🎽 ملصق التشكيلة</button>`:''}${me&&(me.role==='admin'||hm==me.teamId||aw==me.teamId)?`<button class="btn sm alt" data-ps="${round}-${hm}-${aw}">🖨 ورقة رسمية</button>`:''}${me&&me.role==='admin'?`<button class="btn sm alt" data-rec="${k}">🎥 تصوير مباشر</button>`:''}<button class="btn sm alt" data-tl="${k}">⏱️ أحداث اللقاء</button><button class="btn sm alt" data-mp="${round}-${hm}-${aw}">📣 ملصق المباراة</button>${me?`<button class="btn sm alt" data-mv="${round}-${hm}-${aw}">🎬 فيديو المباراة</button>`:''}${v&&(v.gh||v.ga)?`<button class="btn sm alt" data-gp="${k}">⚽ ملصق / فيديو الهدف</button>`:''}<button class="btn sm alt" data-fp="${k}">📝 منشور</button>${canEdit(hm,aw,v)?`<button class="btn sm" data-e="${k}">✏️ ${has?'تعديل النتيجة':'الموعد / النتيجة'}</button>`:''}${erBtns(hm,aw,v,k)}${canConfirm(hm,aw,v)&&has?`${me.role==='admin'?`<button class="btn sm" data-ok="${k}">✅ اعتماد</button>`:`<button class="btn sm red" data-no="${k}">❌ اعتراض</button>`}`:''}</div></div>`});
  return h+`<div class="bye">🛌 مستريحة: ${esc(T[p.bye])}</div>`
 }
 function results(){
@@ -3001,10 +3128,13 @@ function admin(){
 
  const navBar = `<div class="adm-tabs">
    <button type="button" class="adm-tab ${adminSec==='users'?'active':''}" data-adms="users">👥 الحسابات والطلبات ${pend.length?`<span class="badge-count">${pend.length}</span>`:''}</button>
+   <button type="button" class="adm-tab ${adminSec==='edits'?'active':''}" data-adms="edits">📝 طلبات التعديل ${erPend().length?`<span class="badge-count">${erPend().length}</span>`:''}</button>
    <button type="button" class="adm-tab ${adminSec==='trash'?'active':''}" data-adms="trash">🗑 سلة المحذوفات ${del.length?`<span class="badge-count" style="background:#64748b">${del.length}</span>`:''}</button>
    <button type="button" class="adm-tab ${adminSec==='act'?'active':''}" data-adms="act">🕒 سجل الدخول</button>
    <button type="button" class="adm-tab ${adminSec==='tools'?'active':''}" data-adms="tools">⚙️ الملصق والأدوات</button>
  </div>`;
+
+ if(adminSec === 'edits')return navBar+erSection();
 
  if(adminSec === 'trash'){
    return navBar + `<h2>🗑 سلة المحذوفات (${del.length})</h2><p class="hint" style="margin-top:-6px;margin-bottom:12px">يمكنك استرجاع أي حساب محذوف وإعادته للعمل فوراً، أو حذفه نهائياً من قاعدة البيانات.</p>${del.map(rowDel).join('')||'<div class="card" style="color:var(--mu);text-align:center;padding:24px">سلة المحذوفات فارغة ✅</div>'}`;
@@ -3133,6 +3263,10 @@ document.addEventListener('click',async e=>{
  else if(b.dataset.rec)openStudio(b.dataset.rec)
  else if(b.id==='plBtn'){OLD.load(S);OLD.state({cat,rosters:RO});OLD.players(cat,me.role==='admin'?5:me.teamId)}
  else if(b.dataset.shot)poster(b.dataset.shot)
+ else if(b.dataset.er)openEditReq(b.dataset.er)
+ else if(b.dataset.erx)erCancel(b.dataset.erx)
+ else if(b.dataset.ero)erDecide(b.dataset.ero,true)
+ else if(b.dataset.erj)erDecide(b.dataset.erj,false)
  else if(b.dataset.e)openEdit(b.dataset.e)
  else if(b.dataset.tl)openMatchTimeline(b.dataset.tl)
  else if(b.id==='btnAllCatsRecap')exportAllCatsRoundRecap(round)
@@ -3251,7 +3385,7 @@ $('sd').addEventListener('change',tmFromDate);
 $('stm').addEventListener('input',()=>{tmAuto=false});
 $('tmDef').onclick=()=>{const d=defTime(edCat,$('sd').value);if(d){$('stm').value=d;tmAuto=true}};
 function openEdit(k){
- const m=/^(?:([A-Z0-9]+)\|)?(\d+):(\d+)-(\d+)$/.exec(k);cur={k,h:+m[3],a:+m[4]};const v=S[k]||{};
+ const m=/^(?:([A-Z0-9]+)\|)?(\d+):(\d+)-(\d+)$/.exec(k);cur={k,h:+m[3],a:+m[4]};$('erBox').hidden=true;$('ds').textContent='حفظ';const v=S[k]||{};
  if(!canEdit(cur.h,cur.a,v)){toast('⛔ عذراً، لا تملك صلاحية تعديل نتيجة هذه المباراة (خاصة بفريقك فقط).');return}
  $('dt').textContent=T[cur.h]+' ضد '+T[cur.a];$('sh').value=v.sh??'';$('sa').value=v.sa??'';$('sd').value=v.date||'';edCat=m[1]||'U15';$('stm').value=v.time||defTime(edCat,v.date)||'';tmAuto=!v.time;$('sst').value=v.stad||'';stadInit(cur.h,cur.a,v.stad||'');tmUi();
  const has0=v.sh!==undefined&&v.sh!==''&&v.sh!=null;$('ms').value=v.ex?'ex':v.pp?'pp':has0?'done':'sched';$('gh').value=v.gh||'';$('ga').value=v.ga||'';$('nh').textContent=T[cur.h];$('na2').textContent=T[cur.a];
@@ -3279,6 +3413,7 @@ $('ds').onclick=async()=>{
   gh:done?$('gh').value.trim():'',ga:done?$('ga').value.trim():'',
   status:done?(adm?'confirmed':'pending_confirm'):'scheduled',enteredBy:done?(adm?'admin':me.teamId):(old.enteredBy||'')});
  ['yh','ya','rh','ra'].forEach(k=>{d[k]=done?$('c'+k).value.trim():''});
+ if(cur.req)return submitEditReq(d,old);
  await put(cur.k,cur.h,cur.a,d);$('dg').close();
  try{const mk=/^(?:([A-Z0-9]+)\|)?(\d+):/.exec(cur.k),rd=mk?mk[2]:'',ct=(mk&&mk[1])||'U15';
   if(done)pushNotify({kind:'result',teams:[cur.h,cur.a],title:'📋 نتيجة جديدة · '+ct,body:T[cur.h]+' '+d.sh+' - '+d.sa+' '+T[cur.a]+' (الجولة '+rd+')'});
@@ -5128,7 +5263,7 @@ $('msgTxt').addEventListener('input',msgGrow);
 $('msgTxt').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&matchMedia('(pointer:fine)').matches){e.preventDefault();msgSend()}});
 $('msgBody').addEventListener('click',e=>{const b=e.target.closest('[data-mt]');if(b){$('msgBody').dataset.k='';msgOpen(+b.dataset.mt)}});
 $('msgBanner').addEventListener('click',e=>{if(e.target.closest('#mbX')){$('msgBanner').classList.remove('on');return}msgOpen(+$('msgBanner').dataset.t)});
-if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('message',e=>{const d=e.data||{};if(d.type==='open-message'&&msgOk())msgOpen(me.role==='admin'?(d.teamId==null?null:+d.teamId):null)});
+if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('message',e=>{const d=e.data||{};if(d.type==='open-edits'&&me)openEditsTab();if(d.type==='open-message'&&msgOk())msgOpen(me.role==='admin'?(d.teamId==null?null:+d.teamId):null)});
 
 /* ===== سجل دخول الحسابات (Firestore: activity) ===== */
 function actLogin(){

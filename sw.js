@@ -1,4 +1,4 @@
-const CACHE_NAME = 'esm-messelmoun-v56';
+const CACHE_NAME = 'esm-messelmoun-v57';
 const ASSETS = [
   './',
   './index.html',
@@ -79,7 +79,8 @@ self.addEventListener('notificationclick', (event) => {
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
       for (let client of windowClients) {
         if (client.url.startsWith(self.registration.scope) && 'focus' in client) {
-          if (d.kind === 'message') client.postMessage({ type: 'open-message', teamId: d.teamId });
+          if ((d.url || '').includes('#edits')) client.postMessage({ type: 'open-edits' });
+          else if (d.kind === 'message') client.postMessage({ type: 'open-message', teamId: d.teamId });
           return client.focus();
         }
       }
@@ -101,7 +102,7 @@ self.addEventListener('push', (event) => {
     icon: 'icon-192.png',
     badge: 'icon-192.png',
     vibrate: [200, 100, 200],
-    tag: data.tag || (data.kind === 'message' ? 'esm-msg' : undefined),
+    tag: data.tag || (data.kind === 'message' ? ((data.url || '').includes('#edits') ? 'esm-edit' : 'esm-msg') : undefined),
     renotify: !!(data.tag || data.kind === 'message'),
     data: { url: data.url || (data.kind === 'message' ? './index.html#msg' : './index.html'), kind: data.kind, teamId: data.teamId, dateOfArrival: Date.now() },
     actions: [{ action: 'open', title: 'فتح التطبيق' }]

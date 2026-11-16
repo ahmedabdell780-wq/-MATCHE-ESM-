@@ -10,10 +10,10 @@ messaging.onBackgroundMessage(p=>{
 self.addEventListener('notificationclick',e=>{
   e.notification.close();
   const n=e.notification.data||{},d=(n.FCM_MSG&&n.FCM_MSG.data)||n;
-  const isMsg=d.kind==='message';
+  const isMsg=d.kind==='message',isEd=String(d.url||'').includes('#edits');
   e.waitUntil(clients.matchAll({type:'window',includeUncontrolled:true}).then(l=>{
     const c=l.find(x=>'focus' in x);
-    if(c){if(isMsg)c.postMessage({type:'open-message',teamId:d.teamId==null?null:Number(d.teamId)});return c.focus()}
-    return clients.openWindow(isMsg?'./index.html#msg':'./');
+    if(c){if(isEd)c.postMessage({type:'open-edits'});else if(isMsg)c.postMessage({type:'open-message',teamId:d.teamId==null?null:Number(d.teamId)});return c.focus()}
+    return clients.openWindow(isEd?'./index.html#edits':isMsg?'./index.html#msg':'./');
   }));
 });
