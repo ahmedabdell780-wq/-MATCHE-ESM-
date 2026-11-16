@@ -20,6 +20,26 @@ button,input,select{font:inherit}
 .btn{border:0;border-radius:10px;padding:10px 14px;background:var(--g);color:#fff;font-weight:700;cursor:pointer}
 .btn.alt{background:transparent;color:var(--tx);border:1.5px solid #3a5a46}.btn.red{background:var(--er)}.btn.sm{padding:6px 10px;font-size:13px}
 header .btn{background:#ffffff26;padding:6px 10px;font-size:13px}
+header{flex-direction:column;align-items:stretch;gap:8px;padding:calc(10px + var(--sa)) 14px 10px;border-bottom:2px solid rgba(242,182,50,.55);box-shadow:0 4px 18px rgba(0,0,0,.35);overflow:hidden}
+header::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 140% at 100% 0,rgba(255,255,255,.16),transparent 55%);pointer-events:none}
+header>*{position:relative}
+.hbrand{display:flex;align-items:center;gap:14px;min-width:0}
+.hlogo{position:relative;flex:0 0 auto;width:84px;height:84px;display:grid;place-items:center;animation:hFloat 4s ease-in-out infinite}
+.hlogo .hring{position:absolute;inset:-2px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.55) 0,rgba(242,182,50,.25) 55%,transparent 72%);animation:hGlow 2.8s ease-in-out infinite}
+header .hlogo img{position:relative;width:84px;height:84px;object-fit:contain;filter:drop-shadow(0 3px 6px rgba(0,0,0,.55))}
+.htxt{min-width:0;flex:1}
+header .htxt h1{font-size:22px;font-weight:900;line-height:1.25;letter-spacing:.2px;text-shadow:0 2px 6px rgba(0,0,0,.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header .htxt small{display:inline-block;margin-top:4px;padding:2px 10px;border-radius:999px;background:rgba(0,0,0,.28);color:var(--gold);opacity:1;font-size:12.5px;font-weight:700}
+.hbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-top:8px;border-top:1px solid rgba(255,255,255,.18)}
+.hbar #who{font-size:12.5px;font-weight:800;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.16)}
+.hbar #who:empty{display:none}
+.hbar .sp{flex:1}
+header .hbar .btn{position:relative;min-width:40px;height:40px;padding:0 12px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;font-size:16px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(4px)}
+header .hbar .btn[hidden]{display:none}
+header .hbar #out{font-size:13px;background:rgba(200,32,47,.55)}
+@keyframes hFloat{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-3px) rotate(1.5deg) scale(1.03)}}
+@keyframes hGlow{0%,100%{opacity:.55;transform:scale(.94)}50%{opacity:1;transform:scale(1.08)}}
+@media (prefers-reduced-motion:reduce){.hlogo,.hlogo .hring{animation:none}}
 main{max-width:640px;margin:0 auto;padding:12px 12px calc(84px + var(--sb))}
 .card{background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:12px;margin-bottom:10px}
 .chips{display:flex;gap:8px;margin-bottom:10px}
@@ -391,7 +411,7 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js"></script>
 </head>
 <body>
-<header><img src="icon-192.png" alt=""><div><h1>مباريات رابطة تيبازة</h1><small>الفئات الشبانية 2026/2027 · وسط غرب</small></div><span class="sp"></span><span id="who" style="font-size:12px"></span><button class="btn" id="msgBtn" aria-label="الرسائل" hidden>💬<span class="mbadge" id="msgBadge" hidden></span></button><button class="btn" id="ccBtn" aria-label="مراسلة الأندية" hidden>🤝<span class="mbadge" id="ccBadge" hidden></span></button><button class="btn" id="ctBtn" aria-label="تواصل معنا" hidden>✉️</button><button class="btn" id="gear" aria-label="المظهر">🎨</button><button class="btn" id="out" hidden>خروج</button></header>
+<header><div class="hbrand"><span class="hlogo"><i class="hring"></i><img src="league-logo.png" alt="شعار رابطة تيبازة"></span><div class="htxt"><h1>مباريات رابطة تيبازة</h1><small>الفئات الشبانية 2026/2027 · وسط غرب</small></div></div><div class="hbar"><span id="who" style="font-size:12px"></span><button class="btn" id="msgBtn" aria-label="الرسائل" hidden>💬<span class="mbadge" id="msgBadge" hidden></span></button><button class="btn" id="ccBtn" aria-label="مراسلة الأندية" hidden>🤝<span class="mbadge" id="ccBadge" hidden></span></button><button class="btn" id="ctBtn" aria-label="تواصل معنا" hidden>✉️</button><button class="btn" id="gear" aria-label="المظهر">🎨</button><button class="btn" id="out" hidden>خروج</button></div></header>
 <div id="gate" class="gate" hidden>
  <div class="gbg" aria-hidden="true"><i class="o1"></i><i class="o2"></i><i class="o3"></i><i class="pitch"></i>
   <svg class="shot" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M12 92C30 8 72 -6 92 78" vector-effect="non-scaling-stroke"/></svg>
@@ -3916,13 +3936,18 @@ function rcOverlay(x,cw,ch){
  x.beginPath();x.moveTo(X4,by);x.lineTo(X4-10,by+h/2);x.lineTo(X4,by+h);x.fill();
  x.restore();
  /* شعار الرابطة واسم التطبيق */
- const BRW=390,BRH=46,rx=land?(RC.swap?W-m-BRW:m):(W-BRW)/2,ry=land?by+2:by+h+10;
- x.save();x.shadowColor='rgba(0,0,0,.45)';x.shadowBlur=14;x.shadowOffsetY=3;rr(x,rx,ry,BRW,BRH,12);g=x.createLinearGradient(0,ry,0,ry+BRH);g.addColorStop(0,'#ffffff');g.addColorStop(1,'#dfe4ee');x.fillStyle=g;x.fill();x.restore();
- rr(x,rx,ry,BRW,BRH,12);x.lineWidth=2;x.strokeStyle='rgba(26,42,120,.35)';x.stroke();
- rcLogo(x,RC.imgs.l,rx+BRW-12-18,ry+BRH/2,18,[26,42,120]);
- tx(x,'مباريات رابطة تيبازة',rx+BRW-12-36-10,ry+BRH/2-6,F(900,23),'#0d1850','right',BRW-190);
- tx(x,RC.cat+' · الجولة '+RC.round,rx+BRW-12-36-10,ry+BRH/2+13,F(700,14),'#4a5576','right');
- if(RC.recording||(RC.live&&RC.live.state==='live')){rr(x,rx+10,ry+9,92,28,14);x.fillStyle='#dc2626';x.fill();if(now%1000<650){x.beginPath();x.arc(rx+28,ry+23,5,0,7);x.fillStyle='#fff';x.fill()}tx(x,(RC.live&&RC.live.state==='live')?'مباشر':'تسجيل',rx+70,ry+24,F(800,16),'#fff')}
+ const LS=92,BRW=440,BRH=LS+8,rx=land?(RC.swap?W-m-BRW:m):(W-BRW)/2,ry=land?by-6:by+h+6,tt=now/1000;
+ /* بلا خلفية: الشعار والنص مباشرة فوق الفيديو، مع حركة خفيفة للشعار */
+ {const im=RC.imgs.l,lcx=rx+BRW-LS/2-4,lcy=ry+BRH/2,pul=.5+.5*Math.sin(tt*2.2),fy=Math.sin(tt*1.6)*3,rot=Math.sin(tt*1.1)*.045,br=1+.035*Math.sin(tt*2.2);
+  /* هالة ضوئية نابضة خلف الشعار */
+  x.save();const hg=x.createRadialGradient(lcx,lcy,LS*.15,lcx,lcy,LS*(.72+.1*pul));hg.addColorStop(0,'rgba(255,255,255,'+(.30+.18*pul)+')');hg.addColorStop(.55,'rgba(242,182,50,'+(.12+.10*pul)+')');hg.addColorStop(1,'rgba(242,182,50,0)');x.fillStyle=hg;x.beginPath();x.arc(lcx,lcy,LS*.85,0,7);x.fill();x.restore();
+  if(im){x.save();x.translate(lcx,lcy+fy);x.rotate(rot);x.scale(br,br);x.shadowColor='rgba(0,0,0,.65)';x.shadowBlur=16;x.shadowOffsetY=3;const q=LS,sc=Math.min(q/im.width,q/im.height);x.drawImage(im,-im.width*sc/2,-im.height*sc/2,im.width*sc,im.height*sc);x.restore()}
+  /* نص بحدود داكنة ليبقى واضحاً على أي خلفية */
+  const ot=(s,X,Y,f,col,mw)=>{x.save();x.font=f;if(mw){let n=parseInt(f.split(' ')[1]);while(x.measureText(s).width>mw&&n>13){n-=2;x.font=f.replace(/\d+px/,n+'px')}}x.textAlign='right';x.textBaseline='middle';x.lineJoin='round';x.lineWidth=6;x.strokeStyle='rgba(0,0,0,.6)';x.shadowColor='rgba(0,0,0,.8)';x.shadowBlur=10;x.strokeText(s,X,Y);x.shadowBlur=0;x.fillStyle=col;x.fillText(s,X,Y);x.restore()};
+  const TXR=rx+BRW-LS-10,TMW=BRW-LS-120;
+  ot('مباريات رابطة تيبازة',TXR,ry+BRH/2-12,F(900,28),'#ffffff',TMW);
+  ot(RC.cat+' · الجولة '+RC.round,TXR,ry+BRH/2+16,F(800,17),'#f2b632',TMW)}
+ if(RC.recording||(RC.live&&RC.live.state==='live')){const by2=ry+BRH/2-14;rr(x,rx+6,by2,92,28,14);x.fillStyle='#dc2626';x.fill();if(now%1000<650){x.beginPath();x.arc(rx+24,by2+14,5,0,7);x.fillStyle='#fff';x.fill()}tx(x,(RC.live&&RC.live.state==='live')?'مباشر':'تسجيل',rx+66,by2+15,F(800,16),'#fff')}
  /* شريط الهدف تحت لوحة النتيجة */
  const b=RC.banner;
  if(b&&now<b.until){const t=now-b.t0,e=Math.min(1,t/380),al=e*Math.min(1,(b.until-now)/500),BNW=Math.min(BW,W-2*m),BNH=84,nx=bx-(1-e)*60,ny=by+h+(land?10:BRH+20);
