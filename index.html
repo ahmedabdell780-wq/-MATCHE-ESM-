@@ -369,6 +369,15 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
 .mcomp textarea{flex:1;resize:none;border:1.5px solid var(--ln);border-radius:12px;padding:10px 12px;background:var(--bg);color:var(--tx);font:inherit;max-height:110px;outline:0}
 .mcomp textarea:focus{border-color:var(--g2)}
 .mdlg .err{margin:0;padding:0 12px 6px;min-height:0}
+.bub img.pic{display:block;max-width:100%;max-height:260px;border-radius:10px;margin:2px 0 4px;cursor:zoom-in;background:#0002}
+.prev{display:flex;align-items:center;gap:10px;padding:6px 12px;border-top:1px solid var(--ln);background:var(--card)}
+.prev img{height:56px;border-radius:8px}.prev button{border:0;background:#ef4444;color:#fff;border-radius:50%;width:24px;height:24px;font-weight:900;cursor:pointer}
+.ccdel{border:0;background:none;cursor:pointer;font-size:12px;padding:0 4px;opacity:.8}
+#imgView{padding:0;border:0;background:transparent;max-width:96vw;max-height:92vh}#imgView::backdrop{background:#000d}#imgView img{max-width:96vw;max-height:90vh;display:block;border-radius:10px}
+#ctDlg{width:min(94vw,420px);border:1.5px solid var(--ln);border-radius:16px;padding:16px;background:var(--card);color:var(--tx)}
+#ctDlg label{display:block;font-weight:800;font-size:13px;margin:10px 0 4px}
+#ctDlg input,#ctDlg textarea{width:100%;padding:11px;border:1.5px solid var(--ln);border-radius:10px;background:var(--bg);color:var(--tx);font:inherit}
+.hpw{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 .mbn{position:fixed;top:calc(8px + var(--sa));inset-inline:10px;margin:0 auto;max-width:430px;z-index:95;display:none;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;background:#0f2a1ce6;color:#fff;border:1px solid #6fe39a66;box-shadow:0 14px 40px #000a;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);cursor:pointer;animation:mbIn .35s cubic-bezier(.2,.8,.2,1)}
 .mbn.on{display:flex}
 .mbn .mic{font-size:24px;flex:none}.mbn .mtx{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.35}.mbn .mtx b{font-size:13.5px}.mbn .mtx span{font-size:12.5px;opacity:.85;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -382,7 +391,7 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js"></script>
 </head>
 <body>
-<header><img src="icon-192.png" alt=""><div><h1>مباريات رابطة تيبازة</h1><small>الفئات الشبانية 2026/2027 · وسط غرب</small></div><span class="sp"></span><span id="who" style="font-size:12px"></span><button class="btn" id="msgBtn" aria-label="الرسائل" hidden>💬<span class="mbadge" id="msgBadge" hidden></span></button><button class="btn" id="gear" aria-label="المظهر">🎨</button><button class="btn" id="out" hidden>خروج</button></header>
+<header><img src="icon-192.png" alt=""><div><h1>مباريات رابطة تيبازة</h1><small>الفئات الشبانية 2026/2027 · وسط غرب</small></div><span class="sp"></span><span id="who" style="font-size:12px"></span><button class="btn" id="msgBtn" aria-label="الرسائل" hidden>💬<span class="mbadge" id="msgBadge" hidden></span></button><button class="btn" id="ccBtn" aria-label="مراسلة الأندية" hidden>🤝<span class="mbadge" id="ccBadge" hidden></span></button><button class="btn" id="ctBtn" aria-label="تواصل معنا" hidden>✉️</button><button class="btn" id="gear" aria-label="المظهر">🎨</button><button class="btn" id="out" hidden>خروج</button></header>
 <div id="gate" class="gate" hidden>
  <div class="gbg" aria-hidden="true"><i class="o1"></i><i class="o2"></i><i class="o3"></i><i class="pitch"></i>
   <svg class="shot" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M12 92C30 8 72 -6 92 78" vector-effect="non-scaling-stroke"/></svg>
@@ -402,6 +411,7 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
   <div id="fl" class="gf"><label for="lu">رقم الهاتف أو اسم المستخدم</label><input id="lu" autocomplete="username" inputmode="tel"><label for="lp">كلمة المرور</label><input id="lp" type="password" autocomplete="current-password" placeholder="••••••••"><div class="err" id="le" role="alert"></div><button class="btn gbtn" id="bl">تسجيل الدخول</button><div class="glinks"><button class="lk" id="fp" type="button">🔒 نسيت كلمة المرور؟</button><button class="lk" id="gor" type="button">ليس لديك حساب؟ أنشئ حساباً</button></div></div>
   <div id="fr" class="gf" hidden><p class="hint">📝 طلب <b>حساب جديد</b> لنادٍ. يُفعَّل الحساب بعد موافقة المشرف العام.</p><label for="rn">الاسم واللقب</label><input id="rn" autocomplete="name"><label for="rp">رقم الهاتف (للدخول)</label><input id="rp" inputmode="tel" autocomplete="tel"><label for="rk">نوع الحساب</label><select class="f" id="rk"><option value="manager">⚽ مسؤول نادٍ (إدخال النتائج والتشكيلات)</option><option value="visitor">👁️ زائر (مشاهدة فقط)</option></select><div id="rtw"><label for="rt">الفريق</label><select class="f" id="rt"></select></div><p class="hint" id="rkh" hidden>حساب مشاهدة فقط: لا يستطيع تعديل أي بيانات، ويُفعَّل بعد موافقة المشرف العام.</p><label for="rw">كلمة المرور (6 أحرف على الأقل)</label><input id="rw" type="password" autocomplete="new-password"><label for="rc">تأكيد كلمة المرور</label><input id="rc" type="password" autocomplete="new-password"><div class="err" id="re" role="alert"></div><button class="btn gbtn" id="br">📨 إرسال طلب إنشاء الحساب</button><div class="glinks"><button class="lk" id="gol" type="button">لديك حساب؟ سجّل الدخول</button></div></div>
   <p class="gfoot">للاستفسار واعتماد الحسابات: <a href="https://wa.me/213676108460" target="_blank" rel="noopener">0676108460</a></p>
+  <p class="gfoot"><button class="lk" id="ctGate" type="button">✉️ أرسل لنا رسالة عبر الموقع</button></p>
  </div>
 </div>
 <div id="liveBar" hidden></div>
@@ -890,9 +900,27 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
 <dialog id="msgDlg" class="mdlg">
  <div class="mh"><button class="btn sm" id="msgBack" aria-label="رجوع" hidden>→</button><div class="mt"><b id="msgTitle">💬 الرسائل</b><small id="msgSub"></small></div><button class="btn sm" id="msgClose" aria-label="إغلاق">✕</button></div>
  <div class="mbody" id="msgBody"></div>
- <div class="mcomp" id="msgComp" hidden><textarea id="msgTxt" rows="1" maxlength="1000" dir="auto" placeholder="اكتب رسالتك…"></textarea><button class="btn" id="msgSend">إرسال ➤</button></div>
+ <div id="msgPrev" class="prev" hidden></div>
+ <div class="mcomp" id="msgComp" hidden><button class="btn sm alt" id="msgAtt" type="button" aria-label="إرفاق صورة">📎</button><input type="file" id="msgFile" accept="image/*" hidden><textarea id="msgTxt" rows="1" maxlength="1000" dir="auto" placeholder="اكتب رسالتك…"></textarea><button class="btn" id="msgSend">إرسال ➤</button></div>
  <div class="err" id="msgErr" role="alert"></div>
 </dialog>
+<dialog id="ccDlg" class="mdlg">
+ <div class="mh"><button class="btn sm" id="ccBack" aria-label="رجوع" hidden>→</button><div class="mt"><b id="ccTitle">🤝 مراسلة الأندية</b><small id="ccSub"></small></div><button class="btn sm" id="ccClose" aria-label="إغلاق">✕</button></div>
+ <div class="mbody" id="ccBody"></div>
+ <div id="ccPrev" class="prev" hidden></div>
+ <div class="mcomp" id="ccComp" hidden><button class="btn sm alt" id="ccAtt" type="button" aria-label="إرفاق صورة">📎</button><input type="file" id="ccFile" accept="image/*" hidden><textarea id="ccTxt" rows="1" maxlength="1000" dir="auto" placeholder="اكتب رسالتك للنادي…"></textarea><button class="btn" id="ccSend">إرسال ➤</button></div>
+ <div class="err" id="ccErr" role="alert"></div>
+</dialog>
+<dialog id="ctDlg">
+ <h2 style="margin:0 0 4px">✉️ تواصل مع الرابطة</h2><p class="hint" style="margin:0 0 6px">رسالتك تصل إلى المشرف العام. اترك رقم هاتفك أو بريدك ليتمكن من الرد عليك.</p>
+ <label for="ctName">الاسم</label><input id="ctName" maxlength="60" autocomplete="name">
+ <label for="ctContact">هاتف أو بريد إلكتروني (اختياري لكن مهم للرد)</label><input id="ctContact" maxlength="80" inputmode="email" autocomplete="tel">
+ <label for="ctText">رسالتك</label><textarea id="ctText" rows="4" maxlength="800" dir="auto"></textarea>
+ <div class="hpw" aria-hidden="true"><input id="ctHp" tabindex="-1" autocomplete="off"></div>
+ <div class="err" id="ctErr" role="alert"></div>
+ <div class="act" style="margin-top:12px"><button class="btn" id="ctSend" style="flex:1">إرسال ➤</button><button class="btn alt" id="ctClose" type="button">إغلاق</button></div>
+</dialog>
+<dialog id="imgView"><img id="ivImg" alt="صورة مكبّرة"></dialog>
 <div class="mbn" id="msgBanner" role="status" aria-live="polite"><span class="mic">💬</span><div class="mtx"><b id="mbT"></b><span id="mbB"></span></div><button class="btn sm" id="mbOpen">فتح</button><button class="mx" id="mbX" aria-label="إغلاق">✕</button></div>
 <div id="toast"></div>
 <select id="rr" hidden><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option></select><select id="upto" hidden><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option></select>
@@ -2845,7 +2873,7 @@ function init(){
 async function onAuth(u){
  if(reg)return;
  subs.forEach(f=>f());subs=[];U=[];
- RO={};RS={};LU={};LSS={};PH={};STAFF={};MSG=[];MSGn=0;MSGopen=null;ACT={};ER={};clearInterval(ACTT);
+ RO={};RS={};LU={};LSS={};PH={};STAFF={};MSG=[];MSGn=0;MSGopen=null;ACT={};ER={};CC=[];CT=[];CCopen=null;clearInterval(ACTT);
  if(!u){me=null;OLD.state({user:null});show();return}
  let p=null;try{const s=await db.collection('users').doc(u.uid).get();p=s.exists?s.data():null}catch(e){}
  if(!p||(p.role!=='admin'&&p.status!=='approved')){
@@ -2881,7 +2909,7 @@ async function onAuth(u){
  OLD.state({user:{role:me.role==='admin'?'admin':(isVis()?'visitor':'official'),teamId:me.teamId,name:me.name}});
  subs.push((me.role==='admin'||!isVis()?db.collection('rosters'):db.collection('rosters').where('teamId','==',me.teamId)).onSnapshot(s=>{
   s.docs.forEach(d=>{const r=d.data();RO[r.teamId]=RO[r.teamId]||{};RO[r.teamId][r.cat]=r.roster||[];RS[d.id]=JSON.stringify(r.roster||[])})}));
-listenLineups();listenPhotos();listenStaff();listenMsgs();listenEdits();actLogin();
+listenLineups();listenPhotos();listenStaff();listenMsgs();listenEdits();listenCC();listenCT();actLogin();
  show();
 }
 function listenLineups(){
@@ -3033,7 +3061,7 @@ function listenEdits(){
 }
 
 /* ---- رسم الواجهة ---- */
-function draw(){if(!me&&tab==='a')return;$('app').innerHTML=tab==='m'?fixtures():tab==='r'?results():tab==='s'?standings():tab==='g'?scorers():admin()}
+function draw(){try{ccUi()}catch(e){}if(!me&&tab==='a')return;$('app').innerHTML=tab==='m'?fixtures():tab==='r'?results():tab==='s'?standings():tab==='g'?scorers():admin()}
 const lg=id=>`<img class="lg" src="${LG[id]}" alt="">`;
 const lastRound=()=>{for(let r=22;r>=1;r--)if(pairs(r).m.some(([h,a])=>{const v=S[K(cat,r,h,a)];return v&&v.status==='confirmed'&&v.sh!==''&&v.sh!=null}))return r;return 1};
 function chips(){return`<div class="chips">${CATS.map(c=>`<button class="chip" data-c="${c}" aria-pressed="${c===cat}">${c}</button>`).join('')}</div>`}
@@ -3129,12 +3157,14 @@ function admin(){
  const navBar = `<div class="adm-tabs">
    <button type="button" class="adm-tab ${adminSec==='users'?'active':''}" data-adms="users">👥 الحسابات والطلبات ${pend.length?`<span class="badge-count">${pend.length}</span>`:''}</button>
    <button type="button" class="adm-tab ${adminSec==='edits'?'active':''}" data-adms="edits">📝 طلبات التعديل ${erPend().length?`<span class="badge-count">${erPend().length}</span>`:''}</button>
+   <button type="button" class="adm-tab ${adminSec==='visitors'?'active':''}" data-adms="visitors">📥 الزوار ${ctPend()?`<span class="badge-count">${ctPend()}</span>`:''}</button>
    <button type="button" class="adm-tab ${adminSec==='trash'?'active':''}" data-adms="trash">🗑 سلة المحذوفات ${del.length?`<span class="badge-count" style="background:#64748b">${del.length}</span>`:''}</button>
    <button type="button" class="adm-tab ${adminSec==='act'?'active':''}" data-adms="act">🕒 سجل الدخول</button>
    <button type="button" class="adm-tab ${adminSec==='tools'?'active':''}" data-adms="tools">⚙️ الملصق والأدوات</button>
  </div>`;
 
  if(adminSec === 'edits')return navBar+erSection();
+ if(adminSec === 'visitors')return navBar+ctSection();
 
  if(adminSec === 'trash'){
    return navBar + `<h2>🗑 سلة المحذوفات (${del.length})</h2><p class="hint" style="margin-top:-6px;margin-bottom:12px">يمكنك استرجاع أي حساب محذوف وإعادته للعمل فوراً، أو حذفه نهائياً من قاعدة البيانات.</p>${del.map(rowDel).join('')||'<div class="card" style="color:var(--mu);text-align:center;padding:24px">سلة المحذوفات فارغة ✅</div>'}`;
@@ -3263,6 +3293,8 @@ document.addEventListener('click',async e=>{
  else if(b.dataset.rec)openStudio(b.dataset.rec)
  else if(b.id==='plBtn'){OLD.load(S);OLD.state({cat,rosters:RO});OLD.players(cat,me.role==='admin'?5:me.teamId)}
  else if(b.dataset.shot)poster(b.dataset.shot)
+ else if(b.dataset.ctr)ctRead(b.dataset.ctr)
+ else if(b.dataset.ctd)ctDel(b.dataset.ctd)
  else if(b.dataset.er)openEditReq(b.dataset.er)
  else if(b.dataset.erx)erCancel(b.dataset.erx)
  else if(b.dataset.ero)erDecide(b.dataset.ero,true)
@@ -5144,6 +5176,7 @@ const msgSide=()=>me&&me.role==='admin'?'admin':'club';
 const msgOk=()=>!!me&&!isVis()&&(me.role==='admin'||!!me.teamId);
 const msgPend=()=>me&&me.role==='admin'?U.filter(u=>u.status==='pending').length:0;
 function msgUi(){
+ try{ccUi()}catch(e){}
  const b=$('msgBtn');if(b)b.hidden=!msgOk();
  msgBadge();
  if(msgOk()&&location.hash==='#msg'){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}setTimeout(()=>msgOpen(me.role==='admin'?null:+me.teamId),700)}
@@ -5183,7 +5216,7 @@ function msgIncoming(L){
  playNotifSound();
  const who=me.role==='admin'?'رئيس نادي '+(T[m.teamId]||''):'المشرف العام';
  const title='💬 رسالة جديدة من '+who+(L.length>1?' ('+L.length+')':'');
- const body=String(m.text||'');const pv=body.length>90?body.slice(0,90)+'…':body;
+ const body=String(m.text||(m.img?'📷 صورة':''));const pv=body.length>90?body.slice(0,90)+'…':body;
  msgBanner(title,pv,m.teamId);
  try{navigator.vibrate&&navigator.vibrate([120,60,120])}catch(e){}
  if(document.hidden)msgSysNotify(title,pv,m.teamId);
@@ -5224,7 +5257,7 @@ function msgRender(){
   const rows=Object.keys(T).map(k=>{const id=+k,L=MSG.filter(m=>m.teamId===id);return{id,last:L[L.length-1],un:L.filter(m=>m.to==='admin'&&!m.read).length}})
    .sort((a,b)=>(b.last?b.last.t||0:0)-(a.last?a.last.t||0:0)||a.id-b.id);
   B.innerHTML=rows.map(r=>{
-   const pv=r.last?(r.last.from==='admin'?'أنت: ':'')+String(r.last.text||'').replace(/\s+/g,' '):'ابدأ محادثة مع رئيس النادي';
+   const pv=r.last?(r.last.from==='admin'?'أنت: ':'')+String(r.last.text||(r.last.img?'📷 صورة':'')).replace(/\s+/g,' '):'ابدأ محادثة مع رئيس النادي';
    return `<button class="mrow${r.un?' un':''}" data-mt="${r.id}">${lg(r.id)}<span class="mi"><b>${esc(T[r.id])}</b><span>${esc(pv)}</span></span><span class="mm">${r.last?esc(msgTime(r.last.t)):''}${r.un?`<span class="mu">${r.un}</span>`:''}</span></button>`}).join('');
   B.scrollTop=0;return;
  }
@@ -5238,19 +5271,19 @@ function msgRender(){
   const d=new Date(m.t||Date.now()),dk=d.toDateString();
   if(dk!==day){day=dk;let lb='';try{lb=d.toLocaleDateString('ar-DZ',{weekday:'long',day:'numeric',month:'long'})}catch(e){}h+=`<div class="mday">${esc(lb)}</div>`}
   const mine=m.from===side;
-  h+=`<div class="bub ${mine?'me':'th'}">${mine?'':`<span class="sn">${esc(m.from==='admin'?'المشرف العام':(m.fromName||'رئيس النادي'))}</span>`}${esc(m.text)}<span class="tm2">${esc(msgTime(m.t))}${mine?(m.read?' ✓✓':' ✓'):''}</span></div>`});
+  h+=`<div class="bub ${mine?'me':'th'}">${mine?'':`<span class="sn">${esc(m.from==='admin'?'المشرف العام':(m.fromName||'رئيس النادي'))}</span>`}${imgHtml(m.img)}${esc(m.text)}<span class="tm2">${esc(msgTime(m.t))}${mine?(m.read?' ✓✓':' ✓'):''}</span></div>`});
  const first=!B.dataset.k||B.dataset.k!==String(tid);
  B.innerHTML=h;B.dataset.k=String(tid);
  if(first||near)B.scrollTop=B.scrollHeight;
 }
 function msgSend(){
- const t=$('msgTxt').value.trim();if(!t||MSGopen==null||!msgOk())return;
+ const t=$('msgTxt').value.trim(),im=ATT.msg;if((!t&&!im)||MSGopen==null||!msgOk())return;
  if(t.length>1000)return say('msgErr','⚠️ الرسالة طويلة (1000 حرف كحد أقصى)');
  const adm=me.role==='admin',tid=+MSGopen;say('msgErr','');
- const p=db.collection('messages').add({teamId:tid,from:adm?'admin':'club',to:adm?'club':'admin',fromUid:me.uid,fromName:adm?'المشرف العام':(me.name||''),text:t,t:Date.now(),read:false});
- $('msgTxt').value='';msgGrow();
+ const p=db.collection('messages').add(Object.assign(im?{img:im}:{},{teamId:tid,from:adm?'admin':'club',to:adm?'club':'admin',fromUid:me.uid,fromName:adm?'المشرف العام':(me.name||''),text:t,t:Date.now(),read:false}));
+ $('msgTxt').value='';msgGrow();ATT.msg=null;attPrev('msg','msgPrev');
  p.then(()=>{
-  pushNotify({kind:'message',to:adm?'club':'admin',teams:[tid],title:adm?'💬 رسالة من المشرف العام':'💬 رسالة من رئيس نادي '+(T[tid]||''),body:t.length>120?t.slice(0,120)+'…':t,url:'./index.html#msg'});
+  pushNotify({kind:'message',to:adm?'club':'admin',teams:[tid],title:adm?'💬 رسالة من المشرف العام':'💬 رسالة من رئيس نادي '+(T[tid]||''),body:!t?'📷 صورة':t.length>120?t.slice(0,120)+'…':t,url:'./index.html#msg'});
  }).catch(()=>{say('msgErr','⚠️ تعذّر إرسال الرسالة. تحقق من الاتصال أو من صلاحيات قاعدة البيانات.')});
 }
 function msgGrow(){const e=$('msgTxt');e.style.height='auto';e.style.height=Math.min(e.scrollHeight,110)+'px'}
@@ -5263,7 +5296,7 @@ $('msgTxt').addEventListener('input',msgGrow);
 $('msgTxt').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&matchMedia('(pointer:fine)').matches){e.preventDefault();msgSend()}});
 $('msgBody').addEventListener('click',e=>{const b=e.target.closest('[data-mt]');if(b){$('msgBody').dataset.k='';msgOpen(+b.dataset.mt)}});
 $('msgBanner').addEventListener('click',e=>{if(e.target.closest('#mbX')){$('msgBanner').classList.remove('on');return}msgOpen(+$('msgBanner').dataset.t)});
-if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('message',e=>{const d=e.data||{};if(d.type==='open-edits'&&me)openEditsTab();if(d.type==='open-message'&&msgOk())msgOpen(me.role==='admin'?(d.teamId==null?null:+d.teamId):null)});
+if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('message',e=>{const d=e.data||{};if(d.type==='open-edits'&&me)openEditsTab();if(d.type==='open-cc'&&ccOk())ccOpen(null);if(d.type==='open-message'&&msgOk())msgOpen(me.role==='admin'?(d.teamId==null?null:+d.teamId):null)});
 
 /* ===== سجل دخول الحسابات (Firestore: activity) ===== */
 function actLogin(){
@@ -5276,6 +5309,195 @@ function actLogin(){
  document.addEventListener('visibilitychange',beat);
 }
 setInterval(()=>{if(me&&me.role==='admin'&&tab==='a'&&adminSec==='act')draw()},60000);
+
+/* ===== صور المحادثات + مراسلة الأندية + تواصل الزوار ===== */
+const IMG_RE=/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/;
+const imgHtml=x=>IMG_RE.test(x||'')?`<img class="pic" data-zoom="1" loading="lazy" alt="صورة مرفقة" src="${x}">`:'';
+async function imgCompress(file){
+ if(!file||!/^image\//.test(file.type)||file.size>25e6)throw new Error('type');
+ const url=URL.createObjectURL(file);
+ try{
+  const im=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>no(new Error('read'));i.src=url});
+  let max=1100,out='';
+  for(let k=0;k<4;k++){
+   const sc=Math.min(1,max/Math.max(im.naturalWidth,im.naturalHeight)),cv=document.createElement('canvas');
+   cv.width=Math.max(1,Math.round(im.naturalWidth*sc));cv.height=Math.max(1,Math.round(im.naturalHeight*sc));
+   const c=cv.getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,cv.width,cv.height);c.drawImage(im,0,0,cv.width,cv.height);
+   for(const q of [.7,.55,.42]){out=cv.toDataURL('image/jpeg',q);if(out.length<=300000)return out}
+   max=Math.round(max*.75)
+  }
+  throw new Error('big')
+ }finally{URL.revokeObjectURL(url)}
+}
+const ATT={msg:null,cc:null};
+function attPrev(k,prev){const p=$(prev);p.hidden=!ATT[k];p.innerHTML=ATT[k]?`<img src="${ATT[k]}" alt=""><button type="button" data-x="1" aria-label="إزالة الصورة">✕</button>`:''}
+function attBind(k,btn,file,prev,err){
+ $(btn).onclick=()=>$(file).click();
+ $(file).onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
+  say(err,'⏳ جارٍ تجهيز الصورة…');
+  try{ATT[k]=await imgCompress(f);say(err,'')}catch(x){ATT[k]=null;say(err,'⚠️ تعذّر تجهيز الصورة، اختر صورة أخرى')}
+  attPrev(k,prev)};
+ $(prev).onclick=e=>{if(e.target.closest('[data-x]')){ATT[k]=null;attPrev(k,prev)}};
+}
+attBind('msg','msgAtt','msgFile','msgPrev','msgErr');
+attBind('cc','ccAtt','ccFile','ccPrev','ccErr');
+document.addEventListener('click',e=>{const i=e.target.closest('img[data-zoom]');if(i){$('ivImg').src=i.src;try{$('imgView').showModal()}catch(x){}}});
+$('imgView').onclick=()=>$('imgView').close();
+
+/* ---- مراسلة الأندية (Firestore: clubChats) ---- */
+let CC=[],CCopen=null,CCn=0,CT=[];
+const ccOk=()=>!!me&&!isVis()&&(me.role==='admin'||!!me.teamId);
+const ccMy=()=>me&&me.role!=='admin'?+me.teamId:null;
+const ccPair=(a,b)=>a<b?a+'_'+b:b+'_'+a;
+const ccPv=m=>(m.text||(m.img?'📷 صورة':'')).replace(/\s+/g,' ');
+function ccUi(){
+ const b=$('ccBtn');if(b)b.hidden=!ccOk();
+ const c=$('ctBtn');if(c)c.hidden=!(!me||isVis());
+ const e=$('ccBadge');if(e){e.textContent=CCn>99?'99+':CCn;e.hidden=!(CCn>0&&ccOk())}
+}
+function ccRecount(){CCn=ccOk()&&me.role!=='admin'?CC.filter(m=>m.fromTeam!==ccMy()&&!m.read).length:0;ccUi()}
+function listenCC(){
+ if(!db||!ccOk())return;
+ const q=me.role==='admin'?db.collection('clubChats'):db.collection('clubChats').where('teams','array-contains',+me.teamId);
+ let first=true;
+ subs.push(q.onSnapshot(s=>{
+  const fresh=[];
+  s.docChanges().forEach(c=>{
+   const d=Object.assign({id:c.doc.id},c.doc.data());
+   if(c.type==='removed'){CC=CC.filter(x=>x.id!==d.id);return}
+   const i=CC.findIndex(x=>x.id===d.id);
+   if(i<0){CC.push(d);if(!first&&!c.doc.metadata.hasPendingWrites&&me.role!=='admin'&&d.fromTeam!==ccMy()&&!d.read)fresh.push(d)}else CC[i]=d
+  });
+  const f0=first;first=false;
+  CC.sort((a,b)=>(a.t||0)-(b.t||0));ccRecount();
+  if(fresh.length){
+   const m=fresh[fresh.length-1];
+   if($('ccDlg').open&&CCopen===m.fromTeam&&!document.hidden)ccMarkRead(m.fromTeam);
+   else{try{playNotifSound()}catch(e){}toast('🤝 رسالة جديدة من '+(T[m.fromTeam]||''))}
+  }
+  if($('ccDlg').open)ccRender();
+  if(f0&&location.hash==='#cc'){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}ccOpen(null)}
+ },()=>{}))
+}
+function ccMarkRead(other){
+ const my=ccMy();if(my==null)return;
+ const L=CC.filter(m=>m.pair===ccPair(my,other)&&m.fromTeam!==my&&!m.read);if(!L.length)return;
+ try{const bt=db.batch();L.forEach(m=>bt.update(db.collection('clubChats').doc(m.id),{read:true}));bt.commit().catch(()=>{})}catch(e){}
+}
+function ccOpen(x){
+ if(!ccOk())return;
+ CCopen=x==null||x===''?null:(me.role==='admin'?String(x):+x);
+ say('ccErr','');if(!$('ccDlg').open)$('ccDlg').showModal();
+ $('ccBody').dataset.k='';ccRender();
+ if(me.role!=='admin'&&CCopen!=null){ccMarkRead(CCopen);setTimeout(()=>{try{$('ccTxt').focus({preventScroll:true})}catch(e){}},150)}
+}
+function ccRender(){
+ if(!ccOk())return;
+ const adm=me.role==='admin',B=$('ccBody'),my=ccMy();
+ $('ccBack').hidden=CCopen==null;$('ccComp').hidden=adm||CCopen==null;
+ if(CCopen==null){
+  $('ccTitle').textContent=adm?'🤝 مراقبة محادثات الأندية':'🤝 مراسلة الأندية';
+  $('ccSub').textContent=adm?'قراءة وحذف فقط':'محادثة مباشرة بين الأندية · يطّلع عليها المشرف العام';
+  if(adm){
+   const g={};CC.forEach(m=>{(g[m.pair]=g[m.pair]||[]).push(m)});
+   const rows=Object.keys(g).map(p=>{const L=g[p];return{k:p,L,last:L[L.length-1],title:(L[0].teams||[]).map(t=>T[t]||t).join(' ↔ ')}}).sort((a,b)=>(b.last.t||0)-(a.last.t||0));
+   B.innerHTML=rows.map(r=>`<button class="mrow" data-cc="${esc(r.k)}"><span class="mi"><b>${esc(r.title)}</b><span>${esc(ccPv(r.last))}</span></span><span class="mm">${esc(msgTime(r.last.t))}<span class="mu" style="background:#64748b">${r.L.length}</span></span></button>`).join('')||'<div class="mempty">🤝<br>لا توجد محادثات بين الأندية بعد.</div>';
+  }else{
+   const rows=Object.keys(T).map(Number).filter(id=>id!==my).map(id=>{const L=CC.filter(m=>m.pair===ccPair(my,id));return{id,last:L[L.length-1],un:L.filter(m=>m.fromTeam!==my&&!m.read).length}})
+    .sort((a,b)=>(b.last?b.last.t||0:0)-(a.last?a.last.t||0:0)||a.id-b.id);
+   B.innerHTML=rows.map(r=>`<button class="mrow${r.un?' un':''}" data-cc="${r.id}">${lg(r.id)}<span class="mi"><b>${esc(T[r.id])}</b><span>${esc(r.last?(r.last.fromTeam===my?'أنت: ':'')+ccPv(r.last):'ابدأ محادثة')}</span></span><span class="mm">${r.last?esc(msgTime(r.last.t)):''}${r.un?`<span class="mu">${r.un}</span>`:''}</span></button>`).join('');
+  }
+  B.scrollTop=0;return
+ }
+ const L=CC.filter(m=>m.pair===(adm?CCopen:ccPair(my,CCopen)));
+ $('ccTitle').textContent=adm?(L[0]?(L[0].teams||[]).map(t=>T[t]||t).join(' ↔ '):'محادثة'):'🏟️ '+(T[CCopen]||'');
+ $('ccSub').textContent=adm?'عرض للمراقبة · يمكنك حذف أي رسالة':'مراسلة مباشرة بين الأندية';
+ if(!L.length){B.innerHTML='<div class="mempty">✉️<br>لا توجد رسائل بعد.<br>اكتب أول رسالة.</div>';return}
+ const near=B.scrollHeight-B.scrollTop-B.clientHeight<90;let day='',h='';
+ L.forEach(m=>{
+  const d=new Date(m.t||Date.now()),dk=d.toDateString();
+  if(dk!==day){day=dk;let lb='';try{lb=d.toLocaleDateString('ar-DZ',{weekday:'long',day:'numeric',month:'long'})}catch(e){}h+=`<div class="mday">${esc(lb)}</div>`}
+  const mine=!adm&&m.fromTeam===my;
+  h+=`<div class="bub ${mine?'me':'th'}">${mine?'':`<span class="sn">${esc((T[m.fromTeam]||'')+(m.fromName?' · '+m.fromName:''))}</span>`}${imgHtml(m.img)}${esc(m.text)}<span class="tm2">${esc(msgTime(m.t))}${mine?(m.read?' ✓✓':' ✓'):''}${adm?` <button class="ccdel" data-ccd="${esc(m.id)}" aria-label="حذف الرسالة">🗑</button>`:''}</span></div>`});
+ const first=!B.dataset.k||B.dataset.k!==String(CCopen);
+ B.innerHTML=h;B.dataset.k=String(CCopen);
+ if(first||near)B.scrollTop=B.scrollHeight;
+}
+function ccSend(){
+ const t=$('ccTxt').value.trim(),im=ATT.cc,my=ccMy();
+ if((!t&&!im)||CCopen==null||my==null||!ccOk())return;
+ if(t.length>1000)return say('ccErr','⚠️ الرسالة طويلة (1000 حرف كحد أقصى)');
+ const other=+CCopen;say('ccErr','');
+ const o={pair:ccPair(my,other),teams:[Math.min(my,other),Math.max(my,other)],fromTeam:my,fromUid:me.uid,fromName:me.name||'',text:t,t:Date.now(),read:false};
+ if(im)o.img=im;
+ const p=db.collection('clubChats').add(o);
+ $('ccTxt').value='';$('ccTxt').style.height='auto';ATT.cc=null;attPrev('cc','ccPrev');
+ p.then(()=>{pushNotify({kind:'message',to:'club',teams:[my,other],title:'🤝 رسالة من '+(T[my]||''),body:!t?'📷 صورة':t.length>120?t.slice(0,120)+'…':t,url:'./index.html#cc'})})
+  .catch(()=>say('ccErr','⚠️ تعذّر الإرسال. تحقق من الاتصال أو من نشر قواعد Firestore الجديدة.'))
+}
+async function ccDel(id){
+ if(!me||me.role!=='admin'||!confirm('حذف هذه الرسالة نهائياً؟'))return;
+ try{await db.collection('clubChats').doc(id).delete()}catch(e){toast('⛔ تعذّر الحذف')}
+}
+$('ccBtn').onclick=()=>ccOpen(null);
+$('ccClose').onclick=()=>$('ccDlg').close();
+$('ccDlg').addEventListener('close',()=>{CCopen=null});
+$('ccBack').onclick=()=>{CCopen=null;$('ccBody').dataset.k='';ccRender()};
+$('ccSend').onclick=ccSend;
+$('ccTxt').addEventListener('input',()=>{const e=$('ccTxt');e.style.height='auto';e.style.height=Math.min(e.scrollHeight,110)+'px'});
+$('ccTxt').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&matchMedia('(pointer:fine)').matches){e.preventDefault();ccSend()}});
+$('ccBody').addEventListener('click',e=>{const d=e.target.closest('[data-ccd]');if(d){ccDel(d.dataset.ccd);return}const b=e.target.closest('[data-cc]');if(b)ccOpen(b.dataset.cc)});
+
+/* ---- رسائل الزوار (Firestore: contactMsgs) ---- */
+const ctPend=()=>CT.filter(m=>!m.read).length;
+function listenCT(){
+ if(!db||!me||me.role!=='admin')return;
+ let first=true;
+ subs.push(db.collection('contactMsgs').onSnapshot(s=>{
+  let fresh=0;
+  s.docChanges().forEach(c=>{
+   const d=Object.assign({id:c.doc.id},c.doc.data());
+   if(c.type==='removed'){CT=CT.filter(x=>x.id!==d.id);return}
+   const i=CT.findIndex(x=>x.id===d.id);
+   if(i<0){CT.push(d);if(!first&&!c.doc.metadata.hasPendingWrites&&!d.read)fresh++}else CT[i]=d
+  });
+  first=false;CT.sort((a,b)=>(b.t||0)-(a.t||0));
+  if(fresh){try{playNotifSound()}catch(e){}toast('📥 رسالة جديدة من زائر')}
+  draw()
+ },()=>{}))
+}
+function ctSection(){
+ const dt=t=>{try{return new Date(t).toLocaleString('ar-DZ',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}catch(e){return''}};
+ const rows=CT.map(m=>{
+  const c=String(m.contact||''),ph=c.replace(/[\s.\-]/g,''),isPh=/^(\+?213|0)\d{9}$/.test(ph),isMail=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c);
+  const wa=isPh?'https://wa.me/'+(ph.startsWith('0')?'213'+ph.slice(1):ph.replace('+','')):'';
+  return`<div class="card erq" style="${m.read?'':'border-color:#ef4444aa'}"><div class="erh"><b>${esc(m.name)}</b><small>${esc(dt(m.t))}</small></div>
+<div class="ern" style="white-space:pre-wrap;color:var(--tx)">${esc(m.text)}</div>
+<div class="ern">${c?'📇 '+esc(c):'<small>لم يترك وسيلة تواصل</small>'}</div>
+<div class="act" style="margin:6px 0 0">${isPh?`<a class="btn sm" href="tel:${esc(ph)}">📞 اتصال</a><a class="btn sm alt" href="${esc(wa)}" target="_blank" rel="noopener">💬 واتساب</a>`:''}${isMail?`<a class="btn sm" href="mailto:${esc(c)}">✉️ بريد</a>`:''}${m.read?'':`<button class="btn sm alt" data-ctr="${esc(m.id)}">✓ مقروءة</button>`}<button class="btn sm red" data-ctd="${esc(m.id)}">🗑 حذف</button></div></div>`}).join('');
+ return`<h2>📥 رسائل الزوار (${ctPend()} جديدة)</h2><p class="hint" style="margin:-6px 0 12px;text-align:right">تصلك هنا رسائل غير المسجّلين. للرد، تواصل مع صاحبها عبر وسيلة التواصل التي تركها.</p>${rows||'<div class="card" style="color:var(--mu);text-align:center;padding:24px">لا توجد رسائل من الزوار بعد</div>'}`
+}
+async function ctRead(id){try{await db.collection('contactMsgs').doc(id).update({read:true})}catch(e){toast('⛔ تعذّر التحديث')}}
+async function ctDel(id){if(!confirm('حذف هذه الرسالة نهائياً؟'))return;try{await db.collection('contactMsgs').doc(id).delete()}catch(e){toast('⛔ تعذّر الحذف')}}
+async function ctSend(){
+ if($('ctHp').value)return $('ctDlg').close();
+ const n=$('ctName').value.trim(),c=$('ctContact').value.trim(),t=$('ctText').value.trim();
+ if(n.length<2)return say('ctErr','⚠️ اكتب اسمك');
+ if(t.length<3)return say('ctErr','⚠️ اكتب رسالتك');
+ let L=[];try{L=JSON.parse(localStorage.getItem('esm-ct')||'[]').filter(x=>Date.now()-x<36e5)}catch(e){}
+ if(L.length>=3)return say('ctErr','⏳ بلغتَ الحد المسموح (3 رسائل في الساعة)، حاول لاحقاً');
+ if(L.length&&Date.now()-L[L.length-1]<30000)return say('ctErr','⏳ انتظر قليلاً قبل إرسال رسالة أخرى');
+ const b=$('ctSend');b.disabled=true;say('ctErr','');
+ try{
+  await db.collection('contactMsgs').add({name:n,contact:c,text:t,t:Date.now(),read:false});
+  L.push(Date.now());try{localStorage.setItem('esm-ct',JSON.stringify(L))}catch(e){}
+  $('ctDlg').close();$('ctName').value='';$('ctContact').value='';$('ctText').value='';toast('✅ وصلت رسالتك إلى الرابطة')
+ }catch(e){say('ctErr','⚠️ تعذّر الإرسال، حاول لاحقاً')}
+ b.disabled=false
+}
+const ctOpen=()=>{say('ctErr','');$('ctDlg').showModal()};
+$('ctBtn').onclick=ctOpen;$('ctGate').onclick=ctOpen;$('ctClose').onclick=()=>$('ctDlg').close();$('ctSend').onclick=ctSend;
+
 applyPrefs();
 init();
 </script>

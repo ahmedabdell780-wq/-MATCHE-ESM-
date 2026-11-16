@@ -77,17 +77,23 @@ function readJson(req, max = 20000) {
   });
 }
 
-async function pushTo(kind, teams, title, body) {
+async function pushTo(kind, teams, title, body, to, url, skip) {
   const snap = await fcm.db.collection('pushTokens').get();
   const tokens = [];
   snap.forEach(d => {
     const v = d.data() || {};
-    if (kind === 'live' || v.role === 'admin' || teams.includes(Number(v.teamId))) tokens.push(d.id);
+    const isAdm = v.role === 'admin', inTeam = teams.includes(Number(v.teamId));
+    const okTok = kind === 'live' ? true
+      : to === 'admin' ? isAdm
+      : to === 'club' ? (!isAdm && inTeam)
+      : (isAdm || inTeam);
+    if (okTok && skip != null && Number(v.teamId) === skip && !isAdm) return;
+    if (okTok) tokens.push(d.id);
   });
   let sent = 0;
   for (let i = 0; i < tokens.length; i += 500) {
     const chunk = tokens.slice(i, i + 500);
-    const r = await fcm.messaging.sendEachForMulticast({ tokens: chunk, notification: { title, body }, data: { kind, title, body } });
+    const r = await fcm.messaging.sendEachForMulticast({ tokens: chunk, notification: { title, body }, data: { kind, title, body, url: url || '' } });
     sent += r.successCount;
     const dead = [];
     r.responses.forEach((x, j) => { if (!x.success && /registration-token-not-registered|invalid-registration-token|invalid-argument/.test((x.error && x.error.code) || '')) dead.push(chunk[j]); });
@@ -129,12 +135,21 @@ async function handleNotify(req, res) {
   if (!fcm) return send(503, { error: 'push disabled' });
   try {
     const b = await readJson(req);
-    await authorize(String(b.token || ''));
-    const kind = ['result', 'schedule', 'live'].includes(b.kind) ? b.kind : null;
+    const who = await authorize(String(b.token || ''));
+    const kind = ['result', 'schedule', 'live', 'message'].includes(b.kind) ? b.kind : null;
     if (!kind) return send(400, { error: 'kind' });
+    const isAdm = who.role === 'admin';
     const title = String(b.title || '').slice(0, 120), body = String(b.body || '').slice(0, 240);
-    const teams = Array.isArray(b.teams) ? b.teams.map(Number).filter(Number.isFinite) : [];
-    const sent = await pushTo(kind, teams, title, body);
+    const teams = Array.isArray(b.teams) ? b.teams.map(Number).filter(Number.isFinite).slice(0, 4) : [];
+    const to = b.to === 'admin' || b.to === 'club' ? b.to : '';
+    /* منع إساءة الاستعمال: غير المشرف لا يبثّ للجميع، ولا يراسل إلا من يخصّ ناديه */
+    if (!isAdm) {
+      if (kind === 'live') throw new Error('غير مصرّح');
+      if (!teams.includes(who.teamId)) throw new Error('غير مصرّح');
+      if (kind === 'message' && to !== 'admin' && !(to === 'club' && teams.length === 2)) throw new Error('غير مصرّح');
+    }
+    const url = /^\.\/index\.html(#[a-z]{1,12})?$/.test(String(b.url || '')) ? String(b.url) : '';
+    const sent = await pushTo(kind, teams, title, body, kind === 'message' ? to : '', url, kind === 'message' && !isAdm && to === 'club' ? who.teamId : null);
     send(200, { ok: true, sent });
   } catch (e) { send(400, { error: String(e.message || e).slice(0, 160) }); }
 }
@@ -174,7 +189,7 @@ async function authorize(idToken) {
   const role = f.role?.stringValue, status = f.status?.stringValue, perm = f.perm?.stringValue || 'full';
   if (!(role === 'admin' || (role === 'manager' && status === 'approved' && perm !== 'view_only')))
     throw new Error('حسابك غير مصرّح له بالبث');
-  return uid;
+  return { uid, role, teamId: Number(f.teamId?.integerValue ?? f.teamId?.doubleValue ?? NaN) };
 }
 
 /* منع توجيه البث إلى عناوين داخلية (SSRF) عند تفعيل العنوان المخصص */
@@ -291,7 +306,7 @@ wss.on('connection', (ws, req) => {
     try {
       const m = JSON.parse(data.toString());
       if (m.type !== 'start') throw new Error('طلب غير صالح');
-      uid = await authorize(m.token);
+      uid = (await authorize(m.token)).uid;
       const key = String(m.key || '').trim();
       if (!/^[A-Za-z0-9_\-?=&.]{6,300}$/.test(key) && m.target !== 'custom') throw new Error('مفتاح البث غير صالح');
       let url;

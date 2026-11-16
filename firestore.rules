@@ -41,6 +41,7 @@ service cloud.firestore {
     // قراءة مفتوحة للجميع (بما فيهم الزوار)
     // الكتابة: المشرف العام بحرية كاملة، أو مسؤول النادي لمباريات فريقه فقط (ذهاباً أو إياباً)
     // موافقة المشرف إلزامية دائماً: لا يمكن لغير المشرف العام اعتماد النتيجة (confirmed)
+    // وبعد الاعتماد تُقفل المباراة على النادي: يعدّلها عبر «طلب تعديل» (editRequests) فقط
     match /scores/{k} {
       allow read: if true;
       allow delete: if isAdmin();
@@ -48,6 +49,9 @@ service cloud.firestore {
         || (canWrite()
           && (request.resource.data.home == myDoc().teamId
               || request.resource.data.away == myDoc().teamId)
+          && k == request.resource.data.key.replace('|', '_')
+          && int(request.resource.data.key.split(':')[1].split('-')[0]) == request.resource.data.home
+          && int(request.resource.data.key.split(':')[1].split('-')[1]) == request.resource.data.away
           && request.resource.data.data.get('status', '') != 'confirmed');
       allow update: if isAdmin()
         || (canWrite()
@@ -55,6 +59,8 @@ service cloud.firestore {
               || resource.data.away == myDoc().teamId)
           && request.resource.data.home == resource.data.home
           && request.resource.data.away == resource.data.away
+          && request.resource.data.key == resource.data.key
+          && resource.data.data.get('status', '') != 'confirmed'
           && request.resource.data.data.get('status', '') != 'confirmed');
     }
 
@@ -67,8 +73,10 @@ service cloud.firestore {
     }
 
     // ===== التشكيلات (Lineups) =====
+    // خاصة بالفريق: المشرف + الحسابات المعتمدة لنفس الفريق
     match /lineups/{id} {
-      allow read: if true;
+      allow read: if isAdmin()
+        || (signedIn() && myDoc().status == 'approved' && myDoc().teamId == resource.data.teamId);
       allow create, update: if isAdmin()
         || (canWrite() && request.resource.data.teamId == myDoc().teamId);
       allow delete: if isAdmin();
@@ -84,8 +92,9 @@ service cloud.firestore {
     }
 
     // ===== الطاقم الفني والإداري (Staff) =====
+    // خاصة: المشرف + أعضاء النادي المعتمدون لفريقهم فقط (تحوي أرقام هواتف وصوراً)
     match /staff/{id} {
-      allow read: if true;
+      allow read: if isAdmin() || (signedIn() && isClubMember(resource.data.teamId));
       allow create, update: if isAdmin()
         || (canWrite() && request.resource.data.teamId == myDoc().teamId);
       allow delete: if isAdmin()
@@ -111,12 +120,15 @@ service cloud.firestore {
     match /messages/{id} {
       allow read: if isAdmin() || (signedIn() && isClubMember(resource.data.teamId));
       allow create: if signedIn()
-        && request.resource.data.keys().hasOnly(['teamId','from','to','fromUid','fromName','text','t','read'])
+        && request.resource.data.keys().hasOnly(['teamId','from','to','fromUid','fromName','text','img','t','read'])
         && request.resource.data.fromUid == request.auth.uid
         && request.resource.data.teamId is int
         && request.resource.data.text is string
-        && request.resource.data.text.size() > 0
         && request.resource.data.text.size() <= 1000
+        && (request.resource.data.text.size() > 0 || request.resource.data.get('img', '') != '')
+        && request.resource.data.get('img', '') is string
+        && request.resource.data.get('img', '').size() < 330000
+        && (request.resource.data.get('img', '') == '' || request.resource.data.img.matches('data:image/jpeg;base64,.*'))
         && request.resource.data.read == false
         && ((isAdmin() && request.resource.data.from == 'admin' && request.resource.data.to == 'club')
             || (isClubMember(request.resource.data.teamId) && request.resource.data.from == 'club' && request.resource.data.to == 'admin'));
@@ -145,6 +157,51 @@ service cloud.firestore {
             && request.resource.data.by == request.auth.uid
             && request.resource.data.status in ['pending', 'cancelled']);
       allow delete: if isAdmin();
+    }
+
+    // ===== مراسلة الأندية فيما بينها (نص وصور) — يقرأها المشرف ويحذف منها =====
+    // الإنشاء: عضو نادٍ معتمد لناديه فقط. التعديل: المستلم يضع read=true لا غير.
+    match /clubChats/{id} {
+      allow read: if isAdmin()
+        || (isManager() && myDoc().get('kind', 'club') != 'visitor'
+            && myDoc().teamId in resource.data.teams);
+      allow create: if canWrite()
+        && isClubMember(request.resource.data.fromTeam)
+        && request.resource.data.keys().hasOnly(['pair','teams','fromTeam','fromUid','fromName','text','img','t','read'])
+        && request.resource.data.fromUid == request.auth.uid
+        && request.resource.data.teams is list
+        && request.resource.data.teams.size() == 2
+        && request.resource.data.teams[0] is int
+        && request.resource.data.teams[1] is int
+        && request.resource.data.teams[0] < request.resource.data.teams[1]
+        && request.resource.data.fromTeam in request.resource.data.teams
+        && request.resource.data.text is string
+        && request.resource.data.text.size() <= 1000
+        && (request.resource.data.text.size() > 0 || request.resource.data.get('img', '') != '')
+        && request.resource.data.get('img', '') is string
+        && request.resource.data.get('img', '').size() < 330000
+        && (request.resource.data.get('img', '') == '' || request.resource.data.img.matches('data:image/jpeg;base64,.*'))
+        && request.resource.data.read == false
+        && request.resource.data.t is int;
+      allow update: if isManager() && myDoc().get('kind', 'club') != 'visitor'
+        && myDoc().teamId in resource.data.teams
+        && resource.data.fromTeam != myDoc().teamId
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read'])
+        && request.resource.data.read == true;
+      allow delete: if isAdmin();
+    }
+
+    // ===== رسائل الزوار (يكتبها أي زائر دون تسجيل، ويقرأها المشرف فقط) =====
+    match /contactMsgs/{id} {
+      allow read, update, delete: if isAdmin();
+      allow create: if request.resource.data.keys().hasOnly(['name','contact','text','t','read'])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 2 && request.resource.data.name.size() <= 60
+        && request.resource.data.contact is string && request.resource.data.contact.size() <= 80
+        && request.resource.data.text is string
+        && request.resource.data.text.size() >= 3 && request.resource.data.text.size() <= 800
+        && request.resource.data.t is int
+        && request.resource.data.read == false;
     }
 
     // ===== سجل دخول الحسابات (يقرأه المشرف فقط) =====
