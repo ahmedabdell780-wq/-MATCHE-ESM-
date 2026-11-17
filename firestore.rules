@@ -119,9 +119,14 @@ service cloud.firestore {
 
     // ===== المراسلة: المشرف ↔️ رؤساء النوادي =====
     match /messages/{id} {
-      allow read: if isAdmin() || (signedIn() && isClubMember(resource.data.teamId));
+      // المشرف يقرأ الكل. مسؤول النادي يقرأ فقط محادثته الفردية (clubUid == uid) ورسائل «النادي ككل» (clubUid == '')
+      allow read: if isAdmin()
+        || (signedIn() && isClubMember(resource.data.teamId)
+            && resource.data.clubUid in ['', request.auth.uid]);
       allow create: if signedIn()
-        && request.resource.data.keys().hasOnly(['teamId','from','to','fromUid','fromName','text','img','t','read'])
+        && request.resource.data.keys().hasOnly(['teamId','from','to','fromUid','fromName','text','img','t','read','clubUid'])
+        && request.resource.data.clubUid is string
+        && request.resource.data.clubUid.size() <= 128
         && request.resource.data.fromUid == request.auth.uid
         && request.resource.data.teamId is int
         && request.resource.data.text is string
@@ -132,12 +137,21 @@ service cloud.firestore {
         && (request.resource.data.get('img', '') == '' || request.resource.data.img.matches('data:image/jpeg;base64,.*'))
         && request.resource.data.read == false
         && ((isAdmin() && request.resource.data.from == 'admin' && request.resource.data.to == 'club')
-            || (isClubMember(request.resource.data.teamId) && request.resource.data.from == 'club' && request.resource.data.to == 'admin'));
+            || (isClubMember(request.resource.data.teamId) && request.resource.data.from == 'club' && request.resource.data.to == 'admin'
+                && request.resource.data.clubUid == request.auth.uid));
       allow update: if signedIn()
-        && ((isAdmin() && resource.data.to == 'admin')
-            || (isClubMember(resource.data.teamId) && resource.data.to == 'club'))
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read'])
-        && request.resource.data.read == true;
+        && (
+          // وضع علامة «مقروء»
+          (((isAdmin() && resource.data.to == 'admin')
+              || (isClubMember(resource.data.teamId) && resource.data.to == 'club'
+                  && resource.data.clubUid in ['', request.auth.uid]))
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read'])
+            && request.resource.data.read == true)
+          // ترحيل الرسائل القديمة (بلا clubUid) من المشرف مرة واحدة
+          || (isAdmin() && !('clubUid' in resource.data)
+              && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['clubUid'])
+              && request.resource.data.clubUid is string)
+        );
       allow delete: if isAdmin();
     }
 

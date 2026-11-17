@@ -178,7 +178,7 @@ function readJson(req, max = 20000) {
   });
 }
 
-async function pushTo(kind, teams, title, body, to, url, skip) {
+async function pushTo(kind, teams, title, body, to, url, skip, onlyUid) {
   const snap = await fcm.db.collection('pushTokens').get();
   const tokens = [];
   snap.forEach(d => {
@@ -190,6 +190,7 @@ async function pushTo(kind, teams, title, body, to, url, skip) {
       : to === 'admin' ? isAdm
       : to === 'club' ? (!isAdm && inTeam)
       : (isAdm || inTeam || isFol);
+    if (okTok && onlyUid && v.uid !== onlyUid) return;
     if (okTok && skip != null && Number(v.teamId) === skip && !isAdm) return;
     if (okTok) tokens.push(d.id);
   });
@@ -252,7 +253,8 @@ async function handleNotify(req, res) {
       if (kind === 'message' && to !== 'admin' && !(to === 'club' && teams.length === 2)) throw new Error('غير مصرّح');
     }
     const url = /^\.\/index\.html(#[a-z]{1,12})?$/.test(String(b.url || '')) ? String(b.url) : '';
-    const sent = await pushTo(kind, teams, title, body, kind === 'message' ? to : '', url, kind === 'message' && !isAdm && to === 'club' ? who.teamId : null);
+    const onlyUid = isAdm && kind === 'message' && to === 'club' && typeof b.uid === 'string' && /^[A-Za-z0-9_-]{1,128}$/.test(b.uid) ? b.uid : '';   // رسالة فردية لمسؤول واحد
+    const sent = await pushTo(kind, teams, title, body, kind === 'message' ? to : '', url, kind === 'message' && !isAdm && to === 'club' ? who.teamId : null, onlyUid);
     send(200, { ok: true, sent });
   } catch (e) { send(400, { error: String(e.message || e).slice(0, 160) }); }
 }

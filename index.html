@@ -5376,55 +5376,82 @@ $('fnSel').onchange=e=>{PS.f=e.target.value;savePref('esm-font',PS.f);applyPrefs
 const msgSide=()=>me&&me.role==='admin'?'admin':'club';
 const msgOk=()=>!!me&&!isVis()&&(me.role==='admin'||!!me.teamId);
 const msgPend=()=>me&&me.role==='admin'?U.filter(u=>u.status==='pending').length:0;
+/* ---- رسائل فردية لكل مسؤول نادٍ: مفتاح المحادثة = رقم الفريق|uid المسؤول (فارغ = النادي ككل) ---- */
+const mkKey=(t,c)=>(+t)+'|'+(c||'');
+const mkSplit=k=>{const i=String(k).indexOf('|');return{tid:+String(k).slice(0,i),cuid:String(k).slice(i+1)}};
+const msgMgrs=tid=>U.filter(u=>u.role==='manager'&&u.kind!=='visitor'&&u.status==='approved'&&+u.teamId===+tid).sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),'ar'));
+const msgMine=m=>!!me&&(me.role==='admin'||!m.clubUid||m.clubUid===me.uid);
+function msgKey(m){
+ if(me&&me.role!=='admin')return mkKey(m.teamId,me.uid);
+ if(m.clubUid)return mkKey(m.teamId,m.clubUid);
+ const L=msgMgrs(m.teamId);return mkKey(m.teamId,L.length===1?L[0].id:'');
+}
+function msgName(k){
+ const{tid,cuid}=mkSplit(k);if(!cuid)return 'النادي ككل (كل المسؤولين)';
+ const u=U.find(x=>x.id===cuid);if(u&&u.name)return u.name;
+ const m=MSG.find(x=>x.clubUid===cuid&&x.from==='club'&&x.fromName);return m?m.fromName:'رئيس النادي';
+}
 function msgUi(){
  try{ccUi()}catch(e){}
  const b=$('msgBtn');if(b)b.hidden=!msgOk();
  msgBadge();
- if(msgOk()&&location.hash==='#msg'){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}setTimeout(()=>msgOpen(me.role==='admin'?null:+me.teamId),700)}
+ if(msgOk()&&location.hash==='#msg'){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}setTimeout(()=>msgOpen(null),700)}
 }
 function msgBadge(){
  const e=$('msgBadge');if(e){e.textContent=MSGn>99?'99+':MSGn;e.hidden=!(MSGn>0&&msgOk())}
  document.title=(MSGn>0&&msgOk()?'('+MSGn+') ':'')+'منصة مباريات رابطة تيبازة';
 }
 function msgRecount(){
- const s=msgSide();MSGn=msgOk()?MSG.filter(m=>m.to===s&&!m.read).length:0;
+ const s=msgSide();MSGn=msgOk()?MSG.filter(m=>m.to===s&&!m.read&&msgMine(m)).length:0;
  msgBadge();updateAppBadge(msgPend());
+}
+function msgMigrate(){
+ /* ترحيل الرسائل القديمة (بلا clubUid) مرة واحدة من حساب المشرف: تُنسب للمسؤول الوحيد في النادي أو تُعدّ «للنادي ككل» */
+ if(!me||me.role!=='admin'||!db||!U.length)return;
+ const L=MSG.filter(m=>typeof m.clubUid!=='string').slice(0,400);if(!L.length)return;
+ try{const bt=db.batch();L.forEach(m=>{const ms=msgMgrs(m.teamId);const c=ms.length===1?ms[0].id:'';m.clubUid=c;bt.update(db.collection('messages').doc(m.id),{clubUid:c})});bt.commit().catch(()=>{})}catch(e){}
 }
 function listenMsgs(){
  if(!msgOk()||!db)return;
- const q=me.role==='admin'?db.collection('messages'):db.collection('messages').where('teamId','==',+me.teamId);
- let first=true;
- subs.push(q.onSnapshot(s=>{
-  const fresh=[];
-  s.docChanges().forEach(c=>{
-   const d=Object.assign({id:c.doc.id},c.doc.data());
-   if(c.type==='removed'){MSG=MSG.filter(x=>x.id!==d.id);return}
-   const i=MSG.findIndex(x=>x.id===d.id);
-   if(i<0){MSG.push(d);if(!first&&!c.doc.metadata.hasPendingWrites&&d.to===msgSide()&&!d.read&&d.fromUid!==me.uid)fresh.push(d)}
-   else MSG[i]=d;
-  });
-  first=false;
-  MSG.sort((a,b)=>(a.t||0)-(b.t||0));
-  msgRecount();
-  if(fresh.length)msgIncoming(fresh);
-  if($('msgDlg').open)msgRender();
- },()=>{}));
+ const col=db.collection('messages');
+ /* المشرف: كل الرسائل. المسؤول: محادثته الفردية + رسائل «النادي ككل» (استعلامان تفرضهما قواعد Firestore) */
+ const qs=me.role==='admin'?[col]:[col.where('teamId','==',+me.teamId).where('clubUid','==',me.uid),col.where('teamId','==',+me.teamId).where('clubUid','==','')];
+ qs.forEach(q=>{
+  let first=true;
+  subs.push(q.onSnapshot(s=>{
+   const fresh=[];
+   s.docChanges().forEach(c=>{
+    const d=Object.assign({id:c.doc.id},c.doc.data());
+    if(c.type==='removed'){MSG=MSG.filter(x=>x.id!==d.id);return}
+    const i=MSG.findIndex(x=>x.id===d.id);
+    if(i<0){MSG.push(d);if(!first&&!c.doc.metadata.hasPendingWrites&&d.to===msgSide()&&!d.read&&d.fromUid!==me.uid&&msgMine(d))fresh.push(d)}
+    else MSG[i]=d;
+   });
+   first=false;
+   MSG.sort((a,b)=>(a.t||0)-(b.t||0));
+   msgRecount();
+   if(fresh.length)msgIncoming(fresh);
+   if($('msgDlg').open)msgRender();
+   msgMigrate();
+  },()=>{}));
+ });
+ if(me.role==='admin')setTimeout(msgMigrate,4000);
 }
 function msgIncoming(L){
  const m=L[L.length-1];if(!m)return;
- const viewing=$('msgDlg').open&&MSGopen===m.teamId&&!document.hidden;
- if(viewing){msgMarkRead(m.teamId);return}
+ const k=msgKey(m),viewing=$('msgDlg').open&&MSGopen===k&&!document.hidden;
+ if(viewing){msgMarkRead(k);return}
  playNotifSound();
- const who=me.role==='admin'?'رئيس نادي '+(T[m.teamId]||''):'المشرف العام';
+ const who=me.role==='admin'?(m.fromName||'رئيس النادي')+' — '+(T[m.teamId]||''):'المشرف العام';
  const title='💬 رسالة جديدة من '+who+(L.length>1?' ('+L.length+')':'');
  const body=String(m.text||(m.img?'📷 صورة':''));const pv=body.length>90?body.slice(0,90)+'…':body;
- msgBanner(title,pv,m.teamId);
+ msgBanner(title,pv,k);
  try{navigator.vibrate&&navigator.vibrate([120,60,120])}catch(e){}
- if(document.hidden)msgSysNotify(title,pv,m.teamId);
+ if(document.hidden)msgSysNotify(title,pv,m.teamId,k);
 }
-async function msgSysNotify(title,body,tid){
+async function msgSysNotify(title,body,tid,k){
  if(!('Notification' in window)||Notification.permission!=='granted')return;
- const o={body,icon:'icon-192.png',badge:'icon-192.png',tag:'esm-msg-'+tid,renotify:true,vibrate:[200,100,200],data:{kind:'message',teamId:tid,url:'./index.html#msg'}};
+ const o={body,icon:'icon-192.png',badge:'icon-192.png',tag:'esm-msg-'+(k||tid),renotify:true,vibrate:[200,100,200],data:{kind:'message',teamId:tid,key:k||'',url:'./index.html#msg'}};
  try{const r=await navigator.serviceWorker.getRegistration();if(r){await r.showNotification(title,o);return}}catch(e){}
  try{new Notification(title,o)}catch(e){}
 }
@@ -5433,14 +5460,17 @@ function msgBanner(t,b,tid){
  const e=$('msgBanner');$('mbT').textContent=t;$('mbB').textContent=b;e.dataset.t=tid;
  e.classList.add('on');clearTimeout(mbTm);mbTm=setTimeout(()=>e.classList.remove('on'),8000);
 }
-function msgMarkRead(tid){
- const s=msgSide(),L=MSG.filter(m=>m.teamId===tid&&m.to===s&&!m.read);if(!L.length)return;
+function msgMarkRead(k){
+ const s=msgSide(),L=MSG.filter(m=>m.to===s&&!m.read&&msgMine(m)&&msgKey(m)===k);if(!L.length)return;
  try{const bt=db.batch();L.forEach(m=>bt.update(db.collection('messages').doc(m.id),{read:true}));bt.commit().catch(()=>{})}catch(e){}
 }
-function msgOpen(tid){
+function msgOpen(x){
  if(!msgOk())return;
- if(me.role!=='admin')tid=+me.teamId;
- MSGopen=(tid==null||isNaN(+tid))?null:+tid;
+ let k=null;
+ if(me.role!=='admin')k=mkKey(me.teamId,me.uid);
+ else if(typeof x==='string'&&x.indexOf('|')>0)k=x;
+ else if(x!=null&&x!==''&&!isNaN(+x)){const u=MSG.filter(m=>m.teamId===+x&&m.to==='admin'&&!m.read).pop();k=u?msgKey(u):mkKey(x,'')}
+ MSGopen=k;
  say('msgErr','');$('msgBanner').classList.remove('on');
  if(!$('msgDlg').open)$('msgDlg').showModal();
  msgRender();
@@ -5449,23 +5479,36 @@ function msgOpen(tid){
 function msgTime(t){try{return new Date(t).toLocaleTimeString('ar-DZ',{hour:'2-digit',minute:'2-digit'})}catch(e){return''}}
 function msgRender(){
  if(!msgOk())return;
- const adm=me.role==='admin',B=$('msgBody'),tid=MSGopen;
- $('msgBack').hidden=!(adm&&tid!=null);
- $('msgComp').hidden=tid==null;
- if(tid==null){
+ const adm=me.role==='admin',B=$('msgBody'),k=MSGopen;
+ $('msgBack').hidden=!(adm&&k!=null);
+ $('msgComp').hidden=k==null;
+ if(k==null){
   $('msgTitle').textContent='💬 رسائل رؤساء النوادي';
   $('msgSub').textContent=MSGn?MSGn+' رسالة غير مقروءة':'لا توجد رسائل جديدة';
-  const rows=Object.keys(T).map(k=>{const id=+k,L=MSG.filter(m=>m.teamId===id);return{id,last:L[L.length-1],un:L.filter(m=>m.to==='admin'&&!m.read).length}})
-   .sort((a,b)=>(b.last?b.last.t||0:0)-(a.last?a.last.t||0:0)||a.id-b.id);
-  B.innerHTML=rows.map(r=>{
-   const pv=r.last?(r.last.from==='admin'?'أنت: ':'')+String(r.last.text||(r.last.img?'📷 صورة':'')).replace(/\s+/g,' '):'ابدأ محادثة مع رئيس النادي';
-   return `<button class="mrow${r.un?' un':''}" data-mt="${r.id}">${lg(r.id)}<span class="mi"><b>${esc(T[r.id])}</b><span>${esc(pv)}</span></span><span class="mm">${r.last?esc(msgTime(r.last.t)):''}${r.un?`<span class="mu">${r.un}</span>`:''}</span></button>`}).join('');
+  const rows={},add=(key)=>{if(!rows[key])rows[key]={key,tid:mkSplit(key).tid,L:[]}};
+  Object.keys(T).forEach(t=>{
+   const ms=msgMgrs(t);
+   if(ms.length!==1)add(mkKey(t,''));
+   ms.forEach(u=>add(mkKey(t,u.id)));
+   if(ms.length===1)add(mkKey(t,ms[0].id));
+  });
+  MSG.forEach(m=>{const key=msgKey(m);add(key);rows[key].L.push(m)});
+  const list=Object.values(rows).filter(r=>T[r.tid]).map(r=>{
+   const last=r.L[r.L.length-1],un=r.L.filter(m=>m.to==='admin'&&!m.read).length,nm=msgName(r.key),whole=!mkSplit(r.key).cuid;
+   /* الصف العام للنادي: يُخفى إن لم يكن للنادي أكثر من مسؤول ولا توجد فيه رسائل */
+   return{id:r.tid,key:r.key,last,un,nm,whole}
+  }).filter(r=>!(r.whole&&!r.last&&msgMgrs(r.id).length<2&&msgMgrs(r.id).length>0))
+   .sort((a,b)=>(b.last?b.last.t||0:0)-(a.last?a.last.t||0:0)||a.id-b.id||(a.whole?-1:0)-(b.whole?-1:0)||a.nm.localeCompare(b.nm,'ar'));
+  B.innerHTML=list.map(r=>{
+   const pv=r.last?(r.last.from==='admin'?'أنت: ':'')+String(r.last.text||(r.last.img?'📷 صورة':'')).replace(/\s+/g,' '):(r.whole?'رسالة موجّهة لكل مسؤولي النادي':'ابدأ محادثة مع '+r.nm);
+   return `<button class="mrow${r.un?' un':''}" data-mt="${esc(r.key)}">${lg(r.id)}<span class="mi"><b>${r.whole?'👥 ':'👤 '}${esc(r.nm)}</b><span style="color:var(--gold);font-weight:700">${esc(T[r.id])}</span><span>${esc(pv)}</span></span><span class="mm">${r.last?esc(msgTime(r.last.t)):''}${r.un?`<span class="mu">${r.un}</span>`:''}</span></button>`}).join('');
   B.scrollTop=0;return;
  }
- $('msgTitle').textContent=adm?'🏟️ '+(T[tid]||''):'👑 المشرف العام';
- $('msgSub').textContent=adm?'محادثة مع رئيس النادي':'مراسلة مباشرة مع المشرف';
- const side=msgSide(),L=MSG.filter(m=>m.teamId===tid);
- if(!L.length){B.innerHTML=`<div class="mempty">✉️<br>لا توجد رسائل بعد.<br>${adm?'اكتب أول رسالة لرئيس هذا النادي.':'اكتب رسالتك وسيصل المشرف إشعار فوري.'}</div>`;return}
+ const{tid,cuid}=mkSplit(k);
+ $('msgTitle').textContent=adm?(cuid?'👤 ':'👥 ')+msgName(k)+' · '+(T[tid]||''):'👑 المشرف العام';
+ $('msgSub').textContent=adm?(cuid?'محادثة خاصة مع هذا المسؤول فقط':'رسالة تصل لكل مسؤولي '+(T[tid]||'النادي')):'مراسلة مباشرة مع المشرف';
+ const side=msgSide(),L=MSG.filter(m=>msgMine(m)&&(adm?msgKey(m)===k:m.teamId===tid));
+ if(!L.length){B.innerHTML=`<div class="mempty">✉️<br>لا توجد رسائل بعد.<br>${adm?(cuid?'اكتب أول رسالة لـ '+esc(msgName(k))+'.':'اكتب أول رسالة لكل مسؤولي هذا النادي.'):'اكتب رسالتك وسيصل المشرف إشعار فوري.'}</div>`;return}
  const near=B.scrollHeight-B.scrollTop-B.clientHeight<90;
  let day='',h='';
  L.forEach(m=>{
@@ -5473,31 +5516,31 @@ function msgRender(){
   if(dk!==day){day=dk;let lb='';try{lb=d.toLocaleDateString('ar-DZ',{weekday:'long',day:'numeric',month:'long'})}catch(e){}h+=`<div class="mday">${esc(lb)}</div>`}
   const mine=m.from===side;
   h+=`<div class="bub ${mine?'me':'th'}">${mine?'':`<span class="sn">${esc(m.from==='admin'?'المشرف العام':(m.fromName||'رئيس النادي'))}</span>`}${imgHtml(m.img)}${esc(m.text)}<span class="tm2">${esc(msgTime(m.t))}${mine?(m.read?' ✓✓':' ✓'):''}</span></div>`});
- const first=!B.dataset.k||B.dataset.k!==String(tid);
- B.innerHTML=h;B.dataset.k=String(tid);
+ const first=!B.dataset.k||B.dataset.k!==String(k);
+ B.innerHTML=h;B.dataset.k=String(k);
  if(first||near)B.scrollTop=B.scrollHeight;
 }
 function msgSend(){
  const t=$('msgTxt').value.trim(),im=ATT.msg;if((!t&&!im)||MSGopen==null||!msgOk())return;
  if(t.length>1000)return say('msgErr','⚠️ الرسالة طويلة (1000 حرف كحد أقصى)');
- const adm=me.role==='admin',tid=+MSGopen;say('msgErr','');
- const p=db.collection('messages').add(Object.assign(im?{img:im}:{},{teamId:tid,from:adm?'admin':'club',to:adm?'club':'admin',fromUid:me.uid,fromName:adm?'المشرف العام':(me.name||''),text:t,t:Date.now(),read:false}));
+ const adm=me.role==='admin',{tid,cuid:kc}=mkSplit(MSGopen),cuid=adm?kc:me.uid;say('msgErr','');
+ const p=db.collection('messages').add(Object.assign(im?{img:im}:{},{clubUid:cuid||''},{teamId:tid,from:adm?'admin':'club',to:adm?'club':'admin',fromUid:me.uid,fromName:adm?'المشرف العام':(me.name||''),text:t,t:Date.now(),read:false}));
  $('msgTxt').value='';msgGrow();ATT.msg=null;attPrev('msg','msgPrev');
  p.then(()=>{
-  pushNotify({kind:'message',to:adm?'club':'admin',teams:[tid],title:adm?'💬 رسالة من المشرف العام':'💬 رسالة من رئيس نادي '+(T[tid]||''),body:!t?'📷 صورة':t.length>120?t.slice(0,120)+'…':t,url:'./index.html#msg'});
+  pushNotify(Object.assign({kind:'message',to:adm?'club':'admin',teams:[tid],title:adm?'💬 رسالة من المشرف العام':'💬 رسالة من '+(me.name||'رئيس النادي')+' — '+(T[tid]||''),body:!t?'📷 صورة':t.length>120?t.slice(0,120)+'…':t,url:'./index.html#msg'},adm&&cuid?{uid:cuid}:{}));
  }).catch(()=>{say('msgErr','⚠️ تعذّر إرسال الرسالة. تحقق من الاتصال أو من صلاحيات قاعدة البيانات.')});
 }
 function msgGrow(){const e=$('msgTxt');e.style.height='auto';e.style.height=Math.min(e.scrollHeight,110)+'px'}
-$('msgBtn').onclick=()=>msgOpen(me&&me.role==='admin'?null:me&&+me.teamId);
+$('msgBtn').onclick=()=>msgOpen(null);
 $('msgClose').onclick=()=>$('msgDlg').close();
 $('msgDlg').addEventListener('close',()=>{MSGopen=null});
 $('msgBack').onclick=()=>{MSGopen=null;$('msgBody').dataset.k='';msgRender()};
 $('msgSend').onclick=msgSend;
 $('msgTxt').addEventListener('input',msgGrow);
 $('msgTxt').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&matchMedia('(pointer:fine)').matches){e.preventDefault();msgSend()}});
-$('msgBody').addEventListener('click',e=>{const b=e.target.closest('[data-mt]');if(b){$('msgBody').dataset.k='';msgOpen(+b.dataset.mt)}});
-$('msgBanner').addEventListener('click',e=>{if(e.target.closest('#mbX')){$('msgBanner').classList.remove('on');return}msgOpen(+$('msgBanner').dataset.t)});
-if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('message',e=>{const d=e.data||{};if(d.type==='open-edits'&&me)openEditsTab();if(d.type==='open-cc'&&ccOk())ccOpen(null);if(d.type==='open-message'&&msgOk())msgOpen(me.role==='admin'?(d.teamId==null?null:+d.teamId):null)});
+$('msgBody').addEventListener('click',e=>{const b=e.target.closest('[data-mt]');if(b){$('msgBody').dataset.k='';msgOpen(b.dataset.mt)}});
+$('msgBanner').addEventListener('click',e=>{if(e.target.closest('#mbX')){$('msgBanner').classList.remove('on');return}msgOpen($('msgBanner').dataset.t)});
+if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('message',e=>{const d=e.data||{};if(d.type==='open-edits'&&me)openEditsTab();if(d.type==='open-cc'&&ccOk())ccOpen(null);if(d.type==='open-message'&&msgOk())msgOpen(me.role==='admin'?(d.key||(d.teamId==null?null:+d.teamId)):null)});
 
 /* ===== سجل دخول الحسابات (Firestore: activity) ===== */
 function actLogin(){

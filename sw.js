@@ -81,7 +81,7 @@ self.addEventListener('notificationclick', (event) => {
         if (client.url.startsWith(self.registration.scope) && 'focus' in client) {
           if ((d.url || '').includes('#edits')) client.postMessage({ type: 'open-edits' });
           else if ((d.url || '').includes('#cc')) client.postMessage({ type: 'open-cc' });
-          else if (d.kind === 'message') client.postMessage({ type: 'open-message', teamId: d.teamId });
+          else if (d.kind === 'message') client.postMessage({ type: 'open-message', teamId: d.teamId, key: d.key });
           return client.focus();
         }
       }
@@ -105,7 +105,7 @@ self.addEventListener('push', (event) => {
     vibrate: [200, 100, 200],
     tag: data.tag || (data.kind === 'message' ? ((data.url || '').includes('#edits') ? 'esm-edit' : (data.url || '').includes('#cc') ? 'esm-cc' : 'esm-msg') : undefined),
     renotify: !!(data.tag || data.kind === 'message'),
-    data: { url: data.url || (data.kind === 'message' ? './index.html#msg' : './index.html'), kind: data.kind, teamId: data.teamId, dateOfArrival: Date.now() },
+    data: { url: data.url || (data.kind === 'message' ? './index.html#msg' : './index.html'), kind: data.kind, teamId: data.teamId, key: data.key, dateOfArrival: Date.now() },
     actions: [{ action: 'open', title: 'فتح التطبيق' }]
   };
   
