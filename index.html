@@ -2552,7 +2552,7 @@ const mail=v=>{v=String(v||'').trim().toLowerCase();if(v.includes('@'))return v;
 const isVis=()=>!!(me&&(me.kind==='visitor'||me.role==='visitor'));
 const rdoc=(n,p)=>{const v=$('rk')&&$('rk').value==='visitor';return{name:n,phone:p,teamId:v?0:+$('rt').value,role:'manager',kind:v?'visitor':'club',status:'pending',perm:v?'view_only':'full',date:new Date().toISOString().slice(0,10)}};
 const mails=v=>{const b=mail(v);return /^\d{9}@esm\.local$/.test(b)?[b,...[2,3,4,5].map(n=>b.replace('@',`.${n}@`))]:(b?[b]:[])};
-let RO={},RS={},LU={},LSS={},auth,db,me=null,S={},U=[],cat='U15',round=1,tab='m',subs=[],reg=false,cur=null,MSG=[],MSGn=0,MSGopen=null,ACT={},ACTT=0,ER={};
+let ME={},MES={},meReady=false,RO={},RS={},LU={},LSS={},auth,db,me=null,S={},U=[],cat='U15',round=1,tab='m',subs=[],reg=false,cur=null,MSG=[],MSGn=0,MSGopen=null,ACT={},ACTT=0,ER={};
 function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2800)}
 function say(id,t,ok){const e=$(id);e.textContent=t;e.classList.toggle('ok',!!ok)}
 function errTxt(e){const c=(e&&e.code)||'';
@@ -2786,8 +2786,13 @@ function openMatchTimeline(k){
   push(v.gh,h,'goal');push(v.ga,a,'goal');
   push(v.yh,h,'yellow');push(v.ya,a,'yellow');
   push(v.rh,h,'red');push(v.ra,a,'red');
-  const lk=LU[k]||{};
-  [h,a].forEach(t=>((lk[t]&&lk[t].subs)||[]).forEach(s=>evs.push({t:+(s.minute||999),m:s.minute,type:'sub',team:t,inn:s.inName,out:s.outName})));
+  window.__tlK=k;
+  const lk=LU[k]||{},pk=ME[k]||{};
+  [h,a].forEach(t=>{const L=(lk[t]&&lk[t].subs&&lk[t].subs.length)?lk[t].subs:(pk[t]||[]);L.forEach(s=>evs.push({t:+(s.minute||999),m:s.minute,type:'sub',team:t,inn:s.inName,out:s.outName}))});
+  /* أهداف النتيجة التي لم تُسجَّل أسماء مسجليها: تظهر كأهداف «غير محدد اللاعب» كي لا يناقض السجلُّ النتيجة */
+  if(has&&!v.ex&&!v.pp){
+   const named=t=>evs.filter(e=>e.type==='goal'&&e.team===t).reduce((q,e)=>q+(e.k||1),0);
+   [[h,+v.sh],[a,+v.sa]].forEach(([t,g])=>{const miss=(g||0)-named(t);for(let i=0;i<miss;i++)evs.push({t:999,m:'',type:'goal',team:t,n:'هدف (اللاعب غير مسجَّل)',k:1,unk:1})})}
   evs.sort((x,y)=>x.t-y.t);
 
   const box=$('timelineContainer');
@@ -2795,6 +2800,7 @@ function openMatchTimeline(k){
     box.innerHTML='<div class="tlm-empty"><b>⏱️</b>لا توجد أحداث مسجلة لهذه المباراة بعد.<br>تظهر هنا الأهداف والبطاقات والتبديلات عند إدخالها.</div>';
   }else{
     const phase=e=>e.t>=999?3:e.t<=45?1:2;
+    /* دقائق الوقت الإضافي/غير الصالحة */
     const phases=new Set(evs.map(phase));
     const PL={1:'الشوط الأول',2:'الشوط الثاني',3:'دون توقيت'};
     let html='',prev=0;
@@ -2802,7 +2808,7 @@ function openMatchTimeline(k){
       const ph=phase(e);
       if(phases.size>1&&ph!==prev){html+=`<div class="tlm-sep">${PL[ph]}</div>`;prev=ph}
       let inner;
-      if(e.type==='goal')inner=`<span class="tlm-ico">⚽</span><span>${esc(e.n)}${e.k>1?`<small>×${e.k}</small>`:''}</span>`;
+      if(e.type==='goal')inner=`<span class="tlm-ico">⚽</span><span${e.unk?' style="opacity:.65;font-weight:600"':''}>${esc(e.n)}${e.k>1?`<small>×${e.k}</small>`:''}</span>`;
       else if(e.type==='sub')inner=`<span class="tlm-sub"><span class="in">▲ ${esc(e.inn||'')}</span><span class="out">▼ ${esc(e.out||'')}</span></span>`;
       else inner=`<span class="tlm-crd"></span><span>${esc(e.n)}</span>`;
       html+=`<div class="tlm-row" style="--c:${COL[e.type]}"><div class="tlm-cell ${e.team===h?'h':'a'}"><div class="tlm-ev">${inner}</div></div><div class="tlm-min">${e.m?e.m+"'":'•'}</div></div>`;
@@ -3056,6 +3062,14 @@ function init(){
   draw();
 },()=>{$('app').hidden=false;draw();});
  listenPublic(); listenShowcase();
+ /* التبديلات عامة للجميع (حتى الزوار) — التشكيلات نفسها تبقى خاصة */
+ db.collection('matchEvents').onSnapshot(sn=>{
+  sn.docChanges().forEach(c=>{const d=c.doc.data();
+   if(c.type==='removed'){if(ME[d.key])delete ME[d.key][d.teamId];delete MES[c.doc.id]}
+   else{ME[d.key]=ME[d.key]||{};ME[d.key][d.teamId]=d.subs||[];MES[c.doc.id]=JSON.stringify(d.subs||[])}});
+  const first=!meReady;meReady=true;if(first)try{pubAllSubs()}catch(e){}
+  try{if($('matchTimelineModal')&&$('matchTimelineModal').open&&window.__tlK)openMatchTimeline(window.__tlK)}catch(e){}
+  draw()},()=>{meReady=true});
  auth.onAuthStateChanged(onAuth);
  /* للزائر: رفع hidden عن التطبيق مباشرة */
  $('app').hidden=false;
@@ -3071,6 +3085,13 @@ async function onAuth(u){
  if(!p||(p.role!=='admin'&&p.status!=='approved')){
   await auth.signOut();say('le',p&&p.status==='suspended'?'⛔ الحساب معطّل من المشرف العام. تواصل معه عبر الواتساب.':p&&p.status==='deleted'?'⚠️ حُذف حسابك من قِبل المشرف. إن كان ذلك بالخطأ فتواصل معه ليسترجعه.':p?'⏳ حسابك بانتظار موافقة المشرف العام. سيُفعَّل قريباً.':'⚠️ لا توجد بيانات لهذا الحساب. أرسل «طلب إنشاء حساب» أو تواصل مع المشرف.');return}
  me=Object.assign({uid:u.uid},p);
+ if(me.role!=='admin'){subs.push(db.collection('users').doc(u.uid).onSnapshot(sn=>{
+  if(!sn.exists||!me)return;const n=sn.data();
+  if(n.status!=='approved'){toast('⛔ تغيّرت حالة حسابك — سيتم تسجيل خروجك');setTimeout(()=>auth.signOut(),1200);return}
+  const ch=['perm','kind','teamId','role'].some(f=>String(n[f])!==String(me[f]));
+  Object.assign(me,n);
+  if(ch){try{OLD.state({user:{role:me.role==='admin'?'admin':(isVis()?'visitor':'official'),teamId:me.teamId,name:me.name}})}catch(e){}toast('🔄 تم تحديث صلاحيات حسابك');draw()}
+ },()=>{}))}
  if(me.role==='admin'){
   let prevPendingCount = -1;
    subs.push(db.collection('activity').onSnapshot(s=>{ACT={};s.docs.forEach(d=>{ACT[d.id]=d.data()});if(tab==='a'&&adminSec==='act')draw()},()=>{}));
@@ -3104,11 +3125,21 @@ async function onAuth(u){
 if(me.role==='admin'||!isVis()){listenLineups();listenPhotos();listenStaff()}listenMsgs();listenEdits();listenCC();listenCT();actLogin();
  show();
 }
+/* نشر التبديلات علناً: id = المفتاح_الفريق */
+const subsPub=L=>((L&&L.subs)||[]).map(x=>({minute:String(x.minute||''),inName:x.inName||'',outName:x.outName||''}));
+async function pubSubs(k,t,L){
+ if(!me||isVis())return;if(me.role!=='admin'&&+t!==+me.teamId)return;
+ const id=k.replace('|','_')+'_'+t,sb=subsPub(L),j=JSON.stringify(sb);
+ if(MES[id]===j||(MES[id]===undefined&&!sb.length))return;
+ const m=/^(?:[A-Z0-9]+\|)?\d+:(\d+)-(\d+)$/.exec(k);if(!m)return;
+ try{await db.collection('matchEvents').doc(id).set({key:k,teamId:+t,home:+m[1],away:+m[2],subs:sb,updatedAt:Date.now()});MES[id]=j}catch(e){console.warn('matchEvents',e.code)}
+}
+function pubAllSubs(){if(!meReady||!me||isVis())return;Object.keys(LU).forEach(k=>Object.keys(LU[k]||{}).forEach(t=>pubSubs(k,t,LU[k][t])))}
 function listenLineups(){
  const q=(!me||me.role==='admin')?db.collection('lineups'):db.collection('lineups').where('teamId','==',me.teamId);
  subs.push(q.onSnapshot(s=>{s.docChanges().forEach(c=>{const d=c.doc.data();
   if(c.type==='removed'){if(LU[d.key])delete LU[d.key][d.teamId];delete LSS[c.doc.id]}
-  else{LU[d.key]=LU[d.key]||{};LU[d.key][d.teamId]=d.data||{starters:[],bench:[],subs:[]};LSS[c.doc.id]=JSON.stringify(d.data||{})}})},()=>{}))
+  else{LU[d.key]=LU[d.key]||{};LU[d.key][d.teamId]=d.data||{starters:[],bench:[],subs:[]};LSS[c.doc.id]=JSON.stringify(d.data||{})}});if(meReady)pubAllSubs()},()=>{}))
 }
 function firstOpen(){for(let r=1;r<=22;r++)if(pairs(r).m.some(([h,a])=>{const v=S[K(cat,r,h,a)];return!v||v.status!=='confirmed'}))return r;return 22}
 function show(){
@@ -3148,7 +3179,10 @@ function erBtns(h,a,v,k){
 function erBadge(k){
  if(!me)return'';
  if(me.role==='admin'){const n=erPend().filter(r=>r.key===k).length;return n?`<span class="b wt">📝 ${n>1?n+' طلبات تعديل':'طلب تعديل'} بانتظارك</span>`:''}
- const r=erMine(k);if(!r)return'';
+ const r=erMine(k);
+ if(!r){const m=/(\d+):(\d+)-(\d+)$/.exec(k),v=S[k];
+  if(m&&v&&v.status==='confirmed'&&!isVis()&&(me.teamId==m[2]||me.teamId==m[3]))return'<span class="b wt">🔒 النتيجة معتمدة — للتعديل استعمل «طلب تعديل»</span>';
+  return''}
  if(r.status==='pending')return'<span class="b wt">📝 طلب تعديل بانتظار المشرف</span>';
  if(r.status==='rejected'&&Date.now()-(r.decidedAt||0)<7*864e5)return`<span class="b no">❌ رُفض طلب التعديل${r.reason?': '+esc(r.reason):''}</span>`;
  return''
@@ -3287,7 +3321,7 @@ function results(){
  let h=chips()+rnd()+recapBar+`<div class="rh">نتائج الجولة ${round} · ${round<=11?'ذهاب':'إياب'} · ${cat}</div>`;
  p.m.forEach(([hm,aw])=>{
   const k=K(cat,round,hm,aw),v=S[k],has=v&&v.sh!==undefined&&v.sh!=='';
-  const hasEvents = v&&(v.gh||v.ga||v.yh||v.ya||v.rh||v.ra);
+  const hasEvents = v&&(v.gh||v.ga||v.yh||v.ya||v.rh||v.ra||(v.sh!==undefined&&v.sh!==''&&v.sh!=null&&!v.ex&&!v.pp)||(ME[k]&&Object.values(ME[k]).some(a=>a&&a.length)));
   h+=`<div class="card rs mc${isMine(hm)||isMine(aw)?' favm':''}" style="--c1:${tcs(hm)};--c2:${tcs(aw)}">${mh(hm,aw,has,v)}
   <div class="meta" style="justify-content:center;gap:8px">${has&&v.status!=='confirmed'?stBadge(v):''}${hasEvents?`<button class="btn sm alt" data-tl="${k}" style="padding:2px 10px;font-size:11.5px">⏱️ أحداث اللقاء</button>`:''}${has?`<button class="btn sm alt" data-sc="r:${k}" style="padding:2px 10px;font-size:11.5px">📤 مشاركة</button>`:''}${canEdit(hm,aw,v)?`<button class="btn sm" data-e="${k}" style="padding:2px 10px;font-size:11.5px">✏️ ${has?'تعديل النتيجة':'إدخال النتيجة'}</button>`:''}${me&&me.role==='admin'&&has&&v.status==='pending_confirm'?`<button class="btn sm" data-ok="${k}" style="padding:2px 10px;font-size:11.5px">✅ اعتماد</button>`:''}</div></div>`
  });
@@ -3343,7 +3377,8 @@ let adminSec = 'users';
 function admin(){
  const p9=u=>String(u.phone||'').replace(/[٠-٩]/g,d=>d.charCodeAt(0)-1632).replace(/\D/g,'').slice(-9),dupP={};U.forEach(u=>{if(u.status!=='deleted'){const k=p9(u);if(k)dupP[k]=(dupP[k]||0)+1}});
  const rowDel=u=>`<div class="card u"><div><b>${esc(u.name)}</b><br><small>${u.kind==='visitor'?'👁️ زائر':esc(T[u.teamId]||'')} · ${esc(u.phone)}</small></div><div class="act" style="margin:0"><button class="btn sm" data-u="${u.id}" data-s="approved">↩ استرجاع واعتماد</button><button class="btn sm alt" data-u="${u.id}" data-s="pending">⏳ للانتظار</button><button class="btn sm red" data-uh="${u.id}" data-un="${esc(u.name)}">❌ حذف نهائي</button></div></div>`;
- const row=u=>u.status==='deleted'?rowDel(u):`<div class="card u"><div><b>${esc(u.name)}</b>${dupP[p9(u)]>1?' <span class="b no">رقم مكرر</span>':''}<br><small>${u.kind==='visitor'?'👁️ زائر (مشاهدة فقط)':esc(T[u.teamId]||'')} · <a href="tel:${esc(u.phone)}">${esc(u.phone)}</a>${u.status==='approved'&&u.kind!=='visitor'&&u.perm==='view_only'?' · 👁 مشاهدة فقط':''}</small></div><div class="act" style="margin:0">${u.status!=='approved'?`<button class="btn sm" data-u="${u.id}" data-s="approved">✅ اعتماد</button>`:''}${u.status==='approved'&&u.kind!=='visitor'?`<button class="btn sm alt" data-up="${u.id}" data-pm="${u.perm==='view_only'?'full':'view_only'}">${u.perm==='view_only'?'✏️ منح التعديل':'👁 مشاهدة فقط'}</button>`:''}<button class="btn sm" data-uem="${u.id}" style="background:#0f2a1c;color:#fff" title="تعديل كافة الصلاحيات والفريق">🛡️ الصلاحيات</button>${u.status!=='suspended'?`<button class="btn sm red" data-u="${u.id}" data-s="suspended">⏸ ${u.status==='pending'?'رفض':'تجميد'}</button>`:''}<button class="btn sm alt" data-ud="${u.id}" data-un="${esc(u.name)}" aria-label="حذف الحساب">🗑 حذف</button></div></div>`;
+ const permIssue=u=>{if(u.status!=='approved'||u.role==='admin')return'';const r=[];if(u.kind==='visitor')r.push('الحساب مسجَّل «زائر»');if(u.perm==='view_only')r.push('الصلاحية «مشاهدة فقط»');if(!(typeof u.teamId==='number'&&u.teamId>0))r.push('الفريق غير محدد/صيغته خاطئة');return r.length?`<br><small style="color:#dc2626;font-weight:800">⚠️ لا يستطيع تعديل النتائج: ${r.join(' + ')} — افتح «🛡️ الصلاحيات» واحفظ</small>`:'<br><small style="color:#16a34a;font-weight:800">✅ يستطيع إدخال النتائج لمباريات فريقه (غير المعتمدة)</small>'};
+ const row=u=>u.status==='deleted'?rowDel(u):`<div class="card u"><div><b>${esc(u.name)}</b>${dupP[p9(u)]>1?' <span class="b no">رقم مكرر</span>':''}<br><small>${u.kind==='visitor'?'👁️ زائر (مشاهدة فقط)':esc(T[u.teamId]||'')} · <a href="tel:${esc(u.phone)}">${esc(u.phone)}</a>${u.status==='approved'&&u.kind!=='visitor'&&u.perm==='view_only'?' · 👁 مشاهدة فقط':''}</small>${permIssue(u)}</div><div class="act" style="margin:0">${u.status!=='approved'?`<button class="btn sm" data-u="${u.id}" data-s="approved">✅ اعتماد</button>`:''}${u.status==='approved'&&u.kind!=='visitor'?`<button class="btn sm alt" data-up="${u.id}" data-pm="${u.perm==='view_only'?'full':'view_only'}">${u.perm==='view_only'?'✏️ منح التعديل':'👁 مشاهدة فقط'}</button>`:''}<button class="btn sm" data-uem="${u.id}" style="background:#0f2a1c;color:#fff" title="تعديل كافة الصلاحيات والفريق">🛡️ الصلاحيات</button>${u.status!=='suspended'?`<button class="btn sm red" data-u="${u.id}" data-s="suspended">⏸ ${u.status==='pending'?'رفض':'تجميد'}</button>`:''}<button class="btn sm alt" data-ud="${u.id}" data-un="${esc(u.name)}" aria-label="حذف الحساب">🗑 حذف</button></div></div>`;
  const pend=U.filter(u=>u.status==='pending'),oth=U.filter(u=>u.status!=='pending'&&u.status!=='deleted'),del=U.filter(u=>u.status==='deleted');
 
  const navBar = `<div class="adm-tabs">
@@ -3400,7 +3435,7 @@ function openUserPermModal(uid){
   }
   $('upmTeamSel').innerHTML = teamOpts;
   
-  $('upmRoleSel').value = u.role || (u.kind === 'visitor' ? 'visitor' : 'manager');
+  $('upmRoleSel').value = (u.role === 'admin') ? 'admin' : 'manager';
   $('upmPermSel').value = u.perm || 'full';
   $('upmStatusSel').value = u.status || 'approved';
   
@@ -3426,11 +3461,16 @@ $('saveUserPermBtn').onclick = async () => {
   const perm = $('upmPermSel').value;
   const status = $('upmStatusSel').value;
   
+  /* kind يجب أن يتبع الفريق/الدور، وإلا يبقى الحساب «زائراً» رغم منحه الصلاحية (هذا كان سبب عدم القدرة على التعديل) */
+  const isClub = role === 'admin' || teamId > 0;
+  const kind = isClub ? 'club' : 'visitor';
+  const permFinal = (!isClub) ? 'view_only' : perm;
   try{
     await db.collection('users').doc(activePermUserId).update({
       teamId: teamId,
       role: role,
-      perm: perm,
+      kind: kind,
+      perm: permFinal,
       status: status
     });
     
@@ -3439,13 +3479,14 @@ $('saveUserPermBtn').onclick = async () => {
     if(u){
       u.teamId = teamId;
       u.role = role;
-      u.perm = perm;
+      u.kind = kind;
+      u.perm = permFinal;
       u.status = status;
     }
     
     closeUserPermModal();
     draw();
-    toast('✅ تم تحديث كافة صلاحيات الحساب بنجاح');
+    toast(isClub?'✅ تم تحديث صلاحيات الحساب — تُطبَّق فوراً على جهازه':'✅ حُفظ كزائر (مشاهدة فقط) — اختر فريقاً ليتمكن من التعديل');
   }catch(e){
     console.error('Update user perm error:', e);
     toast('⛔ تعذر حفظ الصلاحيات: تحقق من القواعد أو الاتصال');
@@ -3504,7 +3545,7 @@ document.addEventListener('click',async e=>{
      try{await db.collection('users').doc(b.dataset.ud).update({status:'deleted'});toast('🗑 نُقل إلى المحذوفين (يمكن استرجاعه)')}catch(x){toast('⛔ تعذر التنفيذ')}}
     else if(b.dataset.uh){const nm=b.dataset.un||'';if(!confirm('حذف «'+nm+'» نهائياً؟ لا يمكن التراجع، وسيحتاج للتسجيل من جديد.'))return;
      try{await db.collection('users').doc(b.dataset.uh).delete();toast('❌ حُذف نهائياً')}catch(x){toast('⛔ تعذر الحذف')}}
- else if(b.dataset.up)try{await db.collection('users').doc(b.dataset.up).update({perm:b.dataset.pm});toast(b.dataset.pm==='view_only'?'👁 صار الحساب للمشاهدة فقط':'✏️ مُنحت صلاحية التعديل')}catch(x){toast('⛔ تعذر التنفيذ')}
+ else if(b.dataset.up)try{await db.collection('users').doc(b.dataset.up).update({perm:b.dataset.pm,kind:'club'});toast(b.dataset.pm==='view_only'?'👁 صار الحساب للمشاهدة فقط':'✏️ مُنحت صلاحية التعديل')}catch(x){toast('⛔ تعذر التنفيذ')}
     else if(b.dataset.u)try{await db.collection('users').doc(b.dataset.u).update({status:b.dataset.s})}catch(x){toast('⛔ تعذر التنفيذ')}
  else if(b.id==='seed')importSeed()
  else if(b.id==='mig')migrateLineups()
@@ -3655,7 +3696,7 @@ OLD.onSave=async()=>{
    const id=k.replace('|','_')+'_'+t,j=JSON.stringify(lu[t]),L=lu[t]||{};
    const empty=!(L.starters&&L.starters.length)&&!(L.bench&&L.bench.length)&&!(L.subs&&L.subs.length);
    if(LSS[id]===j||(empty&&LSS[id]===undefined))continue;
-   try{await db.collection('lineups').doc(id).set({key:k,teamId:+t,home:+m[1],away:+m[2],data:lu[t]});LSS[id]=j;LU[k]=LU[k]||{};LU[k][t]=JSON.parse(j)}catch(e){toast('⛔ رُفض حفظ التشكيلة: لا تملك الصلاحية')}
+   try{await db.collection('lineups').doc(id).set({key:k,teamId:+t,home:+m[1],away:+m[2],data:lu[t]});LSS[id]=j;LU[k]=LU[k]||{};LU[k][t]=JSON.parse(j);pubSubs(k,t,lu[t])}catch(e){toast('⛔ رُفض حفظ التشكيلة: لا تملك الصلاحية')}
   }
   /* النتيجة والموعد: بدون التشكيلات */
   if(JSON.stringify(rest)===OLD.snap[k])continue;
