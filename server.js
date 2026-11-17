@@ -11,6 +11,7 @@
  *   FORCE_TRANSCODE       "1" لإعادة الترميز دائماً (مفاتيح إطارات مضبوطة كل ثانيتين)
  *   ALLOW_CUSTOM          "1" للسماح بعنوان RTMP مخصص (غير فيسبوك/يوتيوب)
  *   FIREBASE_SERVICE_ACCOUNT  محتوى ملف JSON لحساب الخدمة (لتفعيل الإشعارات /notify)
+ *   CLIP_PRE / CLIP_POST  ثوانٍ تُقصّ قبل/بعد لحظة الضغط على زر الهدف في إعادات الأهداف (الافتراضي 25 / 8)
  */
 const http = require('http');
 const dns = require('dns').promises;
@@ -30,6 +31,106 @@ const FORCE_TRANSCODE = process.env.FORCE_TRANSCODE !== '0';
 const ALLOW_CUSTOM = process.env.ALLOW_CUSTOM === '1';
 const MAX_HOURS = 3;
 const MAX_BACKLOG = 8 * 1024 * 1024; // 8MB
+
+/* ===== إعادات الأهداف: حلقة مقاطع قصيرة (نسخ بلا ترميز) + قصّ مقطع عند كل هدف ===== */
+const os = require('os');
+const crypto = require('crypto');
+const nodePath = require('path');
+const CLIP_DIR = process.env.CLIP_DIR || nodePath.join(os.tmpdir(), 'esm-clips');
+const CLIP_PRE = Math.min(60, Math.max(5, Number(process.env.CLIP_PRE) || 25));    // ثوانٍ قبل لحظة الضغط على زر الهدف
+const CLIP_POST = Math.min(30, Math.max(2, Number(process.env.CLIP_POST) || 8));   // ثوانٍ بعدها
+const CLIP_KEEP_MS = 3 * 3600 * 1000, CLIP_MAX = 40;
+try { fs.mkdirSync(CLIP_DIR, { recursive: true }); } catch (e) {}
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+let clipQueue = Promise.resolve();
+
+function runFfmpeg(args, ms) {
+  return new Promise((resolve, reject) => {
+    const p = spawn(ffmpegPath, args, { stdio: ['ignore', 'ignore', 'pipe'] });
+    let err = '';
+    p.stderr.on('data', b => { err = (err + b).slice(-400); });
+    const t = setTimeout(() => { try { p.kill('SIGKILL'); } catch (e) {} reject(new Error('timeout')); }, ms || 60000);
+    p.on('error', e => { clearTimeout(t); reject(e); });
+    p.on('exit', code => { clearTimeout(t); code === 0 ? resolve() : reject(new Error('ffmpeg ' + code + ' ' + err.replace(/\s+/g, ' '))); });
+  });
+}
+
+/* حلقة تسجيل: عملية ffmpeg ثانية تنسخ الفيديو (-c copy) إلى مقاطع قصيرة، فلا تكلّف معالجاً يُذكر */
+function createRing() {
+  const sid = crypto.randomBytes(6).toString('hex');
+  const dir = nodePath.join(CLIP_DIR, 'ring_' + sid);
+  fs.mkdirSync(dir, { recursive: true });
+  const list = nodePath.join(dir, 'list.csv');
+  const p = spawn(ffmpegPath, ['-hide_banner', '-loglevel', 'error', '-fflags', '+genpts', '-i', 'pipe:0',
+    '-map', '0:v:0', '-map', '0:a:0?', '-c', 'copy',
+    '-f', 'segment', '-segment_time', '2', '-segment_format', 'mpegts', '-reset_timestamps', '1',
+    '-segment_list', list, '-segment_list_type', 'csv', '-segment_list_flags', '+live',
+    nodePath.join(dir, 's%05d.ts')], { stdio: ['pipe', 'ignore', 'pipe'] });
+  let dead = false, closed = false;
+  p.stdin.on('error', () => {}); p.stderr.on('data', () => {}); p.on('error', () => { dead = true; });
+  p.on('exit', () => { dead = true; });
+  const gc = setInterval(() => {                                    // لا نُبقي إلا آخر دقيقتين تقريباً
+    const lim = Date.now() - (CLIP_PRE + CLIP_POST + 90) * 1000;
+    try { fs.readdirSync(dir).forEach(f => { if (!/^s\d+\.ts$/.test(f)) return; const fp = nodePath.join(dir, f); if (fs.statSync(fp).mtimeMs < lim) fs.unlinkSync(fp); }); } catch (e) {}
+  }, 15000);
+  const rows = () => {
+    let t = ''; try { t = fs.readFileSync(list, 'utf8'); } catch (e) { return []; }
+    return t.split('\n').map(l => l.trim().split(',')).filter(a => a.length >= 3 && /^s\d+\.ts$/.test(a[0]))
+      .map(a => { const f = nodePath.join(dir, a[0]); let m = 0; try { m = fs.statSync(f).mtimeMs; } catch (e) { return null; } return { f, dur: Math.max(0, Number(a[2]) - Number(a[1])), end: m }; })
+      .filter(Boolean);
+  };
+  return {
+    get alive() { return !dead && !closed; },
+    feed(buf) { if (dead || closed) return; if (p.stdin.writableLength > 6 * 1024 * 1024) return; try { p.stdin.write(buf); } catch (e) {} },
+    /* ago: كم مضى (ملّي ثانية) منذ اللحظة التي ضغط فيها المشغّل زر الهدف */
+    async mark(ago) {
+      const T = Date.now() - Math.max(0, Math.min(Number(ago) || 0, 60000));
+      const from = T - CLIP_PRE * 1000, to = T + CLIP_POST * 1000;
+      const deadline = to + 10000;
+      let sel = [];
+      for (;;) {                                                     // ننتظر حتى يُغلق المقطع الذي يضم نهاية النافذة
+        const all = rows().map(r => ({ ...r, start: r.end - r.dur * 1000 }));
+        sel = all.filter(r => r.end >= from && r.start <= to);
+        const covered = sel.length && sel[sel.length - 1].end >= to - 1500;
+        if ((covered && Date.now() >= to) || Date.now() >= deadline) break;
+        await sleep(700);
+      }
+      if (!sel.length) throw new Error('لا توجد مقاطع في هذه الفترة');
+      const total = sel.reduce((s, r) => s + r.dur, 0);
+      if (total > CLIP_PRE + CLIP_POST + 25) sel = sel.slice(-Math.ceil((CLIP_PRE + CLIP_POST + 25) / 2));
+      return sel.map(r => r.f);
+    },
+    close(keepMs) {
+      if (closed) return; closed = true; clearInterval(gc);
+      try { p.stdin.end(); } catch (e) {}
+      setTimeout(() => { try { p.kill('SIGKILL'); } catch (e) {} }, 3000);
+      setTimeout(() => { try { fs.rmSync(dir, { recursive: true, force: true }); } catch (e) {} }, keepMs || 5 * 60 * 1000);
+    }
+  };
+}
+
+/* دمج المقاطع المختارة في ملف MP4 واحد (نسخ بلا ترميز) */
+function buildClip(files) {
+  const job = clipQueue.then(async () => {
+    const id = crypto.randomBytes(8).toString('hex');
+    const lst = nodePath.join(CLIP_DIR, 'c_' + id + '.txt'), out = nodePath.join(CLIP_DIR, 'c_' + id + '.mp4');
+    fs.writeFileSync(lst, files.map(f => "file '" + f.replace(/'/g, "'\\''") + "'").join('\n'));
+    try {
+      await runFfmpeg(['-hide_banner', '-loglevel', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', lst, '-c', 'copy', '-bsf:a', 'aac_adtstoasc', '-movflags', '+faststart', out], 60000);
+    } finally { try { fs.unlinkSync(lst); } catch (e) {} }
+    return { id, size: fs.statSync(out).size };
+  });
+  clipQueue = job.catch(() => {});
+  return job;
+}
+function clipPath(id) { return /^[a-f0-9]{16}$/.test(id) ? nodePath.join(CLIP_DIR, 'c_' + id + '.mp4') : null; }
+setInterval(() => {                                                  // تنظيف المقاطع القديمة
+  try {
+    const fl = fs.readdirSync(CLIP_DIR).filter(f => /^c_[a-f0-9]{16}\.mp4$/.test(f)).map(f => ({ f, m: fs.statSync(nodePath.join(CLIP_DIR, f)).mtimeMs })).sort((a, b) => b.m - a.m);
+    fl.forEach((x, i) => { if (i >= CLIP_MAX || Date.now() - x.m > CLIP_KEEP_MS) fs.unlinkSync(nodePath.join(CLIP_DIR, x.f)); });
+  } catch (e) {}
+}, 10 * 60 * 1000).unref();
+
 
 const TARGETS = {
   facebook: k => 'rtmps://live-api-s.facebook.com:443/rtmp/' + k,
@@ -83,10 +184,12 @@ async function pushTo(kind, teams, title, body, to, url, skip) {
   snap.forEach(d => {
     const v = d.data() || {};
     const isAdm = v.role === 'admin', inTeam = teams.includes(Number(v.teamId));
+    /* متابعو الفريق (يختارونه في التطبيق): نتائج وأهداف فقط */
+    const isFol = (kind === 'result' || kind === 'goal') && Array.isArray(v.follow) && v.follow.some(t => teams.includes(Number(t)));
     const okTok = kind === 'live' ? true
       : to === 'admin' ? isAdm
       : to === 'club' ? (!isAdm && inTeam)
-      : (isAdm || inTeam);
+      : (isAdm || inTeam || isFol);
     if (okTok && skip != null && Number(v.teamId) === skip && !isAdm) return;
     if (okTok) tokens.push(d.id);
   });
@@ -136,7 +239,7 @@ async function handleNotify(req, res) {
   try {
     const b = await readJson(req);
     const who = await authorize(String(b.token || ''));
-    const kind = ['result', 'schedule', 'live', 'message'].includes(b.kind) ? b.kind : null;
+    const kind = ['result', 'schedule', 'live', 'message', 'goal'].includes(b.kind) ? b.kind : null;
     if (!kind) return send(400, { error: 'kind' });
     const isAdm = who.role === 'admin';
     const title = String(b.title || '').slice(0, 120), body = String(b.body || '').slice(0, 240);
@@ -160,9 +263,24 @@ const server = http.createServer((req, res) => {
     if (req.method === 'OPTIONS') { const { h } = corsHeaders(req); res.writeHead(204, h); return res.end(); }
     if (req.method === 'POST') return handleNotify(req, res);
   }
+  const cm = /^\/clip\/([a-f0-9]{16})\.mp4$/.exec(path);
+  if (cm) {                                                          // تنزيل مقطع إعادة (رابط غير قابل للتخمين، يُحذف بعد ساعات)
+    const { h, ok } = corsHeaders(req); h['access-control-allow-methods'] = 'GET, OPTIONS';
+    if (req.method === 'OPTIONS') { res.writeHead(204, h); return res.end(); }
+    const fp = clipPath(cm[1]);
+    if ((!ok && req.headers.origin) || !fp || !fs.existsSync(fp)) { res.writeHead(404, h); return res.end(); }
+    const size = fs.statSync(fp).size, rg = /^bytes=(\d*)-(\d*)$/.exec(req.headers.range || '');
+    let s = 0, e = size - 1, code = 200;
+    if (rg && (rg[1] || rg[2])) { if (rg[1]) { s = +rg[1]; e = rg[2] ? Math.min(+rg[2], size - 1) : size - 1; } else { s = Math.max(0, size - +rg[2]); } code = 206; }
+    if (s > e || s >= size) { res.writeHead(416, { ...h, 'content-range': 'bytes */' + size }); return res.end(); }
+    const hd = { ...h, 'content-type': 'video/mp4', 'accept-ranges': 'bytes', 'content-length': e - s + 1, 'cache-control': 'private, max-age=3600', 'access-control-expose-headers': 'content-length' };
+    if (code === 206) hd['content-range'] = 'bytes ' + s + '-' + e + '/' + size;
+    res.writeHead(code, hd);
+    return req.method === 'HEAD' ? res.end() : fs.createReadStream(fp, { start: s, end: e }).pipe(res);
+  }
   if (path === '/diag') {
     res.writeHead(200, { 'content-type': 'application/json; charset=utf-8', 'access-control-allow-origin': '*' });
-    return res.end(JSON.stringify({ ...diag, push: !!fcm }, null, 1));
+    return res.end(JSON.stringify({ ...diag, push: !!fcm, replay: { pre: CLIP_PRE, post: CLIP_POST } }, null, 1));
   }
   if (path === '/healthz' || path === '/') {
     res.writeHead(200, { 'content-type': 'text/plain; charset=utf-8', 'access-control-allow-origin': '*' });
@@ -286,11 +404,12 @@ wss.on('connection', (ws, req) => {
   const origin = req.headers.origin || '';
   if (ORIGINS.length && !ORIGINS.includes(origin)) { ws.close(1008, 'origin'); return; }
   const send = o => { try { ws.readyState === 1 && ws.send(JSON.stringify(o)); } catch (e) {} };
-  let ff = null, uid = null, started = false, timer = null, beat = null, rx = 0, st = { frames: 0, fps: 0, kbps: 0 }, statT = null, secret = '', tunnel = null;
+  let ff = null, ring = null, uid = null, started = false, timer = null, beat = null, rx = 0, st = { frames: 0, fps: 0, kbps: 0 }, statT = null, secret = '', tunnel = null;
   const stop = () => {
     clearTimeout(timer); clearInterval(beat); clearInterval(statT);
     if (tunnel) { try { tunnel.close(); } catch (e) {} tunnel = null; }
     if (uid && active.get(uid) === stop) active.delete(uid);
+    if (ring) { try { ring.close(); } catch (e) {} ring = null; }
     if (ff) { try { ff.stdin.end(); } catch (e) {} const p = ff; ff = null; setTimeout(() => { try { p.kill('SIGKILL'); } catch (e) {} }, 4000); }
   };
   beat = setInterval(() => { try { ws.ping(); } catch (e) {} }, 20000);
@@ -299,9 +418,20 @@ wss.on('connection', (ws, req) => {
     if (isBinary) {
       if (!ff) return;
       if (ff.stdin.writableLength > MAX_BACKLOG) { send({ type: 'error', msg: 'الشبكة بطيئة جداً، توقف البث' }); stop(); ws.close(); return; }
-      rx += data.length; ff.stdin.write(data); return;
+      rx += data.length; ff.stdin.write(data); if (ring) ring.feed(data); return;
     }
-    if (started) return;
+    if (started) {                                                // رسائل تحكّم بعد بدء البث: وسم هدف لقصّ إعادته
+      try {
+        const c = JSON.parse(data.toString());
+        if (c && c.type === 'mark') {
+          const gid = String(c.gid || '').slice(0, 40);
+          if (ring && ring.alive) ring.mark(c.ago).then(buildClip).then(r => send({ type: 'clip', gid, id: r.id, size: r.size, pre: CLIP_PRE, post: CLIP_POST }))
+            .catch(e => send({ type: 'clip', gid, error: String(e.message || e).slice(0, 120) }));
+          else send({ type: 'clip', gid, error: 'الإعادات غير متاحة: تتطلب أن يرسل الجهاز فيديو H.264' });
+        }
+      } catch (e) {}
+      return;
+    }
     started = true;
     try {
       const m = JSON.parse(data.toString());
@@ -344,7 +474,8 @@ wss.on('connection', (ws, req) => {
         stop(); try { ws.close(); } catch (e) {}
       });
       timer = setTimeout(() => { send({ type: 'ended', msg: 'بلغ البث الحد الأقصى للمدة' }); stop(); ws.close(); }, MAX_HOURS * 3600 * 1000);
-      send({ type: 'ready', mode: FORCE_TRANSCODE || !/h264|avc|mp4/i.test(m.mime || '') ? 'transcode' : 'copy' });
+      if (/h264|avc|mp4/i.test(m.mime || '')) { try { ring = createRing(); } catch (e) { ring = null; } }
+      send({ type: 'ready', mode: FORCE_TRANSCODE || !/h264|avc|mp4/i.test(m.mime || '') ? 'transcode' : 'copy', replay: !!ring, pre: CLIP_PRE, post: CLIP_POST });
     } catch (e) { send({ type: 'error', msg: e.message || 'خطأ' }); stop(); try { ws.close(); } catch (x) {} }
   });
   ws.on('close', stop);
