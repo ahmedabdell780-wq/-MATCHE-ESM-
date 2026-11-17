@@ -3508,7 +3508,7 @@ document.addEventListener('click',async e=>{
  else if(b.dataset.c){cat=b.dataset.c;roundAuto=true;round=curRound();up=0;draw()}
  else if(b.dataset.cur){roundAuto=true;round=curRound();draw()}
  else if(b.dataset.r){roundAuto=false;round=+b.dataset.r;draw()}
- else if(b.dataset.t){tab=b.dataset.t;if(tab==='m'){roundAuto=true;round=curRound()}document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-pressed',x===b));if(tab==='a'&&me&&me.role==='admin'){/* clear or reduce badge */ const p=U.filter(u=>u.status==='pending').length; updateAppBadge(p); } draw()}
+ else if(b.dataset.t){tab=b.dataset.t;if(tab==='m'||tab==='r'){roundAuto=true;round=curRound()}document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-pressed',x===b));if(tab==='a'&&me&&me.role==='admin'){/* clear or reduce badge */ const p=U.filter(u=>u.status==='pending').length; updateAppBadge(p); } draw()}
  else if(b.dataset.lu){const[r,h,a]=b.dataset.lu.split('-').map(Number);OLD.load(S);OLD.state({cat,round:r,rosters:RO,team:me?(me.role==='admin'?5:me.teamId):5});OLD.lineup(r,h,a)}
  else if(b.dataset.lp)openLp(b.dataset.lp)
  else if(b.dataset.mv){const[r,h,a]=b.dataset.mv.split('-').map(Number);OLD.load(S);OLD.state({cat,rosters:RO});openVid(r,h,a)}
@@ -5993,16 +5993,20 @@ let roundAuto=true;const SU={};
    وتبقى معروضة 24 ساعة بعد آخر تعديل، ثم تظهر الجولة التي تليها مباشرة */
 function curRound(c){
  c=c||cat;
- for(let r=1;r<=22;r++){
-  let last=0,all=true;
-  for(const[h,a]of pairs(r).m){
+ /* حالة كل جولة: هل حُسمت كل لقاءاتها (نتيجة أو معفاة أو مؤجلة) وآخر وقت تعديل فيها */
+ const st=r=>{let last=0;for(const[h,a]of pairs(r).m){
    const k=K(c,r,h,a),v=S[k],done=!!v&&((v.sh!==undefined&&v.sh!==''&&v.sh!=null)||v.pp||v.ex);
-   if(!done){all=false;break}
-   last=Math.max(last,SU[k]||0)
-  }
-  if(!all||Date.now()-last<24*36e5)return r
- }
- return 22
+   if(!done)return{all:false,last:0};
+   last=Math.max(last,SU[k]||0)}
+  return{all:true,last}};
+ /* F = أول جولة لم تُحسم بعد. الجولات السابقة لها كلها محسومة */
+ let F=0;
+ for(let r=1;r<=22;r++){if(!st(r).all){F=r;break}}
+ if(!F)return 22;                       // كل الجولات انتهت
+ if(F>1){                               // الجولة السابقة تبقى ظاهرة 24 ساعة بعد آخر تعديل فيها
+  const p=st(F-1);
+  if(p.all&&Date.now()-p.last<24*36e5)return F-1}
+ return F
 }
 setInterval(()=>{if(roundAuto){const r=curRound();if(r!==round){round=r;if(tab==='m'||tab==='r')draw()}}},5*60*1000);
 
