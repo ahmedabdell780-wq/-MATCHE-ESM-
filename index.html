@@ -2818,29 +2818,59 @@ function openMatchTimeline(k){
   dlg.showModal();
 }
 
-/* ===== 🖼️ بوستر حصيلة الجولة الشامل (U15·U17·U20) — تصميم جديد ===== */
-async function exportAllCatsRoundRecap(r){
-  toast('⏳ جارٍ تجهيز بوستر حصيلة الجولة…');
+/* ===== 🖼️ بوستر حصيلة الجولة الشامل (U15·U17·U20) — خلفيات متعددة ===== */
+const RECAP_BASE={
+  bg:['#071b11','#0b2a1b','#04110a'],stripe:'rgba(255,255,255,.018)',line:'rgba(255,255,255,.05)',
+  ink:'#ffffff',sub:'#86efac',soft:'#d9e8de',muted:'#9fb5a8',win:'#f2b632',acc:'#f2b632',accInk:'#1a1203',
+  card:'rgba(8,32,21,.82)',cardLn:'rgba(255,255,255,.09)',plate:'rgba(255,255,255,.08)',plateLn:'rgba(255,255,255,.16)',
+  tOkF:'rgba(34,197,94,.13)',tOkS:'rgba(34,197,94,.6)',okTxt:'#86efac',
+  tWarnF:'rgba(251,191,36,.08)',tWarnS:'rgba(251,191,36,.4)',tPendF:'rgba(255,255,255,.035)',tPendS:'rgba(255,255,255,.18)',
+  lose:'#cbd5e1',dim:'rgba(255,255,255,.28)',dash:'rgba(255,255,255,.45)',divider:'rgba(255,255,255,.08)',
+  sumBox:'rgba(0,0,0,.35)',sumLn:'rgba(242,182,50,.4)',site:'#4ade80',postp:'#fb923c'
+};
+const RECAP_THEMES={
+  green:Object.assign({},RECAP_BASE,{n:'ملعب أخضر'}),
+  navy:Object.assign({},RECAP_BASE,{n:'ليل أزرق',bg:['#050b1d','#0b1a3d','#030814'],card:'rgba(10,24,56,.82)',sub:'#93c5fd',soft:'#dbe6fb',muted:'#9fb0cf',tOkF:'rgba(56,189,248,.13)',tOkS:'rgba(56,189,248,.6)',okTxt:'#7dd3fc',site:'#7dd3fc'}),
+  maroon:Object.assign({},RECAP_BASE,{n:'ملكي أحمر',bg:['#240910','#431220','#160509'],card:'rgba(52,12,26,.82)',sub:'#fca5a5',soft:'#fde2e2',muted:'#cfa7ad',tOkF:'rgba(251,113,133,.14)',tOkS:'rgba(251,113,133,.6)',okTxt:'#fecdd3',site:'#fda4af',win:'#fbbf24',acc:'#fbbf24'}),
+  black:Object.assign({},RECAP_BASE,{n:'أسود وذهبي',bg:['#050505','#16120a','#000000'],card:'rgba(26,21,10,.86)',sub:'#fcd34d',soft:'#f3ead2',muted:'#b8ad94',tOkF:'rgba(242,182,50,.12)',tOkS:'rgba(242,182,50,.55)',okTxt:'#fcd34d',site:'#fcd34d'}),
+  purple:Object.assign({},RECAP_BASE,{n:'بنفسجي',bg:['#150a2e','#2b1458','#0d0620'],card:'rgba(36,16,74,.82)',sub:'#d8b4fe',soft:'#eadcff',muted:'#b5a8d6',tOkF:'rgba(167,139,250,.14)',tOkS:'rgba(167,139,250,.6)',okTxt:'#ddd6fe',site:'#c4b5fd'}),
+  light:Object.assign({},RECAP_BASE,{n:'أبيض نظيف',bg:['#f7fbf8','#e8f3ec','#dcebe1'],stripe:'rgba(15,107,58,.035)',line:'rgba(15,107,58,.10)',
+    ink:'#0d2219',sub:'#12854a',soft:'#2d4a3b',muted:'#587066',win:'#b45309',acc:'#f2b632',accInk:'#2a1a00',
+    card:'rgba(255,255,255,.92)',cardLn:'rgba(15,107,58,.18)',plate:'rgba(15,107,58,.06)',plateLn:'rgba(15,107,58,.2)',
+    tOkF:'rgba(18,133,74,.10)',tOkS:'rgba(18,133,74,.55)',okTxt:'#12854a',tWarnF:'rgba(217,142,4,.10)',tWarnS:'rgba(217,142,4,.5)',
+    tPendF:'rgba(13,34,25,.03)',tPendS:'rgba(13,34,25,.22)',lose:'#64748b',dim:'rgba(13,34,25,.3)',dash:'rgba(13,34,25,.45)',divider:'rgba(13,34,25,.1)',
+    sumBox:'rgba(255,255,255,.88)',sumLn:'rgba(180,83,9,.45)',site:'#12854a',postp:'#c2410c'}),
+  custom:Object.assign({},RECAP_BASE,{n:'صورتي',card:'rgba(6,20,13,.80)'})
+};
+
+async function buildRecapCanvas(r,tid,bgImg){
   try{await document.fonts.load('900 40px Tajawal');await document.fonts.load('700 20px Tajawal')}catch(e){}
+  const P=RECAP_THEMES[tid]||RECAP_THEMES.green;
   const p=pairs(r), n=p.m.length, CT=['U15','U17','U20'];
   const W=1080, HEAD=300, ROW=252, FOOT=p.bye?190:110, H=HEAD+n*ROW+FOOT;
   const [cv,c]=canvas0(W,H);
-  const GOLD='#f2b632', GREEN='#22c55e', MUTED='#9fb5a8';
   const logoOf=id=>imgOf(LG[id]||(OLD.DEF&&OLD.DEF[id]));
   const fmtD=d=>{if(!d)return'';const q=d.split('-');return q.length===3?q[2]+'/'+q[1]:d};
   const has=v=>!!v&&v.sh!==undefined&&v.sh!==''&&v.sh!=null&&!v.ex&&!v.pp;
 
-  // الإحصاءات العامة للجولة
   let played=0,goals=0;
   p.m.forEach(([h,a])=>CT.forEach(ct=>{const v=S[K(ct,r,h,a)];if(has(v)){played++;goals+=(+v.sh||0)+(+v.sa||0)}}));
   const total=n*CT.length;
 
-  // الخلفية: أرضية ملعب بخطوط عشب باهتة
-  const bg=c.createLinearGradient(0,0,0,H);
-  bg.addColorStop(0,'#071b11');bg.addColorStop(.55,'#0b2a1b');bg.addColorStop(1,'#04110a');
-  c.fillStyle=bg;c.fillRect(0,0,W,H);
-  for(let x=0;x<W;x+=120){c.fillStyle='rgba(255,255,255,.018)';c.fillRect(x,0,60,H)}
-  c.save();c.strokeStyle='rgba(255,255,255,.05)';c.lineWidth=3;
+  // الخلفية
+  if(tid==='custom'&&bgImg){
+    const k=Math.max(W/bgImg.width,H/bgImg.height);
+    c.drawImage(bgImg,(W-bgImg.width*k)/2,(H-bgImg.height*k)/2,bgImg.width*k,bgImg.height*k);
+    const ov=c.createLinearGradient(0,0,0,H);
+    ov.addColorStop(0,'rgba(3,12,8,.58)');ov.addColorStop(1,'rgba(3,12,8,.8)');
+    c.fillStyle=ov;c.fillRect(0,0,W,H);
+  }else{
+    const bg=c.createLinearGradient(0,0,0,H);
+    bg.addColorStop(0,P.bg[0]);bg.addColorStop(.55,P.bg[1]);bg.addColorStop(1,P.bg[2]);
+    c.fillStyle=bg;c.fillRect(0,0,W,H);
+    for(let x=0;x<W;x+=120){c.fillStyle=P.stripe;c.fillRect(x,0,60,H)}
+  }
+  c.save();c.strokeStyle=P.line;c.lineWidth=3;
   c.strokeRect(28,28,W-56,H-56);
   c.beginPath();c.moveTo(28,H/2);c.lineTo(W-28,H/2);c.stroke();
   c.beginPath();c.arc(W/2,H/2,150,0,Math.PI*2);c.stroke();
@@ -2850,84 +2880,165 @@ async function exportAllCatsRoundRecap(r){
   const lgIm=await imgOf(typeof LEAGUE!=='undefined'?LEAGUE:null);
   if(lgIm){const k=Math.min(150/lgIm.width,150/lgIm.height);c.drawImage(lgIm,W-60-lgIm.width*k,52+(150-lgIm.height*k)/2,lgIm.width*k,lgIm.height*k)}
   const tx0=W-235;
-  drawText(c,'رابطة ولاية تيبازة لكرة القدم',tx0,80,28,800,'#86efac','right');
-  drawText(c,`حصيلة الجولة ${r}`,tx0,150,72,900,'#ffffff','right');
-  // شارة ذهاب/إياب + الموسم
+  drawText(c,'رابطة ولاية تيبازة لكرة القدم',tx0,80,28,800,P.sub,'right');
+  drawText(c,`حصيلة الجولة ${r}`,tx0,150,72,900,P.ink,'right');
   const leg=r<=11?'ذهاب':'إياب';
   c.font='900 24px Tajawal, system-ui, sans-serif';
   const lw=c.measureText(leg).width+44;
-  c.fillStyle=GOLD;rr(c,tx0-lw,208,lw,42,21);c.fill();
-  drawText(c,leg,tx0-lw/2,229,24,900,'#1a1203','center');
-  drawText(c,'الفئات الشبانية · موسم 2026/2027',tx0-lw-18,229,24,700,'#d9e8de','right');
+  c.fillStyle=P.acc;rr(c,tx0-lw,208,lw,42,21);c.fill();
+  drawText(c,leg,tx0-lw/2,229,24,900,P.accInk,'center');
+  drawText(c,'الفئات الشبانية · موسم 2026/2027',tx0-lw-18,229,24,700,P.soft,'right');
 
-  // خلاصة الجولة (يسار الترويسة)
-  c.fillStyle='rgba(0,0,0,.35)';rr(c,56,60,210,196,26);c.fill();
-  c.strokeStyle='rgba(242,182,50,.4)';c.lineWidth=2;c.stroke();
-  drawText(c,String(goals),161,140,96,900,GOLD,'center');
-  drawText(c,goals===1?'هدف':'هدفاً',161,196,26,800,'#ffffff','center');
-  drawText(c,`${played} من ${total} لقاء`,161,232,20,700,MUTED,'center');
+  // خلاصة الجولة
+  c.fillStyle=P.sumBox;rr(c,56,60,210,196,26);c.fill();
+  c.strokeStyle=P.sumLn;c.lineWidth=2;c.stroke();
+  drawText(c,String(goals),161,140,96,900,P.win,'center');
+  drawText(c,goals===1?'هدف':'هدفاً',161,196,26,800,P.ink,'center');
+  drawText(c,`${played} من ${total} لقاء`,161,232,20,700,P.muted,'center');
 
-  // بطاقات المباريات
   const wrap2=(txt,maxW,sz)=>{c.font=`900 ${sz}px Tajawal, system-ui, sans-serif`;
     if(c.measureText(txt).width<=maxW)return[txt];
     const w=txt.split(' ');if(w.length<2)return[txt];
     const kk=Math.ceil(w.length/2);return[w.slice(0,kk).join(' '),w.slice(kk).join(' ')]};
   for(let i=0;i<n;i++){
     const [h,a]=p.m[i], y=HEAD+i*ROW, ch=ROW-22;
-    c.fillStyle='rgba(8,32,21,.82)';rr(c,40,y,W-80,ch,26);c.fill();
-    c.strokeStyle='rgba(255,255,255,.09)';c.lineWidth=1.5;c.stroke();
+    c.fillStyle=P.card;rr(c,40,y,W-80,ch,26);c.fill();
+    c.strokeStyle=P.cardLn;c.lineWidth=1.5;c.stroke();
 
-    // الفريقان: المستضيف يمين، الضيف يسار
     for(const [id,cx] of [[h,W-165],[a,165]]){
       const im=await logoOf(id);
-      c.fillStyle='rgba(255,255,255,.08)';c.beginPath();c.arc(cx,y+76,58,0,Math.PI*2);c.fill();
-      c.strokeStyle='rgba(255,255,255,.16)';c.lineWidth=2;c.stroke();
+      c.fillStyle=P.plate;c.beginPath();c.arc(cx,y+76,58,0,Math.PI*2);c.fill();
+      c.strokeStyle=P.plateLn;c.lineWidth=2;c.stroke();
       if(im){const k=Math.min(92/im.width,92/im.height);c.drawImage(im,cx-im.width*k/2,y+76-im.height*k/2,im.width*k,im.height*k)}
       const L=wrap2(T[id]||'',220,30);
-      if(L.length===1)drawText(c,L[0],cx,y+170,fit(c,L[0],220,30,900),900,'#ffffff','center');
-      else{drawText(c,L[0],cx,y+158,fit(c,L[0],220,28,900),900,'#ffffff','center');drawText(c,L[1],cx,y+190,fit(c,L[1],220,28,900),900,'#ffffff','center')}
+      if(L.length===1)drawText(c,L[0],cx,y+170,fit(c,L[0],220,30,900),900,P.ink,'center');
+      else{drawText(c,L[0],cx,y+158,fit(c,L[0],220,28,900),900,P.ink,'center');drawText(c,L[1],cx,y+190,fit(c,L[1],220,28,900),900,P.ink,'center')}
     }
 
-    // مربعات الفئات الثلاث: U20 يمين … U15 يسار
     const TW=156,TG=14,sx=W/2-(3*TW+2*TG)/2;
     CT.forEach((ct,ci)=>{
       const bx=sx+ci*(TW+TG), by=y+26, bh=170, cx=bx+TW/2;
       const v=S[K(ct,r,h,a)], ok=has(v);
       c.save();
-      if(ok){c.fillStyle='rgba(34,197,94,.13)';c.strokeStyle='rgba(34,197,94,.6)';c.lineWidth=2}
-      else if(v&&(v.ex||v.pp)){c.fillStyle='rgba(251,191,36,.08)';c.strokeStyle='rgba(251,191,36,.4)';c.lineWidth=2}
-      else{c.fillStyle='rgba(255,255,255,.035)';c.strokeStyle='rgba(255,255,255,.18)';c.lineWidth=2;c.setLineDash([8,7])}
+      if(ok){c.fillStyle=P.tOkF;c.strokeStyle=P.tOkS;c.lineWidth=2}
+      else if(v&&(v.ex||v.pp)){c.fillStyle=P.tWarnF;c.strokeStyle=P.tWarnS;c.lineWidth=2}
+      else{c.fillStyle=P.tPendF;c.strokeStyle=P.tPendS;c.lineWidth=2;c.setLineDash([8,7])}
       rr(c,bx,by,TW,bh,20);c.fill();c.stroke();c.restore();
-      drawText(c,ct,cx,by+28,24,900,ok?'#86efac':MUTED,'center');
-      c.strokeStyle='rgba(255,255,255,.08)';c.lineWidth=1;c.beginPath();c.moveTo(bx+22,by+50);c.lineTo(bx+TW-22,by+50);c.stroke();
-      if(v&&v.ex)drawText(c,'معفاة',cx,by+100,34,900,GOLD,'center');
-      else if(v&&v.pp)drawText(c,'مؤجلة',cx,by+100,34,900,'#fb923c','center');
+      drawText(c,ct,cx,by+28,24,900,ok?P.okTxt:P.muted,'center');
+      c.strokeStyle=P.divider;c.lineWidth=1;c.beginPath();c.moveTo(bx+22,by+50);c.lineTo(bx+TW-22,by+50);c.stroke();
+      if(v&&v.ex)drawText(c,'معفاة',cx,by+100,34,900,P.win,'center');
+      else if(v&&v.pp)drawText(c,'مؤجلة',cx,by+100,34,900,P.postp,'center');
       else if(ok){
         const hs=+v.sh||0, as=+v.sa||0;
-        const ch_=hs>as?GOLD:'#ffffff', ca_=as>hs?GOLD:'#ffffff';
-        drawText(c,String(hs),cx+40,by+102,60,900,hs<as?'#cbd5e1':ch_,'center');
-        drawText(c,'-',cx,by+100,34,700,'rgba(255,255,255,.45)','center');
-        drawText(c,String(as),cx-40,by+102,60,900,as<hs?'#cbd5e1':ca_,'center');
-      }else drawText(c,'—',cx,by+100,50,700,'rgba(255,255,255,.28)','center');
+        drawText(c,String(hs),cx+40,by+102,60,900,hs>as?P.win:hs<as?P.lose:P.ink,'center');
+        drawText(c,'-',cx,by+100,34,700,P.dash,'center');
+        drawText(c,String(as),cx-40,by+102,60,900,as>hs?P.win:as<hs?P.lose:P.ink,'center');
+      }else drawText(c,'—',cx,by+100,50,700,P.dim,'center');
       const cap=ok?(v.date?fmtD(v.date):''):(v&&(v.ex||v.pp)?'':(v&&v.date?fmtD(v.date)+(v.time?' · '+v.time:''):'لم تُلعب بعد'));
-      if(cap)drawText(c,cap,cx,by+146,19,700,MUTED,'center');
+      if(cap)drawText(c,cap,cx,by+146,19,700,P.muted,'center');
     });
   }
 
-  // التذييل
   if(p.bye){
-    drawText(c,'يستريح هذه الجولة',W/2,H-140,22,700,MUTED,'center');
+    drawText(c,'يستريح هذه الجولة',W/2,H-140,22,700,P.muted,'center');
     const nmW=fit(c,T[p.bye]||'',420,36,900);
     c.font=`900 ${nmW}px Tajawal, system-ui, sans-serif`;
     const tw=c.measureText(T[p.bye]||'').width;
-    drawText(c,T[p.bye]||'',W/2,H-96,nmW,900,'#ffffff','center');
+    drawText(c,T[p.bye]||'',W/2,H-96,nmW,900,P.ink,'center');
     const bim=await logoOf(p.bye);
     if(bim){const k=Math.min(54/bim.width,54/bim.height);c.drawImage(bim,W/2+tw/2+18,H-96-bim.height*k/2,bim.width*k,bim.height*k)}
   }
-  drawText(c,'الموقع الرسمي لرابطة تيبازة لكرة القدم · الفئات الصغرى',W/2,H-44,21,800,'#4ade80','center');
+  drawText(c,'الموقع الرسمي لرابطة تيبازة لكرة القدم · الفئات الصغرى',W/2,H-44,21,800,P.site,'center');
+  return cv;
+}
 
-  await OLD.saveImg(cv,`حصيلة-نتائج-الجولة-${r}-الشاملة.png`);
-  toast('✅ تم تحميل بوستر حصيلة الجولة بنجاح!');
+/* نافذة اختيار خلفية البوستر مع معاينة مباشرة */
+const RBG={tid:'green',img:null,tok:0,cv:null,r:1,dlg:null};
+try{const t=localStorage.getItem('esm-recap-bg');if(t&&RECAP_THEMES[t]&&t!=='custom')RBG.tid=t}catch(e){}
+function rbgEnsure(){
+  if(RBG.dlg)return RBG.dlg;
+  const st=document.createElement('style');
+  st.textContent=`#recapBgModal{max-width:460px;width:94%;padding:0;border:1px solid var(--ln);border-radius:24px;background:var(--card);color:var(--tx);box-shadow:0 28px 70px rgba(0,0,0,.5);overflow:hidden;font-family:inherit;text-align:right}
+#recapBgModal::backdrop{background:rgba(3,12,8,.64);backdrop-filter:blur(3px)}
+.rbg-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 4px;font-size:16px;font-weight:900}
+.rbg-x{width:34px;height:34px;border-radius:50%;border:0;background:var(--field,rgba(127,127,127,.15));color:var(--tx);font-size:20px;line-height:1;cursor:pointer}
+.rbg-sw{display:flex;gap:10px;overflow-x:auto;padding:10px 16px 12px;scrollbar-width:none}
+.rbg-sw::-webkit-scrollbar{display:none}
+.rbg-it{flex:none;width:66px;display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;padding:0;color:var(--tx);font:inherit;font-size:11.5px;font-weight:800;cursor:pointer}
+.rbg-it .s{width:54px;height:54px;border-radius:16px;border:2px solid var(--ln);display:flex;align-items:center;justify-content:center;font-size:22px;background-size:cover;background-position:center}
+.rbg-it[aria-pressed="true"] .s{border-color:#f2b632;box-shadow:0 0 0 3px rgba(242,182,50,.35)}
+.rbg-it:focus-visible .s{outline:2px solid var(--g2,#2d7a49);outline-offset:2px}
+.rbg-pv{margin:0 16px;max-height:46vh;overflow:auto;border-radius:14px;border:1px solid var(--ln);background:var(--field,rgba(127,127,127,.1));min-height:120px;display:flex;align-items:flex-start;justify-content:center}
+.rbg-pv canvas{width:100%;height:auto;display:block}
+.rbg-pv .w{align-self:center;padding:40px 0;font-size:13px;font-weight:800;color:var(--mu)}
+.rbg-act{display:flex;gap:8px;padding:12px 16px 16px}
+.rbg-act .btn{flex:1;font-weight:800}`;
+  document.head.appendChild(st);
+  const d=document.createElement('dialog');
+  d.id='recapBgModal';d.setAttribute('aria-label','خلفية البوستر');
+  d.innerHTML=`<div class="rbg-head"><span>🖼️ خلفية البوستر</span><button type="button" class="rbg-x" id="rbgClose" aria-label="إغلاق">&times;</button></div>
+<div class="rbg-sw" id="rbgSw"></div>
+<div class="rbg-pv" id="rbgPv"></div>
+<div class="rbg-act"><button type="button" class="btn" id="rbgGo">📥 تحميل البوستر</button><button type="button" class="btn alt" id="rbgCancel" style="flex:.45">إلغاء</button></div>
+<input type="file" id="rbgFile" accept="image/*" hidden>`;
+  document.body.appendChild(d);
+  RBG.dlg=d;
+  d.addEventListener('click',e=>{if(e.target===d)d.close()});
+  $('rbgClose').onclick=$('rbgCancel').onclick=()=>d.close();
+  $('rbgFile').onchange=e=>{
+    const f=e.target.files&&e.target.files[0];e.target.value='';
+    if(!f)return;
+    const u=URL.createObjectURL(f),im=new Image();
+    im.onload=()=>{RBG.img=im;RBG.tid='custom';rbgDraw();rbgRender()};
+    im.onerror=()=>{URL.revokeObjectURL(u);toast('⚠️ تعذّر قراءة هذه الصورة')};
+    im.src=u;
+  };
+  $('rbgGo').onclick=async()=>{
+    if(!RBG.cv)return;
+    const cv=RBG.cv,r=RBG.r;
+    d.close();
+    await OLD.saveImg(cv,`حصيلة-نتائج-الجولة-${r}-الشاملة.png`);
+    toast('✅ تم تحميل بوستر حصيلة الجولة بنجاح!');
+  };
+  return d;
+}
+function rbgDraw(){
+  const sw=$('rbgSw');
+  const items=Object.keys(RECAP_THEMES).filter(t=>t!=='custom').map(t=>{
+    const P=RECAP_THEMES[t];
+    return `<button type="button" class="rbg-it" data-bg="${t}" aria-pressed="${RBG.tid===t}"><span class="s" style="background:linear-gradient(160deg,${P.bg[1]},${P.bg[0]})"></span>${P.n}</button>`;
+  });
+  const cs=RBG.img?`background-image:url(${RBG.img.src})`:'background:var(--field,#eee)';
+  items.push(`<button type="button" class="rbg-it" data-bg="custom" aria-pressed="${RBG.tid==='custom'}"><span class="s" style="${cs}">${RBG.img?'':'📷'}</span>${RBG.img?'صورتي':'من جهازي'}</button>`);
+  sw.innerHTML=items.join('');
+  const cur=sw.querySelector('[aria-pressed="true"]');
+  if(cur&&cur.scrollIntoView)cur.scrollIntoView({inline:'center',block:'nearest'});
+  sw.querySelectorAll('.rbg-it').forEach(b=>b.onclick=()=>{
+    const t=b.dataset.bg;
+    if(t==='custom'&&!RBG.img){$('rbgFile').click();return}
+    if(t==='custom'&&RBG.tid==='custom'){$('rbgFile').click();return}
+    RBG.tid=t;
+    if(t!=='custom'){try{localStorage.setItem('esm-recap-bg',t)}catch(e){}}
+    rbgDraw();rbgRender();
+  });
+}
+async function rbgRender(){
+  const t=++RBG.tok, pv=$('rbgPv'), go=$('rbgGo');
+  RBG.cv=null;go.disabled=true;
+  pv.innerHTML='<span class="w">⏳ جارٍ تجهيز المعاينة…</span>';
+  try{
+    const cv=await buildRecapCanvas(RBG.r,RBG.tid,RBG.img);
+    if(t!==RBG.tok)return;
+    RBG.cv=cv;pv.replaceChildren(cv);go.disabled=false;
+  }catch(e){if(t===RBG.tok)pv.innerHTML='<span class="w">⚠️ تعذّر تجهيز البوستر</span>'}
+}
+async function exportAllCatsRoundRecap(r){
+  const d=rbgEnsure();
+  RBG.r=r;
+  if(RBG.tid==='custom'&&!RBG.img)RBG.tid='green';
+  rbgDraw();
+  if(!d.open)d.showModal();
+  rbgRender();
 }
 
 function init(){
