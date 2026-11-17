@@ -883,20 +883,53 @@ body.vw [data-lu],body.vw [data-lp],body.vw [data-ps],body.vw [data-mp],body.vw 
   </div>
 </dialog>
 
-<!-- ⏱️ نافذة تفاصيل وأحداث اللقاء المباشرة (Match Live Timeline) -->
-<dialog id="matchTimelineModal" style="max-width:440px;width:94%;padding:0;border-radius:22px;border:1.5px solid var(--ln);background:var(--card,#122419);box-shadow:0 25px 60px rgba(0,0,0,0.55);overflow:hidden;font-family:inherit;text-align:right">
-  <div style="padding:16px 18px 12px;background:linear-gradient(135deg, #0d3820, #092013);color:#fff;border-bottom:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:space-between">
-    <div style="display:flex;align-items:center;gap:10px">
-      <span style="font-size:24px">⏱️</span>
-      <div>
-        <h3 id="timelineModalTitle" style="margin:0;font-size:16px;font-weight:800;color:#fef08a">أحداث المباراة</h3>
-        <p id="timelineModalSubtitle" style="margin:2px 0 0;font-size:12px;opacity:0.85;color:#cbd5e1">الجولة · الفئة · النتيجة</p>
-      </div>
+<!-- ⏱️ نافذة أحداث اللقاء (Match Timeline) — تصميم جديد -->
+<style>
+#matchTimelineModal{max-width:480px;width:94%;padding:0;border:1px solid var(--ln);border-radius:24px;background:var(--card);color:var(--tx);box-shadow:0 28px 70px rgba(0,0,0,.5);overflow:hidden;font-family:inherit;text-align:right}
+#matchTimelineModal::backdrop{background:rgba(3,12,8,.64);backdrop-filter:blur(3px)}
+.tlm-head{padding:12px 16px 18px;background:var(--hero,linear-gradient(135deg,#0f6b3a,#0a4a28));color:#fff}
+.tlm-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.tlm-ctx{font-size:12.5px;font-weight:800;background:rgba(255,255,255,.16);padding:4px 12px;border-radius:99px}
+.tlm-x{width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.18);color:#fff;font-size:20px;line-height:1;cursor:pointer}
+.tlm-x:focus-visible{outline:2px solid #fef08a;outline-offset:2px}
+.tlm-board{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px}
+.tlm-team{display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;font-weight:900;font-size:14px;line-height:1.3;min-width:0}
+.tlm-team img{width:58px;height:58px;object-fit:contain;filter:drop-shadow(0 3px 7px rgba(0,0,0,.4))}
+.tlm-score{display:flex;align-items:center;gap:10px;direction:rtl;font-weight:900;font-size:44px;line-height:1;font-variant-numeric:tabular-nums;padding:0 6px}
+.tlm-score i{font-style:normal;opacity:.55;font-size:28px}
+.tlm-state{font-size:17px;font-weight:900;padding:7px 14px;border-radius:12px;background:rgba(255,255,255,.16)}
+.tlm-body:focus{outline:none}
+.tlm-body{padding:16px 12px 18px;max-height:58vh;overflow-y:auto;overscroll-behavior:contain}
+.tlm-tl{position:relative}
+.tlm-tl::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:2px;margin-left:-1px;background:var(--ln)}
+.tlm-row{position:relative;display:grid;grid-template-columns:1fr 58px 1fr;align-items:center;margin-bottom:10px}
+.tlm-min{grid-column:2;grid-row:1;justify-self:center;z-index:1;width:42px;height:30px;padding:0;border-radius:99px;display:flex;align-items:center;justify-content:center;background:var(--card);border:2px solid var(--c);color:var(--tx);font-size:12px;font-weight:900;font-variant-numeric:tabular-nums}
+.tlm-cell{grid-row:1;min-width:0}
+.tlm-cell.h{grid-column:1;padding-inline-end:4px}
+.tlm-cell.a{grid-column:3;padding-inline-start:4px}
+.tlm-ev{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:12px;background:var(--field,rgba(127,127,127,.08));border:1px solid var(--ln);border-inline-start:4px solid var(--c);font-size:13px;font-weight:800;line-height:1.35;overflow-wrap:anywhere}
+.tlm-ev small{font-size:11px;font-weight:900;color:var(--mu);margin-inline-start:4px}
+.tlm-ico{flex:none;font-size:17px;line-height:1}
+.tlm-crd{flex:none;width:13px;height:18px;border-radius:3px;background:var(--c);box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.tlm-sub{display:flex;flex-direction:column;gap:2px;font-size:12.5px}
+.tlm-sub .in{color:#16a34a}.tlm-sub .out{color:#dc2626}
+.tlm-sep{position:relative;z-index:1;display:flex;align-items:center;gap:10px;margin:4px 0 12px;font-size:11.5px;font-weight:900;color:var(--mu);background:var(--card)}
+.tlm-sep::before,.tlm-sep::after{content:"";flex:1;height:1px;background:var(--ln)}
+.tlm-sum{margin-top:6px;padding:10px 12px;border-radius:16px;background:var(--field,rgba(127,127,127,.08));border:1px solid var(--ln)}
+.tlm-sumrow{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;padding:5px 0;font-size:13px;font-weight:900;text-align:center}
+.tlm-sumrow span{color:var(--mu);font-size:12px}
+.tlm-empty{text-align:center;padding:34px 12px;color:var(--mu);font-size:13.5px;font-weight:700;line-height:1.7}
+.tlm-empty b{display:block;font-size:30px;margin-bottom:6px}
+</style>
+<dialog id="matchTimelineModal" aria-label="أحداث اللقاء">
+  <div class="tlm-head">
+    <div class="tlm-top">
+      <span class="tlm-ctx" id="timelineModalSubtitle"></span>
+      <button type="button" id="closeTimelineModal" class="tlm-x" aria-label="إغلاق">&times;</button>
     </div>
-    <button type="button" id="closeTimelineModal" style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px">&times;</button>
+    <div class="tlm-board" id="timelineBoard"></div>
   </div>
-  <div id="timelineContainer" style="padding:18px 16px;max-height:60vh;overflow-y:auto">
-  </div>
+  <div id="timelineContainer" class="tlm-body" tabindex="-1" autofocus></div>
 </dialog>
 
 
@@ -2733,160 +2766,168 @@ async function downloadPlayerCardImage(t, n){
   toast('✅ تم تحميل بطاقة اللاعب بنجاح!');
 }
 
-/* ===== ⏱️ تفاصيل وأحداث اللقاء المباشرة (Match Live Timeline) ===== */
+/* ===== ⏱️ أحداث اللقاء (Match Timeline) — تصميم جديد ===== */
 function openMatchTimeline(k){
   const m=/^(?:([A-Z0-9]+)\|)?(\d+)[:-](\d+)-(\d+)$/.exec(k);
   if(!m)return;
   const c=m[1]||cat, r=+m[2], h=+m[3], a=+m[4], v=S[k]||{};
-  const dlg = $('matchTimelineModal');
+  const dlg=$('matchTimelineModal');
   if(!dlg)return;
-  $('timelineModalTitle').textContent = `⏱️ أحداث لقاء: ${T[h]} ضد ${T[a]}`;
-  const scoreText = (v.sh!==undefined && v.sh!=='') ? `[ ${v.sh} - ${v.sa} ]` : 'لم تُسجل النتيجة بعد';
-  $('timelineModalSubtitle').textContent = `الجولة ${r} · ${c} · النتيجة: ${scoreText}`;
-  
-  const events = [];
-  parseG(v.gh).forEach(e => events.push({ min: +(e.m || 999), rawMin: e.m, type: 'goal', team: h, text: `⚽ هدف لصالح ${T[h]}: ${e.n}${e.k > 1 ? ` (×${e.k})` : ''}` }));
-  parseG(v.ga).forEach(e => events.push({ min: +(e.m || 999), rawMin: e.m, type: 'goal', team: a, text: `⚽ هدف لصالح ${T[a]}: ${e.n}${e.k > 1 ? ` (×${e.k})` : ''}` }));
-  parseG(v.yh).forEach(e => events.push({ min: +(e.m || 999), rawMin: e.m, type: 'yellow', team: h, text: `🟨 بطاقة صفراء (${T[h]}): ${e.n}` }));
-  parseG(v.ya).forEach(e => events.push({ min: +(e.m || 999), rawMin: e.m, type: 'yellow', team: a, text: `🟨 بطاقة صفراء (${T[a]}): ${e.n}` }));
-  parseG(v.rh).forEach(e => events.push({ min: +(e.m || 999), rawMin: e.m, type: 'red', team: h, text: `🟥 بطاقة حمراء طرد (${T[h]}): ${e.n}` }));
-  parseG(v.ra).forEach(e => events.push({ min: +(e.m || 999), rawMin: e.m, type: 'red', team: a, text: `🟥 بطاقة حمراء طرد (${T[a]}): ${e.n}` }));
-  
-  const lk = LU[k] || {};
-  [h, a].forEach(t => {
-    const subs = (lk[t] && lk[t].subs) || [];
-    subs.forEach(s => {
-      events.push({ min: +(s.minute || 999), rawMin: s.minute, type: 'sub', team: t, text: `🔄 تبديل (${T[t]}): خروج [${s.outName}] ⬅️ دخول [${s.inName}]` });
+  const has=v.sh!==undefined&&v.sh!==''&&v.sh!=null;
+  const logo=id=>LG[id]?`<img src="${LG[id]}" alt="">`:'';
+  const COL={goal:'#22c55e',yellow:'#eab308',red:'#ef4444',sub:'#3b82f6'};
+
+  $('timelineModalSubtitle').textContent=`الجولة ${r} · ${c}`;
+  const mid=v.ex?'<span class="tlm-state">معفاة</span>':v.pp?'<span class="tlm-state">مؤجلة</span>':has?`<div class="tlm-score"><b>${+v.sh}</b><i>-</i><b>${+v.sa}</b></div>`:'<span class="tlm-state">لم تُلعب بعد</span>';
+  $('timelineBoard').innerHTML=`<div class="tlm-team">${logo(h)}<span>${esc(T[h])}</span></div>${mid}<div class="tlm-team">${logo(a)}<span>${esc(T[a])}</span></div>`;
+
+  const evs=[];
+  const push=(str,team,type)=>parseG(str).forEach(e=>evs.push({t:+(e.m||999),m:e.m,type,team,n:e.n,k:e.k}));
+  push(v.gh,h,'goal');push(v.ga,a,'goal');
+  push(v.yh,h,'yellow');push(v.ya,a,'yellow');
+  push(v.rh,h,'red');push(v.ra,a,'red');
+  const lk=LU[k]||{};
+  [h,a].forEach(t=>((lk[t]&&lk[t].subs)||[]).forEach(s=>evs.push({t:+(s.minute||999),m:s.minute,type:'sub',team:t,inn:s.inName,out:s.outName})));
+  evs.sort((x,y)=>x.t-y.t);
+
+  const box=$('timelineContainer');
+  if(!evs.length){
+    box.innerHTML='<div class="tlm-empty"><b>⏱️</b>لا توجد أحداث مسجلة لهذه المباراة بعد.<br>تظهر هنا الأهداف والبطاقات والتبديلات عند إدخالها.</div>';
+  }else{
+    const phase=e=>e.t>=999?3:e.t<=45?1:2;
+    const phases=new Set(evs.map(phase));
+    const PL={1:'الشوط الأول',2:'الشوط الثاني',3:'دون توقيت'};
+    let html='',prev=0;
+    evs.forEach(e=>{
+      const ph=phase(e);
+      if(phases.size>1&&ph!==prev){html+=`<div class="tlm-sep">${PL[ph]}</div>`;prev=ph}
+      let inner;
+      if(e.type==='goal')inner=`<span class="tlm-ico">⚽</span><span>${esc(e.n)}${e.k>1?`<small>×${e.k}</small>`:''}</span>`;
+      else if(e.type==='sub')inner=`<span class="tlm-sub"><span class="in">▲ ${esc(e.inn||'')}</span><span class="out">▼ ${esc(e.out||'')}</span></span>`;
+      else inner=`<span class="tlm-crd"></span><span>${esc(e.n)}</span>`;
+      html+=`<div class="tlm-row" style="--c:${COL[e.type]}"><div class="tlm-cell ${e.team===h?'h':'a'}"><div class="tlm-ev">${inner}</div></div><div class="tlm-min">${e.m?e.m+"'":'•'}</div></div>`;
     });
-  });
-
-  events.sort((x, y) => x.min - y.min);
-
-  const container = $('timelineContainer');
-  if(!events.length){
-    container.innerHTML = '<div style="text-align:center;padding:30px 10px;color:var(--mu,#94a3b8);font-size:13px">لا توجد أحداث (أهداف أو بطاقات أو تبديلات) مسجلة لهذه المباراة بعد.</div>';
-  } else {
-    container.innerHTML = `
-      <div style="position:relative;padding-right:20px;border-right:2px dashed rgba(34,197,94,0.4);margin-right:12px;display:flex;flex-direction:column;gap:12px">
-        ${events.map(ev => {
-          const color = ev.type==='goal' ? '#4ade80' : ev.type==='yellow' ? '#facc15' : ev.type==='red' ? '#f87171' : '#60a5fa';
-          const icon = ev.type==='goal' ? '⚽' : ev.type==='yellow' ? '🟨' : ev.type==='red' ? '🟥' : '🔄';
-          const minLabel = ev.rawMin ? `${ev.rawMin}'` : '⏱️';
-          return `
-            <div style="position:relative;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:8px 12px;display:flex;align-items:center;justify-content:space-between">
-              <span style="position:absolute;right:-29px;top:50%;transform:translateY(-50%);width:16px;height:16px;border-radius:50%;background:#0f2a1c;border:2px solid ${color}"></span>
-              <div style="display:flex;align-items:center;gap:8px">
-                <span style="font-size:16px">${icon}</span>
-                <span style="font-size:12.5px;font-weight:700;color:#f1f5f9">${esc(ev.text)}</span>
-              </div>
-              <span style="background:rgba(255,255,255,0.08);color:${color};font-size:11.5px;font-weight:900;padding:2px 8px;border-radius:8px">${minLabel}</span>
-            </div>
-          `;
-        }).join('')}
-      </div>
-    `;
+    const cnt=(type,team)=>evs.filter(e=>e.type===type&&e.team===team).reduce((s,e)=>s+(e.type==='goal'?(e.k||1):1),0);
+    const SUM=[['goal','⚽ أهداف'],['yellow','🟨 إنذارات'],['red','🟥 طرد'],['sub','🔄 تبديلات']]
+      .filter(([t])=>cnt(t,h)+cnt(t,a)>0)
+      .map(([t,l])=>`<div class="tlm-sumrow"><b>${cnt(t,h)}</b><span>${l}</span><b>${cnt(t,a)}</b></div>`).join('');
+    box.innerHTML=`<div class="tlm-tl">${html}</div>${SUM?`<div class="tlm-sum">${SUM}</div>`:''}`;
   }
+  box.scrollTop=0;
+  if(!dlg.__tlmBackdrop){dlg.__tlmBackdrop=1;dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()})}
   dlg.showModal();
 }
 
-/* ===== 🖼️ بوستر حصيلة الجولة الشامل (Round Recap Poster - U15·U17·U20) ===== */
+/* ===== 🖼️ بوستر حصيلة الجولة الشامل (U15·U17·U20) — تصميم جديد ===== */
 async function exportAllCatsRoundRecap(r){
-  toast('⏳ جارٍ تجهيز بوستر حصيلة الجولة الشاملة لكافة الفئات…');
-  const W=1200, H=1920;
-  const[cv, c]=canvas0(W, H);
-  
-  const bg=c.createLinearGradient(0, 0, 0, H);
-  bg.addColorStop(0, '#061c12');
-  bg.addColorStop(0.5, '#0a2e1d');
-  bg.addColorStop(1, '#030f09');
-  c.fillStyle=bg;
-  c.fillRect(0, 0, W, H);
-  
-  c.save();
-  c.strokeStyle='rgba(255,255,255,0.035)';
-  c.lineWidth=3;
-  c.strokeRect(30, 30, W-60, H-60);
-  c.beginPath(); c.arc(W/2, H/2, 220, 0, Math.PI*2); c.stroke();
-  c.beginPath(); c.moveTo(30, H/2); c.lineTo(W-30, H/2); c.stroke();
+  toast('⏳ جارٍ تجهيز بوستر حصيلة الجولة…');
+  try{await document.fonts.load('900 40px Tajawal');await document.fonts.load('700 20px Tajawal')}catch(e){}
+  const p=pairs(r), n=p.m.length, CT=['U15','U17','U20'];
+  const W=1080, HEAD=300, ROW=252, FOOT=p.bye?190:110, H=HEAD+n*ROW+FOOT;
+  const [cv,c]=canvas0(W,H);
+  const GOLD='#f2b632', GREEN='#22c55e', MUTED='#9fb5a8';
+  const logoOf=id=>imgOf(LG[id]||(OLD.DEF&&OLD.DEF[id]));
+  const fmtD=d=>{if(!d)return'';const q=d.split('-');return q.length===3?q[2]+'/'+q[1]:d};
+  const has=v=>!!v&&v.sh!==undefined&&v.sh!==''&&v.sh!=null&&!v.ex&&!v.pp;
+
+  // الإحصاءات العامة للجولة
+  let played=0,goals=0;
+  p.m.forEach(([h,a])=>CT.forEach(ct=>{const v=S[K(ct,r,h,a)];if(has(v)){played++;goals+=(+v.sh||0)+(+v.sa||0)}}));
+  const total=n*CT.length;
+
+  // الخلفية: أرضية ملعب بخطوط عشب باهتة
+  const bg=c.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#071b11');bg.addColorStop(.55,'#0b2a1b');bg.addColorStop(1,'#04110a');
+  c.fillStyle=bg;c.fillRect(0,0,W,H);
+  for(let x=0;x<W;x+=120){c.fillStyle='rgba(255,255,255,.018)';c.fillRect(x,0,60,H)}
+  c.save();c.strokeStyle='rgba(255,255,255,.05)';c.lineWidth=3;
+  c.strokeRect(28,28,W-56,H-56);
+  c.beginPath();c.moveTo(28,H/2);c.lineTo(W-28,H/2);c.stroke();
+  c.beginPath();c.arc(W/2,H/2,150,0,Math.PI*2);c.stroke();
   c.restore();
 
-  c.fillStyle='rgba(0,0,0,0.35)';
-  rr(c, 40, 36, W-80, 160, 24);
-  c.fill();
-  c.strokeStyle='rgba(34,197,94,0.3)';
-  c.lineWidth=1.5;
-  c.stroke();
+  // الترويسة
+  const lgIm=await imgOf(typeof LEAGUE!=='undefined'?LEAGUE:null);
+  if(lgIm){const k=Math.min(150/lgIm.width,150/lgIm.height);c.drawImage(lgIm,W-60-lgIm.width*k,52+(150-lgIm.height*k)/2,lgIm.width*k,lgIm.height*k)}
+  const tx0=W-235;
+  drawText(c,'رابطة ولاية تيبازة لكرة القدم',tx0,80,28,800,'#86efac','right');
+  drawText(c,`حصيلة الجولة ${r}`,tx0,150,72,900,'#ffffff','right');
+  // شارة ذهاب/إياب + الموسم
+  const leg=r<=11?'ذهاب':'إياب';
+  c.font='900 24px Tajawal, system-ui, sans-serif';
+  const lw=c.measureText(leg).width+44;
+  c.fillStyle=GOLD;rr(c,tx0-lw,208,lw,42,21);c.fill();
+  drawText(c,leg,tx0-lw/2,229,24,900,'#1a1203','center');
+  drawText(c,'الفئات الشبانية · موسم 2026/2027',tx0-lw-18,229,24,700,'#d9e8de','right');
 
-  const lgIm = await imgOf(typeof LEAGUE!=='undefined'?LEAGUE:null);
-  if(lgIm) c.drawImage(lgIm, W-140, 52, 120, 120);
+  // خلاصة الجولة (يسار الترويسة)
+  c.fillStyle='rgba(0,0,0,.35)';rr(c,56,60,210,196,26);c.fill();
+  c.strokeStyle='rgba(242,182,50,.4)';c.lineWidth=2;c.stroke();
+  drawText(c,String(goals),161,140,96,900,GOLD,'center');
+  drawText(c,goals===1?'هدف':'هدفاً',161,196,26,800,'#ffffff','center');
+  drawText(c,`${played} من ${total} لقاء`,161,232,20,700,MUTED,'center');
 
-  drawText(c, 'رابطة ولاية تيبازة لكرة القدم', W/2, 85, 34, 900, '#4ade80', 'center');
-  drawText(c, `حصيلة نتائج الجولة ${r} · ${r<=11?'(ذهاب)':'(إياب)'}`, W/2, 138, 44, 900, '#ffffff', 'center');
-  drawText(c, 'الفئات الشبانية: U15 · U17 · U20 · موسم 2026/2027', W/2, 178, 22, 700, '#fef08a', 'center');
+  // بطاقات المباريات
+  const wrap2=(txt,maxW,sz)=>{c.font=`900 ${sz}px Tajawal, system-ui, sans-serif`;
+    if(c.measureText(txt).width<=maxW)return[txt];
+    const w=txt.split(' ');if(w.length<2)return[txt];
+    const kk=Math.ceil(w.length/2);return[w.slice(0,kk).join(' '),w.slice(kk).join(' ')]};
+  for(let i=0;i<n;i++){
+    const [h,a]=p.m[i], y=HEAD+i*ROW, ch=ROW-22;
+    c.fillStyle='rgba(8,32,21,.82)';rr(c,40,y,W-80,ch,26);c.fill();
+    c.strokeStyle='rgba(255,255,255,.09)';c.lineWidth=1.5;c.stroke();
 
-  const p = pairs(r);
-  const matches = p.m;
-  const startY = 220;
-  const rowHeight = 245;
+    // الفريقان: المستضيف يمين، الضيف يسار
+    for(const [id,cx] of [[h,W-165],[a,165]]){
+      const im=await logoOf(id);
+      c.fillStyle='rgba(255,255,255,.08)';c.beginPath();c.arc(cx,y+76,58,0,Math.PI*2);c.fill();
+      c.strokeStyle='rgba(255,255,255,.16)';c.lineWidth=2;c.stroke();
+      if(im){const k=Math.min(92/im.width,92/im.height);c.drawImage(im,cx-im.width*k/2,y+76-im.height*k/2,im.width*k,im.height*k)}
+      const L=wrap2(T[id]||'',220,30);
+      if(L.length===1)drawText(c,L[0],cx,y+170,fit(c,L[0],220,30,900),900,'#ffffff','center');
+      else{drawText(c,L[0],cx,y+158,fit(c,L[0],220,28,900),900,'#ffffff','center');drawText(c,L[1],cx,y+190,fit(c,L[1],220,28,900),900,'#ffffff','center')}
+    }
 
-  for(let i=0; i<matches.length; i++){
-    const [h, a] = matches[i];
-    const y = startY + i*rowHeight;
-    
-    c.fillStyle='rgba(10, 35, 22, 0.75)';
-    rr(c, 40, y, W-80, rowHeight - 20, 20);
-    c.fill();
-    c.strokeStyle='rgba(255,255,255,0.08)';
-    c.lineWidth=1;
-    c.stroke();
-
-    const imH = await imgOf(OLD.DEF[h]);
-    if(imH) c.drawImage(imH, W-130, y+35, 75, 75);
-    drawText(c, T[h]||'', W-150, y+75, fit(c, T[h]||'', 240, 28, 900), 900, '#ffffff', 'right');
-
-    const imA = await imgOf(OLD.DEF[a]);
-    if(imA) c.drawImage(imA, 55, y+35, 75, 75);
-    drawText(c, T[a]||'', 145, y+75, fit(c, T[a]||'', 240, 28, 900), 900, '#ffffff', 'left');
-
-    drawText(c, 'ضد', W/2, y+50, 20, 800, 'rgba(255,255,255,0.5)', 'center');
-
-    const catBoxWidth = 180;
-    const catSpacing = 20;
-    const catTotalW = 3*catBoxWidth + 2*catSpacing;
-    const catStartX = W/2 - catTotalW/2;
-
-    ['U15', 'U17', 'U20'].forEach((ct, cIdx) => {
-      const bx = catStartX + cIdx*(catBoxWidth + catSpacing);
-      const by = y + 120;
-      const k = K(ct, r, h, a);
-      const v = S[k];
-      const has = v && v.sh!==undefined && v.sh!=='' && v.sh!=null;
-      const sc = v && v.ex ? 'معفاة' : v && v.pp ? 'مؤجلة' : has ? `${v.sh} - ${v.sa}` : '-';
-
-      c.fillStyle='rgba(0,0,0,0.45)';
-      rr(c, bx, by, catBoxWidth, 75, 14);
-      c.fill();
-      c.strokeStyle = has ? '#22c55e' : 'rgba(255,255,255,0.1)';
-      c.lineWidth = 1;
-      c.stroke();
-
-      c.fillStyle = '#22c55e';
-      rr(c, bx+10, by+10, 50, 24, 6);
-      c.fill();
-      drawText(c, ct, bx+35, by+23, 14, 900, '#ffffff', 'center');
-
-      drawText(c, sc, bx+catBoxWidth - 55, by+40, 24, 900, has ? '#fef08a' : '#94a3b8', 'center');
+    // مربعات الفئات الثلاث: U20 يمين … U15 يسار
+    const TW=156,TG=14,sx=W/2-(3*TW+2*TG)/2;
+    CT.forEach((ct,ci)=>{
+      const bx=sx+ci*(TW+TG), by=y+26, bh=170, cx=bx+TW/2;
+      const v=S[K(ct,r,h,a)], ok=has(v);
+      c.save();
+      if(ok){c.fillStyle='rgba(34,197,94,.13)';c.strokeStyle='rgba(34,197,94,.6)';c.lineWidth=2}
+      else if(v&&(v.ex||v.pp)){c.fillStyle='rgba(251,191,36,.08)';c.strokeStyle='rgba(251,191,36,.4)';c.lineWidth=2}
+      else{c.fillStyle='rgba(255,255,255,.035)';c.strokeStyle='rgba(255,255,255,.18)';c.lineWidth=2;c.setLineDash([8,7])}
+      rr(c,bx,by,TW,bh,20);c.fill();c.stroke();c.restore();
+      drawText(c,ct,cx,by+28,24,900,ok?'#86efac':MUTED,'center');
+      c.strokeStyle='rgba(255,255,255,.08)';c.lineWidth=1;c.beginPath();c.moveTo(bx+22,by+50);c.lineTo(bx+TW-22,by+50);c.stroke();
+      if(v&&v.ex)drawText(c,'معفاة',cx,by+100,34,900,GOLD,'center');
+      else if(v&&v.pp)drawText(c,'مؤجلة',cx,by+100,34,900,'#fb923c','center');
+      else if(ok){
+        const hs=+v.sh||0, as=+v.sa||0;
+        const ch_=hs>as?GOLD:'#ffffff', ca_=as>hs?GOLD:'#ffffff';
+        drawText(c,String(hs),cx+40,by+102,60,900,hs<as?'#cbd5e1':ch_,'center');
+        drawText(c,'-',cx,by+100,34,700,'rgba(255,255,255,.45)','center');
+        drawText(c,String(as),cx-40,by+102,60,900,as<hs?'#cbd5e1':ca_,'center');
+      }else drawText(c,'—',cx,by+100,50,700,'rgba(255,255,255,.28)','center');
+      const cap=ok?(v.date?fmtD(v.date):''):(v&&(v.ex||v.pp)?'':(v&&v.date?fmtD(v.date)+(v.time?' · '+v.time:''):'لم تُلعب بعد'));
+      if(cap)drawText(c,cap,cx,by+146,19,700,MUTED,'center');
     });
   }
 
+  // التذييل
   if(p.bye){
-    drawText(c, `المعفى من الجولة: ${T[p.bye]}`, W/2, H-90, 22, 700, '#cbd5e1', 'center');
+    drawText(c,'يستريح هذه الجولة',W/2,H-140,22,700,MUTED,'center');
+    const nmW=fit(c,T[p.bye]||'',420,36,900);
+    c.font=`900 ${nmW}px Tajawal, system-ui, sans-serif`;
+    const tw=c.measureText(T[p.bye]||'').width;
+    drawText(c,T[p.bye]||'',W/2,H-96,nmW,900,'#ffffff','center');
+    const bim=await logoOf(p.bye);
+    if(bim){const k=Math.min(54/bim.width,54/bim.height);c.drawImage(bim,W/2+tw/2+18,H-96-bim.height*k/2,bim.width*k,bim.height*k)}
   }
+  drawText(c,'الموقع الرسمي لرابطة تيبازة لكرة القدم · الفئات الصغرى',W/2,H-44,21,800,'#4ade80','center');
 
-  drawText(c, 'الموقع الرسمي لرابطة تيبازة لكرة القدم · الفئات الصغرى', W/2, H-50, 20, 800, '#4ade80', 'center');
-
-  await OLD.saveImg(cv, `حصيلة-نتائج-الجولة-${r}-الشاملة.png`);
-  toast('✅ تم تحميل بوستر حصيلة الجولة الشاملة بنجاح!');
+  await OLD.saveImg(cv,`حصيلة-نتائج-الجولة-${r}-الشاملة.png`);
+  toast('✅ تم تحميل بوستر حصيلة الجولة بنجاح!');
 }
 
 function init(){
