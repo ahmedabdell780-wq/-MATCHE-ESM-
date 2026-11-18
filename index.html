@@ -525,7 +525,7 @@ body.vw [data-lu],body.vw [data-lp],body.vw [data-ps],body.vw [data-mp],body.vw 
 <label>🟥 طرد <span id="cn2"></span></label><input id="crh"><div class="gp" id="pkRh"></div>
 <label>🟨 إنذارات <span id="cn3"></span></label><input id="cya"><div class="gp" id="pkYa"></div>
 <label>🟥 طرد <span id="cn4"></span></label><input id="cra"><div class="gp" id="pkRa"></div></div></div>
-<div id="erBox" class="sec" hidden><label>📝 سبب طلب التعديل (يراه المشرف)</label><textarea id="erNote" rows="2" maxlength="300" placeholder="مثال: خطأ في تسجيل هدّاف الدقيقة 34"></textarea><p class="hint" style="margin:6px 0 0">🔒 تبقى النتيجة المعتمدة كما هي إلى أن يوافق المشرف العام على الطلب.</p></div>
+<div id="erBox" class="sec" hidden><label>📝 سبب طلب التعديل (يراه المشرف)</label><textarea id="erNote" rows="2" maxlength="300" placeholder="مثال: خطأ في تسجيل هدّاف الدقيقة 34"></textarea><div id="erErr" role="alert" hidden style="margin-top:8px;padding:8px 10px;border-radius:10px;background:#fdecea;color:#b91c1c;font-weight:800;font-size:13px"></div><p class="hint" style="margin:6px 0 0">🔒 تبقى النتيجة المعتمدة كما هي إلى أن يوافق المشرف العام على الطلب.</p></div>
 <p class="hint" id="msHint"></p>
 <div class="act" style="margin-top:14px"><button class="btn" id="ds" style="flex:1">حفظ</button><button class="btn alt" id="dc">إلغاء</button></div></dialog>
 <div id="rec" hidden>
@@ -2615,7 +2615,11 @@ const isVis=()=>!!(me&&(me.kind==='visitor'||me.role==='visitor'));
 const rdoc=(n,p)=>{const v=$('rk')&&$('rk').value==='visitor';return{name:n,phone:p,teamId:v?0:+$('rt').value,role:'manager',kind:v?'visitor':'club',status:'pending',perm:v?'view_only':'full',date:new Date().toISOString().slice(0,10)}};
 const mails=v=>{const b=mail(v);return /^\d{9}@esm\.local$/.test(b)?[b,...[2,3,4,5].map(n=>b.replace('@',`.${n}@`))]:(b?[b]:[])};
 let PUBRO={},ME={},MES={},meReady=false,RO={},RS={},LU={},LSS={},auth,db,me=null,S={},U=[],cat='U15',round=1,tab='m',subs=[],reg=false,cur=null,MSG=[],MSGn=0,MSGopen=null,ACT={},ACTT=0,ER={};
-function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2800)}
+let toastT=0;
+function toast(t){const e=$('toast');
+ /* النوافذ المنبثقة (dialog) تُعرض في الطبقة العليا فتغطي التوست؛ نضعه داخل النافذة المفتوحة */
+ try{const od=[...document.querySelectorAll('dialog[open]')].pop(),to=od||document.body;if(e.parentNode!==to)to.appendChild(e)}catch(x){}
+ e.textContent=t;e.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('on'),3200)}
 function say(id,t,ok){const e=$(id);e.textContent=t;e.classList.toggle('ok',!!ok)}
 function errTxt(e){const c=(e&&e.code)||'';
  if(c.includes('network'))return'📡 لا يوجد اتصال بالإنترنت، تحقق من الشبكة وأعد المحاولة';
@@ -3271,21 +3275,28 @@ function openEditReq(k){
  if(!m||!erCanReq(+m[1],+m[2],S[k],k))return toast('⛔ لا يمكنك طلب تعديل هذه المباراة');
  openEdit(k,true);cur.req=true;
  $('dt').textContent='📝 طلب تعديل: '+T[cur.h]+' ضد '+T[cur.a];
- $('erBox').hidden=false;$('erNote').value='';$('ds').textContent='📨 إرسال الطلب للمشرف'
+ $('erBox').hidden=false;$('erNote').value='';$('erErr').hidden=true;$('ds').disabled=false;$('ds').textContent='📨 إرسال الطلب للمشرف'
 }
 async function submitEditReq(d,old){
- const h=cur.h,a=cur.a,k=cur.k,note=$('erNote').value.trim();
+ const h=cur.h,a=cur.a,k=cur.k,note=$('erNote').value.trim(),btn=$('ds'),err=$('erErr');
+ const fail=(m,el)=>{err.textContent='⚠️ '+m;err.hidden=false;toast('⚠️ '+m);if(el){try{el.focus();el.scrollIntoView({block:'center',behavior:'smooth'})}catch(x){}}};
+ err.hidden=true;
  const nz=(o,f)=>f==='pp'||f==='ex'?!!o[f]:(o[f]==null?'':String(o[f]));
  const prev={},neu={};ER_F.forEach(f=>{prev[f]=nz(old,f);neu[f]=nz(d,f)});
  prev.time=old.ex?'':String(old.time||defTime(edCat,old.date)||'');
  prev.stad=old.ex?'':String(old.stad||STAD[h]||'');
- if(!erDiff(prev,neu,h,a).length)return toast('⚠️ لم تغيّر أي شيء في بيانات المباراة');
- if(note.length<3)return toast('⚠️ اكتب سبب طلب التعديل');
+ if(!erDiff(prev,neu,h,a).length)return fail('لم تغيّر أي شيء في بيانات المباراة — عدّل النتيجة أو الهدافين أو الموعد ثم أرسل الطلب');
+ if(note.length<3)return fail('اكتب سبب طلب التعديل في الخانة أدناه',$('erNote'));
+ if(!me||!db)return fail('الخدمة غير جاهزة، أعد تحميل الصفحة');
+ btn.disabled=true;btn.textContent='⏳ جارٍ الإرسال…';
  try{
   await db.collection('editRequests').doc(erId(k,me.teamId)).set({key:k,home:h,away:a,teamId:+me.teamId,by:me.uid,byName:me.name||'',status:'pending',t:Date.now(),note,old:prev,neu});
   $('dg').close();toast('📨 أُرسل طلب التعديل إلى المشرف');
-  pushNotify({kind:'message',to:'admin',teams:[+me.teamId],title:'📝 طلب تعديل من '+(T[me.teamId]||''),body:T[h]+' × '+T[a]+' — '+note.slice(0,100),url:'./index.html#edits'})
- }catch(e){console.error('editRequests',e);toast('⛔ تعذّر إرسال الطلب — تأكد من نشر قواعد Firestore الجديدة')}
+  try{pushNotify({kind:'message',to:'admin',teams:[+me.teamId],title:'📝 طلب تعديل من '+(T[me.teamId]||''),body:T[h]+' × '+T[a]+' — '+note.slice(0,100),url:'./index.html#edits'})}catch(x){}
+ }catch(e){
+  console.error('editRequests',e);
+  fail(e&&e.code==='permission-denied'?'رُفض الإرسال: صلاحية حسابك أو قواعد Firestore لا تسمح بطلبات التعديل — راجع المشرف':'تعذّر إرسال الطلب ('+((e&&e.code)||'خطأ')+') — تحقق من الاتصال وأعد المحاولة');
+ }finally{btn.disabled=false;if(cur&&cur.req)btn.textContent='📨 إرسال الطلب للمشرف'}
 }
 async function erCancel(k){
  const r=erMine(k);if(!r||r.status!=='pending')return;
@@ -3789,7 +3800,7 @@ $('sd').addEventListener('change',tmFromDate);
 $('stm').addEventListener('input',()=>{tmAuto=false});
 $('tmDef').onclick=()=>{const d=defTime(edCat,$('sd').value);if(d){$('stm').value=d;tmAuto=true}};
 function openEdit(k,asReq){
- const m=/^(?:([A-Z0-9]+)\|)?(\d+):(\d+)-(\d+)$/.exec(k);cur={k,h:+m[3],a:+m[4]};$('erBox').hidden=true;$('ds').textContent='حفظ';const v=S[k]||{};
+ const m=/^(?:([A-Z0-9]+)\|)?(\d+):(\d+)-(\d+)$/.exec(k);cur={k,h:+m[3],a:+m[4]};$('erBox').hidden=true;$('ds').disabled=false;$('ds').textContent='حفظ';const v=S[k]||{};
  if(!asReq&&!canEdit(cur.h,cur.a,v,k)){toast(pastLocked(k)?'🔒 جولة سابقة — استعمل «طلب تعديل (بموافقة المشرف)»':'⛔ عذراً، لا تملك صلاحية تعديل نتيجة هذه المباراة (خاصة بفريقك فقط).');return}
  $('dt').textContent=T[cur.h]+' ضد '+T[cur.a];$('sh').value=v.sh??'';$('sa').value=v.sa??'';$('sd').value=v.date||'';edCat=m[1]||'U15';$('stm').value=v.time||defTime(edCat,v.date)||'';tmAuto=!v.time;$('sst').value=v.stad||'';stadInit(cur.h,cur.a,v.stad||'');tmUi();
  const has0=v.sh!==undefined&&v.sh!==''&&v.sh!=null;$('ms').value=v.ex?'ex':v.pp?'pp':has0?'done':'sched';$('gh').value=v.gh||'';$('ga').value=v.ga||'';$('nh').textContent=T[cur.h];$('na2').textContent=T[cur.a];
