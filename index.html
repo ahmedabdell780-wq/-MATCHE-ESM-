@@ -6002,7 +6002,10 @@ function curRound(c){
    const k=K(c,r,h,a),v=S[k],done=!!v&&((v.sh!==undefined&&v.sh!==''&&v.sh!=null)||v.pp||v.ex);
    if(done){last=Math.max(last,SU[k]||0);continue}
    /* مباراة لها موعد محدد مرّ وقتها (انطلاق + ساعتان) ولم تُدخل نتيجتها: تُعدّ منتهية ويُحسب 24 ساعة من نهايتها */
-   const dt=v&&v.date,tm=(v&&v.time)||(dt?defTime(c,dt):'')||DT[c]||'12:00',ko=dt?Date.parse(dt+'T'+tm+':00'):NaN,end=ko+2*36e5;
+   /* موعد المباراة: المحدد فعلياً، وإلا الموعد الافتراضي من رزنامة الدوري (بداية الموسم + 7 أيام × (الجولة-1)) */
+   let dt=v&&v.date;
+   if(!dt){try{const d0=new Date(((OLD.store&&OLD.store.startAll)||'2026-10-17')+'T12:00');d0.setDate(d0.getDate()+7*(r-1));dt=d0.getFullYear()+'-'+String(d0.getMonth()+1).padStart(2,'0')+'-'+String(d0.getDate()).padStart(2,'0')}catch(e){dt=''}}
+   const tm=(v&&v.time)||(dt?defTime(c,dt):'')||({U20:'09:00',U17:'10:30',U15:'14:00'})[c]||'12:00',ko=dt?Date.parse(dt+'T'+tm+':00'):NaN,end=ko+2*36e5;
    if(!isNaN(ko)&&Date.now()>end){last=Math.max(last,end);continue}
    return{all:false,last:0}}
   return{all:true,last}};
