@@ -5996,8 +5996,11 @@ function curRound(c){
  /* حالة كل جولة: هل حُسمت كل لقاءاتها (نتيجة أو معفاة أو مؤجلة) وآخر وقت تعديل فيها */
  const st=r=>{let last=0;for(const[h,a]of pairs(r).m){
    const k=K(c,r,h,a),v=S[k],done=!!v&&((v.sh!==undefined&&v.sh!==''&&v.sh!=null)||v.pp||v.ex);
-   if(!done)return{all:false,last:0};
-   last=Math.max(last,SU[k]||0)}
+   if(done){last=Math.max(last,SU[k]||0);continue}
+   /* مباراة لها موعد محدد مرّ وقتها (انطلاق + ساعتان) ولم تُدخل نتيجتها: تُعدّ منتهية ويُحسب 24 ساعة من نهايتها */
+   const dt=v&&v.date,tm=(v&&v.time)||(dt?defTime(c,dt):'')||DT[c]||'12:00',ko=dt?Date.parse(dt+'T'+tm+':00'):NaN,end=ko+2*36e5;
+   if(!isNaN(ko)&&Date.now()>end){last=Math.max(last,end);continue}
+   return{all:false,last:0}}
   return{all:true,last}};
  /* F = أول جولة لم تُحسم بعد. الجولات السابقة لها كلها محسومة */
  let F=0;
