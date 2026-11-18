@@ -3154,11 +3154,15 @@ if(ok){setTimeout(pushResume,2500);setTimeout(syncLocalScores,3500);if(!isVis())
 }
 
 /* ---- صلاحيات ---- */
-function canEdit(h,a,v){
+/* جولة المفتاح أقدم من الجولة الحالية (لفئته) => مقفلة على مسؤول النادي ويعدّلها عبر طلب بموافقة المشرف */
+const keyRound=k=>{const m=/(\d+):\d+-\d+$/.exec(k||'');return m?+m[1]:0};
+const keyCat=k=>{const m=/^([A-Z0-9]+)\|/.exec(k||'');return m?m[1]:'U15'};
+const pastLocked=k=>!!(k&&me&&me.role!=='admin'&&keyRound(k)>0&&keyRound(k)<curRound(keyCat(k)));
+function canEdit(h,a,v,k){
  if(!me||isVis())return false;
  if(me.perm==='view_only')return false;
  if(me.role==='admin')return true;
- if((me.role==='manager'||!!me.teamId)&&(me.teamId==h||me.teamId==a))return!(v&&v.status==='confirmed');
+ if((me.role==='manager'||!!me.teamId)&&(me.teamId==h||me.teamId==a))return!(v&&v.status==='confirmed')&&!pastLocked(k);
  return false;
 }
 const canConfirm=(h,a,v)=>me&&v&&v.status!=='confirmed'&&!isVis()&&me.perm!=='view_only'&&(me.role==='admin'||((me.role==='manager'||!!me.teamId)&&me.teamId!=v.enteredBy&&v.status==='pending_confirm'));
@@ -3169,9 +3173,9 @@ const erId=(k,t)=>k.replace('|','_')+'_'+(+t);
 const erMine=k=>(me&&me.role!=='admin'&&me.teamId)?ER[erId(k,me.teamId)]:null;
 const erList=()=>Object.keys(ER).map(i=>Object.assign({id:i},ER[i],{id:i}));
 const erPend=()=>erList().filter(r=>r.status==='pending');
-const erCanReq=(h,a,v)=>!!(me&&me.role!=='admin'&&!isVis()&&me.perm!=='view_only'&&(me.teamId==h||me.teamId==a)&&v&&v.status==='confirmed');
+const erCanReq=(h,a,v,k)=>!!(me&&me.role!=='admin'&&!isVis()&&me.perm!=='view_only'&&(me.teamId==h||me.teamId==a)&&((v&&v.status==='confirmed')||pastLocked(k)));
 function erBtns(h,a,v,k){
- if(!erCanReq(h,a,v))return'';
+ if(!erCanReq(h,a,v,k))return'';
  const r=erMine(k);
  if(r&&r.status==='pending')return`<button class="btn sm red" data-erx="${k}">✖ إلغاء طلب التعديل</button>`;
  return`<button class="btn sm" data-er="${k}">📝 طلب تعديل (بموافقة المشرف)</button>`
@@ -3181,7 +3185,7 @@ function erBadge(k){
  if(me.role==='admin'){const n=erPend().filter(r=>r.key===k).length;return n?`<span class="b wt">📝 ${n>1?n+' طلبات تعديل':'طلب تعديل'} بانتظارك</span>`:''}
  const r=erMine(k);
  if(!r){const m=/(\d+):(\d+)-(\d+)$/.exec(k),v=S[k];
-  if(m&&v&&v.status==='confirmed'&&!isVis()&&(me.teamId==m[2]||me.teamId==m[3]))return'<span class="b wt">🔒 النتيجة معتمدة — للتعديل استعمل «طلب تعديل»</span>';
+  if(m&&!isVis()&&(me.teamId==m[2]||me.teamId==m[3])){if(v&&v.status==='confirmed')return'<span class="b wt">🔒 النتيجة معتمدة — للتعديل استعمل «طلب تعديل»</span>';if(pastLocked(k))return'<span class="b wt">🔒 جولة سابقة — التعديل بطلب يوافق عليه المشرف</span>'}
   return''}
  if(r.status==='pending')return'<span class="b wt">📝 طلب تعديل بانتظار المشرف</span>';
  if(r.status==='rejected'&&Date.now()-(r.decidedAt||0)<7*864e5)return`<span class="b no">❌ رُفض طلب التعديل${r.reason?': '+esc(r.reason):''}</span>`;
@@ -3200,8 +3204,8 @@ function erDiff(o,n,h,a){
 }
 function openEditReq(k){
  const m=/^(?:[A-Z0-9]+\|)?\d+:(\d+)-(\d+)$/.exec(k);
- if(!m||!erCanReq(+m[1],+m[2],S[k]))return toast('⛔ لا يمكنك طلب تعديل هذه المباراة');
- openEdit(k);cur.req=true;
+ if(!m||!erCanReq(+m[1],+m[2],S[k],k))return toast('⛔ لا يمكنك طلب تعديل هذه المباراة');
+ openEdit(k,true);cur.req=true;
  $('dt').textContent='📝 طلب تعديل: '+T[cur.h]+' ضد '+T[cur.a];
  $('erBox').hidden=false;$('erNote').value='';$('ds').textContent='📨 إرسال الطلب للمشرف'
 }
@@ -3312,7 +3316,7 @@ function fixtures(){
   const k=K(cat,round,hm,aw),v=S[k],has=v&&v.sh!==undefined&&v.sh!=='';
   h+=`<div class="card mc${isMine(hm)||isMine(aw)?' favm':''}" style="--c1:${tcs(hm)};--c2:${tcs(aw)}">${mh(hm,aw,has,v)}
   <div class="meta"><span>${mi(v)}</span>${has?stBadge(v):v&&v.pp?'<span class="b wt">⏳ مؤجلة</span>':v&&v.ex?'<span class="b no">معفاة</span>':''}${erBadge(k)}</div>
-  <div class="act"><button class="btn sm alt" data-lu="${round}-${hm}-${aw}">📋 التشكيلة والتبديلات</button>${me?`<button class="btn sm alt" data-lp="${k}">🎽 ملصق التشكيلة</button>`:''}${me&&(me.role==='admin'||hm==me.teamId||aw==me.teamId)?`<button class="btn sm alt" data-ps="${round}-${hm}-${aw}">🖨 ورقة رسمية</button>`:''}${me&&me.role==='admin'?`<button class="btn sm alt" data-rec="${k}">🎥 تصوير مباشر</button>`:''}<button class="btn sm alt" data-tl="${k}">⏱️ أحداث اللقاء</button><button class="btn sm alt" data-mp="${round}-${hm}-${aw}">📣 ملصق المباراة</button>${me?`<button class="btn sm alt" data-mv="${round}-${hm}-${aw}">🎬 فيديو المباراة</button>`:''}${v&&(v.gh||v.ga)?`<button class="btn sm alt" data-gp="${k}">⚽ ملصق / فيديو الهدف</button>`:''}${has?`<button class="btn sm alt" data-sc="r:${k}">📤 بطاقة النتيجة</button>`:''}<button class="btn sm alt" data-fp="${k}">📝 منشور</button>${canEdit(hm,aw,v)?`<button class="btn sm" data-e="${k}">✏️ ${has?'تعديل النتيجة':'الموعد / النتيجة'}</button>`:''}${erBtns(hm,aw,v,k)}${canConfirm(hm,aw,v)&&has?`${me.role==='admin'?`<button class="btn sm" data-ok="${k}">✅ اعتماد</button>`:`<button class="btn sm red" data-no="${k}">❌ اعتراض</button>`}`:''}</div></div>`});
+  <div class="act"><button class="btn sm alt" data-lu="${round}-${hm}-${aw}">📋 التشكيلة والتبديلات</button>${me?`<button class="btn sm alt" data-lp="${k}">🎽 ملصق التشكيلة</button>`:''}${me&&(me.role==='admin'||hm==me.teamId||aw==me.teamId)?`<button class="btn sm alt" data-ps="${round}-${hm}-${aw}">🖨 ورقة رسمية</button>`:''}${me&&me.role==='admin'?`<button class="btn sm alt" data-rec="${k}">🎥 تصوير مباشر</button>`:''}<button class="btn sm alt" data-tl="${k}">⏱️ أحداث اللقاء</button><button class="btn sm alt" data-mp="${round}-${hm}-${aw}">📣 ملصق المباراة</button>${me?`<button class="btn sm alt" data-mv="${round}-${hm}-${aw}">🎬 فيديو المباراة</button>`:''}${v&&(v.gh||v.ga)?`<button class="btn sm alt" data-gp="${k}">⚽ ملصق / فيديو الهدف</button>`:''}${has?`<button class="btn sm alt" data-sc="r:${k}">📤 بطاقة النتيجة</button>`:''}<button class="btn sm alt" data-fp="${k}">📝 منشور</button>${canEdit(hm,aw,v,k)?`<button class="btn sm" data-e="${k}">✏️ ${has?'تعديل النتيجة':'الموعد / النتيجة'}</button>`:''}${erBtns(hm,aw,v,k)}${canConfirm(hm,aw,v)&&has?`${me.role==='admin'?`<button class="btn sm" data-ok="${k}">✅ اعتماد</button>`:`<button class="btn sm red" data-no="${k}">❌ اعتراض</button>`}`:''}</div></div>`});
  return h+`<div class="bye">🛌 مستريحة: ${esc(T[p.bye])}</div>`
 }
 function results(){
@@ -3323,7 +3327,7 @@ function results(){
   const k=K(cat,round,hm,aw),v=S[k],has=v&&v.sh!==undefined&&v.sh!=='';
   const hasEvents = v&&(v.gh||v.ga||v.yh||v.ya||v.rh||v.ra||(v.sh!==undefined&&v.sh!==''&&v.sh!=null&&!v.ex&&!v.pp)||(ME[k]&&Object.values(ME[k]).some(a=>a&&a.length)));
   h+=`<div class="card rs mc${isMine(hm)||isMine(aw)?' favm':''}" style="--c1:${tcs(hm)};--c2:${tcs(aw)}">${mh(hm,aw,has,v)}
-  <div class="meta" style="justify-content:center;gap:8px">${has&&v.status!=='confirmed'?stBadge(v):''}${hasEvents?`<button class="btn sm alt" data-tl="${k}" style="padding:2px 10px;font-size:11.5px">⏱️ أحداث اللقاء</button>`:''}${has?`<button class="btn sm alt" data-sc="r:${k}" style="padding:2px 10px;font-size:11.5px">📤 مشاركة</button>`:''}${canEdit(hm,aw,v)?`<button class="btn sm" data-e="${k}" style="padding:2px 10px;font-size:11.5px">✏️ ${has?'تعديل النتيجة':'إدخال النتيجة'}</button>`:''}${me&&me.role==='admin'&&has&&v.status==='pending_confirm'?`<button class="btn sm" data-ok="${k}" style="padding:2px 10px;font-size:11.5px">✅ اعتماد</button>`:''}</div></div>`
+  <div class="meta" style="justify-content:center;gap:8px">${has&&v.status!=='confirmed'?stBadge(v):''}${hasEvents?`<button class="btn sm alt" data-tl="${k}" style="padding:2px 10px;font-size:11.5px">⏱️ أحداث اللقاء</button>`:''}${has?`<button class="btn sm alt" data-sc="r:${k}" style="padding:2px 10px;font-size:11.5px">📤 مشاركة</button>`:''}${canEdit(hm,aw,v,k)?`<button class="btn sm" data-e="${k}" style="padding:2px 10px;font-size:11.5px">✏️ ${has?'تعديل النتيجة':'إدخال النتيجة'}</button>`:''}${erBtns(hm,aw,v,k)}${me&&me.role==='admin'&&has&&v.status==='pending_confirm'?`<button class="btn sm" data-ok="${k}" style="padding:2px 10px;font-size:11.5px">✅ اعتماد</button>`:''}</div></div>`
  });
  return h+`<div class="bye">🛌 معفى من هذه الجولة: ${esc(T[p.bye])}</div>`
 }
@@ -3650,9 +3654,9 @@ function tmFromDate(){const d=defTime(edCat,$('sd').value);if(d&&(tmAuto||!$('st
 $('sd').addEventListener('change',tmFromDate);
 $('stm').addEventListener('input',()=>{tmAuto=false});
 $('tmDef').onclick=()=>{const d=defTime(edCat,$('sd').value);if(d){$('stm').value=d;tmAuto=true}};
-function openEdit(k){
+function openEdit(k,asReq){
  const m=/^(?:([A-Z0-9]+)\|)?(\d+):(\d+)-(\d+)$/.exec(k);cur={k,h:+m[3],a:+m[4]};$('erBox').hidden=true;$('ds').textContent='حفظ';const v=S[k]||{};
- if(!canEdit(cur.h,cur.a,v)){toast('⛔ عذراً، لا تملك صلاحية تعديل نتيجة هذه المباراة (خاصة بفريقك فقط).');return}
+ if(!asReq&&!canEdit(cur.h,cur.a,v,k)){toast(pastLocked(k)?'🔒 جولة سابقة — استعمل «طلب تعديل (بموافقة المشرف)»':'⛔ عذراً، لا تملك صلاحية تعديل نتيجة هذه المباراة (خاصة بفريقك فقط).');return}
  $('dt').textContent=T[cur.h]+' ضد '+T[cur.a];$('sh').value=v.sh??'';$('sa').value=v.sa??'';$('sd').value=v.date||'';edCat=m[1]||'U15';$('stm').value=v.time||defTime(edCat,v.date)||'';tmAuto=!v.time;$('sst').value=v.stad||'';stadInit(cur.h,cur.a,v.stad||'');tmUi();
  const has0=v.sh!==undefined&&v.sh!==''&&v.sh!=null;$('ms').value=v.ex?'ex':v.pp?'pp':has0?'done':'sched';$('gh').value=v.gh||'';$('ga').value=v.ga||'';$('nh').textContent=T[cur.h];$('na2').textContent=T[cur.a];
   ['yh','ya','rh','ra'].forEach(k=>$('c'+k).value=v[k]||'');
