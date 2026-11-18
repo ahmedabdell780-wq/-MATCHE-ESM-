@@ -5997,23 +5997,24 @@ let roundAuto=true;const SU={};
    وتبقى معروضة 24 ساعة بعد آخر تعديل، ثم تظهر الجولة التي تليها مباشرة */
 function curRound(c){
  c=c||cat;
- /* حالة كل جولة: هل حُسمت كل لقاءاتها (نتيجة أو معفاة أو مؤجلة) وآخر وقت تعديل فيها */
+ const pad=n=>String(n).padStart(2,'0'),ymd=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+ const defD=r=>{try{const d=new Date(((OLD.store&&OLD.store.startAll)||'2026-10-17')+'T12:00');d.setDate(d.getDate()+7*(r-1));return ymd(d)}catch(e){return''}};
+ /* نهاية المباراة = موعدها + ساعتان. المؤجلة/المعفاة لا يُعتدّ بتاريخها الجديد بل بموعد الجولة الأصلي */
+ const endOf=(r,v)=>{const moved=v&&(v.pp||v.ex),dt=(!moved&&v&&v.date)||defD(r);
+  const tm=(!moved&&v&&v.time)||(dt?defTime(c,dt):'')||({U20:'09:00',U17:'10:30',U15:'14:00'})[c]||'12:00';
+  const t=Date.parse(dt+'T'+tm+':00');return isNaN(t)?NaN:t+2*36e5};
+ /* حالة الجولة: all = كل لقاءاتها محسومة (نتيجة/معفاة/مؤجلة/مرّ وقتها)، last = وقت نهاية آخر لقاء فيها */
  const st=r=>{let last=0;for(const[h,a]of pairs(r).m){
-   const k=K(c,r,h,a),v=S[k],done=!!v&&((v.sh!==undefined&&v.sh!==''&&v.sh!=null)||v.pp||v.ex);
-   if(done){last=Math.max(last,SU[k]||0);continue}
-   /* مباراة لها موعد محدد مرّ وقتها (انطلاق + ساعتان) ولم تُدخل نتيجتها: تُعدّ منتهية ويُحسب 24 ساعة من نهايتها */
-   /* موعد المباراة: المحدد فعلياً، وإلا الموعد الافتراضي من رزنامة الدوري (بداية الموسم + 7 أيام × (الجولة-1)) */
-   let dt=v&&v.date;
-   if(!dt){try{const d0=new Date(((OLD.store&&OLD.store.startAll)||'2026-10-17')+'T12:00');d0.setDate(d0.getDate()+7*(r-1));dt=d0.getFullYear()+'-'+String(d0.getMonth()+1).padStart(2,'0')+'-'+String(d0.getDate()).padStart(2,'0')}catch(e){dt=''}}
-   const tm=(v&&v.time)||(dt?defTime(c,dt):'')||({U20:'09:00',U17:'10:30',U15:'14:00'})[c]||'12:00',ko=dt?Date.parse(dt+'T'+tm+':00'):NaN,end=ko+2*36e5;
-   if(!isNaN(ko)&&Date.now()>end){last=Math.max(last,end);continue}
+   const k=K(c,r,h,a),v=S[k],has=!!v&&((v.sh!==undefined&&v.sh!==''&&v.sh!=null)||v.pp||v.ex),end=endOf(r,v);
+   if(has){last=Math.max(last,isNaN(end)?(SU[k]||0):end);continue}
+   if(!isNaN(end)&&Date.now()>end){last=Math.max(last,end);continue}
    return{all:false,last:0}}
   return{all:true,last}};
- /* F = أول جولة لم تُحسم بعد. الجولات السابقة لها كلها محسومة */
+ /* F = أول جولة لم تُحسم بعد */
  let F=0;
  for(let r=1;r<=22;r++){if(!st(r).all){F=r;break}}
- if(!F)return 22;                       // كل الجولات انتهت
- if(F>1){                               // الجولة السابقة تبقى ظاهرة 24 ساعة بعد آخر تعديل فيها
+ if(!F)return 22;
+ if(F>1){                               // الجولة السابقة تبقى ظاهرة 24 ساعة بعد نهاية آخر لقاء فيها
   const p=st(F-1);
   if(p.all&&Date.now()-p.last<24*36e5)return F-1}
  return F
