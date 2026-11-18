@@ -355,6 +355,68 @@ body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed
 .adm-tab{flex:1 1 30%;border:0;background:transparent;padding:10px 8px;border-radius:9px;font-family:inherit;font-weight:800;font-size:13px;color:#475569;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .18s}
 .adm-tab.active{background:#fff;color:#0f2a1c;box-shadow:0 2px 6px rgba(0,0,0,.08)}
 .adm-tab .badge-count{background:#ef4444;color:#fff;font-size:11px;padding:1px 6px;border-radius:10px;font-weight:900}
+/* ===== لوحة الحسابات والطلبات ===== */
+.ax-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0 0 12px}
+.ax-k{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:10px 4px 9px;text-align:center;box-shadow:0 1px 3px rgba(15,42,28,.05)}
+.ax-k b{display:block;font-size:21px;font-weight:900;line-height:1.1;color:#0f2a1c}
+.ax-k small{display:block;margin-top:3px;font-size:11px;font-weight:800;color:#64748b}
+.ax-k.w b{color:#d97706}.ax-k.r b{color:#dc2626}.ax-k.g b{color:#15803d}
+.ax-tools{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:10px;margin:0 0 14px;box-shadow:0 1px 3px rgba(15,42,28,.05)}
+.ax-sw{position:relative}
+.ax-sw span{position:absolute;inset-inline-start:12px;top:50%;transform:translateY(-50%);font-size:15px;opacity:.55;pointer-events:none}
+.ax-sw input{width:100%;box-sizing:border-box;border:1.5px solid #dbe3ea;background:#f6f8fa;color:#0f2a1c;border-radius:12px;padding:11px 14px;padding-inline-start:38px;font:inherit;font-weight:700;font-size:14px;outline:0}
+.ax-sw input:focus{border-color:#16a34a;background:#fff}
+.ax-chips{display:flex;gap:6px;overflow-x:auto;margin-top:9px;padding-bottom:2px;scrollbar-width:none}
+.ax-chips::-webkit-scrollbar{display:none}
+.ax-chip{flex:0 0 auto;white-space:nowrap;border:1.5px solid #dbe3ea;background:#fff;color:#475569;border-radius:999px;padding:6px 12px;font:inherit;font-weight:800;font-size:12.5px;cursor:pointer;display:flex;gap:6px;align-items:center}
+.ax-chip i{font-style:normal;background:#eef2f6;color:#475569;border-radius:999px;padding:0 7px;font-size:11px;font-weight:900}
+.ax-chip.on{background:#0f2a1c;border-color:#0f2a1c;color:#fff}
+.ax-chip.on i{background:#ffffff26;color:#fff}
+.ax-chip.bad:not(.on){border-color:#fca5a5;color:#b91c1c}
+.ax-h{display:flex;align-items:center;gap:8px;margin:16px 2px 9px;font-size:15px;font-weight:900;color:#0f2a1c}
+.ax-h em{font-style:normal;background:#0f2a1c;color:#fff;border-radius:999px;padding:1px 9px;font-size:12px}
+.ax-h.w em{background:#d97706}
+.ac{background:#fff;border:1px solid #e2e8f0;border-inline-start:4px solid #16a34a;border-radius:16px;padding:12px;margin-bottom:10px;box-shadow:0 1px 4px rgba(15,42,28,.06)}
+.ac.pend{border-inline-start-color:#f59e0b;background:#fffdf6}
+.ac.sus{border-inline-start-color:#94a3b8;background:#f8fafc}
+.ac.bad{border-inline-start-color:#ef4444}
+.ac.vis{border-inline-start-color:#94a3b8}
+.ac-top{display:flex;align-items:center;gap:11px}
+.ac-av{flex:0 0 46px;height:46px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:900;font-size:16px;position:relative;background:var(--c,#475569)}
+.ac-av.on::after{content:"";position:absolute;inset-inline-end:-1px;bottom:-1px;width:13px;height:13px;border-radius:50%;background:#22c55e;border:2.5px solid #fff}
+.ac-main{flex:1;min-width:0}
+.ac-name{font-weight:900;font-size:15.5px;color:#0b1722;line-height:1.3;word-break:break-word;direction:auto;text-align:start}
+.ac-sub{display:flex;flex-wrap:wrap;gap:6px;margin-top:5px}
+.ac-pill{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:2px 9px;font-size:11.5px;font-weight:800;background:#eef2f6;color:#334155;text-decoration:none}
+.ac-pill.team{background:#e6f4ea;color:#14532d}
+.ac-pill.tel{background:#e8f1fe;color:#1d4ed8}
+.ac-pill.warn{background:#fff1cf;color:#7a5200}
+.ac-pill.red{background:#fde4e2;color:#b91c1c}
+.ac-pill.grey{background:#e5e9ee;color:#475569}
+.ac-st{flex:0 0 auto;align-self:flex-start}
+.ac-note{display:flex;gap:8px;align-items:flex-start;margin-top:10px;padding:8px 10px;border-radius:11px;font-size:12.5px;font-weight:800;line-height:1.55}
+.ac-note.ok{background:#e9f7ee;color:#166534}
+.ac-note.bad{background:#fdecea;color:#b91c1c}
+.ac-note.warn{background:#fff6dd;color:#7a5200}
+.ac-note.grey{background:#eef2f6;color:#475569}
+.ac-seen{margin-top:8px;font-size:11.5px;font-weight:700;color:#7b8794}
+.ac-bar{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px;align-items:stretch}
+.ac-seg{display:inline-flex;background:#eef2f6;border-radius:11px;padding:3px;gap:2px}
+.ac-seg button{border:0;background:transparent;color:#64748b;font:inherit;font-weight:800;font-size:12.5px;padding:7px 11px;border-radius:9px;cursor:pointer}
+.ac-seg button.on{background:#fff;color:#0f2a1c;box-shadow:0 1px 4px rgba(0,0,0,.12);cursor:default}
+.ac-seg button.on.full{background:#16a34a;color:#fff}
+.ac-btn{border:0;border-radius:11px;padding:9px 13px;font:inherit;font-weight:800;font-size:13px;cursor:pointer;background:#0f2a1c;color:#fff}
+.ac-btn.ok{background:#16a34a}
+.ac-btn.no{background:#fff;color:#b91c1c;border:1.5px solid #fca5a5}
+.ac-btn.ghost{background:#fff;color:#0f2a1c;border:1.5px solid #cfd8e0}
+.ac-btn.grow{flex:1}
+.ac-more{margin-inline-start:auto}
+.ac-more summary{list-style:none;cursor:pointer;border:1.5px solid #cfd8e0;border-radius:11px;padding:8px 13px;font-weight:900;color:#475569;background:#fff;user-select:none}
+.ac-more summary::-webkit-details-marker{display:none}
+.ac-more[open] summary{background:#eef2f6}
+.ac-more-p{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;justify-content:flex-end}
+.ax-empty{background:#fff;border:1.5px dashed #cbd5e1;border-radius:16px;padding:22px 12px;text-align:center;color:#64748b;font-weight:800;margin-bottom:10px}
+
 .erq .erh{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
 .erq .ern{font-size:13px;color:var(--mu);margin:6px 0}
 .erq .erd{background:var(--bg,#f8fafc);border:1px solid var(--ln);border-radius:10px;padding:4px 10px;margin:8px 0}
@@ -3378,11 +3440,80 @@ let HL={team:'',color:'#f59e0b'};try{Object.assign(HL,JSON.parse(localStorage.ge
 const hlSave=()=>{try{localStorage.setItem('esm-hl',JSON.stringify(HL))}catch(e){}};
 const HLC=['#f59e0b','#ef4444','#3b82f6','#8b5cf6','#10b981','#ec4899'];
 let adminSec = 'users';
+
+/* ===== لوحة الحسابات والطلبات (واجهة احترافية) ===== */
+let acF='all',acQ='';
+const acDig=x=>String(x||'').replace(/[٠-٩]/g,d=>d.charCodeAt(0)-1632).replace(/\D/g,'');
+function acInfo(u){
+ const club=u.role==='admin'?false:(u.kind!=='visitor');
+ const tidOk=typeof u.teamId==='number'&&u.teamId>0;
+ let lvl='ok',msg='يستطيع إدخال نتائج فريقه (المباريات غير المعتمدة والجولة الحالية)';
+ if(u.status==='pending'){lvl='pend';msg='بانتظار اعتمادك — حدِّد الفريق من «🛡️ الصلاحيات» ثم اعتمد'}
+ else if(u.status==='suspended'){lvl='sus';msg='الحساب مجمَّد ولا يستطيع الدخول'}
+ else if(u.role==='admin'){lvl='ok';msg='مشرف عام — كل الصلاحيات'}
+ else if(u.kind==='visitor'&&tidOk){lvl='bad';msg='الحساب مسجَّل «زائر» رغم تحديد فريق — افتح «الصلاحيات» واحفظ ليصير مسؤول نادٍ'}
+ else if(u.kind==='visitor'){lvl='vis';msg='زائر — مشاهدة فقط (لا فريق مرتبط)'}
+ else if(!tidOk){lvl='bad';msg='لا يستطيع التعديل: الفريق غير محدد أو صيغته خاطئة — افتح «الصلاحيات» واحفظ'}
+ else if(u.perm==='view_only'){lvl='warn';msg='مشاهدة فقط بقرارك — لا يستطيع تعديل النتائج'}
+ return{club,tidOk,lvl,msg}
+}
+function acCard(u,dupP){
+ const i=acInfo(u),A=(typeof ACT!=='undefined'&&ACT[u.id])||null,on=!!(A&&A.lastSeen>Date.now()-4*60e3);
+ const w=String(u.name||'?').trim().split(/\s+/),ini=((w[0]||'?')[0]+(w[1]?w[1][0]:'')).toUpperCase();
+ const col=u.role==='admin'?'#b7791f':(i.tidOk?`hsl(${(u.teamId*47)%360} 52% 36%)`:'#64748b');
+ const nm=esc(u.name||'بدون اسم'),ph=esc(u.phone||''),tm=i.tidOk?esc(T[u.teamId]||('فريق '+u.teamId)):'';
+ const dup=dupP[acDig(u.phone).slice(-9)]>1;
+ const stP={approved:'<span class="b ok">✅ نشط</span>',pending:'<span class="b wt">⏳ جديد</span>',suspended:'<span class="b no">⏸ مجمَّد</span>'}[u.status]||'';
+ const kindP=u.role==='admin'?'<span class="ac-pill warn">👑 مشرف</span>':(u.kind==='visitor'?'<span class="ac-pill grey">👁 زائر</span>':(tm?`<span class="ac-pill team">⚽ ${tm}</span>`:'<span class="ac-pill red">⚽ بلا فريق</span>'));
+ const note=i.lvl==='pend'?'warn':i.lvl==='sus'?'grey':i.lvl==='vis'?'grey':i.lvl;
+ const ico={ok:'✅',bad:'⚠️',warn:'👁',grey:'ℹ️'}[note]||'ℹ️';
+ const seen=A?`<div class="ac-seen">${on?'🟢 متصل الآن':'🕒 آخر ظهور: '+esc(new Date(A.lastSeen||A.lastLogin).toLocaleString('ar-DZ',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}))} · دخل ${A.logins||1} مرة</div>`:'';
+ let bar='';
+ if(u.status==='pending'){
+  bar=`<button class="ac-btn ok grow" data-u="${u.id}" data-s="approved">✅ اعتماد الحساب</button><button class="ac-btn ghost" data-uem="${u.id}">🛡️ الصلاحيات</button><button class="ac-btn no" data-u="${u.id}" data-s="suspended">رفض</button>`;
+ }else if(u.status==='suspended'){
+  bar=`<button class="ac-btn ok grow" data-u="${u.id}" data-s="approved">↩ إعادة التفعيل</button><button class="ac-btn ghost" data-uem="${u.id}">🛡️ الصلاحيات</button><button class="ac-btn no" data-ud="${u.id}" data-un="${nm}">🗑 حذف</button>`;
+ }else{
+  const seg=(i.club&&u.role!=='admin')?`<div class="ac-seg" role="group" aria-label="الصلاحية"><button ${u.perm==='view_only'?'':'class="on full"'} ${u.perm==='view_only'?`data-up="${u.id}" data-pm="full"`:''}>✏️ تعديل</button><button ${u.perm==='view_only'?'class="on"':`data-up="${u.id}" data-pm="view_only"`}>👁 مشاهدة</button></div>`:'';
+  bar=`${seg}<button class="ac-btn${i.lvl==='bad'?'':' ghost'}" data-uem="${u.id}">🛡️ ${i.lvl==='bad'?'إصلاح الصلاحيات':'الصلاحيات'}</button>
+   ${u.role==='admin'?'':`<details class="ac-more"><summary>⋯</summary><div class="ac-more-p"><button class="ac-btn no" data-u="${u.id}" data-s="suspended">⏸ تجميد</button><button class="ac-btn no" data-ud="${u.id}" data-un="${nm}">🗑 حذف</button></div></details>`}`;
+ }
+ return `<div class="ac ${i.lvl==='ok'?'':i.lvl}" data-acid="${u.id}"><div class="ac-top"><div class="ac-av${on?' on':''}" style="--c:${col}">${esc(ini)}</div><div class="ac-main"><div class="ac-name">${nm}</div><div class="ac-sub">${kindP}${ph?`<a class="ac-pill tel" href="tel:${ph}">📞 ${ph}</a>`:''}${dup?'<span class="ac-pill red">رقم مكرر</span>':''}</div></div><div class="ac-st">${stP}</div></div><div class="ac-note ${note}"><span>${ico}</span><span>${esc(i.msg)}</span></div>${seen}<div class="ac-bar">${bar}</div></div>`
+}
+function acModel(){
+ const dupP={};U.forEach(u=>{if(u.status!=='deleted'){const k=acDig(u.phone).slice(-9);if(k)dupP[k]=(dupP[k]||0)+1}});
+ const all=U.filter(u=>u.status!=='deleted').map(u=>({u,i:acInfo(u)}));
+ const q=acQ.trim().toLowerCase(),qd=acDig(q);
+ const hit=({u})=>!q||String(u.name||'').toLowerCase().includes(q)||(qd&&acDig(u.phone).includes(qd))||String(T[u.teamId]||'').toLowerCase().includes(q);
+ const fl={all:()=>true,pend:x=>x.u.status==='pending',club:x=>x.u.status==='approved'&&x.u.kind!=='visitor'&&x.u.role!=='admin',vis:x=>x.u.kind==='visitor'&&x.u.status==='approved',view:x=>x.u.status==='approved'&&x.u.kind!=='visitor'&&x.u.perm==='view_only',sus:x=>x.u.status==='suspended',bad:x=>x.i.lvl==='bad'};
+ return{all,dupP,fl,hit}
+}
+function acListHTML(){
+ const m=acModel(),f=m.fl[acF]||m.fl.all,rows=m.all.filter(x=>f(x)&&m.hit(x));
+ const pend=rows.filter(x=>x.u.status==='pending'),rest=rows.filter(x=>x.u.status!=='pending');
+ const rank=x=>(x.i.lvl==='bad'?0:1),nameOf=x=>String(T[x.u.teamId]||'~')+String(x.u.name||'');
+ rest.sort((a,b)=>rank(a)-rank(b)||nameOf(a).localeCompare(nameOf(b),'ar'));
+ const none=(t)=>`<div class="ax-empty">${t}</div>`;
+ let h='';
+ if(acF==='all'||acF==='pend')h+=`<div class="ax-h w">⏳ طلبات التسجيل الجديدة <em>${pend.length}</em></div>${pend.map(x=>acCard(x.u,m.dupP)).join('')||none('لا توجد طلبات معلَّقة 🎉')}`;
+ if(acF!=='pend')h+=`<div class="ax-h">👥 ${acF==='all'?'الحسابات':'النتائج'} <em>${rest.length}</em></div>${rest.map(x=>acCard(x.u,m.dupP)).join('')||none(acQ?'لا نتائج مطابقة للبحث':'لا توجد حسابات')}`;
+ return h
+}
+function acPanel(){
+ const m=acModel(),n=k=>m.all.filter(m.fl[k]).length;
+ const chip=(k,l,cls)=>`<button type="button" class="ax-chip${acF===k?' on':''}${cls?' '+cls:''}" data-acf="${k}">${l} <i>${n(k)}</i></button>`;
+ const kp=(l,v,c)=>`<div class="ax-k ${c||''}"><b>${v}</b><small>${l}</small></div>`;
+ return `<div class="ax-kpis">${kp('الإجمالي',m.all.length)}${kp('نشطون',m.all.filter(x=>x.u.status==='approved').length,'g')}${kp('بانتظار',n('pend'),n('pend')?'w':'')}${kp('تحتاج انتباه',n('bad'),n('bad')?'r':'')}</div>
+ <div class="ax-tools"><div class="ax-sw"><span>🔎</span><input id="acQ" type="search" inputmode="search" autocomplete="off" placeholder="ابحث بالاسم أو الهاتف أو الفريق" value="${esc(acQ)}"></div>
+ <div class="ax-chips">${chip('all','الكل')}${chip('pend','⏳ الجدد')}${chip('club','⚽ مسؤولو الأندية')}${chip('vis','👁 زوار')}${chip('view','مشاهدة فقط')}${chip('bad','⚠️ تحتاج إصلاح','bad')}${chip('sus','⏸ مجمَّدون')}</div></div>
+ <div id="acList">${acListHTML()}</div>`
+}
+document.addEventListener('input',e=>{const t=e.target;if(t&&t.id==='acQ'){acQ=t.value;const l=document.getElementById('acList');if(l)l.innerHTML=acListHTML()}});
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-acf]');if(!b)return;acF=b.dataset.acf;document.querySelectorAll('[data-acf]').forEach(x=>x.classList.toggle('on',x===b));const l=document.getElementById('acList');if(l)l.innerHTML=acListHTML()});
+
 function admin(){
  const p9=u=>String(u.phone||'').replace(/[٠-٩]/g,d=>d.charCodeAt(0)-1632).replace(/\D/g,'').slice(-9),dupP={};U.forEach(u=>{if(u.status!=='deleted'){const k=p9(u);if(k)dupP[k]=(dupP[k]||0)+1}});
  const rowDel=u=>`<div class="card u"><div><b>${esc(u.name)}</b><br><small>${u.kind==='visitor'?'👁️ زائر':esc(T[u.teamId]||'')} · ${esc(u.phone)}</small></div><div class="act" style="margin:0"><button class="btn sm" data-u="${u.id}" data-s="approved">↩ استرجاع واعتماد</button><button class="btn sm alt" data-u="${u.id}" data-s="pending">⏳ للانتظار</button><button class="btn sm red" data-uh="${u.id}" data-un="${esc(u.name)}">❌ حذف نهائي</button></div></div>`;
- const permIssue=u=>{if(u.status!=='approved'||u.role==='admin')return'';const r=[];if(u.kind==='visitor')r.push('الحساب مسجَّل «زائر»');if(u.perm==='view_only')r.push('الصلاحية «مشاهدة فقط»');if(!(typeof u.teamId==='number'&&u.teamId>0))r.push('الفريق غير محدد/صيغته خاطئة');return r.length?`<br><small style="color:#dc2626;font-weight:800">⚠️ لا يستطيع تعديل النتائج: ${r.join(' + ')} — افتح «🛡️ الصلاحيات» واحفظ</small>`:'<br><small style="color:#16a34a;font-weight:800">✅ يستطيع إدخال النتائج لمباريات فريقه (غير المعتمدة)</small>'};
- const row=u=>u.status==='deleted'?rowDel(u):`<div class="card u"><div><b>${esc(u.name)}</b>${dupP[p9(u)]>1?' <span class="b no">رقم مكرر</span>':''}<br><small>${u.kind==='visitor'?'👁️ زائر (مشاهدة فقط)':esc(T[u.teamId]||'')} · <a href="tel:${esc(u.phone)}">${esc(u.phone)}</a>${u.status==='approved'&&u.kind!=='visitor'&&u.perm==='view_only'?' · 👁 مشاهدة فقط':''}</small>${permIssue(u)}</div><div class="act" style="margin:0">${u.status!=='approved'?`<button class="btn sm" data-u="${u.id}" data-s="approved">✅ اعتماد</button>`:''}${u.status==='approved'&&u.kind!=='visitor'?`<button class="btn sm alt" data-up="${u.id}" data-pm="${u.perm==='view_only'?'full':'view_only'}">${u.perm==='view_only'?'✏️ منح التعديل':'👁 مشاهدة فقط'}</button>`:''}<button class="btn sm" data-uem="${u.id}" style="background:#0f2a1c;color:#fff" title="تعديل كافة الصلاحيات والفريق">🛡️ الصلاحيات</button>${u.status!=='suspended'?`<button class="btn sm red" data-u="${u.id}" data-s="suspended">⏸ ${u.status==='pending'?'رفض':'تجميد'}</button>`:''}<button class="btn sm alt" data-ud="${u.id}" data-un="${esc(u.name)}" aria-label="حذف الحساب">🗑 حذف</button></div></div>`;
  const pend=U.filter(u=>u.status==='pending'),oth=U.filter(u=>u.status!=='pending'&&u.status!=='deleted'),del=U.filter(u=>u.status==='deleted');
 
  const navBar = `<div class="adm-tabs">
@@ -3417,7 +3548,7 @@ function admin(){
   }
 
  // Default: users
- return navBar + `<h2>⏳ بانتظار الموافقة (${pend.length})</h2>${pend.map(row).join('')||'<div class="card" style="color:var(--mu)">لا توجد طلبات معلقة</div>'}<h2>👥 الحسابات المعتمدة (${oth.length})</h2>${oth.map(row).join('')||'<div class="card" style="color:var(--mu)">لا توجد حسابات معتمدة</div>'}`;
+ return navBar + acPanel();
 }
 
 
