@@ -2614,7 +2614,7 @@ const mail=v=>{v=String(v||'').trim().toLowerCase();if(v.includes('@'))return v;
 const isVis=()=>!!(me&&(me.kind==='visitor'||me.role==='visitor'));
 const rdoc=(n,p)=>{const v=$('rk')&&$('rk').value==='visitor';return{name:n,phone:p,teamId:v?0:+$('rt').value,role:'manager',kind:v?'visitor':'club',status:'pending',perm:v?'view_only':'full',date:new Date().toISOString().slice(0,10)}};
 const mails=v=>{const b=mail(v);return /^\d{9}@esm\.local$/.test(b)?[b,...[2,3,4,5].map(n=>b.replace('@',`.${n}@`))]:(b?[b]:[])};
-let ME={},MES={},meReady=false,RO={},RS={},LU={},LSS={},auth,db,me=null,S={},U=[],cat='U15',round=1,tab='m',subs=[],reg=false,cur=null,MSG=[],MSGn=0,MSGopen=null,ACT={},ACTT=0,ER={};
+let PUBRO={},ME={},MES={},meReady=false,RO={},RS={},LU={},LSS={},auth,db,me=null,S={},U=[],cat='U15',round=1,tab='m',subs=[],reg=false,cur=null,MSG=[],MSGn=0,MSGopen=null,ACT={},ACTT=0,ER={};
 function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2800)}
 function say(id,t,ok){const e=$(id);e.textContent=t;e.classList.toggle('ok',!!ok)}
 function errTxt(e){const c=(e&&e.code)||'';
@@ -3124,6 +3124,8 @@ function init(){
   draw();
 },()=>{$('app').hidden=false;draw();});
  listenPublic(); listenShowcase();
+ /* قوائم اللاعبين (أسماء فقط) عامة: لتعمل «🪪 بطاقة أي لاعب» للجميع حتى الزوار */
+ try{db.collection('rosters').onSnapshot(sn=>{sn.docs.forEach(d=>{const r=d.data();PUBRO[r.teamId]=PUBRO[r.teamId]||{};PUBRO[r.teamId][r.cat]=r.roster||[]})},()=>{})}catch(e){}
  /* التبديلات عامة للجميع (حتى الزوار) — التشكيلات نفسها تبقى خاصة */
  db.collection('matchEvents').onSnapshot(sn=>{
   sn.docChanges().forEach(c=>{const d=c.doc.data();
@@ -3714,6 +3716,7 @@ $('btnDownloadPlayerCard').onclick=()=>{if(curPlayerCard)downloadPlayerCardImage
 $('closeTimelineModal').onclick=()=>$('matchTimelineModal').close();
 function pCardNames(t){
   const set=new Set((typeof rosterNamesFor==='function'?rosterNamesFor(t):[])||[]);
+  ((PUBRO[t]||{})[cat]||[]).forEach(n=>{if(n)set.add(String(n).trim())});
   Object.keys(S).forEach(k=>{
     const m=/(\d+):(\d+)-(\d+)$/.exec(k); if(!m)return; const v=S[k]||{};
     [[+m[2],['gh','yh','rh']],[+m[3],['ga','ya','ra']]].forEach(([tm,ks])=>{ if(tm!=t)return; ks.forEach(f=>{try{parseG(v[f]).forEach(e=>{if(e&&e.n)set.add(e.n)})}catch(x){}}) });
@@ -5993,20 +5996,57 @@ async function scResult(k){
  return{cv,name:'نتيجة-'+T[h]+'-'+T[a]+'-'+ct+'-ج'+r+'.png',text:'📋 '+T[h]+' '+v.sh+' - '+v.sa+' '+T[a]+' · '+ct+' · الجولة '+r+'\n'+location.origin}
 }
 async function scTable(){
- if(!up)up=lastRound();const rows=tbl(cat,up),n=rows.length,rh=82,W=1080,H=436+n*rh+190;
- const[cv,c]=await scBase(W,H,'ترتيب الرابطة · '+cat,'بعد نهاية الجولة '+up+' · مجموعة وسط غرب');
+ /* بطاقة الترتيب — على طراز ملصقات الرابطات الجهوية: خلفية فاتحة، شريط عنوان أخضر، جدول بخانات بيضاء */
+ if(!up)up=lastRound();
+ const rows=tbl(cat,up),n=rows.length,W=1080,R=1000,rp=66,rbh=56,y0=468,rowsEnd=y0+n*rp,H=rowsEnd+300;
+ const[cv,c]=canvas0(W,H);
+ const GR='#2f5d3a',GR2='#3f7a4c',INK='#1f2937',OR='#f08a1c',LN='#cfd8cf';
+ const[lg0,ap0]=await Promise.all([scImg('league-logo.png').then(x=>x||scImg(typeof LEAGUE!=='undefined'?LEAGUE:'')),scImg('icon-512.png').then(x=>x||scImg('league-logo.png'))]);
  const ims=await Promise.all(rows.map(r=>scImg(scCrestSrc(r.id))));
- const hy=398;scRR(c,36,hy-34,W-72,64,18);c.fillStyle='rgba(242,182,50,.95)';c.fill();
- [['#',1008],['الفريق',900],['لعب',470],['فاز',385],['تعادل',300],['خسر',215],['نقاط',105]].forEach(([t,x],i)=>drawText(c,t,x,hy-2,28,900,'#06281a',i===1?'right':'center'));
+ /* الخلفية + خطوط مائلة في الزوايا */
+ c.fillStyle='#f4f6f4';c.fillRect(0,0,W,H);
+ const rg=c.createRadialGradient(W/2,H*.42,60,W/2,H*.42,W);rg.addColorStop(0,'rgba(255,255,255,.85)');rg.addColorStop(1,'rgba(255,255,255,0)');c.fillStyle=rg;c.fillRect(0,0,W,H);
+ const stripes=(x0,y0_,dir)=>{c.save();c.beginPath();c.rect(x0,y0_,dir*300,dir*300);c.restore();c.save();c.lineWidth=15;c.strokeStyle='#e2e8e2';for(let i=0;i<9;i++){const o=i*40;c.beginPath();c.moveTo(x0,y0_+dir*(o+10));c.lineTo(x0+dir*(o+10),y0_);c.stroke()}c.restore()};
+ stripes(0,0,1);stripes(W,H,-1);
+ /* الرأس: اسم الرابطة + الشعار */
+ drawText(c,'رابطة تيبازة لكرة القدم',W-262,86,fit(c,'رابطة تيبازة لكرة القدم',520,46,900),900,GR,'right');
+ drawText(c,'الفئات الشبانية · الموسم 2026/2027',W-262,140,28,700,'#6b7a6e','right');
+ const badge=(im,cx,cy,r,ring)=>{c.save();c.shadowColor='rgba(0,0,0,.20)';c.shadowBlur=16;c.shadowOffsetY=5;c.beginPath();c.arc(cx,cy,r,0,7);c.fillStyle='#fff';c.fill();c.restore();c.lineWidth=ring;c.strokeStyle=LN;c.beginPath();c.arc(cx,cy,r,0,7);c.stroke();if(im){const q=r*1.62,k=Math.min(q/im.width,q/im.height);c.drawImage(im,cx-im.width*k/2,cy-im.height*k/2,im.width*k,im.height*k)}};
+ badge(lg0,W-116,112,84,6);
+ /* شريط العنوان + دائرة رقم الجولة */
+ const ty=214,tH=104,bg=c.createLinearGradient(60,0,W-60,0);bg.addColorStop(0,GR2);bg.addColorStop(1,GR);
+ scRR(c,70,ty,W-140,tH,52);c.fillStyle=bg;c.fill();
+ const ttl='ترتيب '+cat+' - وسط غرب';drawText(c,ttl,W/2+70,ty+tH/2+2,fit(c,ttl,600,62,900),900,'#fff');
+ c.beginPath();c.arc(160,ty+tH/2,40,0,7);c.fillStyle='#dfe7df';c.fill();c.lineWidth=4;c.strokeStyle='rgba(255,255,255,.55)';c.stroke();
+ drawText(c,String(up).padStart(2,'0'),160,ty+tH/2+2,46,900,GR);
+ drawText(c,'بعد نهاية الجولة '+String(up).padStart(2,'0'),W/2,ty+tH+36,36,900,GR);
+ /* رأس الجدول */
+ const COL={p:440,w:350,d:260,l:170,pts:80},hy=418,hh=58;
+ scRR(c,36,hy-hh/2,R-36,hh,16);c.fillStyle=GR;c.fill();
+ drawText(c,'#',960,hy+1,32,900,'#fff');drawText(c,'الفريق',672,hy+1,34,900,'#fff');
+ [['لعب',COL.p],['فاز',COL.w],['تعادل',COL.d],['خسر',COL.l],['النقاط',COL.pts]].forEach(([t,x])=>drawText(c,t,x,hy+1,30,900,'#fff'));
+ /* الصفوف */
+ const cell=(x,y,w,txt,col,sz)=>{scRR(c,x-w/2,y-rbh/2,w,rbh,12);c.fillStyle='#fff';c.fill();c.lineWidth=2;c.strokeStyle=LN;c.stroke();drawText(c,String(txt),x,y+1,sz||36,900,col||INK)};
+ const arrow=(x,y,up_)=>{c.save();c.fillStyle=up_?'#22a55a':'#e23b3b';c.beginPath();if(up_){c.moveTo(x,y-14);c.lineTo(x+13,y);c.lineTo(x+5,y);c.lineTo(x+5,y+14);c.lineTo(x-5,y+14);c.lineTo(x-5,y);c.lineTo(x-13,y)}else{c.moveTo(x,y+14);c.lineTo(x+13,y);c.lineTo(x+5,y);c.lineTo(x+5,y-14);c.lineTo(x-5,y-14);c.lineTo(x-5,y);c.lineTo(x-13,y)}c.closePath();c.fill();c.restore()};
  rows.forEach((r,i)=>{
-  const y=hy+62+i*rh;scRR(c,36,y-34,W-72,rh-10,16);c.fillStyle=i%2?'rgba(255,255,255,.05)':'rgba(255,255,255,.10)';c.fill();
-  const col=i==0?'#f2b632':i<3?'#4ade80':i>=n-3?'#f87171':'#ffffff';
-  c.beginPath();c.arc(1008,y,22,0,7);c.fillStyle=col;c.fill();drawText(c,String(i+1),1008,y+1,26,900,'#06281a');
-  scCrest(c,ims[i],944,y,26);drawText(c,T[r.id],900-44,y,fit(c,T[r.id],370,34,800),800,'#fff','right');
-  [[r.p,470],[r.w,385],[r.d,300],[r.l,215]].forEach(([t,x])=>drawText(c,String(t),x,y,32,700,'rgba(255,255,255,.92)'));
-  scRR(c,60,y-24,92,48,24);c.fillStyle='#f2b632';c.fill();drawText(c,String(r.pts),106,y+1,34,900,'#06281a')
+  const y=y0+i*rp+rp/2;
+  scRR(c,R-80,y-rbh/2,80,rbh,12);c.fillStyle=GR;c.fill();drawText(c,String(i+1),R-40,y+1,34,900,'#fff');
+  /* شعار الفريق + اسمه */
+  const im=ims[i];if(im){const q=50,k=Math.min(q/im.width,q/im.height);c.drawImage(im,886-im.width*k/2,y-im.height*k/2,im.width*k,im.height*k)}
+  scRR(c,488,y-rbh/2,368,rbh,12);c.fillStyle='#fff';c.fill();c.lineWidth=2;c.strokeStyle=LN;c.stroke();
+  drawText(c,T[r.id],842,y+1,fit(c,T[r.id],330,36,900),900,INK,'right');
+  [[r.p,COL.p],[r.w,COL.w],[r.d,COL.d],[r.l,COL.l]].forEach(([t,x])=>cell(x,y,84,t));
+  cell(COL.pts,y,84,r.pts,OR,38);
+  if(i===0)arrow(R+34,y,true);else if(i>=n-3)arrow(R+34,y,false)
  });
- scFoot(c,W,H,'الترتيب بالنقاط ثم فارق الأهداف · النتائج المعتمدة فقط');
+ /* التذييل */
+ drawText(c,'الموسم الرياضي : 2026 - 2027',R,rowsEnd+46,fit(c,'الموسم الرياضي : 2026 - 2027',520,42,900),900,GR,'right');
+ const by=rowsEnd+92,bh=88;scRR(c,170,by,W-170-80,bh,44);c.fillStyle=bg;c.fill();
+ const msg='حمّل التطبيق وتابع النتائج والترتيب وآخر المستجدات';
+ drawText(c,msg,(170+W-80)/2+48,by+bh/2+1,fit(c,msg,660,34,800),800,'#fff');
+ badge(ap0,128,by+bh/2,70,6);
+ c.strokeStyle=LN;c.lineWidth=2;c.beginPath();c.moveTo(60,by+bh+34);c.lineTo(W-60,by+bh+34);c.stroke();
+ drawText(c,'🌐 '+location.host,W/2,by+bh+74,28,800,'#4b5b4f');
  return{cv,name:'ترتيب-'+cat+'-ج'+up+'.png',text:'🏆 ترتيب الرابطة '+cat+' بعد الجولة '+up+'\n'+location.origin}
 }
 async function scScorers(){
