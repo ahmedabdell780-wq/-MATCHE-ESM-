@@ -40,6 +40,30 @@ header .hbar #out{font-size:13px;background:rgba(200,32,47,.55)}
 @keyframes hFloat{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-3px) rotate(1.5deg) scale(1.03)}}
 @keyframes hGlow{0%,100%{opacity:.55;transform:scale(.94)}50%{opacity:1;transform:scale(1.08)}}
 @media (prefers-reduced-motion:reduce){.hlogo,.hlogo .hring{animation:none}}
+/* ===== هيدر مضغوط + قائمة ☰ ===== */
+header{gap:0;padding:calc(6px + var(--sa)) 12px 6px;overflow:visible}
+header.menu-open{z-index:50}
+.hbrand{gap:10px}
+.hlogo,header .hlogo img{width:52px;height:52px}
+header .htxt h1{font-size:17px;line-height:1.2}
+.htxt .hsub{display:flex;flex-wrap:wrap;align-items:center;gap:3px 6px;margin-top:2px}
+header .htxt small{margin-top:0;padding:1px 7px;font-size:10.5px;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:374px){header .htxt small{font-size:9.5px;padding:1px 6px}}
+.hsub #who{font-size:11.5px!important;font-weight:800;padding:1px 9px;border-radius:999px;background:rgba(255,255,255,.18);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.hsub #who:empty{display:none}
+.hctl{display:flex;align-items:center;gap:6px;flex:0 0 auto}
+header .hctl>.btn,header .hmenu>.btn{position:relative;height:36px;min-width:36px;padding:0 10px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;font-size:18px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.22)}
+header .hctl>#out{font-size:13px;background:rgba(200,32,47,.55)}
+header .hctl>#out[hidden]{display:none}
+.hmenu{position:relative}
+#menuBadge{top:-5px;left:-5px}
+.hpanel{position:absolute;top:calc(100% + 8px);inset-inline-end:0;min-width:210px;padding:6px;border-radius:14px;background:var(--card,#10241a);border:1px solid var(--ln,#23382b);box-shadow:0 12px 32px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:2px;z-index:60}
+.hpanel[hidden]{display:none}
+header .hpanel .btn{position:relative;width:100%;height:44px;display:flex;align-items:center;justify-content:flex-start;gap:10px;padding:0 12px;font-size:14.5px;font-weight:700;background:transparent;border:0;border-radius:10px;color:var(--tx,#eaf3ec);text-align:start}
+header .hpanel .btn:hover,header .hpanel .btn:active{background:rgba(255,255,255,.1)}
+header .hpanel .btn[hidden]{display:none}
+header .hpanel .mi{font-size:18px;width:24px;text-align:center}
+header .hpanel .mbadge{position:static;margin-inline-start:auto;animation:none}
 main{max-width:640px;margin:0 auto;padding:12px 12px calc(84px + var(--sb))}
 .card{background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:12px;margin-bottom:10px}
 .chips{display:flex;gap:8px;margin-bottom:10px}
@@ -489,7 +513,7 @@ body.vw [data-lu],body.vw [data-lp],body.vw [data-ps],body.vw [data-mp],body.vw 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js"></script>
 </head>
 <body>
-<header><div class="hbrand"><span class="hlogo"><i class="hring"></i><img src="league-logo.png" alt="شعار رابطة تيبازة"></span><div class="htxt"><h1>مباريات رابطة تيبازة</h1><small>الفئات الشبانية 2026/2027 · وسط غرب</small></div></div><div class="hbar"><span id="who" style="font-size:12px"></span><button class="btn" id="msgBtn" aria-label="الرسائل" hidden>💬<span class="mbadge" id="msgBadge" hidden></span></button><button class="btn" id="ccBtn" aria-label="مراسلة الأندية" hidden>🤝<span class="mbadge" id="ccBadge" hidden></span></button><button class="btn" id="ctBtn" aria-label="تواصل معنا" hidden>✉️</button><button class="btn" id="gear" aria-label="المظهر">🎨</button><button class="btn" id="out" hidden>خروج</button></div></header>
+<header><div class="hbrand"><span class="hlogo"><i class="hring"></i><img src="league-logo.png" alt="شعار رابطة تيبازة"></span><div class="htxt"><h1>مباريات رابطة تيبازة</h1><div class="hsub"><small>الفئات الشبانية 2026/2027 · وسط غرب</small><span id="who"></span></div></div><div class="hctl"><button class="btn" id="out" hidden>خروج</button><div class="hmenu"><button class="btn" id="menuBtn" type="button" aria-label="القائمة" aria-haspopup="true" aria-expanded="false" aria-controls="hpanel">☰<span class="mbadge" id="menuBadge" hidden></span></button><div class="hpanel" id="hpanel" role="menu" hidden><button class="btn" id="msgBtn" role="menuitem" hidden><span class="mi">💬</span><span>الرسائل</span><span class="mbadge" id="msgBadge" hidden></span></button><button class="btn" id="ccBtn" role="menuitem" hidden><span class="mi">🤝</span><span>مراسلة الأندية</span><span class="mbadge" id="ccBadge" hidden></span></button><button class="btn" id="ctBtn" role="menuitem" hidden><span class="mi">✉️</span><span>تواصل معنا</span></button><button class="btn" id="gear" role="menuitem"><span class="mi">🎨</span><span>المظهر</span></button></div></div></div></div></header>
 <div id="gate" class="gate" hidden>
  <div class="gbg" aria-hidden="true"><i class="o1"></i><i class="o2"></i><i class="o3"></i><i class="pitch"></i>
   <svg class="shot" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M12 92C30 8 72 -6 92 78" vector-effect="non-scaling-stroke"/></svg>
@@ -6251,6 +6275,23 @@ function syncShowcase(){
 
 applyPrefs();
 init();
+</script>
+<script>
+/* قائمة ☰ في الهيدر */
+(function(){
+ var hd=document.querySelector('header'),mb=document.getElementById('menuBtn'),pn=document.getElementById('hpanel'),dot=document.getElementById('menuBadge');
+ if(!hd||!mb||!pn||!dot)return;
+ function open(v){pn.hidden=!v;mb.setAttribute('aria-expanded',v?'true':'false');hd.classList.toggle('menu-open',v)}
+ mb.addEventListener('click',function(e){e.stopPropagation();open(pn.hidden)});
+ pn.addEventListener('click',function(e){if(e.target.closest('button'))open(false)});
+ document.addEventListener('click',function(e){if(!pn.hidden&&!pn.contains(e.target))open(false)});
+ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!pn.hidden){open(false);mb.focus()}});
+ var ids=['msgBadge','ccBadge'];
+ function sync(){var n=0;ids.forEach(function(id){var b=document.getElementById(id);if(b&&!b.hidden)n+=parseInt(b.textContent,10)||0});dot.textContent=n>99?'99+':n;dot.hidden=!(n>0)}
+ var mo=new MutationObserver(sync);
+ ids.forEach(function(id){var b=document.getElementById(id);if(b)mo.observe(b,{attributes:true,attributeFilter:['hidden'],childList:true,characterData:true})});
+ sync();
+})();
 </script>
 </body>
 </html>
