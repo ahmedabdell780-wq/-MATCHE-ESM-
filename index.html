@@ -6017,9 +6017,10 @@ function scCrest(c,im,cx,cy,r){
  if(im){c.beginPath();c.arc(cx,cy,r-6,0,7);c.clip();const q=(r-6)*1.7,k=Math.min(q/im.width,q/im.height);c.drawImage(im,cx-im.width*k/2,cy-im.height*k/2,im.width*k,im.height*k)}
  c.restore()
 }
+const scPal=()=>PS.s==='red'?{a:'#3a0a10',b:'#7a1420',c:'#1c0508',bar:'#c8202f',bar2:'#e23b4a'}:{a:'#061a33',b:'#0b4f8a',c:'#04101f',bar:'#1f6fb5',bar2:'#2aa0ee'};
 async function scBase(W,H,title,sub){
- const[cv,c]=canvas0(W,H);
- const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,'#06281a');g.addColorStop(.55,'#0b4a2a');g.addColorStop(1,'#04180f');c.fillStyle=g;c.fillRect(0,0,W,H);
+ const[cv,c]=canvas0(W,H);const P=scPal();
+ const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,P.a);g.addColorStop(.55,P.b);g.addColorStop(1,P.c);c.fillStyle=g;c.fillRect(0,0,W,H);
  const rg=c.createRadialGradient(W/2,200,30,W/2,200,640);rg.addColorStop(0,'rgba(255,255,255,.18)');rg.addColorStop(1,'rgba(255,255,255,0)');c.fillStyle=rg;c.fillRect(0,0,W,H);
  c.fillStyle='#f2b632';c.fillRect(0,0,W,10);c.fillRect(0,H-10,W,10);
  const lg0=(await scImg('league-logo.png'))||(await scImg(typeof LEAGUE!=='undefined'?LEAGUE:''));
@@ -6042,7 +6043,7 @@ async function scResult(k){
  const[ih,ia]=await Promise.all([scImg(scCrestSrc(h)),scImg(scCrestSrc(a))]);
  const xh=810,xa=270,cy=520;scCrest(c,ih,xh,cy,118);scCrest(c,ia,xa,cy,118);
  const sh=+v.sh,sa=+v.sa;
- drawText(c,String(v.sa),440,cy,170,900,sa>sh?'#f2b632':'#ffffff');drawText(c,'-',540,cy-8,110,900,'rgba(255,255,255,.7)');drawText(c,String(v.sh),640,cy,170,900,sh>sa?'#f2b632':'#ffffff');
+ drawText(c,String(v.sa),440,cy,170,900,sa>sh?'#f2b632':'#ffffff');if(PS.s==='red'){scRR(c,500,cy+70,80,40,20);c.fillStyle='#c8202f';c.fill();drawText(c,'VS',540,cy+91,26,900,'#fff')}drawText(c,'-',540,cy-8,110,900,'rgba(255,255,255,.7)');drawText(c,String(v.sh),640,cy,170,900,sh>sa?'#f2b632':'#ffffff');
  [[T[h],xh],[T[a],xa]].forEach(([n,x])=>drawText(c,n,x,688,fit(c,n,380,46,900),900,'#ffffff'));
  const L=[scGoals(v.gh),scGoals(v.ga)];
  [[L[0],xh],[L[1],xa]].forEach(([ls,x])=>{ls.slice(0,6).forEach((g,i)=>drawText(c,'⚽ '+g,x,752+i*50,fit(c,'⚽ '+g,420,30,700),700,'rgba(255,255,255,.92)'));if(ls.length>6)drawText(c,'… +'+(ls.length-6),x,752+6*50,26,700,'#f2b632')});
@@ -6058,7 +6059,7 @@ async function scTable(){
  if(!up)up=lastRound();
  const rows=tbl(cat,up),n=rows.length,W=1080,R=1000,rp=66,rbh=56,y0=468,rowsEnd=y0+n*rp,H=rowsEnd+300;
  const[cv,c]=canvas0(W,H);
- const GR='#2f5d3a',GR2='#3f7a4c',INK='#1f2937',OR='#f08a1c',LN='#cfd8cf';
+ const GR=scPal().bar,GR2=scPal().bar2,INK='#1f2937',OR='#f08a1c',LN='#cfd8cf';
  const[lg0,ap0]=await Promise.all([scImg('league-logo.png').then(x=>x||scImg(typeof LEAGUE!=='undefined'?LEAGUE:'')),scImg('icon-512.png').then(x=>x||scImg('league-logo.png'))]);
  const ims=await Promise.all(rows.map(r=>scImg(scCrestSrc(r.id))));
  /* الخلفية + خطوط مائلة في الزوايا */
