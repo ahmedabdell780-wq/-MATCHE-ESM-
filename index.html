@@ -361,7 +361,7 @@ body.th-blue{--bg:#e6eefa;--card:#ffffff;--panel:#ffffff;--tx:#0c1f3f;--ink:#0c1
 body.th-purple{--bg:#f0e8f8;--card:#ffffff;--panel:#ffffff;--tx:#2a1545;--ink:#2a1545;--mu:#65558a;--muted:#65558a;--ln:#dcd0ec;--line:#dcd0ec;--field:#faf7fe;--hero:linear-gradient(135deg,#6a1b9a,#4a1170);--g:#7b2cb8;--g2:#5a1a8a;--bodybg:linear-gradient(180deg,#f0e8f8,#faf7fd)}
 body.th-dark{--bg:#0a0f20;--card:#151c33;--panel:#151c33;--tx:#eef2ff;--ink:#eef2ff;--mu:#aab4d6;--muted:#aab4d6;--ln:#2a3560;--line:#2a3560;--field:#1c2442;--hero:linear-gradient(135deg,#1e2a5a,#121a3d);--g:#3b5bdb;--g2:#2a44b0;--bodybg:linear-gradient(180deg,#0a0f20,#0d1428)}
 body.th-gold{--bg:#fff8e7;--card:#ffffff;--panel:#ffffff;--tx:#3b2a00;--ink:#3b2a00;--mu:#7a6128;--muted:#7a6128;--ln:#ecd9a6;--line:#ecd9a6;--field:#fffbef;--hero:linear-gradient(135deg,#b7791f,#8a5a00);--g:#d69e2e;--g2:#b7791f;--bodybg:linear-gradient(180deg,#fff8e7,#fffdf5)}
-body{background:var(--bodybg,var(--bg))}header{background:var(--hero,linear-gradient(135deg,var(--g),#0f3a20))!important}.thd{background:var(--field)!important}.btn.alt{border-color:var(--ln)!important}.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tgrid button{padding:10px;border-radius:10px;border:1.5px solid var(--ln);background:var(--field);color:var(--tx);font-weight:700;cursor:pointer}.tgrid button[aria-pressed=true]{background:var(--g);color:#fff;border-color:var(--g)}
+body{background:var(--bodybg,var(--bg))}header{background:var(--hero,linear-gradient(135deg,var(--g),#0f3a20))!important}.thd{background:var(--field)!important}.btn.alt{border-color:var(--ln)!important}.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tgrid button{padding:10px;border-radius:10px;border:1.5px solid var(--ln);background:var(--field);color:var(--tx);font-weight:700;cursor:pointer}.tgrid button[aria-pressed=true]{background:var(--g);color:#fff;border-color:var(--g)}#psGrid button[data-s=blue][aria-pressed=true]{background:linear-gradient(135deg,#0b4f8a,#2aa0ee);border-color:#2aa0ee}#psGrid button[data-s=red][aria-pressed=true]{background:linear-gradient(135deg,#7a1420,#e23b4a);border-color:#e23b4a}#psGrid button[aria-pressed=true]{box-shadow:0 0 0 3px rgba(255,255,255,.35);transform:scale(1.03)}.psp{margin-top:10px;border-radius:14px;padding:12px;text-align:center;color:#fff;border:2px solid #f2b632;transition:background .25s}.psp[data-s=blue]{background:linear-gradient(180deg,#061a33,#0b4f8a)}.psp[data-s=red]{background:linear-gradient(180deg,#3a0a10,#7a1420)}.psp-t{font-weight:900;font-size:14px;color:#f2b632}.psp-r{display:flex;align-items:center;justify-content:center;gap:12px;margin:8px 0;font-size:26px}.psp-c{width:30px;height:30px;border-radius:50%;background:#fff;display:inline-block}.psp-v{font-style:normal;opacity:.8}.psp[data-s=red] .psp-v{background:#c8202f;font-size:13px;font-weight:900;padding:2px 9px;border-radius:12px;opacity:1}.psp[data-s=red] .psp-v:before{content:"VS"}.psp[data-s=red] .psp-v{font-size:0}.psp[data-s=red] .psp-v:before{font-size:13px}.psp-b{height:6px;border-radius:3px;background:linear-gradient(90deg,#1f6fb5,#2aa0ee)}.psp[data-s=red] .psp-b{background:linear-gradient(90deg,#c8202f,#e23b4a)}
 body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed=true],body.th-purple nav button[aria-pressed=true],body.th-gold nav button[aria-pressed=true]{color:var(--g)}
 .swatches{display:flex;gap:8px;align-items:center;margin:10px 0 4px;flex-wrap:wrap}.sw{width:34px;height:34px;border-radius:50%;border:3px solid transparent;cursor:pointer;padding:0}.sw[aria-pressed=true]{border-color:var(--tx);box-shadow:0 0 0 2px var(--card) inset}.swatches input[type=color]{width:46px;height:34px;padding:0;border:0;background:none;cursor:pointer}
 
@@ -825,7 +825,7 @@ body.vw [data-lu],body.vw [data-lp],body.vw [data-ps],body.vw [data-mp],body.vw 
 <dialog id="pd"><h2 style="margin-top:0">🎨 المظهر</h2>
 <label>الألوان</label><div class="tgrid" id="thGrid"></div>
 <label>الخط</label><select class="f" id="fnSel"></select>
-<label>شكل بطاقة الملصق</label><div class="tgrid" id="psGrid"><button data-s="blue">🔵 الأزرق</button><button data-s="red">🔴 الأحمر VS</button></div>
+<label>شكل بطاقة الملصق</label><div class="tgrid" id="psGrid"><button data-s="blue">🔵 الأزرق</button><button data-s="red">🔴 الأحمر VS</button></div><div id="psPrev" class="psp" aria-hidden="true"><div class="psp-t">مباريات رابطة تيبازة</div><div class="psp-r"><span class="psp-c"></span><b>1</b><i class="psp-v">-</i><b>2</b><span class="psp-c"></span></div><div class="psp-b"></div></div>
 <div class="sec"><label>🔔 الإشعارات</label><button class="btn alt" id="pushBtn" style="width:100%">🔔 تفعيل الإشعارات على هذا الجهاز</button><p class="hint" id="pushHint" style="text-align:right;margin:6px 0 0"></p></div>
 <div class="sec"><label>🔐 الحساب</label><button class="btn alt" id="pwOpen" style="width:100%">🔑 تغيير كلمة المرور</button></div>
 <div class="act" style="margin-top:14px"><button class="btn" id="pdc" style="flex:1">تم</button></div></dialog>
@@ -5586,7 +5586,7 @@ function applyPrefs(){
  document.body.style.fontFamily="'"+PS.f+"',system-ui,-apple-system,'Segoe UI',sans-serif";try{preloadAppFont()}catch(e){}
  $('thGrid').innerHTML=THS.map(x=>`<button data-th="${x[0]}" aria-pressed="${x[0]===PS.t}">${x[1]}</button>`).join('');
  $('fnSel').innerHTML=FNS.map(n=>`<option value="${n}" ${n===PS.f?'selected':''}>Aa  ${n}</option>`).join('');
- document.querySelectorAll('#psGrid button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.s===PS.s));
+ document.querySelectorAll('#psGrid button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.s===PS.s));const _pp=document.getElementById('psPrev');if(_pp)_pp.dataset.s=PS.s;
  const m=document.querySelector('meta[name=theme-color]');if(m)m.content=/light|blue|purple|gold/.test(PS.t)?'#0f6b3a':'#0b1812';
  _st({style:PS.s,font:PS.f})
 }
@@ -5606,7 +5606,7 @@ $('pws').onclick=async()=>{say('pwe','');const u=auth&&auth.currentUser,c=$('pwc
  b.disabled=false;b.textContent='حفظ كلمة المرور'};
 $('pd').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
  if(b.dataset.th){PS.t=b.dataset.th;savePref('esm-theme',PS.t);applyPrefs()}
- else if(b.dataset.s){PS.s=b.dataset.s;savePref('esm-pstyle',PS.s);applyPrefs()}});
+ else if(b.dataset.s){PS.s=b.dataset.s;savePref('esm-pstyle',PS.s);applyPrefs();try{toast(PS.s==='red'?'🔴 تم اختيار الشكل الأحمر VS':'🔵 تم اختيار الشكل الأزرق')}catch(e){}}});
 $('fnSel').onchange=e=>{PS.f=e.target.value;savePref('esm-font',PS.f);applyPrefs()};
 
 /* ===== مراسلة المشرف ↔ رؤساء النوادي (Firestore: messages) ===== */
