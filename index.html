@@ -64,7 +64,7 @@ header .hpanel .btn:hover,header .hpanel .btn:active{background:rgba(255,255,255
 header .hpanel .btn[hidden]{display:none}
 header .hpanel .mi{font-size:18px;width:24px;text-align:center}
 header .hpanel .mbadge{position:static;margin-inline-start:auto;animation:none}
-main{max-width:640px;margin:0 auto;padding:12px 12px calc(84px + var(--sb))}
+main{max-width:640px;margin:0 auto;padding:12px 12px calc(96px + var(--sb))}
 .card{background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:12px;margin-bottom:10px}
 .chips{display:flex;gap:8px;margin-bottom:10px}
 .chip{flex:1;padding:9px;border-radius:10px;border:1.5px solid var(--ln);background:var(--card);color:var(--tx);font-weight:700;cursor:pointer}
@@ -81,9 +81,15 @@ main{max-width:640px;margin:0 auto;padding:12px 12px calc(84px + var(--sb))}
 table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:7px 3px;text-align:center;border-bottom:1px solid var(--ln)}
 td.n{text-align:right;font-weight:700;white-space:nowrap}th{color:var(--mu);font-weight:600}td.p{font-weight:900;color:var(--g)}
 
-nav{position:fixed;bottom:0;inset-inline:0;background:var(--card);border-top:1px solid var(--ln);display:flex;padding-bottom:var(--sb);z-index:5}
-nav button{flex:1;border:0;background:none;padding:10px 2px;color:var(--mu);font-weight:700;font-size:11.5px;cursor:pointer;white-space:nowrap}
-nav button[aria-pressed=true]{color:#6fe39a;box-shadow:inset 0 3px 0 #6fe39a}
+nav{position:fixed;bottom:0;inset-inline:0;background:var(--card);border-top:1px solid var(--ln);display:flex;padding:8px 6px var(--sb);z-index:5;overflow:visible}
+nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;height:46px;border:0;background:none;padding:0;color:var(--mu);font-weight:700;font-size:11px;cursor:pointer;white-space:nowrap;position:relative;-webkit-tap-highlight-color:transparent}
+nav button[hidden]{display:none}
+nav button .ic{display:grid;place-items:center;width:44px;height:26px;font-size:20px;line-height:1;transition:transform .25s,width .25s,height .25s,box-shadow .25s}
+nav button .lb{line-height:1.3}
+nav button[aria-pressed=true]{color:var(--gold)}
+nav button[aria-pressed=true] .ic{transform:translateY(-20px);width:48px;height:48px;border-radius:50%;font-size:22px;background:var(--gold);background:linear-gradient(145deg,color-mix(in srgb,var(--gold) 70%,#fff),var(--gold));box-shadow:0 6px 16px rgba(242,182,50,.4),0 0 0 5px var(--card)}
+nav button[aria-pressed=true] .lb{margin-top:-18px}
+@media (prefers-reduced-motion:reduce){nav button .ic{transition:none}}
 .gate{position:fixed;inset:0;z-index:60;display:flex;overflow:auto;padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom));background:radial-gradient(120% 90% at 80% 0%,#12603a 0%,#0a2e1d 45%,#051410 100%);color:#fff}
 .gate[hidden]{display:none}
 .gbg{position:fixed;inset:0;overflow:hidden;pointer-events:none}
@@ -183,7 +189,7 @@ input:focus,select:focus,button:focus-visible{outline:2px solid var(--g2);outlin
 .err{color:var(--er);font-size:13px;margin-top:8px;min-height:18px}.err.ok{color:var(--g);font-weight:700}.lk{background:none;border:0;color:var(--g);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer;padding:6px 0}.hint{font-size:12.5px;color:var(--mu);margin:8px 0 0;text-align:center}.sec{border-top:1px dashed var(--line,#cbd5e1);margin-top:10px;padding-top:6px}
 .ck{display:inline-flex;align-items:center;gap:6px;margin:6px 8px;color:var(--tx)}.ck input{width:auto}dialog{max-height:90vh;overflow:auto;border:0;border-radius:16px;padding:16px;width:min(92vw,380px);background:var(--card);color:var(--tx)}dialog::backdrop{background:#0008}
 .sc2{display:flex;gap:10px;align-items:center;justify-content:center}.sc2 input{text-align:center;font-size:22px;font-weight:900;width:80px}
-#toast{position:fixed;bottom:calc(76px + var(--sb));inset-inline:16px;margin:auto;max-width:360px;background:#17211be6;color:#fff;padding:10px 14px;border-radius:12px;text-align:center;opacity:0;pointer-events:none;transition:.25s;z-index:20}
+#toast{position:fixed;bottom:calc(88px + var(--sb));inset-inline:16px;margin:auto;max-width:360px;background:#17211be6;color:#fff;padding:10px 14px;border-radius:12px;text-align:center;opacity:0;pointer-events:none;transition:.25s;z-index:20}
 #toast.on{opacity:1}
 .u{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
 h2{font-size:15px;margin:14px 2px 8px}
@@ -356,7 +362,7 @@ body.th-purple{--bg:#f0e8f8;--card:#ffffff;--panel:#ffffff;--tx:#2a1545;--ink:#2
 body.th-dark{--bg:#0a0f20;--card:#151c33;--panel:#151c33;--tx:#eef2ff;--ink:#eef2ff;--mu:#aab4d6;--muted:#aab4d6;--ln:#2a3560;--line:#2a3560;--field:#1c2442;--hero:linear-gradient(135deg,#1e2a5a,#121a3d);--g:#3b5bdb;--g2:#2a44b0;--bodybg:linear-gradient(180deg,#0a0f20,#0d1428)}
 body.th-gold{--bg:#fff8e7;--card:#ffffff;--panel:#ffffff;--tx:#3b2a00;--ink:#3b2a00;--mu:#7a6128;--muted:#7a6128;--ln:#ecd9a6;--line:#ecd9a6;--field:#fffbef;--hero:linear-gradient(135deg,#b7791f,#8a5a00);--g:#d69e2e;--g2:#b7791f;--bodybg:linear-gradient(180deg,#fff8e7,#fffdf5)}
 body{background:var(--bodybg,var(--bg))}header{background:var(--hero,linear-gradient(135deg,var(--g),#0f3a20))!important}.thd{background:var(--field)!important}.btn.alt{border-color:var(--ln)!important}.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tgrid button{padding:10px;border-radius:10px;border:1.5px solid var(--ln);background:var(--field);color:var(--tx);font-weight:700;cursor:pointer}.tgrid button[aria-pressed=true]{background:var(--g);color:#fff;border-color:var(--g)}
-body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed=true],body.th-purple nav button[aria-pressed=true],body.th-gold nav button[aria-pressed=true]{color:var(--g);box-shadow:inset 0 3px 0 var(--g)}
+body.th-light nav button[aria-pressed=true],body.th-blue nav button[aria-pressed=true],body.th-purple nav button[aria-pressed=true],body.th-gold nav button[aria-pressed=true]{color:var(--g)}
 .swatches{display:flex;gap:8px;align-items:center;margin:10px 0 4px;flex-wrap:wrap}.sw{width:34px;height:34px;border-radius:50%;border:3px solid transparent;cursor:pointer;padding:0}.sw[aria-pressed=true]{border-color:var(--tx);box-shadow:0 0 0 2px var(--card) inset}.swatches input[type=color]{width:46px;height:34px;padding:0;border:0;background:none;cursor:pointer}
 
 .card.mc{padding:14px 10px 12px;background:linear-gradient(90deg,rgba(var(--c2),.16),transparent 40%,transparent 60%,rgba(var(--c1),.16)),var(--card);overflow:hidden}
@@ -538,7 +544,7 @@ body.vw [data-lu],body.vw [data-lp],body.vw [data-ps],body.vw [data-mp],body.vw 
 </div>
 <div id="liveBar" hidden></div>
 <main id="app"></main>
-<nav id="nav"><button data-t="m" aria-pressed="true">⚽ المباريات</button><button data-t="r" aria-pressed="false">📋 النتائج</button><button data-t="s" aria-pressed="false">🏆 الترتيب</button><button data-t="g" aria-pressed="false">🥅 الهدافون</button><button data-t="a" id="na" aria-pressed="false" hidden>👑 الإدارة</button></nav>
+<nav id="nav"><button data-t="m" aria-pressed="true"><span class="ic">⚽</span><span class="lb">المباريات</span></button><button data-t="r" aria-pressed="false"><span class="ic">📋</span><span class="lb">النتائج</span></button><button data-t="s" aria-pressed="false"><span class="ic">🏆</span><span class="lb">الترتيب</span></button><button data-t="g" aria-pressed="false"><span class="ic">🥅</span><span class="lb">الهدافون</span></button><button data-t="a" id="na" aria-pressed="false" hidden><span class="ic">👑</span><span class="lb">الإدارة</span></button></nav>
 <dialog id="dg"><h2 id="dt" style="margin-top:0"></h2>
 <label>حالة المباراة</label><select id="ms" class="f"><option value="sched">📅 مبرمجة — حفظ الموعد والملعب فقط</option><option value="done">✅ منتهية — إدخال النتيجة</option><option value="pp">⏳ مؤجلة</option><option value="ex">🚫 معفاة</option></select>
 <div id="schedBox" class="sec"><label>تاريخ المباراة</label><input id="sd" type="date"><label>التوقيت</label><input id="stm" type="time"><div class="act" style="margin:4px 0 0;justify-content:space-between;align-items:center"><small class="hint" id="tmHint" style="text-align:right;flex:1;margin:0"></small><button type="button" class="btn sm alt" id="tmDef">↺ الافتراضي</button></div>
