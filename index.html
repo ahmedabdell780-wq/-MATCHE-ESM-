@@ -16,7 +16,7 @@ body{margin:0;color:var(--tx);font-family:Tajawal,system-ui,-apple-system,"Segoe
 header{background:linear-gradient(135deg,var(--g),#0f3a20);color:#fff;padding:calc(10px + var(--sa)) 14px 10px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:5}
 header img{width:44px;height:44px;object-fit:contain}header h1{font-size:16px;margin:0;line-height:1.2}header small{opacity:.8;font-size:12px}
 header .sp{flex:1}
-button,input,select{font:inherit}
+button,input,select,textarea{font:inherit}
 .btn{border:0;border-radius:10px;padding:10px 14px;background:var(--g);color:#fff;font-weight:700;cursor:pointer}
 .btn.alt{background:transparent;color:var(--tx);border:1.5px solid #3a5a46}.btn.red{background:var(--er)}.btn.sm{padding:6px 10px;font-size:13px}
 header .btn{background:#ffffff26;padding:6px 10px;font-size:13px}
@@ -512,6 +512,23 @@ body.vw [data-lu],body.vw [data-lp],body.vw [data-ps],body.vw [data-mp],body.vw 
 .mbn .mx{background:none;border:0;color:#fff;opacity:.7;font-size:16px;cursor:pointer;padding:4px}
 @keyframes mbIn{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:none}}
 </style>
+<script>
+/* الخط المختار من «المظهر» — مصدر واحد لكل البطاقات والطباعة */
+(function(){
+ var L=['Tajawal','Cairo','Almarai','Noto Kufi Arabic','Amiri','Changa'];
+ window.appFont=function(){
+  var f='';
+  try{f=(document.body&&document.body.style.fontFamily||'').split(',')[0].replace(/["']/g,'').trim()}catch(e){}
+  if(L.indexOf(f)<0){try{f=localStorage.getItem('esm-font')||''}catch(e){}}
+  return L.indexOf(f)<0?'Tajawal':f;
+ };
+ window.appFontCss=function(){return '"'+window.appFont()+'",Tajawal,system-ui,sans-serif'};
+ window.preloadAppFont=function(){
+  var f=window.appFont();
+  try{return Promise.all(['500','700','800','900'].map(function(w){return document.fonts.load(w+' 30px "'+f+'"','الوفاق مسلمون 0123 ABC')}))}catch(e){return Promise.resolve()}
+ };
+})();
+</script>
 <script>window.ESM_FIREBASE={apiKey:"AIzaSyBSDRAZwpChKIXpRPVIUp0JtdfflLqPRfU",authDomain:"moubarati-l-w-t.firebaseapp.com",projectId:"moubarati-l-w-t",messagingSenderId:"582704281935",appId:"1:582704281935:web:aeb821d64b4de733386d3a"};</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
@@ -2746,7 +2763,7 @@ function canvas0(w, h){
   return [cv, c];
 }
 function drawText(c, str, x, y, sz, wt, col, align){
-  c.font = (wt || 700) + ' ' + sz + 'px Tajawal, system-ui, sans-serif';
+  c.font = (wt || 700) + ' ' + sz + 'px ' + appFontCss();
   c.fillStyle = col || '#ffffff';
   c.textAlign = align || 'center';
   c.textBaseline = 'middle';
@@ -2754,10 +2771,10 @@ function drawText(c, str, x, y, sz, wt, col, align){
 }
 function fit(c, txt, maxW, maxSz, wt){
   let sz = maxSz;
-  c.font = (wt || 700) + ' ' + sz + 'px Tajawal, system-ui, sans-serif';
+  c.font = (wt || 700) + ' ' + sz + 'px ' + appFontCss();
   while(sz > 10 && c.measureText(txt || '').width > maxW){
     sz -= 2;
-    c.font = (wt || 700) + ' ' + sz + 'px Tajawal, system-ui, sans-serif';
+    c.font = (wt || 700) + ' ' + sz + 'px ' + appFontCss();
   }
   return sz;
 }
@@ -2946,7 +2963,7 @@ const RECAP_THEMES={
 };
 
 async function buildRecapCanvas(r,tid,bgImg){
-  try{await document.fonts.load('900 40px Tajawal');await document.fonts.load('700 20px Tajawal')}catch(e){}
+  try{await preloadAppFont()}catch(e){}
   const P=RECAP_THEMES[tid]||RECAP_THEMES.green;
   const p=pairs(r), n=p.m.length, CT=['U15','U17','U20'];
   const W=1080, HEAD=300, ROW=252, FOOT=p.bye?190:110, H=HEAD+n*ROW+FOOT;
@@ -2985,7 +3002,7 @@ async function buildRecapCanvas(r,tid,bgImg){
   drawText(c,'رابطة ولاية تيبازة لكرة القدم',tx0,80,28,800,P.sub,'right');
   drawText(c,`حصيلة الجولة ${r}`,tx0,150,72,900,P.ink,'right');
   const leg=r<=11?'ذهاب':'إياب';
-  c.font='900 24px Tajawal, system-ui, sans-serif';
+  c.font='900 24px '+appFontCss();
   const lw=c.measureText(leg).width+44;
   c.fillStyle=P.acc;rr(c,tx0-lw,208,lw,42,21);c.fill();
   drawText(c,leg,tx0-lw/2,229,24,900,P.accInk,'center');
@@ -2998,7 +3015,7 @@ async function buildRecapCanvas(r,tid,bgImg){
   drawText(c,goals===1?'هدف':'هدفاً',161,196,26,800,P.ink,'center');
   drawText(c,`${played} من ${total} لقاء`,161,232,20,700,P.muted,'center');
 
-  const wrap2=(txt,maxW,sz)=>{c.font=`900 ${sz}px Tajawal, system-ui, sans-serif`;
+  const wrap2=(txt,maxW,sz)=>{c.font=`900 ${sz}px ${appFontCss()}`;
     if(c.measureText(txt).width<=maxW)return[txt];
     const w=txt.split(' ');if(w.length<2)return[txt];
     const kk=Math.ceil(w.length/2);return[w.slice(0,kk).join(' '),w.slice(kk).join(' ')]};
@@ -3044,7 +3061,7 @@ async function buildRecapCanvas(r,tid,bgImg){
   if(p.bye){
     drawText(c,'يستريح هذه الجولة',W/2,H-140,22,700,P.muted,'center');
     const nmW=fit(c,T[p.bye]||'',420,36,900);
-    c.font=`900 ${nmW}px Tajawal, system-ui, sans-serif`;
+    c.font=`900 ${nmW}px ${appFontCss()}`;
     const tw=c.measureText(T[p.bye]||'').width;
     drawText(c,T[p.bye]||'',W/2,H-96,nmW,900,P.ink,'center');
     const bim=await logoOf(p.bye);
@@ -4683,8 +4700,8 @@ function printSheet(r,h,a){
  const subRows=Array.from({length:Math.max(6,subs.length)},(_,i)=>{const o=subs[i];return`<tr><td>${o?esc(T[o.t]):'&nbsp;'}</td><td class="c">${o?esc(o.x.minute||''):''}</td><td>${o?esc(o.x.outName||''):''}</td><td>${o?esc(o.x.inName||''):''}</td></tr>`}).join('');
  const has=v.sh!==undefined&&v.sh!=='';
  const html=`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>ورقة المباراة ${esc(T[h])} - ${esc(T[a])}</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
-<style>@page{size:A4;margin:8mm}*{box-sizing:border-box}body{font-family:'Tajawal','Segoe UI',Tahoma,sans-serif;font-size:11px;color:#111;margin:0;padding:0}
+<link href="https://fonts.googleapis.com/css2?family=${encodeURIComponent(appFont()).replace(/%20/g,'+')}:wght@400;700&display=swap" rel="stylesheet">
+<style>@page{size:A4;margin:8mm}*{box-sizing:border-box}body{font-family:'${appFont()}','Tajawal','Segoe UI',Tahoma,sans-serif;font-size:11px;color:#111;margin:0;padding:0}
 .bar{padding:8px;text-align:center;background:#0f6b3a}.bar button{font:inherit;font-weight:700;padding:8px 16px;border:0;border-radius:8px;background:#fff;cursor:pointer}@media print{.bar{display:none}}
 .hd{display:flex;align-items:center;justify-content:space-between;border-bottom:3px double #0f6b3a;padding:6px 0 8px;margin-bottom:6px}.hd h1{margin:0;font-size:17px;color:#0f6b3a}.hd h2{margin:2px 0 0;font-size:13px}.hd div{text-align:center}
 table{border-collapse:collapse;width:100%}td,th{border:1px solid #555;padding:2px 5px;height:19px}th{background:#e8f1ec;font-size:10.5px}.c{text-align:center}.sub{background:#f3f3f3;text-align:center}
@@ -5566,7 +5583,7 @@ if(!THS.some(x=>x[0]===PS.t))PS.t='th-green';if(!FNS.includes(PS.f))PS.f='Tajawa
 const _st=OLD.state;OLD.state=o=>_st(Object.assign({style:PS.s,font:PS.f},o));
 function applyPrefs(){
  THS.forEach(x=>document.body.classList.remove(x[0]));document.body.classList.add(PS.t);
- document.body.style.fontFamily="'"+PS.f+"',system-ui,-apple-system,'Segoe UI',sans-serif";
+ document.body.style.fontFamily="'"+PS.f+"',system-ui,-apple-system,'Segoe UI',sans-serif";try{preloadAppFont()}catch(e){}
  $('thGrid').innerHTML=THS.map(x=>`<button data-th="${x[0]}" aria-pressed="${x[0]===PS.t}">${x[1]}</button>`).join('');
  $('fnSel').innerHTML=FNS.map(n=>`<option value="${n}" ${n===PS.f?'selected':''}>Aa  ${n}</option>`).join('');
  document.querySelectorAll('#psGrid button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.s===PS.s));
@@ -6119,7 +6136,7 @@ async function shareCard(spec){
  if(isView())return toast('⛔ حساب الزائر للمشاهدة فقط');
  if(scBusy)return;scBusy=true;toast('⏳ جاري تجهيز البطاقة…');
  try{
-  try{await document.fonts.load('800 40px Tajawal')}catch(e){}
+  try{await preloadAppFont()}catch(e){}
   const o=spec==='t'?await scTable():spec==='g'?await scScorers():await scResult(String(spec).replace(/^r:/,''));
   await shareCanvas(o.cv,o.name,o.text)
  }catch(e){toast(e&&e.message==='noresult'?'⚠️ لا توجد نتيجة لهذه المباراة بعد':e&&e.message==='noscorers'?'⚠️ لا يوجد هدافون مسجلون بعد':'⚠️ تعذّر إنشاء البطاقة')}
