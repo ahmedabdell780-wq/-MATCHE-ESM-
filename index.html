@@ -4542,7 +4542,7 @@ function rcLiveResume(why){const L=RC.live;if(!L||!L.on||L.user||document.hidden
 document.addEventListener('visibilitychange',()=>{const L=RC.live;if(L&&L.on){if(document.hidden)L.hiddenAt=Date.now();else{if(L.hiddenAt&&Date.now()-L.hiddenAt>4000)toast('⚠️ غادرتَ الصفحة فتوقف الإرسال مؤقتاً. ابقَ هنا أثناء البث');L.hiddenAt=0;rcLiveResume('vis')}}});
 window.addEventListener('online',()=>rcLiveResume('net'));
 /* ===== البث المباشر إلى فيسبوك/يوتيوب عبر خادم وسيط (RTMP) ===== */
-const LIVE_RELAY='https://esm-live-relay.onrender.com'; /* غيّره إن سمّيت الخدمة باسم آخر */
+const LIVE_RELAY='https://esm-live-relay-5mw0.onrender.com'; /* غيّره إن سمّيت الخدمة باسم آخر */
 const LK={t:'esmLiveTarget',k:'esmLiveKey',r:'esmLiveRelay'};
 const lsGet=k=>{try{return localStorage.getItem(k)||''}catch(e){return''}},lsSet=(k,v)=>{try{v?localStorage.setItem(k,v):localStorage.removeItem(k)}catch(e){}};
 const rcWs=r=>{r=(r||'').trim().replace(/\/+$/,'').replace(/\/live$/,'');if(!r)return'';if(!/^(wss?|https?):\/\//.test(r))r='https://'+r;return r.replace(/^http/,'ws')+'/live'};
@@ -4558,8 +4558,10 @@ $('lvT').onchange=lvSync;
 let lvTm=null;
 async function rcPing(){const r=$('lvR').value.trim()||LIVE_RELAY,el=$('lvSt');
  if(!rcWs(r)){el.className='srv bad';el.textContent='⚠️ أدخل رابط الخادم في «إعدادات متقدمة»';$('lvAdv').open=true;return true}
- el.className='srv wait';el.textContent='⏳ جارٍ الاتصال بالخادم… (قد يستغرق دقيقة إن كان نائماً)';
- try{const c=new AbortController(),tm=setTimeout(()=>c.abort(),9000),res=await fetch(rcWs(r).replace(/^ws/,'http').replace(/\/live$/,'')+'/healthz',{signal:c.signal});clearTimeout(tm);
+ /* FIX-E: clearer wakeup message for free-tier server */
+  el.className='srv wait';el.textContent='⏳ جارٍ الاتصال بالخادم… قد يستغرق 30-60 ثانية إن كان الخادم نائماً. انتظر…';
+ /* FIX-D: 30s timeout to handle Render free-tier server wakeup (can take 60s) */
+  try{const c=new AbortController(),tm=setTimeout(()=>c.abort(),30000),res=await fetch(rcWs(r).replace(/^ws/,'http').replace(/\/live$/,'')+'/healthz',{signal:c.signal});clearTimeout(tm);
   if(res.ok){el.className='srv ok';el.textContent='🟢 الخادم جاهز للبث';return true}}catch(e){}
  el.className='srv bad';el.textContent='🔴 الخادم غير متاح بعد… نعيد المحاولة';return false}
 function rcPingLoop(){clearTimeout(lvTm);const go=async()=>{if(!$('liveSet').open)return;const ok=await rcPing();if(!ok&&$('liveSet').open)lvTm=setTimeout(go,4000)};go()}
@@ -4592,6 +4594,8 @@ function rcLiveConnect(){
  L.ws=ws;L.state=L.tries?'retry':'connecting';
  ws.onopen=async()=>{try{const token=await auth.currentUser.getIdToken();L.mime=rcLiveMime();ws.send(JSON.stringify({type:'start',token,target:L.target,key:L.key,url:L.url,mime:L.mime,codec:rcLiveCodec(L.mime),title:L.title}))}catch(e){L.fatal=true;L.endMsg='⚠️ تعذّر التحقق من حسابك';ws.close()}};
  ws.onmessage=e=>{let m;try{m=JSON.parse(e.data)}catch(x){return}
+  /* FIX-C: handle server 'connecting' (ffmpeg started) → begin sending video immediately */
+  if(m.type==='connecting'){L.state='connecting';L.mode=m.mode||L.mode;if(!L.rec)rcLiveRec();rcUi();return}
   if(m.type==='ready'){L.state='live';L.tries=0;L.mode=m.mode;if(!L.t0){L.t0=Date.now();rcPub(true);if(RC.train){rcTrainStart();if(RC.notify)pushNotify({kind:'live',title:'🏋️ حصة تدريبية مباشرة · '+T[RC.h],body:(RC.ttl||'حصة تدريبية')+(RC.cat?' · '+RC.cat:'')})}else pushNotify({kind:'live',title:'🔴 مباشر الآن · '+RC.cat,body:T[RC.h]+' × '+T[RC.a]})}L.replay=!!m.replay;L.watch=m.watch||L.watch;rcLiveRec();toast(m.auto?'📡 البث مباشر الآن على صفحة فيسبوك تلقائياً. أبقِ هذه الصفحة مفتوحة':'📡 البث متصل. اضغط Go Live في فيسبوك (من حاسوب أو هاتف آخر) وأبقِ هذه الصفحة مفتوحة')}
   else if(m.type==='stats')L.stat=m;
    else if(m.type==='clip')rcClip(m);
