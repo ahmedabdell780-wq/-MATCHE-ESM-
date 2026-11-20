@@ -1916,8 +1916,9 @@ function renderMatchLineupView() {
         const capClass = p.isCaptain ? 'is-cap' : '';
 
         return `
-          <div class="lineup-player-chip ${gkClass} ${capClass}" style="${isS ? 'border:1.5px solid #ef4444;background:#fff5f5;' : ''}">
+          <div class="lineup-player-chip ${gkClass} ${capClass}" data-dnd="starters" data-i="${idx}" style="${isS ? 'border:1.5px solid #ef4444;background:#fff5f5;' : ''}">
             <div style="display:flex; align-items:center; gap:6px; overflow:hidden;">
+              ${canEdit ? '<span class="dnd-h" title="اسحب لتغيير المكان">⠿</span>' : ''}
               <span style="font-weight:900; color:#166534; font-size:13px; min-width:20px;">#${p.num || (idx+1)}</span>
               <span style="font-weight:700; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">${p.name}</span>
             </div>
@@ -1958,8 +1959,9 @@ function renderMatchLineupView() {
         const suspNote = isS ? `<span style="color:#b91c1c; font-size:10.5px; font-weight:800; background:#fef2f2; border:1px solid #f87171; padding:1px 6px; border-radius:4px;">⚠️ معاقب وموقوف</span>` : '';
 
         return `
-          <div class="lineup-player-chip" style="${isS ? 'border:1.5px solid #ef4444;background:#fff5f5;' : ''}">
+          <div class="lineup-player-chip" data-dnd="bench" data-i="${idx}" style="${isS ? 'border:1.5px solid #ef4444;background:#fff5f5;' : ''}">
             <div style="display:flex; align-items:center; gap:6px; overflow:hidden;">
+              ${canEdit ? '<span class="dnd-h" title="اسحب لتغيير المكان">⠿</span>' : ''}
               <span style="font-weight:900; color:#0369a1; font-size:13px; min-width:20px;">#${p.num || (idx+12)}</span>
               <span style="font-weight:700; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">${p.name}</span>
             </div>
@@ -2080,6 +2082,65 @@ function updateLineupDropdowns() {
       availableBench.map(p => `<option value="${p.name}">🔺 ${p.name} (#${p.num || ''})</option>`).join('');
   }
 }
+/* ===== سحب وإفلات اللاعبين لتغيير أماكنهم (أساسيون + احتياط) ===== */
+(function(){
+  const st=document.createElement('style');
+  st.textContent='.dnd-h{cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;font-size:20px;line-height:1;padding:6px 6px;margin:-4px -2px;color:#64748b;border-radius:8px;flex:none}.dnd-h:active{background:#e2e8f0}'
+   +'.lineup-player-chip.dnd-drag{position:relative;z-index:50;box-shadow:0 10px 24px rgba(15,23,42,.28);border-color:#16a34a;background:#f0fdf4;opacity:.96;transition:none;pointer-events:none}'
+   +'.lineup-player-chip.dnd-before{box-shadow:0 -4px 0 #16a34a}.lineup-player-chip.dnd-after{box-shadow:0 4px 0 #16a34a}'
+   +'body.dnd-on{user-select:none;-webkit-user-select:none;overscroll-behavior:contain}';
+  document.head.appendChild(st);
+  let D=null,raf=0;
+  const scrollParent=el=>{while(el&&el!==document.body){const s=getComputedStyle(el);if(/(auto|scroll)/.test(s.overflowY)&&el.scrollHeight>el.clientHeight+2)return el;el=el.parentElement}return null};
+  function chips(){return [...D.box.querySelectorAll(':scope > [data-dnd]')].filter(c=>c!==D.chip)}
+  function target(x,y){const cs=chips();let best=null,bd=1e9;
+    for(const c of cs){const r=c.getBoundingClientRect();
+      if(x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom)return c;
+      const dx=Math.max(r.left-x,0,x-r.right),dy=Math.max(r.top-y,0,y-r.bottom),d=dx*dx+dy*dy;if(d<bd){bd=d;best=c}}
+    return best}
+  function paint(){
+    if(!D)return;
+    const sc=D.sp?D.sp.scrollTop-D.sp0:0;
+    D.chip.style.transform='translate('+(D.x-D.x0)+'px,'+(D.y-D.y0+sc)+'px)';
+    D.box.querySelectorAll('.dnd-before,.dnd-after').forEach(c=>c.classList.remove('dnd-before','dnd-after'));
+    const tg=target(D.x,D.y);
+    if(tg){const to=+tg.dataset.i;D.to=to;tg.classList.add(to<D.from?'dnd-before':'dnd-after')}else D.to=D.from;
+  }
+  function loop(){
+    if(!D)return;
+    if(D.sp){const r=D.sp.getBoundingClientRect(),z=70;let v=0;
+      if(D.y<r.top+z)v=-Math.ceil((r.top+z-D.y)/6);else if(D.y>r.bottom-z)v=Math.ceil((D.y-(r.bottom-z))/6);
+      if(v){D.sp.scrollTop+=Math.max(-18,Math.min(18,v));paint()}}
+    raf=requestAnimationFrame(loop)}
+  document.addEventListener('pointerdown',e=>{
+    const hd=e.target.closest&&e.target.closest('.dnd-h');if(!hd)return;
+    const chip=hd.closest('[data-dnd]');if(!chip||!canEditCurrentLineup())return;
+    e.preventDefault();
+    const box=chip.parentElement,sp=scrollParent(box);
+    D={chip,box,hd,list:chip.dataset.dnd,from:+chip.dataset.i,to:+chip.dataset.i,x0:e.clientX,y0:e.clientY,x:e.clientX,y:e.clientY,sp,sp0:sp?sp.scrollTop:0,id:e.pointerId};
+    try{hd.setPointerCapture(e.pointerId)}catch(_){}
+    chip.classList.add('dnd-drag');document.body.classList.add('dnd-on');
+    if(navigator.vibrate)try{navigator.vibrate(12)}catch(_){}
+    raf=requestAnimationFrame(loop);
+  },{passive:false});
+  document.addEventListener('pointermove',e=>{if(!D||e.pointerId!==D.id)return;e.preventDefault();D.x=e.clientX;D.y=e.clientY;paint()},{passive:false});
+  function end(e,cancel){
+    if(!D||e.pointerId!==D.id)return;
+    cancelAnimationFrame(raf);
+    const d=D;D=null;
+    try{d.hd.releasePointerCapture(d.id)}catch(_){}
+    d.chip.classList.remove('dnd-drag');d.chip.style.transform='';document.body.classList.remove('dnd-on');
+    d.box.querySelectorAll('.dnd-before,.dnd-after').forEach(c=>c.classList.remove('dnd-before','dnd-after'));
+    if(cancel||d.to===d.from||!canEditCurrentLineup())return;
+    const data=getTeamLineupData(getActiveTeamId()),arr=data[d.list];
+    if(!arr||!arr[d.from])return;
+    const m=arr.splice(d.from,1)[0];arr.splice(d.to,0,m);
+    save();renderMatchLineupView();
+    showToast('✅ تم نقل '+m.name+' إلى المكان '+(d.to+1));
+  }
+  document.addEventListener('pointerup',e=>end(e,false));
+  document.addEventListener('pointercancel',e=>end(e,true));
+})();
 function addStarterFromSelect() {
   if (!canEditCurrentLineup()) return;
   const teamId = getActiveTeamId();
