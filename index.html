@@ -4372,42 +4372,44 @@ const rcTitle=()=>RC.train?'🏋️ '+(RC.ttl||'حصة تدريبية')+' · '+(
 function rcTrainStart(){if(RC.train&&!RC.clk.run&&!RC.clk.base){RC.clk.start=Date.now();RC.clk.run=true}if(RC.train)RC.trT0=Date.now()}
 /* شعار ثابت بظل خفيف */
 function rcLogoFlat(x,im,cx,cy,sz){if(!im)return;const sc=Math.min(sz/im.width,sz/im.height),w=im.width*sc,h=im.height*sc;x.save();x.shadowColor='rgba(0,0,0,.6)';x.shadowBlur=16;x.shadowOffsetY=4;x.drawImage(im,cx-w/2,cy-h/2,w,h);x.restore()}
-/* غلاف تلفزيوني خفيف: لوحتان للشعارين في الأعلى + مؤقّت في جانب واحد، والباقي حرّ */
+/* غلاف البث التدريبي: شعاران صغيران ثابتان بلا خلفية في الأعلى + شريط أخبار متحرك في الأسفل والمؤقّت في أحد جانبيه */
 function rcOverlayTrain(x,cw,ch){
- const land=cw>=ch,s=cw/(land?1280:720),W=cw/s,H=ch/s,now=Date.now(),tt=now/1000,m=land?26:18,NV1='#1a2a78',NV2='#0a1240',GOLD='#f2b632';
+ const land=cw>=ch,s=cw/(land?1280:720),W=cw/s,H=ch/s,now=Date.now(),tt=now/1000,m=land?26:18,GOLD='#f2b632';
  if(!RC.trT0)RC.trT0=now;
- const pr=1-Math.pow(1-Math.min(1,(now-RC.trT0)/900),3);
  x.save();x.scale(s,s);
- let g=x.createLinearGradient(0,0,0,land?230:240);g.addColorStop(0,'rgba(0,0,0,.55)');g.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=g;x.fillRect(0,0,W,land?230:240);
- const shine=(clip,X,Y,w,h,off)=>{const q=((tt+off)%7)/1.2;if(q>=1)return;x.save();clip();x.clip();x.translate(X-140+(w+280)*q,Y);x.transform(1,0,-.35,1,0,0);const gr=x.createLinearGradient(0,0,80,0);gr.addColorStop(0,'rgba(255,255,255,0)');gr.addColorStop(.5,'rgba(255,255,255,.35)');gr.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=gr;x.fillRect(0,0,80,h);x.restore()};
- const PH=land?104:90,LS=land?150:122,SK=30,PW=land?480:352,py=m+16;
- const plate=(left,col,name,sub,im,ph)=>{
-  const slide=(1-pr)*(PW+60)*(left?-1:1);x.save();x.translate(slide,0);
-  const poly=()=>{x.beginPath();if(left){x.moveTo(0,py);x.lineTo(PW,py);x.lineTo(PW-SK,py+PH);x.lineTo(0,py+PH)}else{x.moveTo(W,py);x.lineTo(W-PW,py);x.lineTo(W-PW+SK,py+PH);x.lineTo(W,py+PH)}x.closePath()};
-  x.save();x.shadowColor='rgba(0,0,0,.55)';x.shadowBlur=20;x.shadowOffsetY=5;poly();x.fillStyle=NV2;x.fill();x.restore();
-  x.save();poly();x.clip();
-  g=x.createLinearGradient(0,py,0,py+PH);g.addColorStop(0,NV1);g.addColorStop(1,NV2);x.fillStyle=g;x.fillRect(0,py,W,PH);
-  x.fillStyle='rgba(255,255,255,.09)';x.fillRect(0,py,W,PH*.46);
-  x.fillStyle=col;x.beginPath();if(left){x.moveTo(PW-11,py);x.lineTo(PW,py);x.lineTo(PW-SK,py+PH);x.lineTo(PW-SK-11,py+PH)}else{x.moveTo(W-PW,py);x.lineTo(W-PW+11,py);x.lineTo(W-PW+SK+11,py+PH);x.lineTo(W-PW+SK,py+PH)}x.closePath();x.fill();
-  x.fillStyle=GOLD;x.fillRect(0,py+PH-4,W,4);x.restore();
-  shine(poly,left?0:W-PW,py,PW,PH,ph);
-  const cx=left?LS/2+22:W-LS/2-22;rcLogoFlat(x,im,cx,py+PH/2,LS);
-  const a=left?cx+LS/2+14:W-PW+SK+22,bb=left?PW-SK-22:cx-LS/2-14,mx=(a+bb)/2,mw=bb-a;
-  tx(x,name,mx,py+PH/2-15,F(900,land?37:29),'#fff','center',mw);tx(x,sub,mx,py+PH/2+22,F(800,land?20:16),GOLD,'center',mw);
-  x.restore()};
- const cl=!!RC.swap,cc=RC.col&&RC.col.h?rgba(RC.col.h,1):GOLD;
- plate(cl,cc,T[RC.h]||'',(RC.ttl||'حصة تدريبية')+(RC.cat?' · '+RC.cat:''),RC.imgs.h,0);
- plate(!cl,GOLD,'رابطة تيبازة','الموسم 2026 / 2027',RC.imgs.l,1.7);
- /* المؤقّت في جانب النادي + شارة مباشر بجانبه */
- {const TW=land?176:152,TH2=land?52:46,ty=py+PH+(LS-PH)/2+4,sl=(1-pr)*(TW+60)*(cl?-1:1);
-  x.save();x.translate(sl,0);
-  const tp=()=>{x.beginPath();if(cl){x.moveTo(0,ty);x.lineTo(TW,ty);x.lineTo(TW-18,ty+TH2);x.lineTo(0,ty+TH2)}else{x.moveTo(W,ty);x.lineTo(W-TW,ty);x.lineTo(W-TW+18,ty+TH2);x.lineTo(W,ty+TH2)}x.closePath()};
-  x.save();x.shadowColor='rgba(0,0,0,.5)';x.shadowBlur=16;x.shadowOffsetY=4;tp();x.fillStyle='#fff';x.fill();x.restore();
-  x.save();tp();x.clip();x.fillStyle=GOLD;x.fillRect(0,ty+TH2-4,W,4);x.restore();
-  const dx=cl?24:W-24;x.beginPath();x.arc(dx,ty+TH2/2-2,6*(.75+.25*Math.sin(tt*5)),0,7);x.fillStyle='#dc2626';x.fill();
-  const tcx=cl?TW/2+10:W-TW/2-10;x.direction='ltr';tx(x,rcMS(rcEl()),tcx,ty+TH2/2-1,F(900,land?36:31),'#0d1530');x.direction='rtl';x.restore();
-  const lv=RC.live&&RC.live.state==='live';
-  if(RC.recording||lv){const w=100,h=34,bx=cl?TW+10:W-TW-10-w,by=ty+(TH2-4-h)/2+2;rr(x,bx,by,w,h,17);x.fillStyle='#dc2626';x.fill();if(now%1000<650){x.beginPath();x.arc(bx+22,by+h/2,6,0,7);x.fillStyle='#fff';x.fill()}tx(x,lv?'مباشر':'تسجيل',bx+64,by+h/2+1,F(900,19),'#fff')}}
+ /* نص بحدود داكنة ليبقى واضحاً فوق الفيديو بلا أي خلفية */
+ const ot=(t,X,Y,f,col,al,mw)=>{x.save();x.font=f;if(mw){let n=parseInt(f.split(' ')[1]);while(x.measureText(t).width>mw&&n>11){n-=1;x.font=f.replace(/\d+px/,n+'px')}}x.textAlign=al;x.textBaseline='middle';x.lineJoin='round';x.lineWidth=5;x.strokeStyle='rgba(0,0,0,.65)';x.shadowColor='rgba(0,0,0,.8)';x.shadowBlur=8;x.strokeText(t,X,Y);x.shadowBlur=0;x.fillStyle=col;x.fillText(t,X,Y);x.restore()};
+ /* ===== الأعلى: شعاران مصغّران ثابتان، بلا خلفية ===== */
+ const LS=land?74:60,py=m,cl=!!RC.swap;
+ const top=(left,name,sub,im)=>{
+  const cx=left?m+LS/2:W-m-LS/2;rcLogoFlat(x,im,cx,py+LS/2,LS);
+  const tx0=left?cx+LS/2+10:cx-LS/2-10,al=left?'left':'right',mw=land?260:190;
+  ot(name,tx0,py+LS/2-(sub?11:0),F(900,land?26:20),'#fff',al,mw);
+  if(sub)ot(sub,tx0,py+LS/2+15,F(800,land?16:13),GOLD,al,mw)};
+ top(cl,T[RC.h]||'','',RC.imgs.h);
+ top(!cl,'رابطة تيبازة','الموسم 2026 / 2027',RC.imgs.l);
+ /* ===== الأسفل: شريط أخبار متحرك، والمؤقّت في جانب النادي ===== */
+ const BH=land?54:48,by=H-BH-(land?m:m+10),TW=land?170:146,lv=RC.live&&RC.live.state==='live';
+ /* منطقة الشريط المتحرك */
+ const a0=cl?TW:m,a1=cl?W-m:W-TW;
+ const A0=cl?m+TW:m,A1=cl?W-m:W-m-TW;
+ x.save();x.shadowColor='rgba(0,0,0,.5)';x.shadowBlur=14;x.shadowOffsetY=3;
+ x.fillStyle='rgba(8,12,24,.78)';x.fillRect(m,by,W-2*m,BH);x.restore();
+ x.fillStyle=GOLD;x.fillRect(m,by+BH-4,W-2*m,4);
+ /* نص الشريط */
+ const ttl=(RC.ttl&&RC.ttl!=='حصة تدريبية')?RC.ttl:'';
+ const msg=[T[RC.h]||'',ttl,'رابطة تيبازة · الموسم 2026 / 2027'].filter(Boolean).join('   ⚽   ');
+ x.save();x.beginPath();x.rect(A0,by,A1-A0,BH-4);x.clip();
+ x.font=F(800,land?25:22);const w=x.measureText(msg).width,gap=140,per=w+gap,off=(tt*70)%per;
+ for(let k=-1;A0+off+k*per-w<A1;k++){const xr=A0+off+k*per;if(xr>=A0)ot(msg,xr,by+(BH-4)/2+1,F(800,land?25:22),'#fff','right',0)}
+ x.restore();
+ /* مؤقّت الحصة في جانب واحد من الشريط */
+ {const tx0=cl?m:W-m-TW;
+  x.fillStyle='#fff';x.fillRect(tx0,by,TW,BH-4);
+  const dx=cl?tx0+20:tx0+TW-20;x.beginPath();x.arc(dx,by+(BH-4)/2,6*(.75+.25*Math.sin(tt*5)),0,7);x.fillStyle='#dc2626';x.fill();
+  const tcx=tx0+TW/2+(cl?8:-8);x.direction='ltr';tx(x,rcMS(rcEl()),tcx,by+(BH-4)/2+1,F(900,land?33:29),'#0d1530');x.direction='rtl'}
+ /* شارة مباشر/تسجيل فوق الشريط بجانب المؤقّت */
+ if(RC.recording||lv){const bw=100,bh=32,bx=cl?m:W-m-bw,bY=by-bh-10;rr(x,bx,bY,bw,bh,16);x.fillStyle='#dc2626';x.fill();if(now%1000<650){x.beginPath();x.arc(bx+22,bY+bh/2,6,0,7);x.fillStyle='#fff';x.fill()}tx(x,lv?'مباشر':'تسجيل',bx+64,bY+bh/2+1,F(900,19),'#fff')}
  x.restore()
 }
 function openTrDlg(){
