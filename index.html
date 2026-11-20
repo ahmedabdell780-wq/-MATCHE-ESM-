@@ -4298,18 +4298,38 @@ async function rcCam(useScreenShare = false){
  v.srcObject = st;
  v.muted = true;
  try { await v.play(); } catch(e){}
- if(!v.videoWidth) await new Promise(r => { v.onloadedmetadata = r; setTimeout(r, 1500); });
+ /* FIX1: dual-event wait + progressive retry for camera readiness */
+  await new Promise(r => {
+    if(v.videoWidth>0 && v.readyState>=2) return r();
+    let _done=false;
+    const _fin=()=>{if(!_done){_done=true;clearTimeout(_tm);r();}};
+    v.onloadedmetadata=_fin; v.onloadeddata=_fin;
+    var _tm=setTimeout(r,3500);
+  });
+  for(let _i=0;_i<20&&!v.videoWidth;_i++) await new Promise(r=>setTimeout(r,100));
  rcSize();
 }
-function rcSize(){const v=$('recVid'),vw=v.videoWidth||1280,vh=v.videoHeight||720,f=Math.min(1,RC.q/Math.min(vw,vh)),cv=$('recCv');
- cv.width=Math.round(vw*f/2)*2;cv.height=Math.round(vh*f/2)*2;RC.ctx=cv.getContext('2d');RC.ar=vw/vh}
+function rcSize(){
+ /* FIX6: never resize canvas while live-streaming (would send black frames) */
+ if(RC.live&&RC.live.on) return;
+ const v=$('recVid'),vw=v.videoWidth||1280,vh=v.videoHeight||720;
+ /* FIX2: guard against zero dimensions */
+ if(vw<4||vh<4) return;
+ const f=Math.min(1,RC.q/Math.min(vw,vh)),cv=$('recCv');
+ const nw=Math.round(vw*f/2)*2,nh=Math.round(vh*f/2)*2;
+ if(nw<4||nh<4) return;
+ cv.width=nw;cv.height=nh;RC.ctx=cv.getContext('2d');RC.ar=vw/vh;
+}
 function rcLogo(x,im,cx,cy,r,col){x.save();x.beginPath();x.arc(cx,cy,r,0,7);x.fillStyle='#fff';x.fill();if(im){x.clip();const q=r*1.62,sc=Math.min(q/im.width,q/im.height);x.drawImage(im,cx-im.width*sc/2,cy-im.height*sc/2,im.width*sc,im.height*sc)}x.restore();
  if(col){x.beginPath();x.arc(cx,cy,r,0,7);x.lineWidth=3;x.strokeStyle=rgba(col,1);x.stroke()}}
 function rcFrame(){
  const v=$('recVid'),cv=$('recCv');
+ /* FIX3: self-heal if canvas context broken or dimensions invalid */
+ if(!RC.ctx||cv.width<4||cv.height<4){rcSize();return;}
  if(!RC.recording&&!(RC.live&&RC.live.on)&&v.videoWidth&&Math.abs(v.videoWidth/v.videoHeight-RC.ar)>.02)rcSize();
  const x=RC.ctx,cw=cv.width,ch=cv.height;x.direction='rtl';x.fillStyle='#000';x.fillRect(0,0,cw,ch);
- if(v.readyState>=2&&v.videoWidth){const sc=Math.max(cw/v.videoWidth,ch/v.videoHeight),dw=v.videoWidth*sc,dh=v.videoHeight*sc;x.drawImage(v,(cw-dw)/2,(ch-dh)/2,dw,dh)}
+ /* FIX3: extended check: readyState>=2 AND videoWidth>0 AND videoHeight>0 */
+ if(v.readyState>=2&&v.videoWidth>0&&v.videoHeight>0){const sc=Math.max(cw/v.videoWidth,ch/v.videoHeight),dw=v.videoWidth*sc,dh=v.videoHeight*sc;x.drawImage(v,(cw-dw)/2,(ch-dh)/2,dw,dh)}
  rcOverlay(x,cw,ch)
 }
 function rcOverlay(x,cw,ch){
@@ -4598,6 +4618,8 @@ function rcGetAudioTrack(){
 }
 function rcLiveRec(){
  const L=RC.live;rcLiveRecStop();
+ /* FIX4: start training timer when going live (not just when recording) */
+ if(RC.train) rcTrainStart();
  try{const aud=rcGetAudioTrack(),audTracks=aud?[aud]:[];const ms=new MediaStream([...$('recCv').captureStream(30).getVideoTracks(),...audTracks]),o={videoBitsPerSecond:RC.q>=720?1800000:1000000,audioBitsPerSecond:96000};if(L.mime)o.mimeType=L.mime;
   const r=new MediaRecorder(ms,o);
   r.ondataavailable=e=>{const w=L.ws;if(!e.data||!e.data.size||!w||w.readyState!==1)return;
