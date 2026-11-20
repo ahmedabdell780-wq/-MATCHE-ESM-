@@ -857,6 +857,9 @@ body.vw [data-lu],body.vw [data-lp],body.vw [data-ps],body.vw [data-mp],body.vw 
 <dialog id="lpd"><h2 style="margin-top:0">🎽 ملصق تشكيلة المدرب</h2>
 <label>الفريق</label><div class="chips" id="lpSide"></div>
 <label>المدرب (تظهر صورته من «الطاقم الفني والإداري»)</label><select class="f" id="lpCoach"></select>
+<label>🖼 صورة الملصق (تحلّ محل صورة المدرب — اختياري)</label>
+<div class="act" style="margin:0 0 6px"><button type="button" class="btn alt sm" id="lpImgPick" style="flex:1">📷 اختيار / تغيير الصورة</button><button type="button" class="btn alt sm" id="lpImgDel" hidden>🗑 إزالة</button></div>
+<input type="file" id="lpImgFile" accept="image/*" hidden><img id="lpImgPrev" alt="" hidden style="display:block;max-width:100%;max-height:120px;margin:0 auto 8px;border-radius:12px;border:1px solid var(--ln)">
 <label>لون الخلفية</label><div class="swatches" id="lpCol"></div>
 <label>خطة اللعب (للتشكيلة على الملعب)</label><select class="f" id="lpForm"></select>
 <details id="lpOrd" style="margin-top:8px"><summary style="cursor:pointer;font-weight:700">↕ ترتيب اللاعبين على المراكز (اختياري)</summary><div id="lpOrdList" style="margin-top:8px;max-height:36vh;overflow:auto"></div></details>
@@ -5008,6 +5011,8 @@ function openLp(key){
  lpCur={key,h,a,cat:m[1]||'U15',round:+m[2],side:(me&&me.role!=='admin'&&me.teamId==a)?'a':'h',coach:'',col:''};
  drawLp();$('lpd').showModal()
 }
+const lpImgGet=t=>{try{return localStorage.getItem('esm-lpimg-'+t)||''}catch(e){return ''}};
+const lpImgSet=(t,v)=>{try{if(v)localStorage.setItem('esm-lpimg-'+t,v);else localStorage.removeItem('esm-lpimg-'+t);return true}catch(e){return false}};
 function drawLp(){
  const L=lpCur,t=L.side==='h'?L.h:L.a,cs=lpCoaches(t).filter(c=>!c.cat||c.cat==='ALL'||c.cat===L.cat);
  if(L.coach&&!cs.some(c=>c.id===L.coach))L.coach='';if(!L.coach&&cs.length)L.coach=cs[0].id;
@@ -5018,6 +5023,7 @@ function drawLp(){
 $('lpForm').innerHTML=FORMS.map(f=>`<option ${f===lpForm?'selected':''}>${f}</option>`).join('');
  const st=lpSt(L),ord=lpOrder(L,st),lb=posLabels(lpForm);
  $('lpOrdList').innerHTML=st.length===11?ord.map((si,k)=>`<div class="u card" style="padding:6px 8px;margin-bottom:4px"><span class="b ok" style="min-width:76px;text-align:center">${lb[k]||''}</span><b style="flex:1;font-size:13px">${esc(shortNm(st[si].n))}</b><span style="white-space:nowrap"><button type="button" class="btn sm alt" data-lpu="${k}">▲</button> <button type="button" class="btn sm alt" data-lpd="${k}">▼</button></span></div>`).join(''):'<div class="hint">تحتاج 11 لاعباً لعرض الخطة على الملعب.</div>';
+ {const ci=lpImgGet(t),pv=$('lpImgPrev');pv.hidden=!ci;if(ci)pv.src=ci;else pv.removeAttribute('src');$('lpImgDel').hidden=!ci}
  $('lpCol').innerHTML=LPCOL.map(([c,l])=>`<button type="button" class="sw" data-lpc="${c}" title="${l}" aria-pressed="${L.col===c}" style="background:${c||'conic-gradient(#b3141c,#0f6b3a,#1d3f8f,#b3141c)'}"></button>`).join('')
 }
 function featherDraw(x,im,X,Y,w,h,top,fr,fb,ft,fl){
@@ -5048,7 +5054,7 @@ async function posterLineup(L){
  toast('⏳ جاري تصميم ملصق التشكيلة…');
  const W=1080,H=1350,cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d');x.direction='rtl';
  const c=L.col?hexRgb(L.col):await tcol(t),co=STAFF[L.coach],Lg=await imgOf(typeof LEAGUE!=='undefined'?LEAGUE:null);
- const [cim,l1,l2,...pims]=await Promise.all([imgOf(co&&co.img),imgOf(OLD.DEF[t]),imgOf(OLD.DEF[opp]),...st.map(s=>imgOf(photoOf(t,s.n)))]);
+ const [cim,l1,l2,...pims]=await Promise.all([imgOf(lpImgGet(t)||(co&&co.img)),imgOf(OLD.DEF[t]),imgOf(OLD.DEF[opp]),...st.map(s=>imgOf(photoOf(t,s.n)))]);
  await lpBase(x,W,H,c);await lpHead(x,W,t,Lg);
  if(cim)featherDraw(x,cim,24,250,620,1000,.04,.38,.28,.09);else if(l1){x.save();x.globalAlpha=.2;x.drawImage(l1,40,420,520,520);x.restore()}
  // اللوحة اليمنى
@@ -5143,7 +5149,7 @@ async function posterCoachCard(L){
  const t=L.side==='h'?L.h:L.a,co=STAFF[L.coach];if(!co)return toast('⚠️ اختر مدرباً (أضفه من «الطاقم الفني والإداري» مع صورته)');
  toast('⏳ جاري تصميم بطاقة المدرب…');
  const W=1080,H=1350,cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d');x.direction='rtl';
- const c=L.col?hexRgb(L.col):await tcol(t),Lg=await imgOf(typeof LEAGUE!=='undefined'?LEAGUE:null),[cim,l1]=await Promise.all([imgOf(co.img),imgOf(OLD.DEF[t])]);
+ const c=L.col?hexRgb(L.col):await tcol(t),Lg=await imgOf(typeof LEAGUE!=='undefined'?LEAGUE:null),[cim,l1]=await Promise.all([imgOf(lpImgGet(t)||co.img),imgOf(OLD.DEF[t])]);
  await lpBase(x,W,H,c);await lpHead(x,W,t,Lg);
  if(cim)featherDraw(x,cim,70,270,940,980,.02,.14,.24,.07,.14);
  rr(x,70,1010,940,190,36);x.fillStyle='rgba(8,10,14,.78)';x.fill();x.lineWidth=3;x.strokeStyle='rgba(255,255,255,.35)';x.stroke();
@@ -5160,7 +5166,13 @@ $('lpd').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||
  else if(b.id==='lpPitch'){const L=Object.assign({},lpCur);$('lpd').close();OLD.load(S);OLD.state({cat:L.cat,rosters:RO});posterPitch(L)}
  else if(b.id==='lpGo'){const L=Object.assign({},lpCur);$('lpd').close();OLD.load(S);OLD.state({cat:L.cat,rosters:RO});posterLineup(L)}
  else if(b.id==='lpCard'){const L=Object.assign({},lpCur);$('lpd').close();posterCoachCard(L)}
+  else if(b.id==='lpImgPick')$('lpImgFile').click()
+ else if(b.id==='lpImgDel'){lpImgSet(lpCur.side==='h'?lpCur.h:lpCur.a,'');drawLp()}
  else if(b.id==='lpX')$('lpd').close()});
+$('lpImgFile').onchange=e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(!f||!lpCur)return;const t=lpCur.side==='h'?lpCur.h:lpCur.a,u=URL.createObjectURL(f),im=new Image();
+ im.onload=()=>{const k=Math.min(1,1200/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);
+  const d=c.toDataURL('image/jpeg',.86);if(!lpImgSet(t,d))toast('⚠️ تعذّر حفظ الصورة (الذاكرة ممتلئة)');drawLp()};
+ im.onerror=()=>{URL.revokeObjectURL(u);toast('⚠️ تعذّر قراءة الصورة')};im.src=u};
 $('lpCoach').onchange=e=>{lpCur.coach=e.target.value};
 $('lpForm').onchange=e=>{lpForm=e.target.value;try{localStorage.setItem('esm-form',lpForm)}catch(x){}drawLp();$('lpOrd').open=true};
 
