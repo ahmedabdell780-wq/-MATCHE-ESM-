@@ -569,7 +569,8 @@ body.vw [data-lu],body.vw [data-lp],body.vw [data-ps],body.vw [data-mp],body.vw 
 <dialog id="dg"><h2 id="dt" style="margin-top:0"></h2>
 <label>حالة المباراة</label><select id="ms" class="f"><option value="sched">📅 مبرمجة — حفظ الموعد والملعب فقط</option><option value="done">✅ منتهية — إدخال النتيجة</option><option value="pp">⏳ مؤجلة</option><option value="ex">🚫 معفاة</option></select>
 <div id="schedBox" class="sec"><label>تاريخ المباراة</label><input id="sd" type="date"><label>التوقيت</label><input id="stm" type="time"><div class="act" style="margin:4px 0 0;justify-content:space-between;align-items:center"><small class="hint" id="tmHint" style="text-align:right;flex:1;margin:0"></small><button type="button" class="btn sm alt" id="tmDef">↺ الافتراضي</button></div>
-<label>الملعب</label><select id="sstSel" class="f"></select><input id="sst" placeholder="اكتب اسم الملعب" hidden></div>
+<label>الملعب</label><select id="sstSel" class="f"></select><input id="sst" placeholder="اكتب اسم الملعب" hidden>
+<label>⚖️ حكم المباراة</label><input id="srf" placeholder="اسم الحكم (اختياري)" autocomplete="off"></div>
 <div id="resBox" class="sec"><div class="sc2"><input id="sh" type="number" min="0" inputmode="numeric"><b>-</b><input id="sa" type="number" min="0" inputmode="numeric"></div>
 <label>هدافو <span id="nh"></span> (مثال: الاسم 28' ، الاسم ×2 49')</label><input id="gh"><div class="gp" id="gph"></div><label>هدافو <span id="na2"></span></label><input id="ga"><div class="gp" id="gpa"></div>
 <div id="cardsBox"><label>🟨 إنذارات <span id="cn1"></span> (الاسم الدقيقة)</label><input id="cyh"><div class="gp" id="pkYh"></div>
@@ -3347,7 +3348,7 @@ function canEdit(h,a,v,k){
 const canConfirm=(h,a,v)=>me&&v&&v.status!=='confirmed'&&!isVis()&&me.perm!=='view_only'&&(me.role==='admin'||((me.role==='manager'||!!me.teamId)&&me.teamId!=v.enteredBy&&v.status==='pending_confirm'));
 
 /* ---- طلبات تعديل النتائج المعتمدة (تحتاج موافقة المشرف) ---- */
-const ER_F=['sh','sa','pp','ex','date','time','stad','gh','ga','yh','ya','rh','ra'];
+const ER_F=['sh','sa','pp','ex','date','time','stad','ref','gh','ga','yh','ya','rh','ra'];
 const erId=(k,t)=>k.replace('|','_')+'_'+(+t);
 const erMine=k=>(me&&me.role!=='admin'&&me.teamId)?ER[erId(k,me.teamId)]:null;
 const erList=()=>Object.keys(ER).map(i=>Object.assign({id:i},ER[i],{id:i}));
@@ -3375,7 +3376,7 @@ function erDiff(o,n,h,a){
  const sc=x=>(x.sh!==''&&x.sh!=null)?T[h]+' '+x.sh+' - '+x.sa+' '+T[a]:'';
  const L=[],add=(lb,x,y)=>{x=x==null?'':String(x);y=y==null?'':String(y);if(x!==y)L.push([lb,x||'—',y||'—'])};
  add('الحالة',st(o),st(n));add('النتيجة',sc(o),sc(n));
- add('التاريخ',o.date,n.date);add('التوقيت',o.time,n.time);add('الملعب',o.stad,n.stad);
+ add('التاريخ',o.date,n.date);add('التوقيت',o.time,n.time);add('الملعب',o.stad,n.stad);add('الحكم',o.ref,n.ref);
  add('⚽ هدافو '+T[h],o.gh,n.gh);add('⚽ هدافو '+T[a],o.ga,n.ga);
  add('🟨 إنذارات '+T[h],o.yh,n.yh);add('🟥 طرد '+T[h],o.rh,n.rh);
  add('🟨 إنذارات '+T[a],o.ya,n.ya);add('🟥 طرد '+T[a],o.ra,n.ra);
@@ -3495,7 +3496,7 @@ function mh(hm,aw,has,v){
  if(has){const sh=+v.sh,sa=+v.sa;mid=`<div class="sbp" dir="ltr"><span class="gl${sa>sh?' w':''}">${esc(v.sa)}</span><i>-</i><span class="gl${sh>sa?' w':''}">${esc(v.sh)}</span></div>`}
  return `<div class="mt">${side(hm)}<div class="sb">${mid}</div>${side(aw)}</div>`
 }
-const mi=v=>'📅 '+(v&&v.date?esc(v.date):'غير محدد')+((v&&(v.time||defTime(cat,v.date)))?' · '+esc(v.time||defTime(cat,v.date)):'')+(v&&v.stad?' · '+esc(v.stad):'');
+const mi=v=>'📅 '+(v&&v.date?esc(v.date):'غير محدد')+((v&&(v.time||defTime(cat,v.date)))?' · '+esc(v.time||defTime(cat,v.date)):'')+(v&&v.stad?' · '+esc(v.stad):'')+(v&&v.ref?' · ⚖️ '+esc(v.ref):'');
 function fixtures(){
  const p=pairs(round);let h=favStrip()+chips()+(me&&!isVis()?`<div class="act" style="margin:0 0 10px"><button class="btn alt" id="plBtn" style="flex:1">👥 إدارة اللاعبين</button><button class="btn alt" id="phBtn" style="flex:1">📷 صور اللاعبين</button></div><div class="act" style="margin:0 0 10px"><button class="btn alt" id="stBtn" style="flex:1">🧑‍💼 الطاقم الفني والإداري</button></div>`:'')+rnd()+rvBar();
  p.m.forEach(([hm,aw])=>{
@@ -3915,7 +3916,7 @@ $('tmDef').onclick=()=>{const d=defTime(edCat,$('sd').value);if(d){$('stm').valu
 function openEdit(k,asReq){
  const m=/^(?:([A-Z0-9]+)\|)?(\d+):(\d+)-(\d+)$/.exec(k);cur={k,h:+m[3],a:+m[4]};$('erBox').hidden=true;$('ds').disabled=false;$('ds').textContent='حفظ';const v=S[k]||{};
  if(!asReq&&!canEdit(cur.h,cur.a,v,k)){toast(pastLocked(k)?'🔒 جولة سابقة — استعمل «طلب تعديل (بموافقة المشرف)»':'⛔ عذراً، لا تملك صلاحية تعديل نتيجة هذه المباراة (خاصة بفريقك فقط).');return}
- $('dt').textContent=T[cur.h]+' ضد '+T[cur.a];$('sh').value=v.sh??'';$('sa').value=v.sa??'';$('sd').value=v.date||'';edCat=m[1]||'U15';$('stm').value=v.time||defTime(edCat,v.date)||'';tmAuto=!v.time;$('sst').value=v.stad||'';stadInit(cur.h,cur.a,v.stad||'');tmUi();
+ $('dt').textContent=T[cur.h]+' ضد '+T[cur.a];$('sh').value=v.sh??'';$('sa').value=v.sa??'';$('sd').value=v.date||'';edCat=m[1]||'U15';$('stm').value=v.time||defTime(edCat,v.date)||'';tmAuto=!v.time;$('sst').value=v.stad||'';$('srf').value=v.ref||'';stadInit(cur.h,cur.a,v.stad||'');tmUi();
  const has0=v.sh!==undefined&&v.sh!==''&&v.sh!=null;$('ms').value=v.ex?'ex':v.pp?'pp':has0?'done':'sched';$('gh').value=v.gh||'';$('ga').value=v.ga||'';$('nh').textContent=T[cur.h];$('na2').textContent=T[cur.a];
   ['yh','ya','rh','ra'].forEach(k=>$('c'+k).value=v[k]||'');
   ['cn1','cn2'].forEach(i=>$(i).textContent=T[cur.h]);['cn3','cn4'].forEach(i=>$(i).textContent=T[cur.a]);
@@ -3937,7 +3938,7 @@ $('ds').onclick=async()=>{
  const m=$('ms').value,pp=m==='pp',ex=m==='ex',done=m==='done',x=$('sh').value,y=$('sa').value;
  if(done&&(x===''||y===''||+x<0||+y<0))return toast('⚠️ أدخل نتيجة صحيحة للمباراة المنتهية');
  const adm=me.role==='admin',old=S[cur.k]||{},d=Object.assign({},old);delete d._hid;delete d.lineups;
- Object.assign(d,{sh:done?String(+x):'',sa:done?String(+y):'',pp,ex,date:ex?'':$('sd').value,time:ex?'':$('stm').value,stad:ex?'':$('sst').value.trim(),
+ Object.assign(d,{sh:done?String(+x):'',sa:done?String(+y):'',pp,ex,date:ex?'':$('sd').value,time:ex?'':$('stm').value,stad:ex?'':$('sst').value.trim(),ref:ex?'':$('srf').value.trim(),
   gh:done?$('gh').value.trim():'',ga:done?$('ga').value.trim():'',
   status:done?(adm?'confirmed':'pending_confirm'):'scheduled',enteredBy:done?(adm?'admin':me.teamId):(old.enteredBy||'')});
  ['yh','ya','rh','ra'].forEach(k=>{d[k]=done?$('c'+k).value.trim():''});
@@ -4865,7 +4866,7 @@ h3{margin:7px 0 3px;font-size:12px;color:#0f6b3a}.ft{text-align:center;font-size
 </div>
 <div class="hd">${lg0}<div><h1>الرابطة الجهوية لكرة القدم — تيبازة</h1><h2>ورقة المباراة الرسمية · الفئة ${esc(cat)} · موسم 2026 / 2027</h2></div>${img(h,52)}</div>
 <table class="info"><tr><td><b>الجولة:</b> ${r}</td><td><b>التاريخ:</b> ${esc(v.date||'')}</td><td><b>التوقيت:</b> ${esc(v.time||'')}</td><td><b>الملعب:</b> ${esc(v.stad||'')}</td></tr>
-<tr><td colspan="2"><b>الحكم:</b></td><td><b>المساعد 1:</b></td><td><b>المساعد 2:</b></td></tr></table>
+<tr><td colspan="2"><b>الحكم:</b> ${esc(v.ref||'')}</td><td><b>المساعد 1:</b></td><td><b>المساعد 2:</b></td></tr></table>
 <div class="row">${team(h)}${team(a)}</div>
 <h3>التبديلات</h3><table><tr><th>الفريق</th><th style="width:50px">الدقيقة</th><th>اللاعب الخارج</th><th>اللاعب الداخل</th></tr>${subRows}</table>
 <h3>النتيجة والأحداث</h3>
@@ -5067,6 +5068,7 @@ async function posterLineup(L){
  tx(x,'VS',BX+204+0,BY+36,F(900,52),'#fff');tx(x,dtm(v,L.cat),BX+204,BY+84,F(900,36),'#ffd54a');
  [[BX+LW/2,opp],[BX+268+LW/2,t]].forEach(([X0,id])=>{rr(x,X0-LW/2,BY+122,LW,46,23);x.fillStyle='rgba(8,10,14,.62)';x.fill();tx(x,T[id],X0,BY+146,F(800,22),'#fff','center',LW-16)});
  tx(x,(v.date?dAr(v.date):'الموعد يُعلن لاحقاً')+(v.stad?' · ملعب '+v.stad:''),BX+204,BY+200,F(700,24),'#fff','center',420);
+  if(v.ref)tx(x,'⚖️ الحكم: '+v.ref,BX+204,BY+236,F(700,22),'rgba(255,255,255,.85)','center',420);
  tx(x,`${L.cat} · الجولة ${L.round} · ${L.round<=11?'ذهاب':'إياب'}`,PX+PW/2,PY+PH+44,F(700,28),'rgba(255,255,255,.85)');
  await footer(x,W,H,Lg);
  await OLD.saveImg(cv,'تشكيلة-'+T[t]+'-'+L.cat+'.png')
@@ -5465,7 +5467,7 @@ function mkPostMatch(k){const m=/^(?:([A-Z0-9]+)\|)?(\d+):(\d+)-(\d+)$/.exec(k),
  if(mkOk(v)){if(v.gh)t+=`\n\n🥅 أهداف ${T[h]}: ${mkGs(v.gh)}`;if(v.ga)t+=`\n🥅 أهداف ${T[a]}: ${mkGs(v.ga)}`;
   const y=[v.yh&&`${T[h]}: ${mkGs(v.yh)}`,v.ya&&`${T[a]}: ${mkGs(v.ya)}`].filter(Boolean),rd=[v.rh&&`${T[h]}: ${mkGs(v.rh)}`,v.ra&&`${T[a]}: ${mkGs(v.ra)}`].filter(Boolean);
   if(y.length)t+='\n\n🟨 إنذارات\n'+y.join('\n');if(rd.length)t+='\n\n🟥 طرد\n'+rd.join('\n')}
- const info=[v.date&&'📅 '+dAr(v.date),'⏰ '+dtm(v,c),v.stad&&'📍 '+v.stad].filter(Boolean);t+='\n\n'+info.join(' · ');
+ const info=[v.date&&'📅 '+dAr(v.date),'⏰ '+dtm(v,c),v.stad&&'📍 '+v.stad,v.ref&&'⚖️ الحكم: '+v.ref].filter(Boolean);t+='\n\n'+info.join(' · ');
  return t+mkHT(c,T[h],T[a])}
 function mkPostRound(c,r){const p=pairs(r);let t=`📋 مباريات ${mkRL(r)} · ${c}\n`;
  p.m.forEach(([h,a])=>{const v=S[K(c,r,h,a)]||{};t+='\n'+(mkOk(v)?`✅ ${T[h]} ${v.sh} - ${v.sa} ${T[a]}`:v.pp?`⏸ ${T[h]} × ${T[a]} (مؤجلة)`:`🕒 ${T[h]} × ${T[a]}${v.date?' — '+dAr(v.date)+' '+dtm(v,c):''}`)});
@@ -6358,7 +6360,7 @@ async function scResult(k){
  [[T[h],xh],[T[a],xa]].forEach(([n,x])=>drawText(c,n,x,688,fit(c,n,380,46,900),900,'#ffffff'));
  const L=[scGoals(v.gh),scGoals(v.ga)];
  [[L[0],xh],[L[1],xa]].forEach(([ls,x])=>{ls.slice(0,6).forEach((g,i)=>drawText(c,'⚽ '+g,x,752+i*50,fit(c,'⚽ '+g,420,30,700),700,'rgba(255,255,255,.92)'));if(ls.length>6)drawText(c,'… +'+(ls.length-6),x,752+6*50,26,700,'#f2b632')});
- const when=[v.date,v.time,v.stad].filter(Boolean).join(' · ');
+ const when=[v.date,v.time,v.stad,v.ref&&'الحكم: '+v.ref].filter(Boolean).join(' · ');
  if(when)drawText(c,'📅 '+when,W/2,1118,fit(c,'📅 '+when,W-120,36,700),700,'#ffffff');
  const ok=v.status==='confirmed';
  scRR(c,W/2-190,1150,380,56,28);c.fillStyle=ok?'#16a34a':'#b45309';c.fill();drawText(c,ok?'✅ نتيجة معتمدة':'⏳ نتيجة أولية',W/2,1179,30,800,'#fff');
