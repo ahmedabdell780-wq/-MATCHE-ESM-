@@ -1,9 +1,10 @@
-const CACHE_NAME = 'esm-messelmoun-v65';
+const CACHE_NAME = 'esm-messelmoun-v66';
 const ASSETS = [
   './',
   './index.html',
   './logos.js',
   './league-logo.png',
+  './card-bg.jpg',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
