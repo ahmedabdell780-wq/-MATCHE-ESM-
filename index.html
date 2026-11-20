@@ -570,7 +570,7 @@ body.vw [data-lu],body.vw [data-lp],body.vw [data-ps],body.vw [data-mp],body.vw 
 <label>حالة المباراة</label><select id="ms" class="f"><option value="sched">📅 مبرمجة — حفظ الموعد والملعب فقط</option><option value="done">✅ منتهية — إدخال النتيجة</option><option value="pp">⏳ مؤجلة</option><option value="ex">🚫 معفاة</option></select>
 <div id="schedBox" class="sec"><label>تاريخ المباراة</label><input id="sd" type="date"><label>التوقيت</label><input id="stm" type="time"><div class="act" style="margin:4px 0 0;justify-content:space-between;align-items:center"><small class="hint" id="tmHint" style="text-align:right;flex:1;margin:0"></small><button type="button" class="btn sm alt" id="tmDef">↺ الافتراضي</button></div>
 <label>الملعب</label><select id="sstSel" class="f"></select><input id="sst" placeholder="اكتب اسم الملعب" hidden>
-<label>⚖️ حكم المباراة</label><input id="srf" placeholder="اسم الحكم (اختياري)" autocomplete="off"></div>
+<label>⚖️ حكم المباراة</label><select id="srfSel" class="f"></select><input id="srf" placeholder="اكتب اسم الحكم" autocomplete="off" hidden></div>
 <div id="resBox" class="sec"><div class="sc2"><input id="sh" type="number" min="0" inputmode="numeric"><b>-</b><input id="sa" type="number" min="0" inputmode="numeric"></div>
 <label>هدافو <span id="nh"></span> (مثال: الاسم 28' ، الاسم ×2 49')</label><input id="gh"><div class="gp" id="gph"></div><label>هدافو <span id="na2"></span></label><input id="ga"><div class="gp" id="gpa"></div>
 <div id="cardsBox"><label>🟨 إنذارات <span id="cn1"></span> (الاسم الدقيقة)</label><input id="cyh"><div class="gp" id="pkYh"></div>
@@ -3903,6 +3903,15 @@ function stadOpts(h,a){
  const lab=s=>`${s} — ${by[s].join(' · ')}`,sug=[...new Set([STAD[h],STAD[a]].filter(Boolean))];
  return `<optgroup label="المقترح (صاحب الأرض ثم الضيف)">${sug.map(s=>`<option value="${esc(s)}">${esc(lab(s))}</option>`).join('')}</optgroup><optgroup label="كل الملاعب">${Object.keys(by).map(s=>`<option value="${esc(s)}">${esc(lab(s))}</option>`).join('')}</optgroup><option value="__o">✍️ ملعب آخر…</option>`
 }
+const REFS=['خليف','رواني','قسمية','طاكوش','حرات','ملوان','بلخضر','الأحول','عرافة','قعوب','غربيي','بودلالي','بن خوشة','حديد','مرزوق','وادفل','تومي','عبد اللاوي','بوجلال','مشاي','بوقادة','نمر'];
+function refInit(val){
+ const sel=$('srfSel'),list=[...REFS].sort((a,b)=>a.localeCompare(b,'ar'));
+ sel.innerHTML='<option value="">— بدون حكم / غير محدد —</option>'+list.map(r=>`<option value="${esc(r)}">${esc(r)}</option>`).join('')+'<option value="__o">✍️ حكم آخر…</option>';
+ if(!val){sel.value='';$('srf').hidden=true;$('srf').value=''}
+ else if(list.includes(val)){sel.value=val;$('srf').hidden=true;$('srf').value=val}
+ else{sel.value='__o';$('srf').hidden=false;$('srf').value=val}
+}
+$('srfSel').onchange=()=>{const v=$('srfSel').value;if(v==='__o'){$('srf').hidden=false;$('srf').value='';$('srf').focus()}else{$('srf').hidden=true;$('srf').value=v}};
 function stadInit(h,a,val){
  const sel=$('sstSel');sel.innerHTML=stadOpts(h,a);const has=[...sel.options].some(o=>o.value===val&&val);
  if(val&&has)sel.value=val;else if(val){sel.value='__o'}else{sel.value=STAD[h]||'__o';}
@@ -3919,7 +3928,7 @@ $('tmDef').onclick=()=>{const d=defTime(edCat,$('sd').value);if(d){$('stm').valu
 function openEdit(k,asReq){
  const m=/^(?:([A-Z0-9]+)\|)?(\d+):(\d+)-(\d+)$/.exec(k);cur={k,h:+m[3],a:+m[4]};$('erBox').hidden=true;$('ds').disabled=false;$('ds').textContent='حفظ';const v=S[k]||{};
  if(!asReq&&!canEdit(cur.h,cur.a,v,k)){toast(pastLocked(k)?'🔒 جولة سابقة — استعمل «طلب تعديل (بموافقة المشرف)»':'⛔ عذراً، لا تملك صلاحية تعديل نتيجة هذه المباراة (خاصة بفريقك فقط).');return}
- $('dt').textContent=T[cur.h]+' ضد '+T[cur.a];$('sh').value=v.sh??'';$('sa').value=v.sa??'';$('sd').value=v.date||'';edCat=m[1]||'U15';$('stm').value=v.time||defTime(edCat,v.date)||'';tmAuto=!v.time;$('sst').value=v.stad||'';$('srf').value=v.ref||'';stadInit(cur.h,cur.a,v.stad||'');tmUi();
+ $('dt').textContent=T[cur.h]+' ضد '+T[cur.a];$('sh').value=v.sh??'';$('sa').value=v.sa??'';$('sd').value=v.date||'';edCat=m[1]||'U15';$('stm').value=v.time||defTime(edCat,v.date)||'';tmAuto=!v.time;$('sst').value=v.stad||'';refInit(v.ref||'');stadInit(cur.h,cur.a,v.stad||'');tmUi();
  const has0=v.sh!==undefined&&v.sh!==''&&v.sh!=null;$('ms').value=v.ex?'ex':v.pp?'pp':has0?'done':'sched';$('gh').value=v.gh||'';$('ga').value=v.ga||'';$('nh').textContent=T[cur.h];$('na2').textContent=T[cur.a];
   ['yh','ya','rh','ra'].forEach(k=>$('c'+k).value=v[k]||'');
   ['cn1','cn2'].forEach(i=>$(i).textContent=T[cur.h]);['cn3','cn4'].forEach(i=>$(i).textContent=T[cur.a]);
