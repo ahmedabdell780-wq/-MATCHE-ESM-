@@ -27,10 +27,8 @@ const API_KEY = process.env.FIREBASE_API_KEY || '';
 const PROJECT = process.env.FIREBASE_PROJECT_ID || '';
 const ORIGINS = (process.env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim().replace(/\/+$/, '')).filter(Boolean);
 const ALLOW_TRANSCODE = process.env.ALLOW_TRANSCODE !== '0';
-const FORCE_TRANSCODE = process.env.FORCE_TRANSCODE === '1';
+const FORCE_TRANSCODE = process.env.FORCE_TRANSCODE !== '0';
 const ALLOW_CUSTOM = process.env.ALLOW_CUSTOM === '1';
-const FB_PAGE_ID = (process.env.FB_PAGE_ID || '').trim();
-const FB_PAGE_TOKEN = (process.env.FB_PAGE_TOKEN || '').trim();
 const MAX_HOURS = 3;
 const MAX_BACKLOG = 8 * 1024 * 1024; // 8MB
 
@@ -284,7 +282,7 @@ const server = http.createServer((req, res) => {
   }
   if (path === '/diag') {
     res.writeHead(200, { 'content-type': 'application/json; charset=utf-8', 'access-control-allow-origin': '*' });
-    return res.end(JSON.stringify({ ...diag, push: !!fcm, fbAuto: !!(FB_PAGE_ID && FB_PAGE_TOKEN), forceTranscode: FORCE_TRANSCODE, replay: { pre: CLIP_PRE, post: CLIP_POST } }, null, 1));
+    return res.end(JSON.stringify({ ...diag, push: !!fcm, replay: { pre: CLIP_PRE, post: CLIP_POST } }, null, 1));
   }
   if (path === '/healthz' || path === '/') {
     res.writeHead(200, { 'content-type': 'text/plain; charset=utf-8', 'access-control-allow-origin': '*' });
@@ -398,26 +396,19 @@ function buildArgs(url, tcUrl, mime) {
   if (transcode && !FORCE_TRANSCODE && !ALLOW_TRANSCODE) throw new Error('متصفحك لا يرسل H.264. استعمل Safari أو Chrome حديثاً.');
   const base = ['-hide_banner', '-loglevel', 'info', '-fflags', '+genpts+nobuffer', '-probesize', '1000000', '-analyzeduration', '1000000', '-i', 'pipe:0'];
   const video = transcode
-    ? ['-map', '0:v:0', '-c:v', 'libx264', '-preset', 'ultrafast', '-tune', 'zerolatency', '-pix_fmt', 'yuv420p', '-b:v', '1200k', '-maxrate', '1500k', '-bufsize', '2400k', '-g', '60', '-keyint_min', '60', '-sc_threshold', '0', '-r', '30']
-    : ['-map', '0:v:0', '-c:v', 'copy'];
-  const audio = ['-map', '0:a:0?', '-c:a', 'aac', '-b:a', '128k', '-ar', '44100', '-ac', '2'];
+    ? ['-c:v', 'libx264', '-preset', 'ultrafast', '-tune', 'zerolatency', '-pix_fmt', 'yuv420p', '-b:v', '1500k', '-maxrate', '1800k', '-bufsize', '3000k', '-g', '60', '-keyint_min', '60', '-sc_threshold', '0', '-r', '30']
+    : ['-c:v', 'copy'];
   const rtmpOpts = tcUrl ? ['-rtmp_tcurl', tcUrl] : [];
-  return [...base, ...video, ...audio, ...rtmpOpts, '-f', 'flv', url];
+  return [...base, ...video, '-c:a', 'aac', '-b:a', '128k', '-ar', '44100', '-ac', '2', ...rtmpOpts, '-f', 'flv', url];
 }
 
 wss.on('connection', (ws, req) => {
   const origin = req.headers.origin || '';
   if (ORIGINS.length && !ORIGINS.includes(origin)) { ws.close(1008, 'origin'); return; }
   const send = o => { try { ws.readyState === 1 && ws.send(JSON.stringify(o)); } catch (e) {} };
-  let ff = null, ring = null, uid = null, started = false, timer = null, beat = null, rx = 0, st = { frames: 0, fps: 0, kbps: 0 }, statT = null, secret = '', tunnel = null, liveVideoId = null;
+  let ff = null, ring = null, uid = null, started = false, timer = null, beat = null, rx = 0, st = { frames: 0, fps: 0, kbps: 0 }, statT = null, secret = '', tunnel = null;
   const stop = () => {
     clearTimeout(timer); clearInterval(beat); clearInterval(statT);
-    if (liveVideoId && FB_PAGE_TOKEN) {
-      try {
-        fetch(`https://graph.facebook.com/v21.0/${liveVideoId}?end_live_video=true&access_token=${encodeURIComponent(FB_PAGE_TOKEN)}`, { method: 'POST' }).catch(() => {});
-      } catch (x) {}
-      liveVideoId = null;
-    }
     if (tunnel) { try { tunnel.close(); } catch (e) {} tunnel = null; }
     if (uid && active.get(uid) === stop) active.delete(uid);
     if (ring) { try { ring.close(); } catch (e) {} ring = null; }
@@ -448,39 +439,14 @@ wss.on('connection', (ws, req) => {
       const m = JSON.parse(data.toString());
       if (m.type !== 'start') throw new Error('طلب غير صالح');
       uid = (await authorize(m.token)).uid;
-      let url, watchUrl = '';
-      if (m.target === 'facebook_auto') {
-        if (!FB_PAGE_ID || !FB_PAGE_TOKEN) {
-          throw new Error('خاصية فيسبوك التلقائي تتطلب ضبط FB_PAGE_ID وFB_PAGE_TOKEN في إعدادات الخادم');
-        }
-        const title = String(m.title || 'بث مباشر · مباريات رابطة تيبازة').slice(0, 100);
-        const fbRes = await fetch(`https://graph.facebook.com/v21.0/${encodeURIComponent(FB_PAGE_ID)}/live_videos`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            access_token: FB_PAGE_TOKEN,
-            title: title,
-            description: title,
-            status: 'LIVE_NOW',
-            stream_type: 'REGULAR'
-          })
-        });
-        const fbData = await fbRes.json();
-        if (!fbRes.ok || !fbData.secure_stream_url) {
-          const fbErr = (fbData && fbData.error && fbData.error.message) || fbRes.statusText;
-          throw new Error('تعذّر بدء البث على فيسبوك تلقائياً: ' + fbErr);
-        }
-        url = fbData.secure_stream_url;
-        liveVideoId = fbData.id;
-        watchUrl = `https://www.facebook.com/${FB_PAGE_ID}/videos/${fbData.id}`;
-      } else if (m.target === 'custom') {
+      const key = String(m.key || '').trim();
+      if (!/^[A-Za-z0-9_\-?=&.]{6,300}$/.test(key) && m.target !== 'custom') throw new Error('مفتاح البث غير صالح');
+      let url;
+      if (m.target === 'custom') {
         if (!ALLOW_CUSTOM) throw new Error('العنوان المخصص غير مفعّل على الخادم');
         url = await safeHost(String(m.url || '').trim());
-      } else if (TARGETS[m.target]) {
-        const key = String(m.key || '').trim();
-        if (!/^[A-Za-z0-9_\-?=&.]{6,300}$/.test(key)) throw new Error('مفتاح البث غير صالح');
-        url = TARGETS[m.target](key);
-      } else throw new Error('وجهة غير معروفة');
+      } else if (TARGETS[m.target]) url = TARGETS[m.target](key);
+      else throw new Error('وجهة غير معروفة');
       const prev = active.get(uid); if (prev) prev();           // بث واحد لكل حساب
       active.set(uid, stop);
       try {
@@ -511,15 +477,7 @@ wss.on('connection', (ws, req) => {
       });
       timer = setTimeout(() => { send({ type: 'ended', msg: 'بلغ البث الحد الأقصى للمدة' }); stop(); ws.close(); }, MAX_HOURS * 3600 * 1000);
       if (/h264|avc|mp4/i.test(m.mime || '')) { try { ring = createRing(); } catch (e) { ring = null; } }
-      send({
-        type: 'ready',
-        mode: FORCE_TRANSCODE || !/h264|avc|mp4/i.test(m.mime || '') ? 'transcode' : 'copy',
-        auto: m.target === 'facebook_auto',
-        watch: watchUrl,
-        replay: !!ring,
-        pre: CLIP_PRE,
-        post: CLIP_POST
-      });
+      send({ type: 'ready', mode: FORCE_TRANSCODE || !/h264|avc|mp4/i.test(m.mime || '') ? 'transcode' : 'copy', replay: !!ring, pre: CLIP_PRE, post: CLIP_POST });
     } catch (e) { send({ type: 'error', msg: e.message || 'خطأ' }); stop(); try { ws.close(); } catch (x) {} }
   });
   ws.on('close', stop);

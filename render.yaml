@@ -14,12 +14,8 @@ services:
       - key: ALLOWED_ORIGINS
         value: https://esm-matches.onrender.com
       - key: FORCE_TRANSCODE
-        value: "0"
+        value: "1"
       - key: ALLOW_TRANSCODE
         value: "1"
       - key: FIREBASE_SERVICE_ACCOUNT
-        sync: false
-      - key: FB_PAGE_ID
-        sync: false
-      - key: FB_PAGE_TOKEN
         sync: false
