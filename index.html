@@ -3872,7 +3872,12 @@ $('br').onclick=async()=>{
  say('re','');const n=$('rn').value.trim(),p=$('rp').value.trim(),w=$('rw').value;
  if(!n||ph(p).length<9)return say('re','⚠️ أدخل الاسم ورقم هاتف صحيحاً');
  if(w.length<6)return say('re','⚠️ كلمة المرور قصيرة');if(w!==$('rc').value)return say('re','⚠️ كلمتا المرور غير متطابقتين');
- if(!auth)return say('re','⚠️ الخدمة غير جاهزة، أعد تحميل الصفحة');reg=true;const bb=$('br');bb.disabled=true;bb.textContent='⏳ جارٍ الإرسال…';
+ if(!auth)return say('re','⚠️ الخدمة غير جاهزة، أعد تحميل الصفحة');
+ /* FIX-DUP: فحص رقم الهاتف في Firestore قبل التسجيل */
+ try{const _ph9=ph(p).slice(-9);const _qs=await db.collection('users').where('phone','>=','0').get();
+  const _dup=_qs.docs.find(d=>{const _d=d.data();return _d.status!=='deleted'&&ph(_d.phone||'').slice(-9)===_ph9});
+  if(_dup){const _st=_dup.data().status;reg=false;return say('re',_st==='pending'?'⚠️ تم إرسال طلب تسجيل بهذا الرقم مسبقاً — انتظر اعتماد المشرف':'⚠️ هذا الرقم مسجَّل بالفعل. استعمل «تسجيل الدخول»')}}catch(_e){}
+ reg=true;const bb=$('br');bb.disabled=true;bb.textContent='⏳ جارٍ الإرسال…';
  try{const c=await auth.createUserWithEmailAndPassword(ph(p)+'@esm.local',w);
   await db.collection('users').doc(c.user.uid).set(rdoc(n,p));
   await auth.signOut();['rn','rp','rw','rc'].forEach(i=>$(i).value='');$('tl').click();say('le','✅ تم إرسال طلب إنشاء حسابك. بعد اعتماد المشرف العام يمكنك تسجيل الدخول (للاستعجال راسله عبر الواتساب).',true)}
