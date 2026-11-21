@@ -515,6 +515,99 @@ body.vw [data-lu],body.vw [data-lp],body.vw [data-ps],body.vw [data-mp],body.vw 
 .mbn .mic{font-size:24px;flex:none}.mbn .mtx{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.35}.mbn .mtx b{font-size:13.5px}.mbn .mtx span{font-size:12.5px;opacity:.85;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mbn .mx{background:none;border:0;color:#fff;opacity:.7;font-size:16px;cursor:pointer;padding:4px}
 @keyframes mbIn{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:none}}
+
+/* ============================================================
+   🏆 أنماط صفحة النادي التفاعلية (Team Profile Modal)
+   ============================================================ */
+dialog#teamProfileModal{max-width:580px;width:95%;padding:0;border-radius:24px;border:1px solid rgba(242,182,50,0.35);background:#0a1610;color:#eaf3ec;box-shadow:0 30px 80px rgba(0,0,0,0.85);overflow:hidden;font-family:inherit;text-align:right;margin:auto}
+dialog#teamProfileModal::backdrop{background:rgba(3,8,5,0.78);backdrop-filter:blur(8px)}
+.tm-wrap{display:flex;flex-direction:column;max-height:88vh;overflow:hidden}
+.tm-header{position:relative;padding:22px 18px 16px;display:flex;align-items:center;gap:16px;border-bottom:2px solid rgba(242,182,50,0.4);box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+.tm-close{position:absolute;top:14px;left:14px;width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,0.25);background:rgba(0,0,0,0.45);color:#fff;font-size:20px;line-height:1;display:grid;place-items:center;cursor:pointer;z-index:5;transition:transform .2s,background .2s}
+.tm-close:hover{background:rgba(200,32,47,0.7);transform:scale(1.05)}
+.tm-crest-ring{width:76px;height:76px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.95),rgba(242,182,50,0.25) 70%);display:grid;place-items:center;padding:6px;box-shadow:0 4px 14px rgba(0,0,0,0.4);flex-shrink:0}
+.tm-logo{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3))}
+.tm-title-box{flex:1;min-width:0}
+.tm-name{margin:0 0 6px;font-size:20px;font-weight:900;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,0.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tm-meta-row{display:flex;flex-wrap:wrap;gap:6px}
+.tm-badge{font-size:11.5px;font-weight:700;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.2);color:var(--gold);padding:3px 9px;border-radius:20px}
+.tm-clubs-bar{display:flex;gap:6px;padding:10px 14px;background:rgba(0,0,0,0.3);overflow-x:auto;border-bottom:1px solid var(--ln);scrollbar-width:none}
+.tm-clubs-bar::-webkit-scrollbar{display:none}
+.tm-club-chip{flex-shrink:0;display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:var(--tx);font-size:12px;cursor:pointer;transition:all .2s}
+.tm-club-chip img{width:18px;height:18px;object-fit:contain}
+.tm-club-chip.active{background:var(--g);border-color:var(--gold);color:#fff;font-weight:800}
+.tm-cats{display:flex;gap:6px;padding:8px 14px;background:rgba(16,36,26,0.7);border-bottom:1px solid var(--ln)}
+.tm-cat-btn{flex:1;padding:7px 4px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:var(--mu);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
+.tm-cat-btn.active{background:var(--g);color:#fff;border-color:var(--gold);box-shadow:0 2px 8px rgba(31,90,52,0.5)}
+.tm-tabs{display:flex;border-bottom:1px solid var(--ln);background:rgba(10,22,16,0.95)}
+.tm-tab{flex:1;padding:10px 4px;border:none;background:none;color:var(--mu);font-size:13px;font-weight:700;border-bottom:2px solid transparent;cursor:pointer;transition:all .2s}
+.tm-tab.active{color:var(--gold);border-bottom-color:var(--gold);background:rgba(242,182,50,0.08)}
+.tm-body{flex:1;overflow-y:auto;padding:14px}
+.tm-stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.tm-stat-box{background:rgba(16,36,26,0.85);border:1px solid var(--ln);border-radius:14px;padding:10px 6px;text-align:center;display:flex;flex-direction:column;gap:2px}
+.tm-stat-box.gold{background:linear-gradient(135deg,rgba(242,182,50,0.22),rgba(16,36,26,0.9));border-color:rgba(242,182,50,0.4)}
+.tm-stat-box.green .tm-stat-val{color:#22c55e}
+.tm-stat-box.yellow .tm-stat-val{color:var(--gold)}
+.tm-stat-box.red .tm-stat-val{color:#ef4444}
+.tm-stat-val{font-size:17px;font-weight:900;color:#fff}
+.tm-stat-lbl{font-size:11px;color:var(--mu)}
+.tm-card-section{background:rgba(16,36,26,0.65);border:1px solid var(--ln);border-radius:14px;padding:12px;margin-bottom:12px}
+.tm-sec-title{font-size:13px;font-weight:800;color:var(--gold);margin-bottom:10px}
+.tm-rate-bar{height:10px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,0.1);display:flex;margin-bottom:8px}
+.tm-rate-part.win{background:#22c55e}
+.tm-rate-part.draw{background:var(--gold)}
+.tm-rate-part.loss{background:#ef4444}
+.tm-rate-legend{display:flex;justify-content:space-around;font-size:11.5px;color:var(--mu)}
+.tm-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:4px}
+.tm-dot.win{background:#22c55e}
+.tm-dot.draw{background:var(--gold)}
+.tm-dot.loss{background:#ef4444}
+.tm-form-badges{display:flex;gap:8px;justify-content:center}
+.tm-form-dot{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:900;color:#fff;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.3)}
+.tm-form-dot.w{background:#22c55e}
+.tm-form-dot.d{background:var(--gold);color:#000}
+.tm-form-dot.l{background:#ef4444}
+.tm-scorers-list{display:flex;flex-direction:column;gap:6px}
+.tm-scorer-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(255,255,255,0.04);border-radius:10px;border:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:all .2s}
+.tm-scorer-item:hover{background:rgba(255,255,255,0.08);transform:translateX(-2px)}
+.tm-rank-badge{font-size:12px;font-weight:800;width:20px;color:var(--gold)}
+.tm-player-name{flex:1;font-weight:700;font-size:13px}
+.tm-goals-badge{font-size:13px;font-weight:800;color:#22c55e}
+.tm-empty-hint{text-align:center;color:var(--mu);font-size:12.5px;padding:10px}
+.tm-squad-header{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:800;color:var(--gold);margin-bottom:10px}
+.tm-players-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.tm-player-card{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(16,36,26,0.85);border:1px solid var(--ln);border-radius:12px;cursor:pointer;transition:all .2s}
+.tm-player-card:hover{background:rgba(31,90,52,0.4);border-color:rgba(242,182,50,0.4);transform:translateX(-3px)}
+.tm-player-jersey{font-size:12px;font-weight:900;color:var(--gold);background:rgba(0,0,0,0.35);padding:4px 8px;border-radius:8px}
+.tm-player-info{flex:1;min-width:0}
+.tm-player-info .tm-player-name{display:block;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tm-player-badges{display:flex;gap:6px;margin-top:3px;font-size:11px}
+.tm-badge-goal{color:#22c55e;font-weight:800}
+.tm-badge-yellow{color:var(--gold);font-weight:800}
+.tm-badge-red{color:#ef4444;font-weight:800}
+.tm-player-arrow{color:var(--mu);font-size:12px}
+.tm-matches-list{display:flex;flex-direction:column;gap:10px}
+.tm-match-card{background:rgba(16,36,26,0.85);border:1px solid var(--ln);border-radius:14px;padding:10px 14px}
+.tm-match-card.win{border-right:4px solid #22c55e}
+.tm-match-card.draw{border-right:4px solid var(--gold)}
+.tm-match-card.loss{border-right:4px solid #ef4444}
+.tm-match-card.upcoming{border-right:4px solid var(--mu)}
+.tm-match-top{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--mu);margin-bottom:8px}
+.tm-round-tag{font-weight:800;color:var(--gold)}
+.tm-outcome-tag.win{color:#22c55e;font-weight:800}
+.tm-outcome-tag.draw{color:var(--gold);font-weight:800}
+.tm-outcome-tag.loss{color:#ef4444;font-weight:800}
+.tm-match-teams{display:flex;align-items:center;justify-content:space-between;margin:6px 0}
+.tm-m-team{flex:1;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700}
+.tm-m-team:last-child{justify-content:flex-end;text-align:left}
+.tm-m-team img{width:26px;height:26px;object-fit:contain}
+.tm-m-team.my-team{color:#fff;font-weight:900}
+.tm-score-pill{font-size:16px;font-weight:900;padding:4px 12px;border-radius:12px;background:rgba(0,0,0,0.45)}
+.tm-score-pill.win{color:#22c55e}
+.tm-score-pill.draw{color:var(--gold)}
+.tm-score-pill.loss{color:#ef4444}
+.tm-vs-pill{font-size:11px;font-weight:800;padding:3px 8px;border-radius:6px;background:rgba(255,255,255,0.1);color:var(--mu)}
+.tm-match-bottom{display:flex;justify-content:space-between;font-size:11px;color:var(--mu);border-top:1px solid rgba(255,255,255,0.06);padding-top:6px;margin-top:6px}
 </style>
 <script>
 /* الخط المختار من «المظهر» — مصدر واحد لكل البطاقات والطباعة */
@@ -572,7 +665,7 @@ body.vw [data-lu],body.vw [data-lp],body.vw [data-ps],body.vw [data-mp],body.vw 
 <label>الملعب</label><select id="sstSel" class="f"></select><input id="sst" placeholder="اكتب اسم الملعب" hidden>
 <label>⚖️ حكم المباراة</label><select id="srfSel" class="f"></select><input id="srf" placeholder="اكتب اسم الحكم" autocomplete="off" hidden></div>
 <div id="resBox" class="sec"><div class="sc2"><input id="sh" type="number" min="0" inputmode="numeric"><b>-</b><input id="sa" type="number" min="0" inputmode="numeric"></div>
-<label>هدافو <span id="nh"></span> (مثال: الاسم 28' ، الاسم ×2 49')</label><input id="gh"><div class="gp" id="gph"></div><label>هدافو <span id="na2"></span></label><input id="ga"><div class="gp" id="gpa"></div>
+<label>هدافو <span id="nh"></span> (مثال: الاسم 28' ، الاسم ×2 49')</label><input id="gh"><div class="gp" id="gph"></div><label>هدافو <span id="na2"></span></label><input id="ga"><div class="gp" id="gpa"></div><div style="margin:8px 0;display:flex"><button type="button" class="btn alt sm" id="btnGoalNotify" style="flex:1;background:rgba(34,197,94,0.18);border:1.5px solid #22c55e;color:#22c55e;font-weight:800;padding:7px 10px">📢 إرسال إشعار هدف الآن (مباشر)</button></div>
 <div id="cardsBox"><label>🟨 إنذارات <span id="cn1"></span> (الاسم الدقيقة)</label><input id="cyh"><div class="gp" id="pkYh"></div>
 <label>🟥 طرد <span id="cn2"></span></label><input id="crh"><div class="gp" id="pkRh"></div>
 <label>🟨 إنذارات <span id="cn3"></span></label><input id="cya"><div class="gp" id="pkYa"></div>
@@ -1048,6 +1141,99 @@ body.vw [data-lu],body.vw [data-lp],body.vw [data-ps],body.vw [data-mp],body.vw 
 .tlm-sumrow span{color:var(--mu);font-size:12px}
 .tlm-empty{text-align:center;padding:34px 12px;color:var(--mu);font-size:13.5px;font-weight:700;line-height:1.7}
 .tlm-empty b{display:block;font-size:30px;margin-bottom:6px}
+
+/* ============================================================
+   🏆 أنماط صفحة النادي التفاعلية (Team Profile Modal)
+   ============================================================ */
+dialog#teamProfileModal{max-width:580px;width:95%;padding:0;border-radius:24px;border:1px solid rgba(242,182,50,0.35);background:#0a1610;color:#eaf3ec;box-shadow:0 30px 80px rgba(0,0,0,0.85);overflow:hidden;font-family:inherit;text-align:right;margin:auto}
+dialog#teamProfileModal::backdrop{background:rgba(3,8,5,0.78);backdrop-filter:blur(8px)}
+.tm-wrap{display:flex;flex-direction:column;max-height:88vh;overflow:hidden}
+.tm-header{position:relative;padding:22px 18px 16px;display:flex;align-items:center;gap:16px;border-bottom:2px solid rgba(242,182,50,0.4);box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+.tm-close{position:absolute;top:14px;left:14px;width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,0.25);background:rgba(0,0,0,0.45);color:#fff;font-size:20px;line-height:1;display:grid;place-items:center;cursor:pointer;z-index:5;transition:transform .2s,background .2s}
+.tm-close:hover{background:rgba(200,32,47,0.7);transform:scale(1.05)}
+.tm-crest-ring{width:76px;height:76px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.95),rgba(242,182,50,0.25) 70%);display:grid;place-items:center;padding:6px;box-shadow:0 4px 14px rgba(0,0,0,0.4);flex-shrink:0}
+.tm-logo{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3))}
+.tm-title-box{flex:1;min-width:0}
+.tm-name{margin:0 0 6px;font-size:20px;font-weight:900;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,0.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tm-meta-row{display:flex;flex-wrap:wrap;gap:6px}
+.tm-badge{font-size:11.5px;font-weight:700;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.2);color:var(--gold);padding:3px 9px;border-radius:20px}
+.tm-clubs-bar{display:flex;gap:6px;padding:10px 14px;background:rgba(0,0,0,0.3);overflow-x:auto;border-bottom:1px solid var(--ln);scrollbar-width:none}
+.tm-clubs-bar::-webkit-scrollbar{display:none}
+.tm-club-chip{flex-shrink:0;display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:var(--tx);font-size:12px;cursor:pointer;transition:all .2s}
+.tm-club-chip img{width:18px;height:18px;object-fit:contain}
+.tm-club-chip.active{background:var(--g);border-color:var(--gold);color:#fff;font-weight:800}
+.tm-cats{display:flex;gap:6px;padding:8px 14px;background:rgba(16,36,26,0.7);border-bottom:1px solid var(--ln)}
+.tm-cat-btn{flex:1;padding:7px 4px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:var(--mu);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
+.tm-cat-btn.active{background:var(--g);color:#fff;border-color:var(--gold);box-shadow:0 2px 8px rgba(31,90,52,0.5)}
+.tm-tabs{display:flex;border-bottom:1px solid var(--ln);background:rgba(10,22,16,0.95)}
+.tm-tab{flex:1;padding:10px 4px;border:none;background:none;color:var(--mu);font-size:13px;font-weight:700;border-bottom:2px solid transparent;cursor:pointer;transition:all .2s}
+.tm-tab.active{color:var(--gold);border-bottom-color:var(--gold);background:rgba(242,182,50,0.08)}
+.tm-body{flex:1;overflow-y:auto;padding:14px}
+.tm-stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.tm-stat-box{background:rgba(16,36,26,0.85);border:1px solid var(--ln);border-radius:14px;padding:10px 6px;text-align:center;display:flex;flex-direction:column;gap:2px}
+.tm-stat-box.gold{background:linear-gradient(135deg,rgba(242,182,50,0.22),rgba(16,36,26,0.9));border-color:rgba(242,182,50,0.4)}
+.tm-stat-box.green .tm-stat-val{color:#22c55e}
+.tm-stat-box.yellow .tm-stat-val{color:var(--gold)}
+.tm-stat-box.red .tm-stat-val{color:#ef4444}
+.tm-stat-val{font-size:17px;font-weight:900;color:#fff}
+.tm-stat-lbl{font-size:11px;color:var(--mu)}
+.tm-card-section{background:rgba(16,36,26,0.65);border:1px solid var(--ln);border-radius:14px;padding:12px;margin-bottom:12px}
+.tm-sec-title{font-size:13px;font-weight:800;color:var(--gold);margin-bottom:10px}
+.tm-rate-bar{height:10px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,0.1);display:flex;margin-bottom:8px}
+.tm-rate-part.win{background:#22c55e}
+.tm-rate-part.draw{background:var(--gold)}
+.tm-rate-part.loss{background:#ef4444}
+.tm-rate-legend{display:flex;justify-content:space-around;font-size:11.5px;color:var(--mu)}
+.tm-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:4px}
+.tm-dot.win{background:#22c55e}
+.tm-dot.draw{background:var(--gold)}
+.tm-dot.loss{background:#ef4444}
+.tm-form-badges{display:flex;gap:8px;justify-content:center}
+.tm-form-dot{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:900;color:#fff;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.3)}
+.tm-form-dot.w{background:#22c55e}
+.tm-form-dot.d{background:var(--gold);color:#000}
+.tm-form-dot.l{background:#ef4444}
+.tm-scorers-list{display:flex;flex-direction:column;gap:6px}
+.tm-scorer-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(255,255,255,0.04);border-radius:10px;border:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:all .2s}
+.tm-scorer-item:hover{background:rgba(255,255,255,0.08);transform:translateX(-2px)}
+.tm-rank-badge{font-size:12px;font-weight:800;width:20px;color:var(--gold)}
+.tm-player-name{flex:1;font-weight:700;font-size:13px}
+.tm-goals-badge{font-size:13px;font-weight:800;color:#22c55e}
+.tm-empty-hint{text-align:center;color:var(--mu);font-size:12.5px;padding:10px}
+.tm-squad-header{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:800;color:var(--gold);margin-bottom:10px}
+.tm-players-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.tm-player-card{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(16,36,26,0.85);border:1px solid var(--ln);border-radius:12px;cursor:pointer;transition:all .2s}
+.tm-player-card:hover{background:rgba(31,90,52,0.4);border-color:rgba(242,182,50,0.4);transform:translateX(-3px)}
+.tm-player-jersey{font-size:12px;font-weight:900;color:var(--gold);background:rgba(0,0,0,0.35);padding:4px 8px;border-radius:8px}
+.tm-player-info{flex:1;min-width:0}
+.tm-player-info .tm-player-name{display:block;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tm-player-badges{display:flex;gap:6px;margin-top:3px;font-size:11px}
+.tm-badge-goal{color:#22c55e;font-weight:800}
+.tm-badge-yellow{color:var(--gold);font-weight:800}
+.tm-badge-red{color:#ef4444;font-weight:800}
+.tm-player-arrow{color:var(--mu);font-size:12px}
+.tm-matches-list{display:flex;flex-direction:column;gap:10px}
+.tm-match-card{background:rgba(16,36,26,0.85);border:1px solid var(--ln);border-radius:14px;padding:10px 14px}
+.tm-match-card.win{border-right:4px solid #22c55e}
+.tm-match-card.draw{border-right:4px solid var(--gold)}
+.tm-match-card.loss{border-right:4px solid #ef4444}
+.tm-match-card.upcoming{border-right:4px solid var(--mu)}
+.tm-match-top{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--mu);margin-bottom:8px}
+.tm-round-tag{font-weight:800;color:var(--gold)}
+.tm-outcome-tag.win{color:#22c55e;font-weight:800}
+.tm-outcome-tag.draw{color:var(--gold);font-weight:800}
+.tm-outcome-tag.loss{color:#ef4444;font-weight:800}
+.tm-match-teams{display:flex;align-items:center;justify-content:space-between;margin:6px 0}
+.tm-m-team{flex:1;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700}
+.tm-m-team:last-child{justify-content:flex-end;text-align:left}
+.tm-m-team img{width:26px;height:26px;object-fit:contain}
+.tm-m-team.my-team{color:#fff;font-weight:900}
+.tm-score-pill{font-size:16px;font-weight:900;padding:4px 12px;border-radius:12px;background:rgba(0,0,0,0.45)}
+.tm-score-pill.win{color:#22c55e}
+.tm-score-pill.draw{color:var(--gold)}
+.tm-score-pill.loss{color:#ef4444}
+.tm-vs-pill{font-size:11px;font-weight:800;padding:3px 8px;border-radius:6px;background:rgba(255,255,255,0.1);color:var(--mu)}
+.tm-match-bottom{display:flex;justify-content:space-between;font-size:11px;color:var(--mu);border-top:1px solid rgba(255,255,255,0.06);padding-top:6px;margin-top:6px}
 </style>
 <dialog id="matchTimelineModal" aria-label="أحداث اللقاء">
   <div class="tlm-head">
@@ -1120,6 +1306,44 @@ body.vw [data-lu],body.vw [data-lp],body.vw [data-ps],body.vw [data-mp],body.vw 
  <div class="act" style="margin-top:12px"><button class="btn" id="ctSend" style="flex:1">إرسال ➤</button><button class="btn alt" id="ctClose" type="button">إغلاق</button></div>
 </dialog>
 <dialog id="imgView"><img id="ivImg" alt="صورة مكبّرة"></dialog>
+
+<!-- 🏆 نافذة ملف النادي التفاعلية -->
+<dialog id="teamProfileModal" aria-label="ملف النادي">
+  <div class="tm-wrap">
+    <div class="tm-header" id="tmHeader">
+      <button type="button" class="tm-close" id="closeTeamModal" aria-label="إغلاق">&times;</button>
+      <div class="tm-crest-ring">
+        <img id="tmLogo" src="" alt="شعار النادي" class="tm-logo">
+      </div>
+      <div class="tm-title-box">
+        <h2 id="tmName" class="tm-name">اسم النادي</h2>
+        <div class="tm-meta-row">
+          <span class="tm-badge" id="tmStad">🏟️ الملعب</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- شريط الأندية السريع -->
+    <div class="tm-clubs-bar" id="tmClubsBar"></div>
+
+    <!-- فئات النادي -->
+    <div class="tm-cats" id="tmCats">
+      <button type="button" class="tm-cat-btn active" data-tmcat="U15">فئة U15</button>
+      <button type="button" class="tm-cat-btn" data-tmcat="U17">فئة U17</button>
+      <button type="button" class="tm-cat-btn" data-tmcat="U20">فئة U20</button>
+    </div>
+
+    <!-- تبويبات ملف النادي -->
+    <div class="tm-tabs" id="tmTabs">
+      <button type="button" class="tm-tab active" data-tmtab="stats">📊 الإحصائيات</button>
+      <button type="button" class="tm-tab" data-tmtab="squad">👥 التعداد واللاعبين</button>
+      <button type="button" class="tm-tab" data-tmtab="matches">📅 المباريات والنتائج</button>
+    </div>
+
+    <!-- محتوى التبويب -->
+    <div class="tm-body" id="tmBody"></div>
+  </div>
+</dialog>
 <div class="mbn" id="msgBanner" role="status" aria-live="polite"><span class="mic">💬</span><div class="mtx"><b id="mbT"></b><span id="mbB"></span></div><button class="btn sm" id="mbOpen">فتح</button><button class="mx" id="mbX" aria-label="إغلاق">✕</button></div>
 <div id="toast"></div>
 <select id="rr" hidden><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option></select><select id="upto" hidden><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option></select>
@@ -3494,7 +3718,7 @@ async function loadTC(){for(const id of Object.keys(T)){try{TC[id]=(await tcol(i
 const tcs=id=>TC[id]||'31,90,52';
 function mh(hm,aw,has,v){
  if(!TCs){TCs=1;loadTC()}
- const side=id=>`<div class="side"><div class="crest" style="--tc:${tcs(id)}"><img src="${(OLD.DEF&&OLD.DEF[id])||LG[id]||''}" alt=""></div><div class="tn">${isMine(id)?'⭐ ':''}${esc(T[id])}</div></div>`;
+ const side=id=>`<div class="side" data-team="${id}" style="cursor:pointer" title="انقر لعرض ملف النادي"><div class="crest" style="--tc:${tcs(id)}"><img src="${(OLD.DEF&&OLD.DEF[id])||LG[id]||''}" alt=""></div><div class="tn">${isMine(id)?'⭐ ':''}${esc(T[id])}</div></div>`;
  let mid='<div class="vsb">VS</div>';
  if(has){const sh=+v.sh,sa=+v.sa;mid=`<div class="sbp" dir="ltr"><span class="gl${sa>sh?' w':''}">${esc(v.sa)}</span><i>-</i><span class="gl${sh>sa?' w':''}">${esc(v.sh)}</span></div>`}
  return `<div class="mt">${side(hm)}<div class="sb">${mid}</div>${side(aw)}</div>`
@@ -3538,7 +3762,7 @@ function standings(){
  <div class="tophd"><div class="yr">2026<br>2027</div><div class="ttl"><b>الترتيب</b><span>${cat} · مجموعة وسط غرب</span></div><img class="lgimg" src="${LEAGUE}" alt=""></div>
  <div class="subl">بعد نهاية الجولة ${String(up).padStart(2,'0')}</div>
  <div class="thd"><span>#</span><span>الفريق</span><span>لعب</span><span>فاز</span><span>تعادل</span><span>خسر</span><span>نقاط</span></div>
- ${rows.map((r,i)=>`<div class="tr${isMine(r.id)?' me':''}"><span class="rk ${rc(i)}">${i+1}</span><span class="nm">${lg(r.id)}<span>${esc(T[r.id])}</span></span><b class="c">${r.p}</b><b class="c">${r.w}</b><b class="c">${r.d}</b><b class="c">${r.l}</b><b class="c p">${r.pts}</b></div>`).join('')}
+ ${rows.map((r,i)=>`<div class="tr${isMine(r.id)?' me':''}" data-team="${r.id}" style="cursor:pointer" title="انقر لعرض ملف النادي"><span class="rk ${rc(i)}">${i+1}</span><span class="nm">${lg(r.id)}<span>${esc(T[r.id])}</span></span><b class="c">${r.p}</b><b class="c">${r.w}</b><b class="c">${r.d}</b><b class="c">${r.l}</b><b class="c p">${r.pts}</b></div>`).join('')}
  <div class="lgd"><span style="background:#1a1f5e">المتصدر</span><span style="background:#22a84a">المركزان 2 و3</span><span style="background:#0f6b3a">المراكز الوسطى</span><span style="background:#e31e24">المراكز الأخيرة</span></div>
  <div class="foot">الرابطة الولائية لكرة القدم تيبازة · ESM<small>esmesselmoune.onrender.com</small></div>
  <p style="font-size:12px;color:var(--mu);text-align:center">الترتيب بالنقاط ثم فارق الأهداف ثم الأهداف المسجلة · النتائج المعتمدة فقط</p>`
@@ -3555,11 +3779,141 @@ async function posterAdmin(){
  OLD.load(S);OLD.state({cat,team:5,rosters:RO});toast('⏳ جاري تصميم الملصق…');
  try{const opt={hl:HL.team?{team:+HL.team,color:HL.color}:null,photo:(n,tm)=>photoOf(tm,n)};const cv=await OLD.adminCanvas(up,cat,opt);await OLD.saveImg(cv,'ترتيب_الرابطة_الجولة_'+up+'_'+cat+'.png')}catch(e){toast('⚠️ تعذر إنشاء الملصق')}
 }
+
+/* ============================================================
+   📊 لوحة الإحصائيات المباشرة للفرق (Season Stats Panel)
+   ============================================================ */
+function seasonStatsPanel(){
+  const sList = Object.keys(T).map(id => getTeamSeasonStats(id, cat));
+  const bestAttack = [...sList].sort((a,b) => b.gf - a.gf || b.avgGf - a.avgGf);
+  const playedTeams = sList.filter(t => t.p > 0);
+  const bestDefense = [...(playedTeams.length ? playedTeams : sList)].sort((a,b) => (a.ga / (a.p||1)) - (b.ga / (b.p||1)) || b.cs - a.cs);
+  const bestWinRate = [...sList].sort((a,b) => b.winRate - a.winRate || b.pts - a.pts);
+  
+  let totalGoals = 0, totalMatches = 0, maxGoalMatch = null, maxWinMatch = null, maxDiff = -1, maxGoalsInMatch = -1;
+  for(let r=1; r<=22; r++){
+    pairs(r).m.forEach(([h, a]) => {
+      const v = S[K(cat, r, h, a)];
+      if(v && v.status === 'confirmed' && v.sh !== undefined && v.sh !== '' && v.sh != null){
+        const sh = +v.sh, sa = +v.sa;
+        totalGoals += (sh + sa);
+        totalMatches++;
+        const sum = sh + sa;
+        if(sum > maxGoalsInMatch){ maxGoalsInMatch = sum; maxGoalMatch = { r, h, a, sh, sa }; }
+        const diff = Math.abs(sh - sa);
+        if(diff > maxDiff){ maxDiff = diff; maxWinMatch = { r, h, a, sh, sa }; }
+      }
+    });
+  }
+  const avgGoalsPerMatch = totalMatches > 0 ? (totalGoals / totalMatches).toFixed(2) : '0.00';
+  
+  let h = chips() + gsw();
+  
+  h += `
+  <div class="tm-stats-grid" style="margin-top:10px">
+    <div class="tm-stat-box gold">
+      <span class="tm-stat-val">${totalGoals} ⚽</span>
+      <span class="tm-stat-lbl">إجمالي أهداف الموسم</span>
+    </div>
+    <div class="tm-stat-box">
+      <span class="tm-stat-val">${totalMatches}</span>
+      <span class="tm-stat-lbl">مباريات ملعوبة</span>
+    </div>
+    <div class="tm-stat-box green">
+      <span class="tm-stat-val">${avgGoalsPerMatch}</span>
+      <span class="tm-stat-lbl">معدل الأهداف/مباراة</span>
+    </div>
+  </div>`;
+  
+  if(maxGoalMatch || maxWinMatch){
+    h += `<div class="tm-card-section" style="margin-bottom:14px">
+      <div class="tm-sec-title">🌟 أرقام قياسية في فئة ${cat}</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        ${maxGoalMatch ? `
+          <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.04);padding:8px 12px;border-radius:10px;font-size:12.5px">
+            <span>🔥 أعلى مباراة تهديفاً (الجولة ${maxGoalMatch.r})</span>
+            <b style="color:var(--gold)">${T[maxGoalMatch.h]} ${maxGoalMatch.sh} - ${maxGoalMatch.sa} ${T[maxGoalMatch.a]} (${maxGoalsInMatch} أهداف)</b>
+          </div>` : ''}
+        ${maxWinMatch ? `
+          <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.04);padding:8px 12px;border-radius:10px;font-size:12.5px">
+            <span>⚡ أكبر فوز في الموسم (الجولة ${maxWinMatch.r})</span>
+            <b style="color:#22c55e">${T[maxWinMatch.h]} ${maxWinMatch.sh} - ${maxWinMatch.sa} ${T[maxWinMatch.a]} (فارق ${maxDiff})</b>
+          </div>` : ''}
+      </div>
+    </div>`;
+  }
+  
+  h += `
+  <div class="tm-card-section" style="margin-bottom:14px">
+    <div class="tm-sec-title">⚡ أقوى هجوم في فئة ${cat} (الأهداف المسجلة)</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      ${bestAttack.map((t, idx) => `
+        <div class="tm-scorer-item" data-team="${t.id}" style="cursor:pointer" title="انقر لعرض ملف النادي">
+          <span class="tm-rank-badge ${idx<3?['g1','g2','g3'][idx]:''}">${idx+1}</span>
+          <span class="nm" style="flex:1;display:flex;align-items:center;gap:8px">
+            ${LG[t.id]?lg(t.id):''}
+            <span style="font-weight:700">${esc(T[t.id])}</span>
+          </span>
+          <span style="font-size:11.5px;color:var(--mu);margin-left:8px">${t.avgGf} هدف/مباراة</span>
+          <b class="tm-goals-badge">${t.gf} ⚽</b>
+        </div>
+      `).join('')}
+    </div>
+  </div>`;
+  
+  h += `
+  <div class="tm-card-section" style="margin-bottom:14px">
+    <div class="tm-sec-title">🛡️ أصلب دفاع في فئة ${cat} (الأقل استقبالاً للأهداف)</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      ${bestDefense.map((t, idx) => `
+        <div class="tm-scorer-item" data-team="${t.id}" style="cursor:pointer" title="انقر لعرض ملف النادي">
+          <span class="tm-rank-badge ${idx<3?['g1','g2','g3'][idx]:''}">${idx+1}</span>
+          <span class="nm" style="flex:1;display:flex;align-items:center;gap:8px">
+            ${LG[t.id]?lg(t.id):''}
+            <span style="font-weight:700">${esc(T[t.id])}</span>
+          </span>
+          <span style="font-size:11.5px;color:var(--mu);margin-left:8px">🧤 ${t.cs} شباك نظيفة</span>
+          <b style="font-size:13px;font-weight:800;color:${t.ga<=10?'#22c55e':'var(--gold)'}">${t.ga} استقبل</b>
+        </div>
+      `).join('')}
+    </div>
+  </div>`;
+  
+  h += `
+  <div class="tm-card-section">
+    <div class="tm-sec-title">📈 ترتيب الأندية حسب نسبة الفوز %</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      ${bestWinRate.map((t, idx) => `
+        <div data-team="${t.id}" style="cursor:pointer;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);padding:8px 12px;border-radius:10px" title="انقر لعرض ملف النادي">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <span style="display:flex;align-items:center;gap:8px">
+              <span class="tm-rank-badge ${idx<3?['g1','g2','g3'][idx]:''}">${idx+1}</span>
+              ${LG[t.id]?lg(t.id):''}
+              <b style="font-size:13px">${esc(T[t.id])}</b>
+            </span>
+            <b style="font-size:14px;color:${t.winRate>=50?'#22c55e':t.winRate>=30?'var(--gold)':'var(--mu)'}">${t.winRate}% فوز</b>
+          </div>
+          <div class="tm-rate-bar" style="height:7px">
+            <div class="tm-rate-part win" style="width:${t.winRate}%"></div>
+            <div class="tm-rate-part draw" style="width:${t.drawRate}%"></div>
+            <div class="tm-rate-part loss" style="width:${t.lossRate}%"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--mu);margin-top:4px">
+            <span>لعب: ${t.p} (ف: ${t.w} · ت: ${t.d} · خ: ${t.l})</span>
+            <span>نقاط: ${t.pts}</span>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  </div>`;
+  
+  return h;
+}
 function scorers(){
  OLD.load(S);OLD.state({cat,team:me?(me.role==='admin'?5:me.teamId):5,rosters:RO||{}});
  const[G,C]=OLD.tallies();
  const row=(i,o)=>`<div class="tr${isMine(o.t)?' me':''}" data-pcard="${o.t}|${esc(o.n)}" style="grid-template-columns:30px 1fr 56px;cursor:pointer" title="انقر لعرض بطاقة اللاعب"><span class="rk ${i<3?['g1','g2','g3'][i]:''}">${i+1}</span><span class="nm">${LG[o.t]?lg(o.t):''}<span>${esc(o.n)}<br><small style="font-weight:500;opacity:.7">${esc(T[o.t]||'')}</small></span></span><b class="c p" style="width:auto;border-radius:20px">${o.c} ⚽</b></div>`;
- if(gsub==='c')return cardsPanel();
+ if(gsub==='c')return cardsPanel();if(gsub==='s')return seasonStatsPanel();
  let h=chips()+gsw()+pCardPickerHtml()+`<div class="act" style="margin:0 0 10px;flex-wrap:wrap"><button class="btn alt sm" data-sc="g">📤 بطاقة الهدافين</button><button class="btn alt sm" data-mk="scorers">🎞️ فيديو الهدافين</button><button class="btn alt sm" data-pg="1">📝 منشور الهدافين</button></div><div class="rh">🥅 ترتيب الهدافين · ${cat}</div>`+(G.length?G.slice(0,30).map((o,i)=>row(i,o)).join(''):'<div class="card" style="text-align:center;color:var(--mu)">لا يوجد هدافون مسجلون بعد</div>');
  if(C.length)h+=`<div class="rh" style="margin-top:14px">🟨🟥 بطاقات فريقنا</div>`+C.map(o=>`<div class="card u"><b>${esc(o.n)}</b><span>🟨 ${o.y} · 🟥 ${o.r}</span></div>`).join('');
  return h
@@ -3759,11 +4113,407 @@ $('saveUserPermBtn').onclick = async () => {
 };
 
 /* ---- أحداث ---- */
+
+/* ============================================================
+   🏆 صفحة النادي التفاعلية (Team Profile Modal)
+   ============================================================ */
+let curTeamModalId = 5;
+let curTeamCat = 'U15';
+let curTeamSubTab = 'stats';
+
+function getTeamSeasonStats(tId, c){
+  const t = { id: +tId, p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0, cs: 0, matches: [] };
+  for(let r=1; r<=22; r++){
+    const pair = pairs(r).m.find(([h,a]) => h == tId || a == tId);
+    if(!pair) continue;
+    const [h, a] = pair;
+    const v = S[K(c, r, h, a)];
+    const isHome = (h == tId);
+    const oppId = isHome ? a : h;
+    const hasRes = v && v.status === 'confirmed' && v.sh !== undefined && v.sh !== '' && v.sh != null;
+    
+    if(hasRes){
+      const myScore = isHome ? +v.sh : +v.sa;
+      const oppScore = isHome ? +v.sa : +v.sh;
+      t.p++;
+      t.gf += myScore;
+      t.ga += oppScore;
+      let outcome = 'd';
+      if(myScore > oppScore){ t.w++; t.pts += 3; outcome = 'w'; }
+      else if(myScore < oppScore){ t.l++; outcome = 'l'; }
+      else { t.d++; t.pts += 1; outcome = 'd'; }
+      if(oppScore === 0) t.cs++;
+      
+      t.matches.push({
+        round: r,
+        isHome,
+        oppId,
+        myScore,
+        oppScore,
+        outcome,
+        date: v.date || '',
+        time: v.time || '',
+        stad: v.stad || STAD[h] || '',
+        v
+      });
+    } else {
+      t.matches.push({
+        round: r,
+        isHome,
+        oppId,
+        isUpcoming: true,
+        pp: v && v.pp,
+        ex: v && v.ex,
+        date: (v && v.date) || '',
+        time: (v && v.time) || '',
+        stad: (v && v.stad) || STAD[h] || '',
+        v
+      });
+    }
+  }
+  
+  const allStandings = tbl(c, lastRound());
+  const rankIdx = allStandings.findIndex(row => row.id == tId);
+  t.rank = rankIdx >= 0 ? (rankIdx + 1) : '-';
+  t.gd = t.gf - t.ga;
+  t.winRate = t.p > 0 ? Math.round((t.w / t.p) * 100) : 0;
+  t.drawRate = t.p > 0 ? Math.round((t.d / t.p) * 100) : 0;
+  t.lossRate = t.p > 0 ? Math.max(0, 100 - t.winRate - t.drawRate) : 0;
+  t.avgGf = t.p > 0 ? (t.gf / t.p).toFixed(1) : '0.0';
+  t.avgGa = t.p > 0 ? (t.ga / t.p).toFixed(1) : '0.0';
+  
+  return t;
+}
+
+function openTeamModal(teamId, targetCat){
+  curTeamModalId = +teamId || 5;
+  if(targetCat) curTeamCat = targetCat;
+  else if(!curTeamCat) curTeamCat = cat || 'U15';
+  
+  const dlg = $('teamProfileModal');
+  if(!dlg) return;
+  
+  renderTeamModalContent();
+  if(!dlg.open){
+    try { dlg.showModal(); } catch(e){ dlg.setAttribute('open', ''); }
+  }
+}
+
+function renderTeamModalContent(){
+  const tId = curTeamModalId;
+  const c = curTeamCat;
+  const tName = T[tId] || ('فريق ' + tId);
+  const tLogo = LG[tId] || (OLD.DEF && OLD.DEF[tId]) || '';
+  const rgb = tcs(tId);
+  const stad = STAD[tId] || 'غير محدد';
+  
+  const stats = getTeamSeasonStats(tId, c);
+  
+  const hdr = $('tmHeader');
+  if(hdr){
+    hdr.style.background = `linear-gradient(135deg, rgba(${rgb}, 0.95), rgba(15, 23, 42, 0.96))`;
+    hdr.style.borderColor = `rgba(${rgb}, 0.5)`;
+  }
+  const logoEl = $('tmLogo');
+  if(logoEl) logoEl.src = tLogo;
+  const nameEl = $('tmName');
+  if(nameEl) nameEl.textContent = tName;
+  const stadEl = $('tmStad');
+  if(stadEl) stadEl.innerHTML = `🏟️ ملعب ${esc(stad)}`;
+  
+  const clubsBar = $('tmClubsBar');
+  if(clubsBar){
+    clubsBar.innerHTML = Object.keys(T).map(id => {
+      const active = id == tId;
+      return `<button type="button" class="tm-club-chip ${active ? 'active' : ''}" data-tmteam="${id}" title="${esc(T[id])}">
+        <img src="${LG[id] || ''}" alt="">
+        <span>${esc(T[id])}</span>
+      </button>`;
+    }).join('');
+  }
+  
+  document.querySelectorAll('#tmCats button').forEach(b => {
+    b.classList.toggle('active', b.dataset.tmcat === c);
+  });
+  
+  document.querySelectorAll('#tmTabs button').forEach(b => {
+    b.classList.toggle('active', b.dataset.tmtab === curTeamSubTab);
+  });
+  
+  const body = $('tmBody');
+  if(!body) return;
+  
+  if(curTeamSubTab === 'stats'){
+    body.innerHTML = renderTeamStatsTab(tId, c, stats, rgb);
+  } else if(curTeamSubTab === 'squad'){
+    body.innerHTML = renderTeamSquadTab(tId, c, rgb);
+  } else if(curTeamSubTab === 'matches'){
+    body.innerHTML = renderTeamMatchesTab(tId, c, stats, rgb);
+  }
+}
+
+function renderTeamStatsTab(tId, c, s, rgb){
+  const finished = s.matches.filter(m => !m.isUpcoming);
+  const last5 = finished.slice(-5).reverse();
+  
+  OLD.load(S);
+  OLD.state({cat: c, team: tId, rosters: RO||{}});
+  const [allG] = OLD.tallies();
+  const teamScorers = allG.filter(g => g.t == tId);
+  
+  let formHtml = '';
+  if(last5.length === 0){
+    formHtml = `<div class="tm-empty-hint">لم يلعب الفريق أي مباراة مؤكدة بعد في هذه الفئة</div>`;
+  } else {
+    formHtml = `<div class="tm-form-badges">` + last5.map(m => {
+      const cls = m.outcome === 'w' ? 'w' : m.outcome === 'l' ? 'l' : 'd';
+      const label = m.outcome === 'w' ? 'ف' : m.outcome === 'l' ? 'خ' : 'ت';
+      const tooltip = `الجولة ${m.round}: ${T[tId]} ${m.myScore} - ${m.oppScore} ${T[m.oppId]}`;
+      return `<span class="tm-form-dot ${cls}" title="${tooltip}">${label}</span>`;
+    }).join('') + `</div>`;
+  }
+  
+  let scorersHtml = '';
+  if(teamScorers.length === 0){
+    scorersHtml = `<div class="tm-empty-hint">لا يوجد هدافون مسجلون للنادي في هذه الفئة بعد</div>`;
+  } else {
+    scorersHtml = `<div class="tm-scorers-list">` + teamScorers.slice(0, 10).map((sc, i) => {
+      return `<div class="tm-scorer-item" data-pcard="${tId}|${esc(sc.n)}" title="انقر لعرض بطاقة اللاعب">
+        <span class="tm-rank-badge">${i+1}</span>
+        <span class="tm-player-name">${esc(sc.n)}</span>
+        <span class="tm-goals-badge">${sc.c} ⚽</span>
+      </div>`;
+    }).join('') + `</div>`;
+  }
+
+  return `
+    <div class="tm-stats-grid">
+      <div class="tm-stat-box gold">
+        <span class="tm-stat-val">المركز ${s.rank}</span>
+        <span class="tm-stat-lbl">🏆 الترتيب في ${c}</span>
+      </div>
+      <div class="tm-stat-box">
+        <span class="tm-stat-val">${s.pts}</span>
+        <span class="tm-stat-lbl">📊 مجموع النقاط</span>
+      </div>
+      <div class="tm-stat-box">
+        <span class="tm-stat-val">${s.p}</span>
+        <span class="tm-stat-lbl">⚽ لعب</span>
+      </div>
+      <div class="tm-stat-box green">
+        <span class="tm-stat-val">${s.w}</span>
+        <span class="tm-stat-lbl">✅ فوز</span>
+      </div>
+      <div class="tm-stat-box yellow">
+        <span class="tm-stat-val">${s.d}</span>
+        <span class="tm-stat-lbl">🤝 تعادل</span>
+      </div>
+      <div class="tm-stat-box red">
+        <span class="tm-stat-val">${s.l}</span>
+        <span class="tm-stat-lbl">❌ خسارة</span>
+      </div>
+      <div class="tm-stat-box">
+        <span class="tm-stat-val">${s.gf}</span>
+        <span class="tm-stat-lbl">🎯 أهداف له</span>
+      </div>
+      <div class="tm-stat-box">
+        <span class="tm-stat-val">${s.ga}</span>
+        <span class="tm-stat-lbl">🛡️ أهداف عليه</span>
+      </div>
+      <div class="tm-stat-box ${s.gd>=0?'green':'red'}">
+        <span class="tm-stat-val">${s.gd>0?'+'+s.gd:s.gd}</span>
+        <span class="tm-stat-lbl">⚖️ فارق الأهداف</span>
+      </div>
+      <div class="tm-stat-box">
+        <span class="tm-stat-val">${s.cs}</span>
+        <span class="tm-stat-lbl">🧤 شباك نظيفة</span>
+      </div>
+      <div class="tm-stat-box">
+        <span class="tm-stat-val">${s.avgGf}</span>
+        <span class="tm-stat-lbl">⚡ معدل التهديف/مباراة</span>
+      </div>
+      <div class="tm-stat-box">
+        <span class="tm-stat-val">${s.winRate}%</span>
+        <span class="tm-stat-lbl">📈 نسبة الانتصارات</span>
+      </div>
+    </div>
+    
+    <div class="tm-card-section">
+      <div class="tm-sec-title">📊 توزيع نتائج الموسم</div>
+      <div class="tm-rate-bar">
+        <div class="tm-rate-part win" style="width:${s.winRate}%" title="فوز: ${s.winRate}%"></div>
+        <div class="tm-rate-part draw" style="width:${s.drawRate}%" title="تعادل: ${s.drawRate}%"></div>
+        <div class="tm-rate-part loss" style="width:${s.lossRate}%" title="خسارة: ${s.lossRate}%"></div>
+      </div>
+      <div class="tm-rate-legend">
+        <span><i class="tm-dot win"></i> فوز (${s.winRate}%)</span>
+        <span><i class="tm-dot draw"></i> تعادل (${s.drawRate}%)</span>
+        <span><i class="tm-dot loss"></i> خسارة (${s.lossRate}%)</span>
+      </div>
+    </div>
+    
+    <div class="tm-card-section">
+      <div class="tm-sec-title">🔥 مؤشر المستوى (آخر المباريات)</div>
+      ${formHtml}
+    </div>
+    
+    <div class="tm-card-section">
+      <div class="tm-sec-title">🥅 هدافو النادي في فئة ${c}</div>
+      ${scorersHtml}
+    </div>
+  `;
+}
+
+function renderTeamSquadTab(tId, c, rgb){
+  const players = rosterList(c, tId) || [];
+  
+  OLD.load(S);
+  OLD.state({cat: c, team: tId, rosters: RO||{}});
+  const [allG, allC] = OLD.tallies();
+  const goalMap = {};
+  allG.filter(g => g.t == tId).forEach(g => { goalMap[g.n] = g.c; });
+  const cardMap = {};
+  allC.forEach(cr => { cardMap[cr.n] = cr; });
+  
+  if(players.length === 0){
+    return `<div class="tm-empty-hint" style="padding:40px 10px">لا توجد قائمة لاعبين مسجلة بعد لهذا النادي في فئة ${c}</div>`;
+  }
+  
+  let listHtml = players.map((pl, idx) => {
+    const pName = typeof pl === 'object' ? (pl.name || pl.n) : String(pl).trim();
+    const pNum = typeof pl === 'object' ? (pl.num || pl.number || (idx + 1)) : (idx + 1);
+    const goals = goalMap[pName] || 0;
+    const cards = cardMap[pName] || { y: 0, r: 0 };
+    
+    return `<div class="tm-player-card" data-pcard="${tId}|${esc(pName)}" title="انقر لعرض بطاقة اللاعب">
+      <div class="tm-player-jersey">🎽 ${pNum}</div>
+      <div class="tm-player-info">
+        <span class="tm-player-name">${esc(pName)}</span>
+        <div class="tm-player-badges">
+          ${goals > 0 ? `<span class="tm-badge-goal">⚽ ${goals}</span>` : ''}
+          ${cards.y > 0 ? `<span class="tm-badge-yellow">🟨 ${cards.y}</span>` : ''}
+          ${cards.r > 0 ? `<span class="tm-badge-red">🟥 ${cards.r}</span>` : ''}
+        </div>
+      </div>
+      <span class="tm-player-arrow">❯</span>
+    </div>`;
+  }).join('');
+  
+  return `
+    <div class="tm-squad-header">
+      <span>تعداد فئة ${c} (${players.length} لاعب)</span>
+      <small style="opacity:0.75">انقر على أي لاعب لعرض بطاقته الرسمية</small>
+    </div>
+    <div class="tm-players-grid">
+      ${listHtml}
+    </div>
+  `;
+}
+
+function renderTeamMatchesTab(tId, c, s, rgb){
+  if(s.matches.length === 0){
+    return `<div class="tm-empty-hint" style="padding:40px 10px">لا توجد مباريات مسجلة لهذا الفريق بعد</div>`;
+  }
+  
+  let matchesHtml = s.matches.map(m => {
+    const oppName = T[m.oppId] || ('فريق ' + m.oppId);
+    const oppLogo = LG[m.oppId] || '';
+    const myLogo = LG[tId] || '';
+    const homeTeam = m.isHome ? T[tId] : oppName;
+    const awayTeam = m.isHome ? oppName : T[tId];
+    const loc = m.isHome ? 'داخل الديار 🏠' : 'خارج الديار ✈️';
+    
+    if(m.isUpcoming){
+      return `<div class="tm-match-card upcoming">
+        <div class="tm-match-top">
+          <span class="tm-round-tag">الجولة ${m.round}</span>
+          <span class="tm-loc-tag">${loc}</span>
+          <span class="tm-date-tag">📅 ${m.date || 'قريباً'} ${m.time ? '· '+m.time : ''}</span>
+        </div>
+        <div class="tm-match-teams">
+          <div class="tm-m-team ${m.isHome ? 'my-team' : ''}">
+            <img src="${myLogo}" alt="">
+            <span>${esc(T[tId])}</span>
+          </div>
+          <div class="tm-vs-pill">VS</div>
+          <div class="tm-m-team ${!m.isHome ? 'my-team' : ''}">
+            <img src="${oppLogo}" alt="">
+            <span>${esc(oppName)}</span>
+          </div>
+        </div>
+        <div class="tm-match-bottom">
+          <span>🏟️ ${esc(m.stad || 'الملعب غير محدد')}</span>
+          ${m.pp ? '<span class="b wt">⏳ مؤجلة</span>' : m.ex ? '<span class="b no">معفاة</span>' : ''}
+        </div>
+      </div>`;
+    }
+    
+    const outcomeCls = m.outcome === 'w' ? 'win' : m.outcome === 'l' ? 'loss' : 'draw';
+    const outcomeText = m.outcome === 'w' ? 'فوز ✅' : m.outcome === 'l' ? 'خسارة ❌' : 'تعادل 🤝';
+    const scoreStr = m.isHome ? `${m.myScore} - ${m.oppScore}` : `${m.oppScore} - ${m.myScore}`;
+    
+    return `<div class="tm-match-card finished ${outcomeCls}">
+      <div class="tm-match-top">
+        <span class="tm-round-tag">الجولة ${m.round}</span>
+        <span class="tm-outcome-tag ${outcomeCls}">${outcomeText}</span>
+        <span class="tm-loc-tag">${loc}</span>
+      </div>
+      <div class="tm-match-teams">
+        <div class="tm-m-team ${m.isHome ? 'my-team' : ''}">
+          <img src="${m.isHome ? myLogo : oppLogo}" alt="">
+          <span>${esc(homeTeam)}</span>
+        </div>
+        <div class="tm-score-pill ${outcomeCls}" dir="ltr">
+          ${scoreStr}
+        </div>
+        <div class="tm-m-team ${!m.isHome ? 'my-team' : ''}">
+          <img src="${!m.isHome ? myLogo : oppLogo}" alt="">
+          <span>${esc(awayTeam)}</span>
+        </div>
+      </div>
+      <div class="tm-match-bottom">
+        <span>📅 ${esc(m.date || '')} ${m.time ? '· '+esc(m.time) : ''}</span>
+        <span>🏟️ ${esc(m.stad || '')}</span>
+      </div>
+    </div>`;
+  }).join('');
+  
+  return `<div class="tm-matches-list">${matchesHtml}</div>`;
+}
 document.addEventListener('click',async e=>{
  const pc = e.target.closest('[data-pcard]');
  if(pc && !e.target.closest('button')){
    const parts = pc.dataset.pcard.split('|');
    openPlayerCard(+parts[0], parts[1]);
+   return;
+ }
+  const tc = e.target.closest('[data-team]');
+ if(tc && !e.target.closest('button, a, input, select, details')){
+   openTeamModal(+tc.dataset.team);
+   return;
+ }
+ const closeTm = e.target.closest('#closeTeamModal');
+ if(closeTm){
+   const dlg = $('teamProfileModal');
+   if(dlg){ try { dlg.close(); } catch(err){ dlg.removeAttribute('open'); } }
+   return;
+ }
+ const tmClub = e.target.closest('[data-tmteam]');
+ if(tmClub){
+   curTeamModalId = +tmClub.dataset.tmteam;
+   renderTeamModalContent();
+   return;
+ }
+ const tmCat = e.target.closest('[data-tmcat]');
+ if(tmCat){
+   curTeamCat = tmCat.dataset.tmcat;
+   renderTeamModalContent();
+   return;
+ }
+ const tmTab = e.target.closest('[data-tmtab]');
+ if(tmTab){
+   curTeamSubTab = tmTab.dataset.tmtab;
+   renderTeamModalContent();
    return;
  }
  const b=e.target.closest('button');if(!b)return;
@@ -3962,8 +4712,28 @@ $('ds').onclick=async()=>{
  if(cur.req)return submitEditReq(d,old);
  await put(cur.k,cur.h,cur.a,d);$('dg').close();
  try{const mk=/^(?:([A-Z0-9]+)\|)?(\d+):/.exec(cur.k),rd=mk?mk[2]:'',ct=(mk&&mk[1])||'U15';
-  if(done)pushNotify({kind:'result',teams:[cur.h,cur.a],title:'📋 نتيجة جديدة · '+ct,body:T[cur.h]+' '+d.sh+' - '+d.sa+' '+T[cur.a]+' (الجولة '+rd+')'});
+  if(done)pushNotify({kind:'result',teams:[cur.h,cur.a],title:'🏁 صافرة النهاية والنتيجة · '+ct,body:T[cur.h]+' '+d.sh+' - '+d.sa+' '+T[cur.a]+' (الجولة '+rd+')'});
   else if(!ex&&d.date&&(d.date!==(old.date||'')||d.time!==(old.time||'')||d.stad!==(old.stad||'')))pushNotify({kind:'schedule',teams:[cur.h,cur.a],title:'📅 موعد مباراة · '+ct,body:T[cur.h]+' × '+T[cur.a]+' — '+d.date+(d.time?' '+d.time:'')+(d.stad?' · '+d.stad:'')})}catch(e){}
+};
+$('btnGoalNotify').onclick = async () => {
+  if(!cur || !me) return;
+  const hId = cur.h, aId = cur.a;
+  const x = $('sh').value || '0', y = $('sa').value || '0';
+  const mk = /^(?:([A-Z0-9]+)\|)?(\d+):/.exec(cur.k), ct = (mk && mk[1]) || 'U15', rd = mk ? mk[2] : '';
+  const teamChoice = confirm(`اضغط [موافق / OK] إذا كان الهدف لـ (${T[hId]})\nأو [إلغاء / Cancel] إذا كان الهدف لـ (${T[aId]})`);
+  const scoringTeam = teamChoice ? hId : aId;
+  const scorerName = prompt(`اكتب اسم مسجل الهدف لـ (${T[scoringTeam]}) [أو اتركه فارغاً]:`, '') || '';
+  const minute = prompt('الدقيقة (مثال: 34):', '') || '';
+  const minText = minute ? ` (د ${minute}')` : '';
+  const scorerText = scorerName ? `⚽ ${scorerName}${minText}` : `⚽ هدف لـ ${T[scoringTeam]}${minText}`;
+  const title = `⚽ هـدف! ${T[scoringTeam]}${minText} · ${ct}`;
+  const body = `${scorerText} — النتيجة: ${T[hId]} ${x} - ${y} ${T[aId]} (الجولة ${rd})`;
+  try {
+    await pushNotify({ kind: 'goal', teams: [hId, aId], title, body, url: './index.html#m' });
+    toast('✅ تم إرسال إشعار الهدف الفوري لجميع المشتركين!');
+  } catch(e) {
+    toast('⚠️ تعذّر إرسال الإشعار');
+  }
 };
 OLD.onSave=async()=>{
  if(!me)return;const st=OLD.store;
@@ -4063,6 +4833,35 @@ $('phd').addEventListener('click',async e=>{
  if(pc && !e.target.closest('button')){
    const parts = pc.dataset.pcard.split('|');
    openPlayerCard(+parts[0], parts[1]);
+   return;
+ }
+  const tc = e.target.closest('[data-team]');
+ if(tc && !e.target.closest('button, a, input, select, details')){
+   openTeamModal(+tc.dataset.team);
+   return;
+ }
+ const closeTm = e.target.closest('#closeTeamModal');
+ if(closeTm){
+   const dlg = $('teamProfileModal');
+   if(dlg){ try { dlg.close(); } catch(err){ dlg.removeAttribute('open'); } }
+   return;
+ }
+ const tmClub = e.target.closest('[data-tmteam]');
+ if(tmClub){
+   curTeamModalId = +tmClub.dataset.tmteam;
+   renderTeamModalContent();
+   return;
+ }
+ const tmCat = e.target.closest('[data-tmcat]');
+ if(tmCat){
+   curTeamCat = tmCat.dataset.tmcat;
+   renderTeamModalContent();
+   return;
+ }
+ const tmTab = e.target.closest('[data-tmtab]');
+ if(tmTab){
+   curTeamSubTab = tmTab.dataset.tmtab;
+   renderTeamModalContent();
    return;
  }
  const b=e.target.closest('button');if(!b)return;const names=JSON.parse($('phList').dataset.names||'[]');
@@ -4274,7 +5073,36 @@ $('stPick').onclick=()=>{$('stFile').value='';$('stFile').click()};
 $('stNoPic').onclick=()=>{stImg='';stPreview()};
 $('stFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{stImg=await resizePhoto(f);stPreview()}catch(x){say('stErr','⚠️ تعذّر قراءة الصورة، جرّب صورة أخرى')}};
 $('stf').addEventListener('change',e=>{if(e.target.id==='stTeamSel'){stTeam=+e.target.value;$('stForm').hidden=true;drawStaff()}});
-$('stf').addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;
+$('stf').addEventListener('click',async e=>{ const tc = e.target.closest('[data-team]');
+ if(tc && !e.target.closest('button, a, input, select, details')){
+   openTeamModal(+tc.dataset.team);
+   return;
+ }
+ const closeTm = e.target.closest('#closeTeamModal');
+ if(closeTm){
+   const dlg = $('teamProfileModal');
+   if(dlg){ try { dlg.close(); } catch(err){ dlg.removeAttribute('open'); } }
+   return;
+ }
+ const tmClub = e.target.closest('[data-tmteam]');
+ if(tmClub){
+   curTeamModalId = +tmClub.dataset.tmteam;
+   renderTeamModalContent();
+   return;
+ }
+ const tmCat = e.target.closest('[data-tmcat]');
+ if(tmCat){
+   curTeamCat = tmCat.dataset.tmcat;
+   renderTeamModalContent();
+   return;
+ }
+ const tmTab = e.target.closest('[data-tmtab]');
+ if(tmTab){
+   curTeamSubTab = tmTab.dataset.tmtab;
+   renderTeamModalContent();
+   return;
+ }
+ const b=e.target.closest('button');if(!b)return;
  if(b.dataset.se)stOpenForm(b.dataset.se);
  else if(b.dataset.sd){const m=STAFF[b.dataset.sd];if(m&&confirm('حذف «'+m.name+'» من الطاقم؟')){try{await db.collection('staff').doc(m.id).delete();toast('🗑 حُذف العضو')}catch(x){toast('⛔ لا تملك الصلاحية')}}}
 });
@@ -4779,7 +5607,7 @@ $('bkRun').onclick=bkRestore;
 
 /* ===== البطاقات والإيقافات لكل الأندية ===== */
 let gsub='g',crd=0,PUB={};
-const gsw=()=>`<div class="gsw"><button data-gs="g" aria-pressed="${gsub==='g'}">🥅 الهدافون</button><button data-gs="c" aria-pressed="${gsub==='c'}">🟨🟥 البطاقات والإيقاف</button></div>`;
+const gsw=()=>`<div class="gsw"><button data-gs="g" aria-pressed="${gsub==='g'}">🥅 الهدافون</button><button data-gs="s" aria-pressed="${gsub==='s'}">📊 إحصائيات الفرق</button><button data-gs="c" aria-pressed="${gsub==='c'}">🟨🟥 البطاقات والإيقاف</button></div>`;� البطاقات والإيقاف</button></div>`;
 function pickRow(k,t,inp){const el=$('pk'+k),ns=rosterNamesFor(t);
  el.innerHTML=ns.length?`<select class="f" id="ps${k}" aria-label="اللاعب"><option value="">👤 اختر لاعباً</option>${ns.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('')}</select><input id="pm${k}" type="number" min="1" max="130" inputmode="numeric" placeholder="الدقيقة" aria-label="الدقيقة"><button type="button" class="btn sm" data-pa="${k}|${inp}" aria-label="إضافة">➕</button>`:'<small class="hint">📋 قائمة هذا الفريق غير متاحة لك، اكتب الأسماء يدوياً.</small>'}
 function pickAdd(k,inp){const n=$('ps'+k).value,m=$('pm'+k).value.trim();if(!n)return toast('⚠️ اختر لاعباً أولاً');
@@ -4878,7 +5706,100 @@ table{border-collapse:collapse;width:100%}td,th{border:1px solid #555;padding:2p
 .row{display:flex;gap:8px;margin:7px 0}.tm{flex:1}.th{display:flex;align-items:center;gap:6px;background:#0f6b3a;color:#fff;padding:4px 8px;font-size:13px;border-radius:6px 6px 0 0}.co{border:1px solid #555;border-top:0;padding:3px 6px;min-height:22px;font-size:10.5px}.co span{font-weight:700}
 .res{display:flex;gap:8px}.res>div{flex:1}.box{border:1px solid #555;min-height:44px;padding:3px 6px;font-size:10.5px}.big{font-size:20px;font-weight:900;text-align:center;letter-spacing:4px}
 .sg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}.sg div{border:1px solid #555;height:62px;padding:3px 6px;font-size:10.5px}
-h3{margin:7px 0 3px;font-size:12px;color:#0f6b3a}.ft{text-align:center;font-size:9px;color:#666;margin-top:6px}</style></head><body>
+h3{margin:7px 0 3px;font-size:12px;color:#0f6b3a}.ft{text-align:center;font-size:9px;color:#666;margin-top:6px}
+/* ============================================================
+   🏆 أنماط صفحة النادي التفاعلية (Team Profile Modal)
+   ============================================================ */
+dialog#teamProfileModal{max-width:580px;width:95%;padding:0;border-radius:24px;border:1px solid rgba(242,182,50,0.35);background:#0a1610;color:#eaf3ec;box-shadow:0 30px 80px rgba(0,0,0,0.85);overflow:hidden;font-family:inherit;text-align:right;margin:auto}
+dialog#teamProfileModal::backdrop{background:rgba(3,8,5,0.78);backdrop-filter:blur(8px)}
+.tm-wrap{display:flex;flex-direction:column;max-height:88vh;overflow:hidden}
+.tm-header{position:relative;padding:22px 18px 16px;display:flex;align-items:center;gap:16px;border-bottom:2px solid rgba(242,182,50,0.4);box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+.tm-close{position:absolute;top:14px;left:14px;width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,0.25);background:rgba(0,0,0,0.45);color:#fff;font-size:20px;line-height:1;display:grid;place-items:center;cursor:pointer;z-index:5;transition:transform .2s,background .2s}
+.tm-close:hover{background:rgba(200,32,47,0.7);transform:scale(1.05)}
+.tm-crest-ring{width:76px;height:76px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.95),rgba(242,182,50,0.25) 70%);display:grid;place-items:center;padding:6px;box-shadow:0 4px 14px rgba(0,0,0,0.4);flex-shrink:0}
+.tm-logo{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3))}
+.tm-title-box{flex:1;min-width:0}
+.tm-name{margin:0 0 6px;font-size:20px;font-weight:900;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,0.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tm-meta-row{display:flex;flex-wrap:wrap;gap:6px}
+.tm-badge{font-size:11.5px;font-weight:700;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.2);color:var(--gold);padding:3px 9px;border-radius:20px}
+.tm-clubs-bar{display:flex;gap:6px;padding:10px 14px;background:rgba(0,0,0,0.3);overflow-x:auto;border-bottom:1px solid var(--ln);scrollbar-width:none}
+.tm-clubs-bar::-webkit-scrollbar{display:none}
+.tm-club-chip{flex-shrink:0;display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:var(--tx);font-size:12px;cursor:pointer;transition:all .2s}
+.tm-club-chip img{width:18px;height:18px;object-fit:contain}
+.tm-club-chip.active{background:var(--g);border-color:var(--gold);color:#fff;font-weight:800}
+.tm-cats{display:flex;gap:6px;padding:8px 14px;background:rgba(16,36,26,0.7);border-bottom:1px solid var(--ln)}
+.tm-cat-btn{flex:1;padding:7px 4px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:var(--mu);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
+.tm-cat-btn.active{background:var(--g);color:#fff;border-color:var(--gold);box-shadow:0 2px 8px rgba(31,90,52,0.5)}
+.tm-tabs{display:flex;border-bottom:1px solid var(--ln);background:rgba(10,22,16,0.95)}
+.tm-tab{flex:1;padding:10px 4px;border:none;background:none;color:var(--mu);font-size:13px;font-weight:700;border-bottom:2px solid transparent;cursor:pointer;transition:all .2s}
+.tm-tab.active{color:var(--gold);border-bottom-color:var(--gold);background:rgba(242,182,50,0.08)}
+.tm-body{flex:1;overflow-y:auto;padding:14px}
+.tm-stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.tm-stat-box{background:rgba(16,36,26,0.85);border:1px solid var(--ln);border-radius:14px;padding:10px 6px;text-align:center;display:flex;flex-direction:column;gap:2px}
+.tm-stat-box.gold{background:linear-gradient(135deg,rgba(242,182,50,0.22),rgba(16,36,26,0.9));border-color:rgba(242,182,50,0.4)}
+.tm-stat-box.green .tm-stat-val{color:#22c55e}
+.tm-stat-box.yellow .tm-stat-val{color:var(--gold)}
+.tm-stat-box.red .tm-stat-val{color:#ef4444}
+.tm-stat-val{font-size:17px;font-weight:900;color:#fff}
+.tm-stat-lbl{font-size:11px;color:var(--mu)}
+.tm-card-section{background:rgba(16,36,26,0.65);border:1px solid var(--ln);border-radius:14px;padding:12px;margin-bottom:12px}
+.tm-sec-title{font-size:13px;font-weight:800;color:var(--gold);margin-bottom:10px}
+.tm-rate-bar{height:10px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,0.1);display:flex;margin-bottom:8px}
+.tm-rate-part.win{background:#22c55e}
+.tm-rate-part.draw{background:var(--gold)}
+.tm-rate-part.loss{background:#ef4444}
+.tm-rate-legend{display:flex;justify-content:space-around;font-size:11.5px;color:var(--mu)}
+.tm-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:4px}
+.tm-dot.win{background:#22c55e}
+.tm-dot.draw{background:var(--gold)}
+.tm-dot.loss{background:#ef4444}
+.tm-form-badges{display:flex;gap:8px;justify-content:center}
+.tm-form-dot{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:900;color:#fff;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.3)}
+.tm-form-dot.w{background:#22c55e}
+.tm-form-dot.d{background:var(--gold);color:#000}
+.tm-form-dot.l{background:#ef4444}
+.tm-scorers-list{display:flex;flex-direction:column;gap:6px}
+.tm-scorer-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(255,255,255,0.04);border-radius:10px;border:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:all .2s}
+.tm-scorer-item:hover{background:rgba(255,255,255,0.08);transform:translateX(-2px)}
+.tm-rank-badge{font-size:12px;font-weight:800;width:20px;color:var(--gold)}
+.tm-player-name{flex:1;font-weight:700;font-size:13px}
+.tm-goals-badge{font-size:13px;font-weight:800;color:#22c55e}
+.tm-empty-hint{text-align:center;color:var(--mu);font-size:12.5px;padding:10px}
+.tm-squad-header{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:800;color:var(--gold);margin-bottom:10px}
+.tm-players-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.tm-player-card{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(16,36,26,0.85);border:1px solid var(--ln);border-radius:12px;cursor:pointer;transition:all .2s}
+.tm-player-card:hover{background:rgba(31,90,52,0.4);border-color:rgba(242,182,50,0.4);transform:translateX(-3px)}
+.tm-player-jersey{font-size:12px;font-weight:900;color:var(--gold);background:rgba(0,0,0,0.35);padding:4px 8px;border-radius:8px}
+.tm-player-info{flex:1;min-width:0}
+.tm-player-info .tm-player-name{display:block;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tm-player-badges{display:flex;gap:6px;margin-top:3px;font-size:11px}
+.tm-badge-goal{color:#22c55e;font-weight:800}
+.tm-badge-yellow{color:var(--gold);font-weight:800}
+.tm-badge-red{color:#ef4444;font-weight:800}
+.tm-player-arrow{color:var(--mu);font-size:12px}
+.tm-matches-list{display:flex;flex-direction:column;gap:10px}
+.tm-match-card{background:rgba(16,36,26,0.85);border:1px solid var(--ln);border-radius:14px;padding:10px 14px}
+.tm-match-card.win{border-right:4px solid #22c55e}
+.tm-match-card.draw{border-right:4px solid var(--gold)}
+.tm-match-card.loss{border-right:4px solid #ef4444}
+.tm-match-card.upcoming{border-right:4px solid var(--mu)}
+.tm-match-top{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--mu);margin-bottom:8px}
+.tm-round-tag{font-weight:800;color:var(--gold)}
+.tm-outcome-tag.win{color:#22c55e;font-weight:800}
+.tm-outcome-tag.draw{color:var(--gold);font-weight:800}
+.tm-outcome-tag.loss{color:#ef4444;font-weight:800}
+.tm-match-teams{display:flex;align-items:center;justify-content:space-between;margin:6px 0}
+.tm-m-team{flex:1;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700}
+.tm-m-team:last-child{justify-content:flex-end;text-align:left}
+.tm-m-team img{width:26px;height:26px;object-fit:contain}
+.tm-m-team.my-team{color:#fff;font-weight:900}
+.tm-score-pill{font-size:16px;font-weight:900;padding:4px 12px;border-radius:12px;background:rgba(0,0,0,0.45)}
+.tm-score-pill.win{color:#22c55e}
+.tm-score-pill.draw{color:var(--gold)}
+.tm-score-pill.loss{color:#ef4444}
+.tm-vs-pill{font-size:11px;font-weight:800;padding:3px 8px;border-radius:6px;background:rgba(255,255,255,0.1);color:var(--mu)}
+.tm-match-bottom{display:flex;justify-content:space-between;font-size:11px;color:var(--mu);border-top:1px solid rgba(255,255,255,0.06);padding-top:6px;margin-top:6px}
+</style></head><body>
 <div class="bar" style="display:flex;justify-content:center;gap:12px;padding:12px;background:#0d3820;box-shadow:0 4px 12px rgba(0,0,0,0.25)">
   <button onclick="window.print()" style="font-weight:900;padding:10px 22px;border-radius:10px;background:#22c55e;color:#fff;border:none;cursor:pointer;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,0.3)">🖨️ طباعة الورقة الرسمية أو حفظها PDF (A4)</button>
   <button onclick="window.close()" style="font-weight:700;padding:10px 18px;border-radius:10px;background:rgba(255,255,255,0.2);color:#fff;border:none;cursor:pointer;font-size:13px">✖ إغلاق</button>
@@ -5294,7 +6215,36 @@ async function vStart(){
  vRun=false
 }
 const vFile=()=>{const ext=vBlob.type.includes('mp4')?'mp4':'webm';return new File([vBlob],`مباراة-${T[vCur.h]}-${T[vCur.a]}.${ext}`,{type:vBlob.type})};
-$('vd').addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;
+$('vd').addEventListener('click',async e=>{ const tc = e.target.closest('[data-team]');
+ if(tc && !e.target.closest('button, a, input, select, details')){
+   openTeamModal(+tc.dataset.team);
+   return;
+ }
+ const closeTm = e.target.closest('#closeTeamModal');
+ if(closeTm){
+   const dlg = $('teamProfileModal');
+   if(dlg){ try { dlg.close(); } catch(err){ dlg.removeAttribute('open'); } }
+   return;
+ }
+ const tmClub = e.target.closest('[data-tmteam]');
+ if(tmClub){
+   curTeamModalId = +tmClub.dataset.tmteam;
+   renderTeamModalContent();
+   return;
+ }
+ const tmCat = e.target.closest('[data-tmcat]');
+ if(tmCat){
+   curTeamCat = tmCat.dataset.tmcat;
+   renderTeamModalContent();
+   return;
+ }
+ const tmTab = e.target.closest('[data-tmtab]');
+ if(tmTab){
+   curTeamSubTab = tmTab.dataset.tmtab;
+   renderTeamModalContent();
+   return;
+ }
+ const b=e.target.closest('button');if(!b)return;
  if(b.dataset.vf&&!vRun){vCur.fmt=b.dataset.vf;document.querySelectorAll('#vFmt .chip').forEach(c=>c.setAttribute('aria-pressed',c===b))}
  else if(b.id==='vGo')vStart();
  else if(b.id==='vDl'&&vBlob){const f=vFile(),a=document.createElement('a');a.href=vUrl;a.download=f.name;document.body.appendChild(a);a.click();a.remove()}
@@ -5455,7 +6405,36 @@ async function avStart(){
  AV.run=false
 }
 const avFile=()=>{const ext=AV.blob.type.includes('mp4')?'mp4':'webm';return new File([AV.blob],'ترتيب_الرابطة_الجولة_'+AV.u+'_'+AV.cat+'.'+ext,{type:AV.blob.type})};
-$('avd').addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;
+$('avd').addEventListener('click',async e=>{ const tc = e.target.closest('[data-team]');
+ if(tc && !e.target.closest('button, a, input, select, details')){
+   openTeamModal(+tc.dataset.team);
+   return;
+ }
+ const closeTm = e.target.closest('#closeTeamModal');
+ if(closeTm){
+   const dlg = $('teamProfileModal');
+   if(dlg){ try { dlg.close(); } catch(err){ dlg.removeAttribute('open'); } }
+   return;
+ }
+ const tmClub = e.target.closest('[data-tmteam]');
+ if(tmClub){
+   curTeamModalId = +tmClub.dataset.tmteam;
+   renderTeamModalContent();
+   return;
+ }
+ const tmCat = e.target.closest('[data-tmcat]');
+ if(tmCat){
+   curTeamCat = tmCat.dataset.tmcat;
+   renderTeamModalContent();
+   return;
+ }
+ const tmTab = e.target.closest('[data-tmtab]');
+ if(tmTab){
+   curTeamSubTab = tmTab.dataset.tmtab;
+   renderTeamModalContent();
+   return;
+ }
+ const b=e.target.closest('button');if(!b)return;
  if(b.dataset.af&&!AV.run){if(AV.fmt!==b.dataset.af){AV.fmt=b.dataset.af;document.querySelectorAll('#avFmt .chip').forEach(c=>c.setAttribute('aria-pressed',c===b));avReset();avPrep()}}
  else if(b.id==='avGo')avStart();
  else if(b.id==='avDl'&&AV.blob){const f=avFile(),a=document.createElement('a');a.href=AV.url;a.download=f.name;document.body.appendChild(a);a.click();a.remove()}
@@ -5945,7 +6924,36 @@ $('pws').onclick=async()=>{say('pwe','');const u=auth&&auth.currentUser,c=$('pwc
  try{await u.reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(u.email,c));await u.updatePassword(n);$('pwd').close();toast('✅ تم تغيير كلمة المرور')}
  catch(x){const k=(x&&x.code)||'';say('pwe',k.includes('wrong-password')||k.includes('invalid-credential')?'❌ كلمة المرور الحالية غير صحيحة':k.includes('weak')?'⚠️ كلمة المرور الجديدة ضعيفة':k.includes('too-many')?'⏳ محاولات كثيرة، حاول لاحقاً':k.includes('network')?'📡 لا يوجد اتصال':'⚠️ تعذر التغيير، سجّل الخروج ثم الدخول وأعد المحاولة')}
  b.disabled=false;b.textContent='حفظ كلمة المرور'};
-$('pd').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+$('pd').addEventListener('click',e=>{ const tc = e.target.closest('[data-team]');
+ if(tc && !e.target.closest('button, a, input, select, details')){
+   openTeamModal(+tc.dataset.team);
+   return;
+ }
+ const closeTm = e.target.closest('#closeTeamModal');
+ if(closeTm){
+   const dlg = $('teamProfileModal');
+   if(dlg){ try { dlg.close(); } catch(err){ dlg.removeAttribute('open'); } }
+   return;
+ }
+ const tmClub = e.target.closest('[data-tmteam]');
+ if(tmClub){
+   curTeamModalId = +tmClub.dataset.tmteam;
+   renderTeamModalContent();
+   return;
+ }
+ const tmCat = e.target.closest('[data-tmcat]');
+ if(tmCat){
+   curTeamCat = tmCat.dataset.tmcat;
+   renderTeamModalContent();
+   return;
+ }
+ const tmTab = e.target.closest('[data-tmtab]');
+ if(tmTab){
+   curTeamSubTab = tmTab.dataset.tmtab;
+   renderTeamModalContent();
+   return;
+ }
+ const b=e.target.closest('button');if(!b)return;
  if(b.dataset.th){PS.t=b.dataset.th;savePref('esm-theme',PS.t);applyPrefs()}
  else if(b.dataset.s){PS.s=b.dataset.s;savePref('esm-pstyle',PS.s);applyPrefs();try{toast(PS.s==='red'?'🔴 تم اختيار الشكل الأحمر VS':'🔵 تم اختيار الشكل الأزرق')}catch(e){}}});
 $('fnSel').onchange=e=>{PS.f=e.target.value;savePref('esm-font',PS.f);applyPrefs()};
