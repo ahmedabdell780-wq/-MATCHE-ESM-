@@ -6395,13 +6395,16 @@ async function scTable(){
  if(!up)up=lastRound();
  const rows=tbl(cat,up),n=rows.length,W=1080,R=1000,rp=66,rbh=56,y0=468,rowsEnd=y0+n*rp,H=rowsEnd+300;
  const[cv,c]=canvas0(W,H);
- const GR=scPal().bar,GR2=scPal().bar2,INK='#1f2937',OR='#f08a1c',LN='#cfd8cf';
+ /* لون خاص بكل فئة: U15 أخضر · U17 أزرق · U20 بنفسجي */
+ const CCOL={U15:{bar:'#156834',bar2:'#2e9d57',bg:'#f4f6f4',st:'#e2e8e2',ln:'#cfd8cf'},U17:{bar:'#1f5fbf',bar2:'#3b8df0',bg:'#f2f6fb',st:'#dde7f3',ln:'#c9d6e6'},U20:{bar:'#6d28d9',bar2:'#9b5cf0',bg:'#f6f3fb',st:'#e7def5',ln:'#d6cce8'}};
+ const CP=CCOL[cat]||{bar:scPal().bar,bar2:scPal().bar2,bg:'#f4f6f4',st:'#e2e8e2',ln:'#cfd8cf'};
+ const GR=CP.bar,GR2=CP.bar2,INK='#1f2937',OR='#f08a1c',LN=CP.ln;
  const[lg0,ap0]=await Promise.all([scImg('league-logo.png').then(x=>x||scImg(typeof LEAGUE!=='undefined'?LEAGUE:'')),scImg('icon-512.png').then(x=>x||scImg('league-logo.png'))]);
  const ims=await Promise.all(rows.map(r=>scImg(scCrestSrc(r.id))));
  /* الخلفية + خطوط مائلة في الزوايا */
- c.fillStyle='#f4f6f4';c.fillRect(0,0,W,H);
+ c.fillStyle=CP.bg;c.fillRect(0,0,W,H);
  const rg=c.createRadialGradient(W/2,H*.42,60,W/2,H*.42,W);rg.addColorStop(0,'rgba(255,255,255,.85)');rg.addColorStop(1,'rgba(255,255,255,0)');c.fillStyle=rg;c.fillRect(0,0,W,H);
- const stripes=(x0,y0_,dir)=>{c.save();c.beginPath();c.rect(x0,y0_,dir*300,dir*300);c.restore();c.save();c.lineWidth=15;c.strokeStyle='#e2e8e2';for(let i=0;i<9;i++){const o=i*40;c.beginPath();c.moveTo(x0,y0_+dir*(o+10));c.lineTo(x0+dir*(o+10),y0_);c.stroke()}c.restore()};
+ const stripes=(x0,y0_,dir)=>{c.save();c.beginPath();c.rect(x0,y0_,dir*300,dir*300);c.restore();c.save();c.lineWidth=15;c.strokeStyle=CP.st;for(let i=0;i<9;i++){const o=i*40;c.beginPath();c.moveTo(x0,y0_+dir*(o+10));c.lineTo(x0+dir*(o+10),y0_);c.stroke()}c.restore()};
  stripes(0,0,1);stripes(W,H,-1);
  /* الرأس: اسم الرابطة + الشعار */
  drawText(c,'رابطة تيبازة لكرة القدم',W-262,86,fit(c,'رابطة تيبازة لكرة القدم',520,46,900),900,GR,'right');
@@ -6412,7 +6415,7 @@ async function scTable(){
  const ty=214,tH=104,bg=c.createLinearGradient(60,0,W-60,0);bg.addColorStop(0,GR2);bg.addColorStop(1,GR);
  scRR(c,70,ty,W-140,tH,52);c.fillStyle=bg;c.fill();
  const ttl='ترتيب '+cat+' - وسط غرب';drawText(c,ttl,W/2+70,ty+tH/2+2,fit(c,ttl,600,62,900),900,'#fff');
- c.beginPath();c.arc(160,ty+tH/2,40,0,7);c.fillStyle='#dfe7df';c.fill();c.lineWidth=4;c.strokeStyle='rgba(255,255,255,.55)';c.stroke();
+ c.beginPath();c.arc(160,ty+tH/2,40,0,7);c.fillStyle='#fff';c.fill();c.lineWidth=4;c.strokeStyle='rgba(255,255,255,.55)';c.stroke();
  drawText(c,String(up).padStart(2,'0'),160,ty+tH/2+2,46,900,GR);
  drawText(c,'بعد نهاية الجولة '+String(up).padStart(2,'0'),W/2,ty+tH+36,36,900,GR);
  /* رأس الجدول */
