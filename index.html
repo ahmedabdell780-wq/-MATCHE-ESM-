@@ -1583,6 +1583,7 @@ function teamLogo(id){
   }
   return (OLD && OLD.DEF && OLD.DEF[id]) || (typeof LG !== 'undefined' && LG && LG[id]) || '';
 }
+window.teamLogo=teamLogo;
 
 var leagueMode = window.leagueMode;
 var isSenior = window.isSenior;
@@ -4023,7 +4024,7 @@ function listenEdits(){
 /* ---- رسم الواجهة ---- */
 function draw(){
  try{updateSeniorVisibility()}catch(e){}
-try{ccUi();document.body.classList.toggle('vw',isView())}catch(e){}if(!me&&tab==='a')return;$('app').innerHTML=tab==='m'?fixtures():tab==='r'?results():tab==='s'?standings():tab==='g'?scorers():admin()}
+try{ccUi();document.body.classList.toggle('vw',isView())}catch(e){}if(!me&&tab==='a')return;try{$('app').innerHTML=tab==='m'?fixtures():tab==='r'?results():tab==='s'?standings():tab==='g'?scorers():admin()}catch(err){console.error('draw failed',err);$('app').innerHTML='<div class="card" style="direction:ltr;text-align:left;border:2px solid #b91c1c"><b style="color:#b91c1c">\u26a0\ufe0f Render error (tab '+tab+')</b><pre style="white-space:pre-wrap;word-break:break-word;font-size:12px;margin:8px 0 0">'+String(err&&err.message||err).replace(/</g,'&lt;')+'\n'+String(err&&err.stack||'').split('\n').slice(0,4).join('\n').replace(/</g,'&lt;')+'</pre></div>'}}
 const lg=id=>`<img class="lg" src="${LG[id]}" alt="">`;
 const lastRound=()=>{for(let r=22;r>=1;r--)if(pairs(r).m.some(([h,a])=>{const v=S[K(cat,r,h,a)];return v&&v.status==='confirmed'&&v.sh!==''&&v.sh!=null}))return r;return 1};
 function chips(){
