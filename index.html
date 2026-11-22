@@ -1583,7 +1583,7 @@ function teamLogo(id){
   }
   return (OLD && OLD.DEF && OLD.DEF[id]) || (typeof LG !== 'undefined' && LG && LG[id]) || '';
 }
-window.teamLogo=teamLogo;
+window.teamLogo=teamLogo;window.parseNames=parseNames;window.rosterList=rosterList;
 
 var leagueMode = window.leagueMode;
 var isSenior = window.isSenior;
@@ -1927,7 +1927,7 @@ function deletePlayerFromModal(idx){
 }
 function restoreDefaultRosterConfirm() {
   const tId = (currentUser && currentUser.role === 'admin') ? 5 : (currentUser && currentUser.teamId);
-  const c = playerModalCat;
+  const c = window.activePlayerModalCat || 'U15';
   if (!tId || !canManageTeamRoster(tId)) { alert('⛔ غير مسموح'); return; }
   const isDef = tId == 5 && typeof DEFAULT_ROSTER !== 'undefined' && DEFAULT_ROSTER[c];
   const msg = isDef ? 'هل تريد استعادة القائمة الأصلية لهذه الفئة؟ ستُستبدل القائمة الحالية.' : 'لا توجد قائمة أصلية لفريقك. هل تريد تفريغ قائمة هذه الفئة؟';
