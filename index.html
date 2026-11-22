@@ -5873,7 +5873,7 @@ $('bkRun').onclick=bkRestore;
 
 /* ===== البطاقات والإيقافات لكل الأندية ===== */
 let gsub='g',crd=0,PUB={};
-const gsw=()=>`<div class="gsw"><button data-gs="g" aria-pressed="${gsub==='g'}">🥅 الهدافون</button><button data-gs="s" aria-pressed="${gsub==='s'}">📊 إحصائيات الفرق</button><button data-gs="c" aria-pressed="${gsub==='c'}">🟨🟥 البطاقات والإيقاف</button></div>`;� البطاقات والإيقاف</button></div>`;
+const gsw=()=>`<div class="gsw"><button data-gs="g" aria-pressed="${gsub==='g'}">🥅 الهدافون</button><button data-gs="s" aria-pressed="${gsub==='s'}">📊 إحصائيات الفرق</button><button data-gs="c" aria-pressed="${gsub==='c'}">🟨🟥 البطاقات والإيقاف</button></div>`;
 function pickRow(k,t,inp){const el=$('pk'+k),ns=rosterNamesFor(t);
  el.innerHTML=ns.length?`<select class="f" id="ps${k}" aria-label="اللاعب"><option value="">👤 اختر لاعباً</option>${ns.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('')}</select><input id="pm${k}" type="number" min="1" max="130" inputmode="numeric" placeholder="الدقيقة" aria-label="الدقيقة"><button type="button" class="btn sm" data-pa="${k}|${inp}" aria-label="إضافة">➕</button>`:'<small class="hint">📋 قائمة هذا الفريق غير متاحة لك، اكتب الأسماء يدوياً.</small>'}
 function pickAdd(k,inp){const n=$('ps'+k).value,m=$('pm'+k).value.trim();if(!n)return toast('⚠️ اختر لاعباً أولاً');
