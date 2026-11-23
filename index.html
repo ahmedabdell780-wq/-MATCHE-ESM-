@@ -1134,6 +1134,15 @@ body.senior-theme nav.nav button[pressed] {
 <p class="hint" id="vInfo" style="text-align:center;margin:6px 0"></p>
 <div class="act" style="margin-top:8px"><button class="btn" id="vGo" style="flex:1">⏺ إنشاء الفيديو</button><button class="btn" id="vShare" style="flex:1" hidden>📤 مشاركة (فيسبوك…)</button><button class="btn alt" id="vDl" style="flex:1" hidden>⬇️ تحميل</button></div>
 <div class="act" style="margin-top:8px"><button class="btn alt" id="vX" style="flex:1">إغلاق</button></div></dialog>
+<dialog id="svd"><h2 style="margin-top:0">🏛️ فيديو الأكابر الشامل</h2>
+<p class="hint" style="text-align:center;margin:0 0 8px">تصميم «الشاطئ الإغريقي» بألوان شعار الرابطة: افتتاحية · نتائج الجولة · الترتيب · الهدافون · ملخص (9:16)</p>
+<select id="svRd" class="f"></select>
+<label class="ck"><input type="checkbox" id="svSnd" checked> 🔊 مؤثرات صوتية</label>
+<div id="svStage" style="margin:8px auto;max-width:300px"><canvas id="svc" width="1080" height="1920" style="width:100%;height:auto;border-radius:14px;background:#0a2a4e;display:block"></canvas><div style="height:6px;border-radius:4px;background:var(--ln);margin-top:8px;overflow:hidden"><div id="svBar" style="height:100%;width:0;background:#b9773a"></div></div></div>
+<video id="svPrev" playsinline controls hidden style="width:100%;max-width:300px;margin:8px auto;display:block;border-radius:14px"></video>
+<p class="hint" id="svInfo" style="text-align:center;margin:6px 0"></p>
+<div class="act" style="margin-top:8px"><button class="btn" id="svGo" style="flex:1">⏺ إنشاء الفيديو</button><button class="btn" id="svShare" style="flex:1" hidden>📤 مشاركة (فيسبوك…)</button><button class="btn alt" id="svDl" style="flex:1" hidden>⬇️ تحميل</button></div>
+<div class="act" style="margin-top:8px"><button class="btn alt" id="svX" style="flex:1">إغلاق</button></div></dialog>
 <dialog id="avd"><h2 style="margin-top:0">🎬 فيديو ملصق الترتيب المعتمد</h2>
 <p class="hint" id="avTitle" style="text-align:center;margin:0 0 8px"></p>
 <div class="chips" id="avFmt"><button class="chip" data-af="916" aria-pressed="true">9:16 · ستوري / ريلز</button><button class="chip" data-af="45" aria-pressed="false">4:5 · منشور</button></div>
@@ -4479,7 +4488,7 @@ function admin(){
  }
 
  if(adminSec === 'tools'){
-   return navBar + `<h2>🏋️ حصة تدريبية مباشرة</h2><div class="card"><p class="hint" style="text-align:right;margin:0 0 8px">صوّر حصة تدريبية لأي فريق وأذعها مباشرة: شعار النادي يرفرف في جهة وشعار التطبيق في الجهة الأخرى.</p><button class="btn" id="trOpen" style="width:100%">🎥 بدء حصة تدريبية مباشرة</button></div><h2>📊 ملصق الترتيب المعتمد</h2><div class="card">${chips()}<select id="us" class="f">${Array.from({length:22},(_,i)=>`<option value="${i+1}" ${i+1===(up||lastRound())?'selected':''}>بعد الجولة ${i+1}</option>`).join('')}</select><label>🎯 تظليل فريق في الملصق (اختياري)</label><select id="hlT" class="f"><option value="">— بدون تظليل —</option>${Object.keys(T).map(i=>`<option value="${i}" ${String(HL.team)===i?'selected':''}>${esc(T[i])}</option>`).join('')}</select><div class="swatches">${HLC.map(c=>`<button type="button" class="sw" data-hc="${c}" style="background:${c}" aria-label="لون" aria-pressed="${HL.color===c}"></button>`).join('')}<input type="color" id="hlC" value="${HL.color}" aria-label="لون مخصص"></div><button class="btn" id="adminPoster" style="width:100%;margin-top:8px">إنشاء الملصق</button><button class="btn" id="adminVideo" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#156834,#1f9a4f);color:#fff">🎬 إنشاء فيديو الملصق</button></div>${bkCard()}${rulesCard()}<h2>🧰 أدوات</h2><div class="card"><button class="btn" id="mig" style="width:100%;margin-bottom:8px">🔒 نقل التشكيلات القديمة إلى مساحة خاصة</button><button class="btn alt" id="seed" style="width:100%">استيراد نتائج الجولات 1-3 السابقة</button></div>`;
+   return navBar + `<h2>🏋️ حصة تدريبية مباشرة</h2><div class="card"><p class="hint" style="text-align:right;margin:0 0 8px">صوّر حصة تدريبية لأي فريق وأذعها مباشرة: شعار النادي يرفرف في جهة وشعار التطبيق في الجهة الأخرى.</p><button class="btn" id="trOpen" style="width:100%">🎥 بدء حصة تدريبية مباشرة</button></div><h2>📊 ملصق الترتيب المعتمد</h2><div class="card">${chips()}<select id="us" class="f">${Array.from({length:isSenior()?30:22},(_,i)=>`<option value="${i+1}" ${i+1===(up||lastRound())?'selected':''}>بعد الجولة ${i+1}</option>`).join('')}</select><label>🎯 تظليل فريق في الملصق (اختياري)</label><select id="hlT" class="f"><option value="">— بدون تظليل —</option>${Object.keys(T).map(i=>`<option value="${i}" ${String(HL.team)===i?'selected':''}>${esc(T[i])}</option>`).join('')}</select><div class="swatches">${HLC.map(c=>`<button type="button" class="sw" data-hc="${c}" style="background:${c}" aria-label="لون" aria-pressed="${HL.color===c}"></button>`).join('')}<input type="color" id="hlC" value="${HL.color}" aria-label="لون مخصص"></div><button class="btn" id="adminPoster" style="width:100%;margin-top:8px">إنشاء الملصق</button><button class="btn" id="adminVideo" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#156834,#1f9a4f);color:#fff">🎬 إنشاء فيديو الملصق</button>${isSenior()?'<button class="btn" id="adminSrVideo" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#0a2a4e,#1f86c8);color:#fff">🏛️ فيديو الأكابر الشامل (تصميم جديد)</button>':''}</div>${bkCard()}${rulesCard()}<h2>🧰 أدوات</h2><div class="card"><button class="btn" id="mig" style="width:100%;margin-bottom:8px">🔒 نقل التشكيلات القديمة إلى مساحة خاصة</button><button class="btn alt" id="seed" style="width:100%">استيراد نتائج الجولات 1-3 السابقة</button></div>`;
  }
 
   if(adminSec === 'act'){
@@ -5031,6 +5040,7 @@ document.addEventListener('click',async e=>{
  else if(b.id==='bkImp')$('bkFile').click()
  else if(b.id==='adminPoster')posterAdmin()
  else if(b.id==='adminVideo')openAV()
+  else if(b.id==='adminSrVideo')openSV()
 });
 document.addEventListener('change',e=>{if(e.target.id==='pCardTeamPick'){const sel=$('pCardPlayerPick');if(sel){const t=+e.target.value;sel.innerHTML='<option value="">— اختر اللاعب —</option>'+(t?pCardNames(t).map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join(''):'');}return}if(e.target.id==='bkFile'){const f=e.target.files[0];e.target.value='';if(f)bkPick(f);return}
  if(e.target.id==='rs'){roundAuto=false;round=+e.target.value;draw()}if(e.target.id==='us'){up=+e.target.value;draw()}if(e.target.id==='hlT'){HL.team=e.target.value;hlSave()}if(e.target.id==='hlC'){HL.color=e.target.value;hlSave();draw()}});
@@ -7041,6 +7051,203 @@ $('avd').addEventListener('click',async e=>{ const tc = e.target.closest('[data-
  else if(b.id==='avShare'&&AV.blob){const f=avFile();try{if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],title:f.name});else toast('⚠️ المشاركة غير مدعومة هنا، استعمل «تحميل»')}catch(x){}}
  else if(b.id==='avX'&&!AV.run){AV.tok++;$('avd').close()}});
 $('avd').addEventListener('cancel',e=>{if(AV.run)e.preventDefault()});
+
+/* ===== فيديو الأكابر الشامل — تصميم «الشاطئ الإغريقي» (ألوان شعار الرابطة: أزرق البحر · النحاس · الكريمي · العنابي) ===== */
+const SV={run:false,blob:null,url:null,A:null,tok:0,u:1};
+const SVK={navy:'#0a2a4e',sea:'#1f86c8',foam:'#8fd0ee',bronze:'#b9773a',gold:'#e8b765',cream:'#f6eedc',paper:'#fffdf7',wine:'#8c1d2f',ink:'#2b3f55'};
+const svc=(v,a,b)=>Math.max(a,Math.min(b,v));
+const svEo=t=>1-Math.pow(1-svc(t,0,1),3);
+const svEb=t=>{t=svc(t,0,1);const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2)};
+const svSeg=(t,a,d)=>svc((t-a)/d,0,1);
+const svCv=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c};
+function svWave(x,W,y0,amp,len,ph,fill,H){x.beginPath();x.moveTo(0,H);for(let i=0;i<=W+12;i+=12)x.lineTo(i,y0+Math.sin(i/len+ph)*amp);x.lineTo(W,H);x.closePath();x.fillStyle=fill;x.fill()}
+/* شريط «المياندر» الإغريقي (نفس زخرفة موجة الشعار) */
+function svKey(x,X,Y,W,u,col,lw){x.save();x.strokeStyle=col;x.lineWidth=lw||3;x.lineJoin='miter';x.beginPath();x.moveTo(X,Y+5*u);x.lineTo(X+W,Y+5*u);
+ for(let px=X;px<X+W;px+=6*u){x.moveTo(px,Y+5*u);x.lineTo(px,Y);x.lineTo(px+5*u,Y);x.lineTo(px+5*u,Y+4*u);x.lineTo(px+2*u,Y+4*u);x.lineTo(px+2*u,Y+2*u);x.lineTo(px+3*u,Y+2*u)}
+ x.stroke();x.restore()}
+/* عمود إيوني */
+function svCol(x,cx,baseY,h,w,al){if(h<30)return;x.save();x.globalAlpha=al;const top=baseY-h,sw=w*.62;
+ const g=x.createLinearGradient(cx-sw/2,0,cx+sw/2,0);g.addColorStop(0,'#7a4a1f');g.addColorStop(.35,'#e8b765');g.addColorStop(.7,'#b9773a');g.addColorStop(1,'#6b3f18');x.fillStyle=g;
+ x.fillRect(cx-sw/2,top+h*.1,sw,h*.8);x.fillRect(cx-w*.62,top+h*.03,w*1.24,h*.045);
+ x.fillRect(cx-w*.42,top+h*.075,w*.84,h*.045);[-1,1].forEach(s=>{x.beginPath();x.arc(cx+s*w*.42,top+h*.098,w*.2,0,7);x.fill()});
+ x.fillRect(cx-w*.7,baseY-h*.07,w*1.4,h*.035);x.fillRect(cx-w*.8,baseY-h*.035,w*1.6,h*.035);
+ x.strokeStyle='rgba(0,0,0,.25)';x.lineWidth=3;for(let i=-2;i<=2;i++){x.beginPath();x.moveTo(cx+i*sw*.2,top+h*.12);x.lineTo(cx+i*sw*.2,baseY-h*.08);x.stroke()}
+ x.restore()}
+function svStar(x,cx,cy,R,r,col){x.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr_=i%2?r:R;x.lineTo(cx+Math.cos(a)*rr_,cy+Math.sin(a)*rr_)}x.closePath();x.fillStyle=col;x.fill()}
+function svMedal(x,cx,cy,r,img){if(r<12)return;x.save();let g=x.createRadialGradient(cx,cy,r*.8,cx,cy,r*1.5);g.addColorStop(0,'rgba(232,183,101,.55)');g.addColorStop(1,'rgba(232,183,101,0)');x.fillStyle=g;x.beginPath();x.arc(cx,cy,r*1.5,0,7);x.fill();
+ x.beginPath();x.arc(cx,cy,r,0,7);x.fillStyle='#fbf6ea';x.fill();
+ if(img){x.save();x.beginPath();x.arc(cx,cy,r-6,0,7);x.clip();x.drawImage(img,cx-r+6,cy-r+6,2*r-12,2*r-12);x.restore()}
+ x.lineWidth=Math.max(4,r*.04);x.strokeStyle='#e8b765';x.beginPath();x.arc(cx,cy,r,0,7);x.stroke();x.restore()}
+function svLogo(x,im,cx,cy,r){if(!im)return;const s=Math.min(2*r/im.width,2*r/im.height);x.drawImage(im,cx-im.width*s/2,cy-im.height*s/2,im.width*s,im.height*s)}
+function svNum(x,s,X,Y,f,c){x.save();x.direction='ltr';tx(x,String(s),X,Y,f,c,'center');x.restore()}
+
+/* ---------- الخلفيات ---------- */
+function svDark(x,A,t){const W=A.W,H=A.H;let g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0e3b6e');g.addColorStop(.55,'#082a52');g.addColorStop(1,'#041528');x.fillStyle=g;x.fillRect(0,0,W,H);
+ g=x.createRadialGradient(W/2,H*.42,40,W/2,H*.42,W*.9);g.addColorStop(0,'rgba(232,183,101,.26)');g.addColorStop(1,'rgba(232,183,101,0)');x.fillStyle=g;x.fillRect(0,0,W,H);
+ x.save();x.translate(W/2,H*.42);x.rotate(t*.12);x.globalAlpha=.06;x.fillStyle='#fff';for(let i=0;i<12;i++){x.rotate(Math.PI/6);x.beginPath();x.moveTo(0,0);x.lineTo(W*1.6,-90);x.lineTo(W*1.6,90);x.closePath();x.fill()}x.restore();
+ A.P.forEach(p=>{const yy=((p.y-t*p.s)%H+H)%H;x.globalAlpha=.2+.5*Math.abs(Math.sin(t*p.f+p.ph));x.fillStyle='#e8b765';x.beginPath();x.arc(p.x,yy,p.r,0,7);x.fill()});x.globalAlpha=1;
+ svWave(x,W,H-230,28,110,t*1.3,'rgba(31,134,200,.33)',H);svWave(x,W,H-185,22,90,-t*1.6+1,'rgba(143,208,238,.22)',H);svWave(x,W,H-135,18,70,t*2+2,'rgba(7,28,54,.92)',H);
+ svKey(x,0,38,W,9,'rgba(232,183,101,.6)',4);svKey(x,0,H-92,W,9,'rgba(232,183,101,.6)',4)}
+function svLight(x,A,t,sc){const W=A.W,H=A.H;let g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#fbf6ea');g.addColorStop(1,'#efe3c9');x.fillStyle=g;x.fillRect(0,0,W,H);
+ svCol(x,62,H-125,1150,120,.08);svCol(x,W-62,H-125,1150,120,.08);
+ if(A.lg){x.save();x.globalAlpha=.06;x.drawImage(A.lg,W/2-380,H/2-380,760,760);x.restore()}
+ svWave(x,W,H-175,14,120,t*1.2,'rgba(31,134,200,.13)',H);svWave(x,W,H-150,12,90,-t*1.5,'rgba(31,134,200,.17)',H);
+ /* الرأس */
+ g=x.createLinearGradient(0,0,W,236);g.addColorStop(0,'#0a2a4e');g.addColorStop(1,'#0f4378');x.fillStyle=g;x.fillRect(0,0,W,236);
+ x.fillStyle='#b9773a';x.fillRect(0,236,W,32);svKey(x,0,241,W,4.4,'#f6eedc',3);
+ svMedal(x,W-140,118,84,A.lg);
+ tx(x,SRT1,410,92,F(900,46),'#fff','center',700);tx(x,SRT2,410,152,F(700,26),'#e8b765','center',700);
+ /* شارة المشهد */
+ const st=sc===1?A.tR:sc===2?A.tS:A.tG,pe=svEb(svSeg(t,st+.15,.6)),lab=sc===1?'نتائج الجولة '+A.u:sc===2?'الترتيب بعد الجولة '+A.u:'ترتيب الهدافين';
+ x.save();x.translate(W/2,326);x.scale(pe,pe);rr(x,-290,-42,580,84,42);x.fillStyle='#0a2a4e';x.fill();x.lineWidth=4;x.strokeStyle='#b9773a';x.stroke();tx(x,lab,0,2,F(900,40),'#f6eedc','center',520);x.restore();
+ /* التذييل */
+ x.fillStyle='#0a2a4e';x.fillRect(0,H-124,W,124);svKey(x,0,H-130,W,3.4,'#b9773a',3);
+ tx(x,'MOUBARATI LIVE · رابطة كرة القدم لولاية تيبازة',W/2,H-78,F(800,28),'#f6eedc','center',960);tx(x,SRT3,W/2,H-38,F(700,23),'#e8b765','center',960)}
+
+/* ---------- المشاهد ---------- */
+function svIntro(x,A,t){const W=A.W,H=A.H,cx=W/2,cy=800;
+ const ce=svEo(svSeg(t,.2,1.5));svCol(x,150,H-330,980*ce,150,ce*.5);svCol(x,W-150,H-330,980*ce,150,ce*.5);
+ x.globalAlpha=svEo(svSeg(t,.3,.8));tx(x,'MOUBARATI LIVE',cx,160,F(800,34),'#e8b765','center');x.globalAlpha=1;
+ const e=svEb(svSeg(t,.6,1.3)),R=250*e;
+ if(R>20){x.save();x.translate(cx,cy);x.rotate(t*.35);for(let i=0;i<48;i++){const a=i/48*Math.PI*2;x.fillStyle=i%2?'#e8b765':'#1f86c8';x.beginPath();x.arc(Math.cos(a)*(R+48),Math.sin(a)*(R+48),i%2?7:4,0,7);x.fill()}x.restore()}
+ svMedal(x,cx,cy,R,A.lg);
+ const rev=(s,y,f,c,a,d,mw)=>{const k=svEo(svSeg(t,a,d));if(k<=0)return;x.save();x.beginPath();x.rect(W-W*k,0,W*k,H);x.clip();tx(x,s,cx,y,f,c,'center',mw);x.restore()};
+ rev(SRT1,1210,F(900,68),'#fff',1.7,1.1,980);rev(SRT2,1295,F(800,38),'#e8b765',2.4,1.1,980);
+ const p=svEb(svSeg(t,3.2,.8));if(p>0){x.save();x.translate(cx,1440);x.scale(p,p);const g=x.createLinearGradient(-250,0,250,0);g.addColorStop(0,'#b9773a');g.addColorStop(.5,'#e8b765');g.addColorStop(1,'#b9773a');rr(x,-250,-58,500,116,58);x.fillStyle=g;x.fill();tx(x,'الجولة '+A.u,0,4,F(900,64),'#0a2a4e','center',440);x.restore()}
+ x.globalAlpha=svEo(svSeg(t,3.9,.7));tx(x,'نتائج · ترتيب · هدافون · إحصائيات',cx,1560,F(700,30),'rgba(255,255,255,.8)','center',900);x.globalAlpha=1}
+
+function svResults(x,A,t){const W=A.W,M=A.M,n=M.length,ch=Math.min(150,Math.floor(1280/Math.max(n,1))-22),gap=22,y0=395,cw=980;
+ M.forEach((m,i)=>{const ta=A.tR+1+i*.8,e=svEo(svSeg(t,ta,.6));if(e<=0)return;
+  const ox=(i%2?-1:1)*(1-e)*W*1.1,X=50+ox,Y=y0+i*(ch+gap);x.save();x.globalAlpha=Math.min(1,e*1.4);
+  x.shadowColor='rgba(10,42,78,.25)';x.shadowBlur=22;x.shadowOffsetY=8;rr(x,X,Y,cw,ch,30);x.fillStyle='#fffdf7';x.fill();x.shadowColor='transparent';x.lineWidth=3;x.strokeStyle='#b9773a';x.stroke();
+  const hw=m.ok&&m.sh>m.sa,aw=m.ok&&m.sa>m.sh;
+  if(hw){rr(x,X+cw-22,Y+16,10,ch-32,5);x.fillStyle='#e8b765';x.fill()}if(aw){rr(x,X+12,Y+16,10,ch-32,5);x.fillStyle='#e8b765';x.fill()}
+  const lr=ch*.36,cy=Y+ch/2;
+  svLogo(x,A.L[m.h],X+cw-84,cy,lr);svLogo(x,A.L[m.a],X+84,cy,lr);
+  tx(x,T[m.h]||'',X+cw-150,cy,F(hw?900:700,32),hw?'#0a2a4e':'#4a5d73','right',262);tx(x,T[m.a]||'',X+150,cy,F(aw?900:700,32),aw?'#0a2a4e':'#4a5d73','left',262);
+  const bx=X+cw/2,g=x.createLinearGradient(bx-90,0,bx+90,0);g.addColorStop(0,'#0a2a4e');g.addColorStop(1,'#0f4378');rr(x,bx-88,cy-45,176,90,24);x.fillStyle=g;x.fill();
+  if(m.ok){const p=svEo(svSeg(t,ta+.5,.7)),sh=Math.round(m.sh*p),sa=Math.round(m.sa*p);
+   svNum(x,sh,bx+47,cy+2,F(900,56),hw?'#e8b765':'#f6eedc');svNum(x,sa,bx-47,cy+2,F(900,56),aw?'#e8b765':'#f6eedc');tx(x,':',bx,cy-2,F(900,46),'#8fd0ee','center')}
+  else tx(x,'VS',bx,cy+2,F(900,44),'#8fd0ee','center');
+  x.restore()});
+ if(A.bye){const tb=A.tR+1+n*.8,e=svEo(svSeg(t,tb,.5));if(e>0){const yb=y0+n*(ch+gap)+6;x.save();x.globalAlpha=e;rr(x,150,yb,780,70,35);x.fillStyle='rgba(10,42,78,.08)';x.fill();x.setLineDash([10,8]);x.lineWidth=3;x.strokeStyle='#b9773a';x.stroke();x.setLineDash([]);
+   tx(x,'يستريح في هذه الجولة: '+(T[A.bye]||''),W/2,yb+36,F(800,30),'#0a2a4e','center',700);x.restore()}}}
+
+function svTable(x,A,t){const W=A.W,R=A.rows,n=R.length,y0=432,pitch=Math.min(92,Math.floor((1792-y0)/n)),rh=pitch-8;
+ const he=svEo(svSeg(t,A.tS+.5,.6)),cols={p:505,w:432,d:362,l:292,df:215,pts:105};
+ x.save();x.globalAlpha=he;rr(x,40,374,W-80,50,16);x.fillStyle='#0a2a4e';x.fill();
+ [['لعب',cols.p],['فاز',cols.w],['تعادل',cols.d],['خسر',cols.l],['+/-',cols.df],['النقاط',cols.pts]].forEach(([s,X])=>tx(x,s,X,399,F(800,24),'#e8b765','center'));
+ tx(x,'الفريق',880,399,F(800,24),'#e8b765','right');x.restore();
+ const medal=['#e8b765','#c9d1d9','#b9773a'],tEnd=A.tS+1.2+n*.27+.6;
+ R.forEach((r,i)=>{const ta=A.tS+1.2+i*.27,e=svEo(svSeg(t,ta,.5));if(e<=0)return;
+  const y=y0+i*pitch;x.save();x.globalAlpha=Math.min(1,e*1.5);x.translate((1-e)*W*.9,0);
+  const low=i>=n-3,col=i<3?medal[i]:low?'#8c1d2f':'#0a2a4e';
+  x.shadowColor='rgba(10,42,78,.14)';x.shadowBlur=10;x.shadowOffsetY=3;rr(x,40,y,W-80,rh,22);x.fillStyle=i%2?'#fffdf7':'#faf2de';x.fill();x.shadowColor='transparent';
+  rr(x,W-54,y+9,9,rh-18,4);x.fillStyle=col;x.fill();
+  x.beginPath();x.arc(W-104,y+rh/2,rh*.31,0,7);x.fillStyle=col;x.fill();svNum(x,i+1,W-104,y+rh/2+2,F(900,Math.round(rh*.36)),i==1?'#0a2a4e':'#fff');
+  svLogo(x,A.L[r.id],W-190,y+rh/2,rh*.4);
+  tx(x,T[r.id]||'',W-250,y+rh/2,F(i<3?900:800,32),'#0a2a4e','right',290);
+  [[r.p,cols.p],[r.w,cols.w],[r.d,cols.d],[r.l,cols.l],[(r.f-r.a>0?'+':'')+(r.f-r.a),cols.df]].forEach(([v,X])=>svNum(x,v,X,y+rh/2+2,F(700,30),'#2b3f55'));
+  const pv=Math.round(r.pts*svEo(svSeg(t,ta+.2,.7)));rr(x,cols.pts-48,y+rh/2-25,96,50,16);x.fillStyle='#0a2a4e';x.fill();svNum(x,pv,cols.pts,y+rh/2+2,F(900,36),'#e8b765');
+  x.restore()});
+ if(t>tEnd){const a=.45+.45*Math.sin((t-tEnd)*4);x.save();rr(x,40,y0,W-80,rh,22);x.lineWidth=5;x.strokeStyle='rgba(232,183,101,'+a+')';x.stroke();x.restore()}}
+
+function svScorers(x,A,t){const W=A.W,G=A.G,mx=Math.max(1,G[0].c),y0=405,pitch=262,ch=240;
+ G.forEach((g,i)=>{const ta=A.tG+1.1+i*.75,e=svEo(svSeg(t,ta,.6));if(e<=0)return;const Y=y0+i*pitch;
+  x.save();x.globalAlpha=Math.min(1,e*1.4);x.translate((i%2?-1:1)*(1-e)*W,0);
+  x.shadowColor='rgba(10,42,78,.22)';x.shadowBlur=20;x.shadowOffsetY=7;rr(x,40,Y,W-80,ch,36);x.fillStyle='#fffdf7';x.fill();x.shadowColor='transparent';x.lineWidth=i?3:6;x.strokeStyle=i?'#b9773a':'#e8b765';x.stroke();
+  const py=Y+ch/2-6;x.beginPath();x.arc(W-210,py,94,0,7);x.fillStyle='#efe3c9';x.fill();
+  const im=A.Ph[i];if(im){x.save();x.beginPath();x.arc(W-210,py,90,0,7);x.clip();cover(x,im,W-300,py-90,180,180,.2);x.restore()}else svLogo(x,A.L[g.t],W-210,py,72);
+  x.lineWidth=6;x.strokeStyle=i?'#b9773a':'#e8b765';x.beginPath();x.arc(W-210,py,92,0,7);x.stroke();
+  x.beginPath();x.arc(W-292,Y+44,30,0,7);x.fillStyle='#0a2a4e';x.fill();svNum(x,i+1,W-292,Y+46,F(900,32),'#e8b765');
+  tx(x,g.n||'',W-320,Y+78,F(900,46),'#0a2a4e','right',500);tx(x,T[g.t]||'',W-320,Y+130,F(700,30),'#4a5d73','right',430);
+  if(i===0){svStar(x,W-332,Y+176,15,7,'#e8b765');tx(x,'هدّاف البطولة',W-358,Y+176,F(800,26),'#b9773a','right',300)}
+  const p=svEo(svSeg(t,ta+.3,.9)),tw=470;rr(x,260,Y+ch-36,tw,14,7);x.fillStyle='#eadfc6';x.fill();
+  const bw=Math.max(16,tw*(g.c/mx)*p);const gg=x.createLinearGradient(260+tw-bw,0,260+tw,0);gg.addColorStop(0,'#1f86c8');gg.addColorStop(1,'#b9773a');rr(x,260+tw-bw,Y+ch-36,bw,14,7);x.fillStyle=gg;x.fill();
+  x.beginPath();x.arc(150,py,78,0,7);x.fillStyle='#0a2a4e';x.fill();x.lineWidth=5;x.strokeStyle='#b9773a';x.stroke();
+  svNum(x,Math.round(g.c*svEo(svSeg(t,ta+.2,.8))),150,py-12,F(900,84),'#e8b765');tx(x,'هدف',150,py+46,F(700,26),'#f6eedc','center');
+  x.restore()})}
+
+function svOutro(x,A,t){const W=A.W,H=A.H,cx=W/2;
+ const ce=svEo(svSeg(t,A.tO+.2,1.5));svCol(x,100,H-110,860*ce,130,ce*.33);svCol(x,W-100,H-110,860*ce,130,ce*.33);
+ x.globalAlpha=svEo(svSeg(t,A.tO+.3,.6));tx(x,'ملخص الجولة '+A.u,cx,190,F(900,66),'#fff','center',900);x.globalAlpha=1;
+ const it=[['أفضل هجوم',A.att?T[A.att.id]:'—',A.att?A.att.f+' هدف مسجّل':'',A.att&&A.att.id],['أفضل دفاع',A.def?T[A.def.id]:'—',A.def?A.def.a+' هدف مستقبَل':'',A.def&&A.def.id],['معدّل الأهداف في المباراة',A.avg,'طوال البطولة'],['أهداف هذه الجولة',A.rg,'في '+A.played+' مباريات']];
+ it.forEach(([lab,val,sub,id],i)=>{const e=svEo(svSeg(t,A.tO+.8+i*.45,.6));if(e<=0)return;const Y=285+i*195;
+  x.save();x.globalAlpha=e;x.translate(0,(1-e)*70);rr(x,70,Y,940,170,34);const g=x.createLinearGradient(70,0,1010,0);g.addColorStop(0,'rgba(255,255,255,.08)');g.addColorStop(1,'rgba(255,255,255,.17)');x.fillStyle=g;x.fill();x.lineWidth=3;x.strokeStyle='rgba(232,183,101,.7)';x.stroke();
+  tx(x,lab,980,Y+42,F(700,28),'#e8b765','right',620);tx(x,String(val),980,Y+98,F(900,i<2?46:64),'#fff','right',640);tx(x,sub,980,Y+144,F(600,24),'rgba(255,255,255,.7)','right',620);
+  if(id)svLogo(x,A.L[id],190,Y+85,62);else{x.beginPath();x.arc(190,Y+85,62,0,7);x.fillStyle='rgba(232,183,101,.2)';x.fill();svStar(x,190,Y+85,34,15,'#e8b765')}
+  x.restore()});
+ const e=svEb(svSeg(t,A.tO+3.1,1.1));svMedal(x,cx,1430,170*e,A.lg);
+ x.globalAlpha=svEo(svSeg(t,A.tO+3.9,.8));tx(x,SRT1,cx,1668,F(900,50),'#fff','center',980);tx(x,SRT2,cx,1730,F(700,30),'#e8b765','center',980);tx(x,'MOUBARATI LIVE · تابعونا على المنصة',cx,1800,F(800,28),'rgba(255,255,255,.78)','center',900);x.globalAlpha=1}
+
+/* ---------- الإطار الكامل ---------- */
+function svFrame(x,A,t){const W=A.W,H=A.H;x.direction='rtl';x.textBaseline='middle';x.globalAlpha=1;
+ const sc=t<A.tR?0:t<A.tS?1:t<A.tG?2:t<A.tO?3:4;
+ if(sc===0||sc===4)svDark(x,A,t);else svLight(x,A,t,sc);
+ if(sc===0)svIntro(x,A,t);else if(sc===1)svResults(x,A,t);else if(sc===2)svTable(x,A,t);else if(sc===3)svScorers(x,A,t);else svOutro(x,A,t);
+ A.B.forEach(b=>{const d=t-b;if(Math.abs(d)>=.5)return;const c=svEo(1-Math.abs(d)/.5),y=H-(H+160)*c;
+  svWave(x,W,y+30,34,90,t*5,'rgba(143,208,238,.9)',H+200);svWave(x,W,y+60,30,70,-t*4,'rgba(31,134,200,1)',H+200);svWave(x,W,y+95,26,60,t*3,'#0a2a4e',H+200);
+  if(c>.85){const m=svMedal;x.save();x.globalAlpha=(c-.85)/.15;m(x,W/2,H/2,150,A.lg);x.restore()}});
+ x.fillStyle='rgba(0,0,0,.25)';x.fillRect(0,H-9,W,9);x.fillStyle='#e8b765';const pw=W*svc(t/A.D,0,1);x.fillRect(W-pw,H-9,pw,9)}
+
+/* ---------- التجهيز ---------- */
+async function svAssets(u){
+ try{await document.fonts.ready}catch(e){}
+ const W=1080,H=1920;
+ OLD.load(S);OLD.state({cat,team:5,rosters:RO});
+ const rows=tbl(cat,u),n=rows.length,pool=rows.filter(r=>r.p>0);
+ const att=pool.length?[...pool].sort((a,b)=>b.f-a.f)[0]:null,def=pool.length?[...pool].sort((a,b)=>a.a-b.a)[0]:null;
+ const tm=pool.reduce((s,r)=>s+r.p,0)/2,tg=pool.reduce((s,r)=>s+r.f,0),avg=tm>0?(tg/tm).toFixed(2):'0.00';
+ let G=[];try{G=((OLD.tallies()||[])[0]||[]).slice(0,5)}catch(e){}
+ const pr=pairs(u),M=pr.m.map(([h,a])=>{const v=S[K(cat,u,h,a)],ok=!!v&&v.status==='confirmed'&&v.sh!==''&&v.sh!=null;return{h,a,ok,sh:ok?+v.sh:0,sa:ok?+v.sa:0}});
+ const rg=M.reduce((s,m)=>s+(m.ok?m.sh+m.sa:0),0),played=M.filter(m=>m.ok).length,bye=pr.bye?+pr.bye:0;
+ const ids=new Set(rows.map(r=>r.id));M.forEach(m=>{ids.add(m.h);ids.add(m.a)});if(bye)ids.add(bye);
+ const L={};await Promise.all([...ids].map(async id=>{L[id]=await imgOf(OLD.DEF[id]||LG[id])}));
+ const[lg,...Ph]=await Promise.all([imgOf(window.SENIOR_LOGO),...G.map(g=>imgOf(photoOf(g.t,g.n)))]);
+ const tR=5.4,dR=1.3+Math.max(1,M.length)*.8+2.1,tS=tR+dR,dS=1.2+n*.27+.6+3.4,tG=tS+dS,dG=G.length?1.1+G.length*.75+2.6:0,tO=tG+dG,D=tO+7.4;
+ const B=[tR,tS,tG];if(dG)B.push(tO);
+ let sd=7;const rnd=()=>(sd=(sd*16807)%2147483647)/2147483647;
+ const P=Array.from({length:70},()=>({x:rnd()*W,y:rnd()*H,r:1.5+rnd()*3,s:14+rnd()*40,f:1+rnd()*2.5,ph:rnd()*6}));
+ return{W,H,u,rows,M,G,Ph,L,lg,att,def,avg,rg,played,bye,tR,tS,tG,tO,D,B,P}}
+function svSfx(ac,dst,b,A){
+ const mk=(t,f,d,v,ty)=>{const o=ac.createOscillator(),g=ac.createGain();o.type=ty||'sine';o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(dst);o.start(t);o.stop(t+d+.05)};
+ const nz=(t,d,f0,f1,v)=>{const n=Math.floor(ac.sampleRate*d),buf=ac.createBuffer(1,n,ac.sampleRate),da=buf.getChannelData(0);for(let i=0;i<n;i++)da[i]=(Math.random()*2-1)*(1-i/n);const s=ac.createBufferSource();s.buffer=buf;const f=ac.createBiquadFilter();f.type='bandpass';f.frequency.setValueAtTime(f0,t);f.frequency.exponentialRampToValueAtTime(f1,t+d);const g=ac.createGain();g.gain.value=v;s.connect(f);f.connect(g);g.connect(dst);s.start(t)};
+ {const k=ac.createOscillator(),kg=ac.createGain();kg.gain.value=.0003;k.connect(kg);kg.connect(dst);k.start(b);k.stop(b+A.D+.6)}
+ [130.8,196,261.6,329.6].forEach((f,i)=>{const o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(.0001,b);g.gain.linearRampToValueAtTime(.028,b+2);g.gain.setValueAtTime(.028,b+A.D-2.2);g.gain.linearRampToValueAtTime(.0001,b+A.D);o.connect(g);g.connect(dst);o.start(b);o.stop(b+A.D+.1)});
+ nz(b+.5,1.2,300,3000,.3);mk(b+1.1,70,.7,.6,'sine');[0,.12,.24].forEach((d,i)=>mk(b+2.1+d,988+i*247,.5,.1,'triangle'));
+ A.B.forEach(t=>{nz(b+t-.5,.55,400,2800,.28);mk(b+t,90,.45,.55,'sine')});
+ A.M.forEach((m,i)=>{const ta=b+A.tR+1+i*.8;mk(ta+.05,740,.14,.12,'triangle');if(m.ok)mk(ta+.6,520+i*20,.2,.1,'triangle')});
+ A.rows.forEach((r,i)=>mk(b+A.tS+1.2+i*.27+.03,300+i*30,.12,.12,'triangle'));
+ A.G.forEach((g,i)=>{const ta=b+A.tG+1.1+i*.75;nz(ta,.35,500,2400,.2);mk(ta+.2,660+i*70,.3,.12,'triangle')});
+ [0,.14,.28,.42].forEach((d,i)=>mk(b+A.tO+3.1+d,523+i*131,.6,.14,'triangle'));nz(b+A.tO+3.4,1,500,5000,.18)}
+function svReset(){SV.blob=null;if(SV.url){URL.revokeObjectURL(SV.url);SV.url=null}$('svPrev').hidden=true;$('svPrev').removeAttribute('src');$('svStage').hidden=false;$('svBar').style.width='0';['svShare','svDl'].forEach(i=>$(i).hidden=true);$('svGo').hidden=false}
+async function svPrep(){const tok=++SV.tok;SV.A=null;$('svGo').disabled=true;$('svInfo').textContent='⏳ تجهيز المعاينة…';
+ try{const A=await svAssets(SV.u);if(tok!==SV.tok)return;SV.A=A;const cv=$('svc');cv.width=A.W;cv.height=A.H;svFrame(cv.getContext('2d'),A,A.tG-1);$('svInfo').textContent='مدة الفيديو نحو '+Math.round(A.D)+' ثانية (9:16). اترك الشاشة مفتوحة أثناء التسجيل.';$('svGo').disabled=false}
+ catch(e){$('svInfo').textContent='⚠️ تعذّر تجهيز الفيديو.';console.log(e)}}
+function openSV(){SV.u=up||lastRound()||1;const sel=$('svRd');sel.innerHTML=Array.from({length:30},(_,i)=>`<option value="${i+1}" ${i+1===SV.u?'selected':''}>الجولة ${i+1}</option>`).join('');svReset();$('svd').showModal();svPrep()}
+async function svStart(){if(SV.run||!SV.A)return;SV.run=true;$('svGo').disabled=true;
+ try{const A=SV.A,cv=$('svc');cv.width=A.W;cv.height=A.H;const x=cv.getContext('2d');
+  let ac=null,dst=null;if($('svSnd').checked){try{ac=new(window.AudioContext||window.webkitAudioContext)();await ac.resume();dst=ac.createMediaStreamDestination()}catch(e){ac=null;dst=null}}
+  svFrame(x,A,0);const stream=cv.captureStream(30);if(dst)dst.stream.getAudioTracks().forEach(tr=>stream.addTrack(tr));
+  const mime=vMime(!!dst),rec=new MediaRecorder(stream,Object.assign({videoBitsPerSecond:8000000},mime?{mimeType:mime}:{})),ch=[];
+  rec.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};const done=new Promise(r=>rec.onstop=r);
+  if(ac)svSfx(ac,dst,ac.currentTime+.08,A);
+  rec.start();$('svInfo').textContent='🔴 جاري التسجيل… لا تغلق الشاشة';const T0=performance.now();
+  await new Promise(res=>{const tick=()=>{const t=(performance.now()-T0)/1000;svFrame(x,A,Math.min(t,A.D));$('svBar').style.width=Math.min(100,t/A.D*100)+'%';if(t<A.D+.4)requestAnimationFrame(tick);else res()};requestAnimationFrame(tick)});
+  rec.stop();await done;try{ac&&ac.close()}catch(e){}
+  const type=(rec.mimeType||mime||'video/webm').split(';')[0];SV.blob=new Blob(ch,{type});if(SV.url)URL.revokeObjectURL(SV.url);SV.url=URL.createObjectURL(SV.blob);
+  const pv=$('svPrev');pv.src=SV.url;pv.hidden=false;$('svStage').hidden=true;['svShare','svDl'].forEach(i=>$(i).hidden=false);$('svGo').hidden=true;
+  $('svInfo').textContent='✅ جاهز ('+(SV.blob.size/1048576).toFixed(1)+' م.ب · '+(type.includes('mp4')?'MP4':'WebM')+')'+(type.includes('mp4')?'':' — فيسبوك يفضّل MP4، وبعض الأجهزة تنتج WebM.')
+ }catch(e){$('svInfo').textContent='⚠️ تعذّر إنشاء الفيديو على هذا المتصفح.';$('svGo').disabled=false;console.log(e)}
+ SV.run=false}
+const svFile=()=>{const ext=SV.blob.type.includes('mp4')?'mp4':'webm';return new File([SV.blob],'فيديو_الاكابر_الجولة_'+SV.u+'.'+ext,{type:SV.blob.type})};
+$('svd').addEventListener('change',e=>{if(e.target.id==='svRd'&&!SV.run){SV.u=+e.target.value;svReset();svPrep()}});
+$('svd').addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;
+ if(b.id==='svGo')svStart();
+ else if(b.id==='svDl'&&SV.blob){const f=svFile(),a=document.createElement('a');a.href=SV.url;a.download=f.name;document.body.appendChild(a);a.click();a.remove()}
+ else if(b.id==='svShare'&&SV.blob){const f=svFile();try{if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],title:f.name});else toast('⚠️ المشاركة غير مدعومة هنا، استعمل «تحميل»')}catch(x){}}
+ else if(b.id==='svX'&&!SV.run){SV.tok++;$('svd').close()}});
+$('svd').addEventListener('cancel',e=>{if(SV.run)e.preventDefault()});
 
 /* ===== لوحة الوسائط: فيديو + ملصق (الترتيب · الهدافون · لاعب الجولة · تشكيلة الجولة · الموقوفون) ومنشورات فيسبوك ===== */
 const MK={kind:'table',c:'U15',r:1,f:'45',run:false,blob:null,url:null,tok:0,pick:'',form:'4-3-3',slots:Array(11).fill(null),A:null};
