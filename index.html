@@ -1145,6 +1145,7 @@ body.senior-theme nav.nav button[pressed] {
 <p class="hint" style="text-align:center;margin:0 0 8px">تصميم «الشاطئ الإغريقي» بألوان شعار الرابطة: افتتاحية · نتائج الجولة · الترتيب · الهدافون · ملخص (9:16)</p>
 <select id="svRd" class="f"></select>
 <label class="ck"><input type="checkbox" id="svSnd" checked> 🔊 مؤثرات صوتية</label>
+<label class="ck"><input type="checkbox" id="svHQ"> 🎞️ جودة عالية 1080p (أثقل؛ الافتراضي 720p أكثر ثباتاً)</label>
 <div id="svStage" style="margin:8px auto;max-width:300px"><canvas id="svc" width="1080" height="1920" style="width:100%;height:auto;border-radius:14px;background:#0a2a4e;display:block"></canvas><div style="height:6px;border-radius:4px;background:var(--ln);margin-top:8px;overflow:hidden"><div id="svBar" style="height:100%;width:0;background:#b9773a"></div></div></div>
 <video id="svPrev" playsinline controls hidden style="width:100%;max-width:300px;margin:8px auto;display:block;border-radius:14px"></video>
 <p class="hint" id="svInfo" style="text-align:center;margin:6px 0"></p>
@@ -7087,16 +7088,19 @@ function svMedal(x,cx,cy,r,img){if(r<12)return;x.save();let g=x.createRadialGrad
  if(img){x.save();x.beginPath();x.arc(cx,cy,r-6,0,7);x.clip();x.drawImage(img,cx-r+6,cy-r+6,2*r-12,2*r-12);x.restore()}
  x.lineWidth=Math.max(4,r*.04);x.strokeStyle='#e8b765';x.beginPath();x.arc(cx,cy,r,0,7);x.stroke();x.restore()}
 function svLogo(x,im,cx,cy,r){if(!im)return;const s=Math.min(2*r/im.width,2*r/im.height);x.drawImage(im,cx-im.width*s/2,cy-im.height*s/2,im.width*s,im.height*s)}
+function svSh(x,X,Y,w,h,r,o){o=o||9;rr(x,X+3,Y+o,w,h,r);x.fillStyle='rgba(10,42,78,.16)';x.fill();rr(x,X+1,Y+o/2,w+2,h,r);x.fillStyle='rgba(10,42,78,.10)';x.fill()}
 function svNum(x,s,X,Y,f,c){x.save();x.direction='ltr';tx(x,String(s),X,Y,f,c,'center');x.restore()}
 
 /* ---------- الخلفيات ---------- */
-function svDark(x,A,t){const W=A.W,H=A.H;let g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0e3b6e');g.addColorStop(.55,'#082a52');g.addColorStop(1,'#041528');x.fillStyle=g;x.fillRect(0,0,W,H);
+function svDarkBase(x,A){const W=A.W,H=A.H;let g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0e3b6e');g.addColorStop(.55,'#082a52');g.addColorStop(1,'#041528');x.fillStyle=g;x.fillRect(0,0,W,H);
  g=x.createRadialGradient(W/2,H*.42,40,W/2,H*.42,W*.9);g.addColorStop(0,'rgba(232,183,101,.26)');g.addColorStop(1,'rgba(232,183,101,0)');x.fillStyle=g;x.fillRect(0,0,W,H);
- x.save();x.translate(W/2,H*.42);x.rotate(t*.12);x.globalAlpha=.06;x.fillStyle='#fff';for(let i=0;i<12;i++){x.rotate(Math.PI/6);x.beginPath();x.moveTo(0,0);x.lineTo(W*1.6,-90);x.lineTo(W*1.6,90);x.closePath();x.fill()}x.restore();
- A.P.forEach(p=>{const yy=((p.y-t*p.s)%H+H)%H;x.globalAlpha=.2+.5*Math.abs(Math.sin(t*p.f+p.ph));x.fillStyle='#e8b765';x.beginPath();x.arc(p.x,yy,p.r,0,7);x.fill()});x.globalAlpha=1;
+ svKey(x,0,38,W,9,'rgba(232,183,101,.6)',4)}
+function svDark(x,A,t){const W=A.W,H=A.H;x.drawImage(A.bgD,0,0,W,H);
+ x.save();x.translate(W/2,H*.42);x.rotate(t*.12);x.globalAlpha=.06;x.fillStyle='#fff';x.beginPath();for(let i=0;i<12;i++){const a=i*Math.PI/6;x.moveTo(0,0);x.lineTo(Math.cos(a)*W*1.6-Math.sin(a)*90,Math.sin(a)*W*1.6+Math.cos(a)*90);x.lineTo(Math.cos(a)*W*1.6+Math.sin(a)*90,Math.sin(a)*W*1.6-Math.cos(a)*90);x.closePath()}x.fill();x.restore();
+ x.fillStyle='#e8b765';A.P.forEach(p=>{const yy=((p.y-t*p.s)%H+H)%H;x.globalAlpha=.2+.5*Math.abs(Math.sin(t*p.f+p.ph));x.beginPath();x.arc(p.x,yy,p.r,0,7);x.fill()});x.globalAlpha=1;
  svWave(x,W,H-230,28,110,t*1.3,'rgba(31,134,200,.33)',H);svWave(x,W,H-185,22,90,-t*1.6+1,'rgba(143,208,238,.22)',H);svWave(x,W,H-135,18,70,t*2+2,'rgba(7,28,54,.92)',H);
- svKey(x,0,38,W,9,'rgba(232,183,101,.6)',4);svKey(x,0,H-92,W,9,'rgba(232,183,101,.6)',4)}
-function svLight(x,A,t,sc){const W=A.W,H=A.H;let g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#fbf6ea');g.addColorStop(1,'#efe3c9');x.fillStyle=g;x.fillRect(0,0,W,H);
+ svKey(x,0,H-92,W,9,'rgba(232,183,101,.6)',4)}
+function svLightBase(x,A){const W=A.W,H=A.H,t=0;let g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#fbf6ea');g.addColorStop(1,'#efe3c9');x.fillStyle=g;x.fillRect(0,0,W,H);
  svCol(x,62,H-125,1150,120,.08);svCol(x,W-62,H-125,1150,120,.08);
  if(A.lg){x.save();x.globalAlpha=.06;x.drawImage(A.lg,W/2-380,H/2-380,760,760);x.restore()}
  svWave(x,W,H-175,14,120,t*1.2,'rgba(31,134,200,.13)',H);svWave(x,W,H-150,12,90,-t*1.5,'rgba(31,134,200,.17)',H);
@@ -7105,12 +7109,12 @@ function svLight(x,A,t,sc){const W=A.W,H=A.H;let g=x.createLinearGradient(0,0,0,
  x.fillStyle='#b9773a';x.fillRect(0,236,W,32);svKey(x,0,241,W,4.4,'#f6eedc',3);
  svMedal(x,W-140,118,84,A.lg);
  tx(x,SRT1,410,92,F(900,46),'#fff','center',700);tx(x,SRT2,410,152,F(700,26),'#e8b765','center',700);
- /* شارة المشهد */
- const st=sc===1?A.tR:sc===2?A.tS:A.tG,pe=svEb(svSeg(t,st+.15,.6)),lab=sc===1?'نتائج الجولة '+A.u:sc===2?'الترتيب بعد الجولة '+A.u:'ترتيب الهدافين';
- x.save();x.translate(W/2,326);x.scale(pe,pe);rr(x,-290,-42,580,84,42);x.fillStyle='#0a2a4e';x.fill();x.lineWidth=4;x.strokeStyle='#b9773a';x.stroke();tx(x,lab,0,2,F(900,40),'#f6eedc','center',520);x.restore();
  /* التذييل */
  x.fillStyle='#0a2a4e';x.fillRect(0,H-124,W,124);svKey(x,0,H-130,W,3.4,'#b9773a',3);
  tx(x,'MOUBARATI LIVE · رابطة كرة القدم لولاية تيبازة',W/2,H-78,F(800,28),'#f6eedc','center',960);tx(x,SRT3,W/2,H-38,F(700,23),'#e8b765','center',960)}
+function svLight(x,A,t,sc){const W=A.W,H=A.H;x.drawImage(A.bgL,0,0,W,H);
+ const st=sc===1?A.tR:sc===2?A.tS:A.tG,pe=svEb(svSeg(t,st+.15,.6)),lab=sc===1?'نتائج الجولة '+A.u:sc===2?'الترتيب بعد الجولة '+A.u:'ترتيب الهدافين';
+ x.save();x.translate(W/2,326);x.scale(pe,pe);rr(x,-290,-42,580,84,42);x.fillStyle='#0a2a4e';x.fill();x.lineWidth=4;x.strokeStyle='#b9773a';x.stroke();tx(x,lab,0,2,F(900,40),'#f6eedc','center',520);x.restore();}
 
 /* ---------- المشاهد ---------- */
 function svIntro(x,A,t){const W=A.W,H=A.H,cx=W/2,cy=800;
@@ -7127,7 +7131,7 @@ function svIntro(x,A,t){const W=A.W,H=A.H,cx=W/2,cy=800;
 function svResults(x,A,t){const W=A.W,M=A.M,n=M.length,ch=Math.min(150,Math.floor(1280/Math.max(n,1))-22),gap=22,y0=395,cw=980;
  M.forEach((m,i)=>{const ta=A.tR+1+i*.8,e=svEo(svSeg(t,ta,.6));if(e<=0)return;
   const ox=(i%2?-1:1)*(1-e)*W*1.1,X=50+ox,Y=y0+i*(ch+gap);x.save();x.globalAlpha=Math.min(1,e*1.4);
-  x.shadowColor='rgba(10,42,78,.25)';x.shadowBlur=22;x.shadowOffsetY=8;rr(x,X,Y,cw,ch,30);x.fillStyle='#fffdf7';x.fill();x.shadowColor='transparent';x.lineWidth=3;x.strokeStyle='#b9773a';x.stroke();
+  svSh(x,X,Y,cw,ch,30);rr(x,X,Y,cw,ch,30);x.fillStyle='#fffdf7';x.fill();x.lineWidth=3;x.strokeStyle='#b9773a';x.stroke();
   const hw=m.ok&&m.sh>m.sa,aw=m.ok&&m.sa>m.sh;
   if(hw){rr(x,X+cw-22,Y+16,10,ch-32,5);x.fillStyle='#e8b765';x.fill()}if(aw){rr(x,X+12,Y+16,10,ch-32,5);x.fillStyle='#e8b765';x.fill()}
   const lr=ch*.36,cy=Y+ch/2;
@@ -7150,7 +7154,7 @@ function svTable(x,A,t){const W=A.W,R=A.rows,n=R.length,y0=432,pitch=Math.min(92
  R.forEach((r,i)=>{const ta=A.tS+1.2+i*.27,e=svEo(svSeg(t,ta,.5));if(e<=0)return;
   const y=y0+i*pitch;x.save();x.globalAlpha=Math.min(1,e*1.5);x.translate((1-e)*W*.9,0);
   const low=i>=n-3,col=i<3?medal[i]:low?'#8c1d2f':'#0a2a4e';
-  x.shadowColor='rgba(10,42,78,.14)';x.shadowBlur=10;x.shadowOffsetY=3;rr(x,40,y,W-80,rh,22);x.fillStyle=i%2?'#fffdf7':'#faf2de';x.fill();x.shadowColor='transparent';
+  svSh(x,40,y,W-80,rh,22,4);rr(x,40,y,W-80,rh,22);x.fillStyle=i%2?'#fffdf7':'#faf2de';x.fill();
   rr(x,W-54,y+9,9,rh-18,4);x.fillStyle=col;x.fill();
   x.beginPath();x.arc(W-104,y+rh/2,rh*.31,0,7);x.fillStyle=col;x.fill();svNum(x,i+1,W-104,y+rh/2+2,F(900,Math.round(rh*.36)),i==1?'#0a2a4e':'#fff');
   svLogo(x,A.L[r.id],W-190,y+rh/2,rh*.4);
@@ -7163,7 +7167,7 @@ function svTable(x,A,t){const W=A.W,R=A.rows,n=R.length,y0=432,pitch=Math.min(92
 function svScorers(x,A,t){const W=A.W,G=A.G,mx=Math.max(1,G[0].c),y0=405,pitch=262,ch=240;
  G.forEach((g,i)=>{const ta=A.tG+1.1+i*.75,e=svEo(svSeg(t,ta,.6));if(e<=0)return;const Y=y0+i*pitch;
   x.save();x.globalAlpha=Math.min(1,e*1.4);x.translate((i%2?-1:1)*(1-e)*W,0);
-  x.shadowColor='rgba(10,42,78,.22)';x.shadowBlur=20;x.shadowOffsetY=7;rr(x,40,Y,W-80,ch,36);x.fillStyle='#fffdf7';x.fill();x.shadowColor='transparent';x.lineWidth=i?3:6;x.strokeStyle=i?'#b9773a':'#e8b765';x.stroke();
+  svSh(x,40,Y,W-80,ch,36);rr(x,40,Y,W-80,ch,36);x.fillStyle='#fffdf7';x.fill();x.lineWidth=i?3:6;x.strokeStyle=i?'#b9773a':'#e8b765';x.stroke();
   const py=Y+ch/2-6;x.beginPath();x.arc(W-210,py,94,0,7);x.fillStyle='#efe3c9';x.fill();
   const im=A.Ph[i];if(im){x.save();x.beginPath();x.arc(W-210,py,90,0,7);x.clip();cover(x,im,W-300,py-90,180,180,.2);x.restore()}else svLogo(x,A.L[g.t],W-210,py,72);
   x.lineWidth=6;x.strokeStyle=i?'#b9773a':'#e8b765';x.beginPath();x.arc(W-210,py,92,0,7);x.stroke();
@@ -7189,7 +7193,7 @@ function svOutro(x,A,t){const W=A.W,H=A.H,cx=W/2;
  x.globalAlpha=svEo(svSeg(t,A.tO+3.9,.8));tx(x,SRT1,cx,1668,F(900,50),'#fff','center',980);tx(x,SRT2,cx,1730,F(700,30),'#e8b765','center',980);tx(x,'MOUBARATI LIVE · تابعونا على المنصة',cx,1800,F(800,28),'rgba(255,255,255,.78)','center',900);x.globalAlpha=1}
 
 /* ---------- الإطار الكامل ---------- */
-function svFrame(x,A,t){const W=A.W,H=A.H;x.direction='rtl';x.textBaseline='middle';x.globalAlpha=1;
+function svFrame(x,A,t){const W=A.W,H=A.H;x.setTransform(A.k,0,0,A.k,0,0);x.direction='rtl';x.textBaseline='middle';x.globalAlpha=1;
  const sc=t<A.tR?0:t<A.tS?1:t<A.tG?2:t<A.tO?3:4;
  if(sc===0||sc===4)svDark(x,A,t);else svLight(x,A,t,sc);
  if(sc===0)svIntro(x,A,t);else if(sc===1)svResults(x,A,t);else if(sc===2)svTable(x,A,t);else if(sc===3)svScorers(x,A,t);else svOutro(x,A,t);
@@ -7217,6 +7221,7 @@ async function svAssets(u){
  let sd=7;const rnd=()=>(sd=(sd*16807)%2147483647)/2147483647;
  const P=Array.from({length:70},()=>({x:rnd()*W,y:rnd()*H,r:1.5+rnd()*3,s:14+rnd()*40,f:1+rnd()*2.5,ph:rnd()*6}));
  return{W,H,u,rows,M,G,Ph,L,lg,att,def,avg,rg,played,bye,tR,tS,tG,tO,D,B,P}}
+function svBake(A,k){A.k=k;const mk=fn=>{const c=svCv(Math.round(A.W*k),Math.round(A.H*k)),x=c.getContext('2d');x.setTransform(k,0,0,k,0,0);x.direction='rtl';x.textBaseline='middle';fn(x,A);return c};A.bgD=mk(svDarkBase);A.bgL=mk(svLightBase)}
 function svSfx(ac,dst,b,A){
  const mk=(t,f,d,v,ty)=>{const o=ac.createOscillator(),g=ac.createGain();o.type=ty||'sine';o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(dst);o.start(t);o.stop(t+d+.05)};
  const nz=(t,d,f0,f1,v)=>{const n=Math.floor(ac.sampleRate*d),buf=ac.createBuffer(1,n,ac.sampleRate),da=buf.getChannelData(0);for(let i=0;i<n;i++)da[i]=(Math.random()*2-1)*(1-i/n);const s=ac.createBufferSource();s.buffer=buf;const f=ac.createBiquadFilter();f.type='bandpass';f.frequency.setValueAtTime(f0,t);f.frequency.exponentialRampToValueAtTime(f1,t+d);const g=ac.createGain();g.gain.value=v;s.connect(f);f.connect(g);g.connect(dst);s.start(t)};
@@ -7230,23 +7235,29 @@ function svSfx(ac,dst,b,A){
  [0,.14,.28,.42].forEach((d,i)=>mk(b+A.tO+3.1+d,523+i*131,.6,.14,'triangle'));nz(b+A.tO+3.4,1,500,5000,.18)}
 function svReset(){SV.blob=null;if(SV.url){URL.revokeObjectURL(SV.url);SV.url=null}$('svPrev').hidden=true;$('svPrev').removeAttribute('src');$('svStage').hidden=false;$('svBar').style.width='0';['svShare','svDl'].forEach(i=>$(i).hidden=true);$('svGo').hidden=false}
 async function svPrep(){const tok=++SV.tok;SV.A=null;$('svGo').disabled=true;$('svInfo').textContent='⏳ تجهيز المعاينة…';
- try{const A=await svAssets(SV.u);if(tok!==SV.tok)return;SV.A=A;const cv=$('svc');cv.width=A.W;cv.height=A.H;svFrame(cv.getContext('2d'),A,A.tG-1);$('svInfo').textContent='مدة الفيديو نحو '+Math.round(A.D)+' ثانية (9:16). اترك الشاشة مفتوحة أثناء التسجيل.';$('svGo').disabled=false}
+ try{const A=await svAssets(SV.u);if(tok!==SV.tok)return;SV.A=A;svBake(A,.5);const cv=$('svc');cv.width=Math.round(A.W*.5);cv.height=Math.round(A.H*.5);svFrame(cv.getContext('2d'),A,A.tG-1);$('svInfo').textContent='مدة الفيديو نحو '+Math.round(A.D)+' ثانية (9:16). اترك الشاشة مفتوحة أثناء التسجيل.';$('svGo').disabled=false}
  catch(e){$('svInfo').textContent='⚠️ تعذّر تجهيز الفيديو.';console.log(e)}}
 function openSV(){SV.u=up||lastRound()||1;const sel=$('svRd');sel.innerHTML=Array.from({length:30},(_,i)=>`<option value="${i+1}" ${i+1===SV.u?'selected':''}>الجولة ${i+1}</option>`).join('');svReset();$('svd').showModal();svPrep()}
-async function svStart(){if(SV.run||!SV.A)return;SV.run=true;$('svGo').disabled=true;
- try{const A=SV.A,cv=$('svc');cv.width=A.W;cv.height=A.H;const x=cv.getContext('2d');
+async function svStart(){if(SV.run||!SV.A)return;SV.run=true;$('svGo').disabled=true;let wl=null;
+ try{const A=SV.A,k=$('svHQ').checked?1:2/3,cv=$('svc');svBake(A,k);cv.width=Math.round(A.W*k);cv.height=Math.round(A.H*k);const x=cv.getContext('2d');
   let ac=null,dst=null;if($('svSnd').checked){try{ac=new(window.AudioContext||window.webkitAudioContext)();await ac.resume();dst=ac.createMediaStreamDestination()}catch(e){ac=null;dst=null}}
-  svFrame(x,A,0);const stream=cv.captureStream(30);if(dst)dst.stream.getAudioTracks().forEach(tr=>stream.addTrack(tr));
-  const mime=vMime(!!dst),rec=new MediaRecorder(stream,Object.assign({videoBitsPerSecond:8000000},mime?{mimeType:mime}:{})),ch=[];
+  try{if(navigator.wakeLock)wl=await navigator.wakeLock.request('screen')}catch(e){wl=null}
+  svFrame(x,A,0);svFrame(x,A,0);const stream=cv.captureStream(30);if(dst)dst.stream.getAudioTracks().forEach(tr=>stream.addTrack(tr));
+  const mime=vMime(!!dst),rec=new MediaRecorder(stream,Object.assign({videoBitsPerSecond:k===1?9000000:5000000},mime?{mimeType:mime}:{})),ch=[];
   rec.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};const done=new Promise(r=>rec.onstop=r);
   if(ac)svSfx(ac,dst,ac.currentTime+.08,A);
-  rec.start();$('svInfo').textContent='🔴 جاري التسجيل… لا تغلق الشاشة';const T0=performance.now();
-  await new Promise(res=>{const tick=()=>{const t=(performance.now()-T0)/1000;svFrame(x,A,Math.min(t,A.D));$('svBar').style.width=Math.min(100,t/A.D*100)+'%';if(t<A.D+.4)requestAnimationFrame(tick);else res()};requestAnimationFrame(tick)});
-  rec.stop();await done;try{ac&&ac.close()}catch(e){}
+  rec.start(1000);$('svInfo').textContent='🔴 جاري التسجيل… لا تغلق الشاشة ولا تغادر التطبيق';const T0=performance.now();let last=-1,bad=0;
+  await new Promise(res=>{const tick=()=>{const t=(performance.now()-T0)/1000;
+    try{svFrame(x,A,Math.min(t,A.D))}catch(e){bad++;console.log('svFrame',e)}
+    $('svBar').style.width=Math.min(100,t/A.D*100)+'%';
+    if(t<A.D+.5)requestAnimationFrame(tick);else res()};requestAnimationFrame(tick);
+   /* حارس: إن توقفت rAF (انتقال لتطبيق آخر/قفل الشاشة) لا ننتظر للأبد */
+   const g=setInterval(()=>{const t=(performance.now()-T0)/1000;if(t>A.D+4){clearInterval(g);res()}},500)});
+  rec.stop();await done;try{ac&&ac.close()}catch(e){}try{wl&&wl.release()}catch(e){}
   const type=(rec.mimeType||mime||'video/webm').split(';')[0];SV.blob=new Blob(ch,{type});if(SV.url)URL.revokeObjectURL(SV.url);SV.url=URL.createObjectURL(SV.blob);
   const pv=$('svPrev');pv.src=SV.url;pv.hidden=false;$('svStage').hidden=true;['svShare','svDl'].forEach(i=>$(i).hidden=false);$('svGo').hidden=true;
-  $('svInfo').textContent='✅ جاهز ('+(SV.blob.size/1048576).toFixed(1)+' م.ب · '+(type.includes('mp4')?'MP4':'WebM')+')'+(type.includes('mp4')?'':' — فيسبوك يفضّل MP4، وبعض الأجهزة تنتج WebM.')
- }catch(e){$('svInfo').textContent='⚠️ تعذّر إنشاء الفيديو على هذا المتصفح.';$('svGo').disabled=false;console.log(e)}
+  $('svInfo').textContent='✅ جاهز ('+(SV.blob.size/1048576).toFixed(1)+' م.ب · '+(type.includes('mp4')?'MP4':'WebM')+')'+(bad?' — ⚠️ حدثت أخطاء رسم في '+bad+' إطار':'')
+ }catch(e){try{wl&&wl.release()}catch(x){}$('svInfo').textContent='⚠️ تعذّر إنشاء الفيديو على هذا المتصفح.';$('svGo').disabled=false;console.log(e)}
  SV.run=false}
 const svFile=()=>{const ext=SV.blob.type.includes('mp4')?'mp4':'webm';return new File([SV.blob],'فيديو_الاكابر_الجولة_'+SV.u+'.'+ext,{type:SV.blob.type})};
 $('svd').addEventListener('change',e=>{if(e.target.id==='svRd'&&!SV.run){SV.u=+e.target.value;svReset();svPrep()}});
