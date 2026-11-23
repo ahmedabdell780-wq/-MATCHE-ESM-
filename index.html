@@ -4504,7 +4504,7 @@ function admin(){
  }
 
  if(adminSec === 'tools'){
-   return navBar + `<h2>🏋️ حصة تدريبية مباشرة</h2><div class="card"><p class="hint" style="text-align:right;margin:0 0 8px">صوّر حصة تدريبية لأي فريق وأذعها مباشرة: شعار النادي يرفرف في جهة وشعار التطبيق في الجهة الأخرى.</p><button class="btn" id="trOpen" style="width:100%">🎥 بدء حصة تدريبية مباشرة</button></div><h2>📊 ملصق الترتيب المعتمد</h2><div class="card">${chips()}<select id="us" class="f">${Array.from({length:isSenior()?30:22},(_,i)=>`<option value="${i+1}" ${i+1===(up||lastRound())?'selected':''}>بعد الجولة ${i+1}</option>`).join('')}</select><label>🎯 تظليل فريق في الملصق (اختياري)</label><select id="hlT" class="f"><option value="">— بدون تظليل —</option>${Object.keys(T).map(i=>`<option value="${i}" ${String(HL.team)===i?'selected':''}>${esc(T[i])}</option>`).join('')}</select><div class="swatches">${HLC.map(c=>`<button type="button" class="sw" data-hc="${c}" style="background:${c}" aria-label="لون" aria-pressed="${HL.color===c}"></button>`).join('')}<input type="color" id="hlC" value="${HL.color}" aria-label="لون مخصص"></div><button class="btn" id="adminPoster" style="width:100%;margin-top:8px">إنشاء الملصق</button><button class="btn" id="adminVideo" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#156834,#1f9a4f);color:#fff">🎬 إنشاء فيديو الملصق</button>${isSenior()?'<button class="btn" id="adminSrVideo" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#0a2a4e,#1f86c8);color:#fff">🏛️ فيديو الأكابر الشامل (تصميم جديد)</button>':''}</div>${bkCard()}${rulesCard()}<h2>🧰 أدوات</h2><div class="card"><button class="btn" id="mig" style="width:100%;margin-bottom:8px">🔒 نقل التشكيلات القديمة إلى مساحة خاصة</button><button class="btn alt" id="seed" style="width:100%">استيراد نتائج الجولات 1-3 السابقة</button></div>`;
+   return navBar + `<h2>🏋️ حصة تدريبية مباشرة</h2><div class="card"><p class="hint" style="text-align:right;margin:0 0 8px">صوّر حصة تدريبية لأي فريق وأذعها مباشرة: شعار النادي يرفرف في جهة وشعار التطبيق في الجهة الأخرى.</p><button class="btn" id="trOpen" style="width:100%">🎥 بدء حصة تدريبية مباشرة</button></div><h2>📊 ملصق الترتيب المعتمد</h2><div class="card">${chips()}<select id="us" class="f">${Array.from({length:isSenior()?30:22},(_,i)=>`<option value="${i+1}" ${i+1===(up||lastRound())?'selected':''}>بعد الجولة ${i+1}</option>`).join('')}</select><label>🎯 تظليل فريق في الملصق (اختياري)</label><select id="hlT" class="f"><option value="">— بدون تظليل —</option>${Object.keys(T).map(i=>`<option value="${i}" ${String(HL.team)===i?'selected':''}>${esc(T[i])}</option>`).join('')}</select><div class="swatches">${HLC.map(c=>`<button type="button" class="sw" data-hc="${c}" style="background:${c}" aria-label="لون" aria-pressed="${HL.color===c}"></button>`).join('')}<input type="color" id="hlC" value="${HL.color}" aria-label="لون مخصص"></div><button class="btn" id="adminPoster" style="width:100%;margin-top:8px">إنشاء الملصق</button><button class="btn" id="adminVideo" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#156834,#1f9a4f);color:#fff">🎬 إنشاء فيديو الملصق</button>${isSenior()?'<button class="btn" id="adminSrVideo" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#0a2a4e,#1f86c8);color:#fff">🏛️ فيديو الأكابر الشامل (تصميم جديد)</button>':''}</div>${bkCard()}${rulesCard()}<h2>🧰 أدوات</h2><div class="card"><button class="btn" id="mig" style="width:100%;margin-bottom:8px">🔒 نقل التشكيلات القديمة إلى مساحة خاصة</button><button class="btn alt" id="seed" style="width:100%">استيراد نتائج الجولات 1-3 السابقة</button><button class="btn" id="seedS" style="width:100%;margin-top:8px">⚽ استيراد نتائج الأكابر (الجولات 1-7)</button></div>`;
  }
 
   if(adminSec === 'act'){
@@ -5052,6 +5052,7 @@ document.addEventListener('click',async e=>{
  else if(b.dataset.up)try{await db.collection('users').doc(b.dataset.up).update({perm:b.dataset.pm,kind:'club'});toast(b.dataset.pm==='view_only'?'👁 صار الحساب للمشاهدة فقط':'✏️ مُنحت صلاحية التعديل')}catch(x){toast('⛔ تعذر التنفيذ')}
     else if(b.dataset.u)try{await db.collection('users').doc(b.dataset.u).update({status:b.dataset.s})}catch(x){toast('⛔ تعذر التنفيذ')}
  else if(b.id==='seed')importSeed()
+  else if(b.id==='seedS')importSeedSenior()
  else if(b.id==='mig')migrateLineups()
  else if(b.id==='bkExp')bkExport()
  else if(b.id==='bkImp')$('bkFile').click()
@@ -5279,6 +5280,20 @@ async function migrateLineups(){
   for(let i=0;i<ops.length;i+=400){const b=db.batch();ops.slice(i,i+400).forEach(o=>b.set(db.collection(o[0]==='l'?'lineups':'scores').doc(o[1]),o[2]));await b.commit()}
   toast(n?'✅ تم نقل تشكيلات '+n+' مباراة وحُذفت من الصفحة العامة':'✅ لا توجد تشكيلات قديمة للنقل')
  }catch(e){toast('⛔ فشل النقل: تأكد من نشر القواعد الجديدة أولاً')}
+}
+async function importSeedSenior(){
+ const SEED_S={"SENIOR|1:2-15":["1","2",""],"SENIOR|1:5-12":["0","2",""],"SENIOR|1:8-9":["0","1",""],"SENIOR|1:7-10":["2","2",""],"SENIOR|1:6-11":["2","2",""],"SENIOR|1:4-13":["2","1",""],"SENIOR|2:11-7":["1","0",""],"SENIOR|2:13-5":["0","3",""],"SENIOR|2:1-2":["3","1",""],"SENIOR|2:15-3":["0","2",""],"SENIOR|2:12-6":["4","4",""],"SENIOR|2:14-4":["1","1",""],"SENIOR|3:3-1":["1","1",""],"SENIOR|3:4-15":["2","1",""],"SENIOR|3:7-12":["2","0",""],"SENIOR|3:8-11":["2","2",""],"SENIOR|3:9-10":["0","0",""],"SENIOR|3:5-14":["1","0",""],"SENIOR|3:6-13":["2","2",""],"SENIOR|4:11-9":["0","0",""],"SENIOR|4:13-7":["0","2",""],"SENIOR|4:1-4":["1","0",""],"SENIOR|4:12-8":["1","1",""],"SENIOR|4:15-5":["0","2",""],"SENIOR|4:2-3":["2","0",""],"SENIOR|4:14-6":["3","1",""],"SENIOR|5:4-2":["1","0","2026-11-06"],"SENIOR|5:5-1":["2","0","2026-11-06"],"SENIOR|5:7-14":["1","1","2026-11-06"],"SENIOR|5:8-13":["2","1","2026-11-06"],"SENIOR|5:9-12":["1","0","2026-11-06"],"SENIOR|5:10-11":["4","0","2026-11-06"],"SENIOR|5:6-15":["2","2","2026-11-07"],"SENIOR|6:1-6":["2","1","2026-11-12"],"SENIOR|6:13-9":["1","2","2026-11-13"],"SENIOR|6:14-8":["0","0","2026-11-13"],"SENIOR|6:3-4":["0","0","2026-11-13"],"SENIOR|6:15-7":["1","0","2026-11-13"],"SENIOR|6:2-5":["0","2","2026-11-14"],"SENIOR|6:12-10":["0","3","2026-11-14"],"SENIOR|7:7-1":["3","3","2026-11-20"],"SENIOR|7:8-15":["0","0","2026-11-20"],"SENIOR|7:9-14":["1","0","2026-11-20"],"SENIOR|7:10-13":["1","0","2026-11-20"],"SENIOR|7:11-12":["1","1","2026-11-20"],"SENIOR|7:6-2":["4","2","2026-11-20"],"SENIOR|7:5-3":["1","0","2026-11-21"]};
+ const ks=Object.keys(SEED_S),fresh=ks.filter(k=>!(S[k]&&S[k].sh!==undefined&&S[k].sh!==''));
+ if(!fresh.length){toast('✅ نتائج الأكابر مستوردة مسبقاً');return}
+ if(!confirm('استيراد '+fresh.length+' نتيجة من نتائج الأكابر (الجولات 1-7) كنتائج معتمدة؟ (لن تُستبدل النتائج الموجودة)'))return;
+ try{
+  for(let i=0;i<fresh.length;i+=400){
+   const b=db.batch();
+   fresh.slice(i,i+400).forEach(k=>{const m=/^SENIOR\|(\d+):(\d+)-(\d+)$/.exec(k),s=SEED_S[k];
+    b.set(db.collection('scores').doc(k.replace('|','_')),{key:k,home:+m[2],away:+m[3],data:{sh:String(s[0]),sa:String(s[1]),date:s[2]||'',status:'confirmed',enteredBy:'admin'},by:me.uid,updatedAt:Date.now()})});
+   await b.commit()}
+  toast('✅ تم استيراد '+fresh.length+' نتيجة')
+ }catch(e){toast('⛔ فشل الاستيراد')}
 }
 async function importSeed(){
  if(!confirm('استيراد '+Object.keys(SEED).length+' نتيجة (الجولات 1-3) كنتائج معتمدة؟'))return;
