@@ -1121,6 +1121,7 @@ body.senior-theme nav.nav button[pressed] {
 <div class="rnd" style="margin:0 0 8px"><button class="btn sm" id="rvNextR">›</button><b id="rvRound" style="flex:1;text-align:center"></b><button class="btn sm" id="rvPrevR">‹</button></div>
 <div class="chips" id="rvCat"><button class="chip" data-rc="U15" aria-pressed="true">U15</button><button class="chip" data-rc="U17" aria-pressed="false">U17</button><button class="chip" data-rc="U20" aria-pressed="false">U20</button></div>
 <div class="chips" id="rvFmt"><button class="chip" data-rf="23" aria-pressed="true">2:3 · منشور</button><button class="chip" data-rf="916" aria-pressed="false">9:16 · ستوري / ريلز</button></div>
+<div style="font-weight:800;margin:8px 0 2px">🎨 لون التصميم</div><div class="swatches" id="rvCol" style="margin:2px 0 8px"><button type="button" class="sw" data-rcol="#ff8a00" style="background:#ff8a00" aria-pressed="true" aria-label="برتقالي"></button><button type="button" class="sw" data-rcol="#1f6feb" style="background:#1f6feb" aria-pressed="false" aria-label="أزرق"></button><button type="button" class="sw" data-rcol="#16a34a" style="background:#16a34a" aria-pressed="false" aria-label="أخضر"></button><button type="button" class="sw" data-rcol="#dc2626" style="background:#dc2626" aria-pressed="false" aria-label="أحمر"></button><button type="button" class="sw" data-rcol="#7c3aed" style="background:#7c3aed" aria-pressed="false" aria-label="بنفسجي"></button><button type="button" class="sw" data-rcol="#d4a017" style="background:#d4a017" aria-pressed="false" aria-label="ذهبي"></button><input type="color" id="rvColC" value="#ff8a00" aria-label="لون مخصص"></div>
 <div id="rvStage" style="margin:8px auto;max-width:300px"><canvas id="rvc" width="720" height="1080" style="width:100%;height:auto;border-radius:14px;background:#e8eefc;display:block"></canvas><div style="height:6px;border-radius:4px;background:var(--ln);margin-top:8px;overflow:hidden"><div id="rvBar" style="height:100%;width:0;background:var(--g)"></div></div></div>
 <video id="rvPrev" playsinline controls hidden style="width:100%;max-width:300px;margin:8px auto;display:block;border-radius:14px"></video>
 <p class="hint" id="rvInfo" style="text-align:center;margin:6px 0"></p>
@@ -7754,69 +7755,70 @@ async function rvAssets(){
  const bg=rvBgMake(W,H),dl=rvDateLine(rows),multi=new Set(rows.map(r=>r.date).filter(Boolean)).size>1;
   return{W,H,rows,ims,bye:p.bye,bg,dateLine:dl,multi}}
 function rvPoly(x,P){x.beginPath();P.forEach((q,i)=>i?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1]));x.closePath()}
-function rvBgMake(W,H){const c=document.createElement('canvas');c.width=W;c.height=H;const b=c.getContext('2d');
- let g=b.createLinearGradient(0,0,0,H);g.addColorStop(0,'#c2410c');g.addColorStop(.28,'#7c2d0c');g.addColorStop(.6,'#3a1405');g.addColorStop(1,'#1a0802');b.fillStyle=g;b.fillRect(0,0,W,H);
- let r=b.createRadialGradient(W/2,0,10,W/2,0,W*.9);r.addColorStop(0,'rgba(255,170,60,.65)');r.addColorStop(1,'rgba(255,120,20,0)');b.fillStyle=r;b.fillRect(0,0,W,H*.7);
- [[0,0],[W,0]].forEach(([lx,ly])=>{const q=b.createRadialGradient(lx,ly,5,lx,ly,W*.55);q.addColorStop(0,'rgba(255,240,210,.7)');q.addColorStop(1,'rgba(255,200,120,0)');b.fillStyle=q;b.fillRect(0,0,W,H*.5)});
+try{RV.col=localStorage.getItem('rv-col')||'#ff8a00'}catch(e){RV.col='#ff8a00'}
+function rvPal(hex){let r=parseInt(hex.slice(1,3),16)/255,g=parseInt(hex.slice(3,5),16)/255,b=parseInt(hex.slice(5,7),16)/255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b);let h=0,s=0;const l=(mx+mn)/2,d=mx-mn;
+ if(d){s=d/(1-Math.abs(2*l-1));h=mx===r?((g-b)/d)%6:mx===g?(b-r)/d+2:(r-g)/d+4;h=(h*60+360)%360}
+ s=Math.max(70,Math.min(100,s*100));const c=(hh,ss,ll,a)=>a===undefined?`hsl(${(hh+360)%360},${ss}%,${ll}%)`:`hsla(${(hh+360)%360},${ss}%,${ll}%,${a})`;
+ return{p1:c(h+4,s,63),p2:c(h,s,50),p3:c(h-10,s,42),ln:c(h,70,10,.88),ac:c(h+6,100,74),bg1:c(h-6,s,40),bg2:c(h-4,s,26),bg3:c(h-2,s,13),bg4:c(h,s*.8,7),gl:c(h+4,100,66,.65),gl2:c(h+4,100,66,0),fl:c(h+6,100,92,.7),fl2:c(h+6,100,78,0),dot:h,sw:c(h,s,50)}}
+function rvBgMake(W,H,col){const P=rvPal(col||'#ff8a00'),c=document.createElement('canvas');c.width=W;c.height=H;const b=c.getContext('2d');
+ let g=b.createLinearGradient(0,0,0,H);g.addColorStop(0,P.bg1);g.addColorStop(.28,P.bg2);g.addColorStop(.6,P.bg3);g.addColorStop(1,P.bg4);b.fillStyle=g;b.fillRect(0,0,W,H);
+ let r=b.createRadialGradient(W/2,0,10,W/2,0,W*.9);r.addColorStop(0,P.gl);r.addColorStop(1,P.gl2);b.fillStyle=r;b.fillRect(0,0,W,H*.7);
+ [[0,0],[W,0]].forEach(([lx,ly])=>{const q=b.createRadialGradient(lx,ly,5,lx,ly,W*.55);q.addColorStop(0,P.fl);q.addColorStop(1,P.fl2);b.fillStyle=q;b.fillRect(0,0,W,H*.5)});
  let sd=11;const rn=()=>(sd=(sd*16807)%2147483647)/2147483647;
- for(let i=0;i<1500;i++){const y=H*.18+rn()*H*.5,xx=rn()*W,a=Math.max(0,.08+.24*rn()*(1-Math.abs(y/H-.43)*2));b.fillStyle=`rgba(255,${120+rn()*100|0},${40+rn()*60|0},${a})`;b.fillRect(xx,y,2+rn()*2.5,2+rn()*2.5)}
- const py=H*.76;let pg=b.createLinearGradient(0,py,0,H);pg.addColorStop(0,'#7a2a05');pg.addColorStop(1,'#2a0e03');b.fillStyle=pg;b.fillRect(0,py,W,H-py);
- for(let i=0;i<8;i++){b.fillStyle=i%2?'rgba(255,150,50,.10)':'rgba(0,0,0,.12)';b.beginPath();b.moveTo(W*.5+(i-4)*W*.02,py);b.lineTo(W*.5+(i-4)*W*.30,H);b.lineTo(W*.5+(i-3)*W*.30,H);b.lineTo(W*.5+(i-3)*W*.02,py);b.closePath();b.fill()}
- b.strokeStyle='rgba(255,200,140,.35)';b.lineWidth=3;b.beginPath();b.ellipse(W/2,H*.98,W*.28,H*.06,0,Math.PI,2*Math.PI);b.stroke();
+ for(let i=0;i<1500;i++){const y=H*.18+rn()*H*.5,xx=rn()*W,a=Math.max(0,.08+.24*rn()*(1-Math.abs(y/H-.43)*2));b.fillStyle=`hsla(${P.dot+(rn()*16-6)|0},100%,${52+rn()*20|0}%,${a})`;b.fillRect(xx,y,2+rn()*2.5,2+rn()*2.5)}
+ const py=H*.76;let pg=b.createLinearGradient(0,py,0,H);pg.addColorStop(0,P.bg2);pg.addColorStop(1,P.bg4);b.fillStyle=pg;b.fillRect(0,py,W,H-py);
+ for(let i=0;i<8;i++){b.fillStyle=i%2?'rgba(255,255,255,.07)':'rgba(0,0,0,.14)';b.beginPath();b.moveTo(W*.5+(i-4)*W*.02,py);b.lineTo(W*.5+(i-4)*W*.30,H);b.lineTo(W*.5+(i-3)*W*.30,H);b.lineTo(W*.5+(i-3)*W*.02,py);b.closePath();b.fill()}
+ b.strokeStyle='rgba(255,255,255,.28)';b.lineWidth=3;b.beginPath();b.ellipse(W/2,H*.98,W*.28,H*.06,0,Math.PI,2*Math.PI);b.stroke();
  let v=b.createRadialGradient(W/2,H/2,H*.3,W/2,H/2,H*.85);v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(0,0,0,.55)');b.fillStyle=v;b.fillRect(0,0,W,H);return c}
 function rvDateLine(rows){const ds=[...new Set(rows.map(r=>r.date).filter(Boolean))].sort();if(!ds.length)return'';
  try{const wd=d=>new Date(d+'T12:00').toLocaleDateString('ar-DZ',{weekday:'long',day:'numeric'}),my=new Date(ds[ds.length-1]+'T12:00').toLocaleDateString('ar-DZ',{month:'long',year:'numeric'});return ds.map(wd).join(' & ')+' '+my}catch(e){return''}}
+function rvPolyR(x,P,rad){const n=P.length;x.beginPath();for(let i=0;i<n;i++){const a=P[(i+n-1)%n],b=P[i],c=P[(i+1)%n];const v1=[a[0]-b[0],a[1]-b[1]],v2=[c[0]-b[0],c[1]-b[1]],l1=Math.hypot(...v1),l2=Math.hypot(...v2),r=Math.min(rad,l1/2,l2/2);
+  const p1=[b[0]+v1[0]/l1*r,b[1]+v1[1]/l1*r],p2=[b[0]+v2[0]/l2*r,b[1]+v2[1]/l2*r];if(i)x.lineTo(p1[0],p1[1]);else x.moveTo(p1[0],p1[1]);x.quadraticCurveTo(b[0],b[1],p2[0],p2[1])}x.closePath()}
 function rvFrame(x,A,t){
- const{W,H,rows,ims}=A,n=rows.length,tm=rvTiming(n),cx=W/2,sen=isSenior();
+ const{W,H,rows,ims}=A,n=rows.length,tm=rvTiming(n),cx=W/2,sen=isSenior(),P=rvPal(RV.col||'#ff8a00');
+ if(A.bgKey!==RV.col){A.bg=rvBgMake(W,H,RV.col);A.bgKey=RV.col}
  x.setTransform(1,0,0,1,0,0);x.globalAlpha=1;x.direction='rtl';x.clearRect(0,0,W,H);x.drawImage(A.bg,0,0);
- // وهج متحرك خفيف
- x.save();x.globalAlpha=.10+.05*Math.sin(t*2);const gl=x.createRadialGradient(cx,0,10,cx,0,W*.8);gl.addColorStop(0,'#ffd27a');gl.addColorStop(1,'rgba(255,170,60,0)');x.fillStyle=gl;x.fillRect(0,0,W,H*.5);x.restore();
- // الرأس: شعار الرابطة + العنوان
+ x.save();x.globalAlpha=.10+.05*Math.sin(t*2);const gl=x.createRadialGradient(cx,0,10,cx,0,W*.8);gl.addColorStop(0,P.ac);gl.addColorStop(1,P.gl2);x.fillStyle=gl;x.fillRect(0,0,W,H*.5);x.restore();
  const u0=rvEase(vpr(t,0,.55));x.save();x.globalAlpha=u0;x.translate(0,(1-u0)*-50);
- if(ims.L){const k=Math.min(104/ims.L.width,104/ims.L.height);x.save();x.shadowColor='rgba(255,190,90,.75)';x.shadowBlur=22;x.drawImage(ims.L,cx-ims.L.width*k/2,18,ims.L.width*k,ims.L.height*k);x.restore()}
- tx(x,sen?(window.SRT1||'البطولة الولائية'):'مباريات رابطة تيبازة',cx,148,F(900,34),'#fff','center',W-60);
+ if(ims.L){const k=Math.min(104/ims.L.width,104/ims.L.height);x.save();x.shadowColor=P.p1;x.shadowBlur=22;x.drawImage(ims.L,cx-ims.L.width*k/2,18,ims.L.width*k,ims.L.height*k);x.restore()}
+ x.save();x.shadowColor='rgba(0,0,0,.55)';x.shadowBlur=8;x.shadowOffsetY=3;tx(x,sen?(window.SRT1||'البطولة الولائية'):'مباريات رابطة تيبازة',cx,148,F(900,34),'#fff','center',W-60);x.restore();
  x.restore();
  const u1=rvEase(vpr(t,.35,.95));x.save();x.globalAlpha=u1;x.translate((1-u1)*120,0);
- tx(x,(sen?'القسم الشرفي · أكابر':'فئة '+RV.c)+' · الجولة '+RV.r,cx,190,F(900,28),'#ffd27a','center',W-60);
- if(A.dateLine)tx(x,A.dateLine,cx,226,F(700,21),'rgba(255,236,210,.92)','center',W-50);x.restore();
- // الصفوف
+ tx(x,(sen?'القسم الشرفي · أكابر':'فئة '+RV.c)+' · الجولة '+RV.r,cx,190,F(900,28),P.ac,'center',W-60);
+ if(A.dateLine)tx(x,A.dateLine,cx,226,F(700,21),'rgba(255,255,255,.92)','center',W-50);x.restore();
  const top=A.dateLine?262:236,bot=H-112,avail=bot-top,units=n+(A.bye?.8:0),pitch=Math.min(132,avail/Math.max(1,units)),rh=Math.round(pitch*.56),y0=top+Math.max(0,(avail-pitch*units)/2)+20;
- const cw=Math.min(262,W*.37),pl=26,pr=W-26,ng=(cx+cw/2-14);
+ const cw=Math.min(270,W*.38),pl=26,pr=W-26,ng=(cx+cw/2-14);
  rows.forEach((r,i)=>{const s=tm.t0+tm.gap*i,u=rvEase(vpr(t,s,s+.5));if(u<=0)return;
   const y=y0+i*pitch;x.save();x.globalAlpha=u;
-  // شريط المضيف (يمين)
   const pill=(X0,X1,fromRight)=>{x.save();x.translate((1-u)*(fromRight?220:-220),0);
-   x.save();x.shadowColor='rgba(0,0,0,.5)';x.shadowBlur=14;x.shadowOffsetY=5;rr(x,X0,y,X1-X0,rh,rh/2);let g=x.createLinearGradient(0,y,0,y+rh);g.addColorStop(0,'#ffbb45');g.addColorStop(.5,'#ff8a00');g.addColorStop(1,'#dd5200');x.fillStyle=g;x.fill();x.restore();
-   rr(x,X0,y,X1-X0,rh,rh/2);x.lineWidth=3;x.strokeStyle='rgba(70,22,0,.85)';x.stroke();
+   x.save();x.shadowColor='rgba(0,0,0,.5)';x.shadowBlur=14;x.shadowOffsetY=5;rr(x,X0,y,X1-X0,rh,rh/2);let g=x.createLinearGradient(0,y,0,y+rh);g.addColorStop(0,P.p1);g.addColorStop(.5,P.p2);g.addColorStop(1,P.p3);x.fillStyle=g;x.fill();x.restore();
+   rr(x,X0,y,X1-X0,rh,rh/2);x.lineWidth=3;x.strokeStyle=P.ln;x.stroke();
    x.save();rr(x,X0+10,y+4,X1-X0-20,rh*.36,rh*.18);x.fillStyle='rgba(255,255,255,.22)';x.fill();x.restore();x.restore()};
   pill(cx+cw/2-30,pr,true);pill(pl,cx-cw/2+30,false);
-  // الأسماء
-  x.save();x.shadowColor='rgba(80,20,0,.8)';x.shadowBlur=4;x.shadowOffsetY=2;const nm=Math.round(rh*.42),mw=(pr-ng)-34;
+  x.save();x.shadowColor=P.ln;x.shadowBlur=4;x.shadowOffsetY=2;const nm=Math.round(rh*.42),mw=(pr-ng)-34;
   x.save();x.translate((1-u)*220,0);tx(x,T[r.h]||'',(ng+pr)/2+4,y+rh/2+1,F(900,nm),'#fff','center',mw);x.restore();
   x.save();x.translate((1-u)*-220,0);tx(x,T[r.a]||'',(pl+(cx-cw/2+14))/2-4,y+rh/2+1,F(900,nm),'#fff','center',mw);x.restore();x.restore();
-  // كبسولة الوسط
-  const sc=.75+.25*u,ch=rh*1.18,cy=y+rh/2;x.save();x.translate(cx,cy);x.scale(sc,sc);
-  x.save();x.shadowColor='rgba(0,0,0,.6)';x.shadowBlur=14;x.shadowOffsetY=4;rr(x,-cw/2,-ch/2,cw,ch,ch/2);let g2=x.createLinearGradient(0,-ch/2,0,ch/2);g2.addColorStop(0,'#2a2a2e');g2.addColorStop(.5,'#101012');g2.addColorStop(1,'#050506');x.fillStyle=g2;x.fill();x.restore();
-  rr(x,-cw/2,-ch/2,cw,ch,ch/2);x.lineWidth=2.5;x.strokeStyle='rgba(255,190,90,.65)';x.stroke();
-  const ls=ch*.78,lx=cw/2-ls/2-14;
-  const lg=(im,X)=>{if(!im)return;x.save();x.beginPath();x.arc(X,0,ls/2,0,7);x.fillStyle='#fff';x.fill();x.clip();const k=Math.min((ls-8)/im.width,(ls-8)/im.height);x.drawImage(im,X-im.width*k/2,-im.height*k/2,im.width*k,im.height*k);x.restore();x.beginPath();x.arc(X,0,ls/2,0,7);x.lineWidth=2.5;x.strokeStyle='#ffb43a';x.stroke()};
+  // كبسولة سداسية داكنة بحافة فضية (كما في النموذج)
+  const sc=.75+.25*u,ch=rh*1.2,cy=y+rh/2,hw=cw/2,hh=ch/2,dd=hh*.95;x.save();x.translate(cx,cy);x.scale(sc,sc);
+  const hex=[[-hw,0],[-hw+dd,-hh],[hw-dd,-hh],[hw,0],[hw-dd,hh],[-hw+dd,hh]];
+  x.save();x.shadowColor='rgba(0,0,0,.65)';x.shadowBlur=16;x.shadowOffsetY=5;rvPolyR(x,hex,hh*.55);let g2=x.createLinearGradient(0,-hh,0,hh);g2.addColorStop(0,'#34363b');g2.addColorStop(.5,'#111214');g2.addColorStop(1,'#040405');x.fillStyle=g2;x.fill();x.restore();
+  rvPolyR(x,hex,hh*.55);let g5=x.createLinearGradient(-hw,0,hw,0);g5.addColorStop(0,'#aeb4bb');g5.addColorStop(.5,'#eceff2');g5.addColorStop(1,'#aeb4bb');x.lineWidth=3;x.strokeStyle=g5;x.stroke();
+  const ls=ch*.78,lx=cw*.315;
+  const lg=(im,X)=>{if(!im)return;x.save();const gg=x.createRadialGradient(X,0,2,X,0,ls*.62);gg.addColorStop(0,'rgba(255,255,255,.28)');gg.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=gg;x.beginPath();x.arc(X,0,ls*.62,0,7);x.fill();x.shadowColor='rgba(0,0,0,.6)';x.shadowBlur=6;x.shadowOffsetY=2;const k=Math.min(ls/im.width,ls/im.height);x.drawImage(im,X-im.width*k/2,-im.height*k/2,im.width*k,im.height*k);x.restore()};
   lg(ims[r.h],lx);lg(ims[r.a],-lx);
-  if(r.has){x.direction='ltr';tx(x,r.v.sa+' - '+r.v.sh,0,2,F(900,Math.round(ch*.42)),'#ffd27a','center',cw-ls*2-14);x.direction='rtl'}
-  else if(r.pp||r.ex)tx(x,r.ex?'معفاة':'مؤجلة',0,2,F(900,Math.round(ch*.3)),'#fbbf24','center',cw-ls*2-12);
-  else tx(x,'VS',0,2,F(900,Math.round(ch*.4)),'#ffb43a','center');
-  // لسان التوقيت
+  if(r.has){x.direction='ltr';tx(x,r.v.sa+' - '+r.v.sh,0,2,F(900,Math.round(ch*.4)),P.ac,'center',cw*.3);x.direction='rtl'}
+  else if(r.pp||r.ex)tx(x,r.ex?'معفاة':'مؤجلة',0,2,F(900,Math.round(ch*.26)),'#fbbf24','center',cw*.3);
+  else{x.save();x.shadowColor=P.p2;x.shadowBlur=8;tx(x,'VS',0,2,'italic '+F(900,Math.round(ch*.4)),'#fff','center');x.restore()}
   const tabT=r.has?'نهاية المباراة':(r.pp?'مؤجلة':r.ex?'معفاة':((A.multi&&r.day?r.day+' · ':'')+(r.time||'')));
-  if(tabT){const tw=Math.min(cw*.8,Math.max(110,tabT.length*13+34)),th=Math.round(ch*.34),ty=-ch/2-th*.55;
-   rr(x,-tw/2,ty,tw,th,th/2);let g3=x.createLinearGradient(0,ty,0,ty+th);g3.addColorStop(0,'#ffb43a');g3.addColorStop(1,'#e66a00');x.fillStyle=g3;x.fill();x.lineWidth=2.5;x.strokeStyle='#2a0e03';x.stroke();
-   tx(x,tabT,0,ty+th/2+1,F(900,Math.max(14,Math.round(th*.62))),'#fff','center',tw-16)}
-  x.restore();
-  x.restore()});
- if(A.bye!==undefined&&A.bye!==null&&A.bye!==0){const sb=tm.t0+tm.gap*n,ub=rvEase(vpr(t,sb,sb+.5));if(ub>0){x.save();x.globalAlpha=ub;const yb=y0+n*pitch+pitch*.1;rr(x,cx-210,yb,420,46,23);x.fillStyle='rgba(0,0,0,.45)';x.fill();x.lineWidth=2;x.strokeStyle='rgba(255,180,60,.7)';x.stroke();tx(x,'🛌 مستريحة: '+(T[A.bye]||''),cx,yb+24,F(800,24),'#ffd27a','center',400);x.restore()}}
- // التذييل
+  if(tabT){const tw=Math.min(cw*.82,Math.max(112,tabT.length*13+40)),th=Math.round(ch*.34),ty=-hh-th*.6,ins=th*.42;
+   const tp=[[-tw/2,ty],[tw/2,ty],[tw/2-ins,ty+th],[-tw/2+ins,ty+th]];rvPolyR(x,tp,th*.3);let g3=x.createLinearGradient(0,ty,0,ty+th);g3.addColorStop(0,P.p1);g3.addColorStop(1,P.p3);x.fillStyle=g3;x.fill();x.lineWidth=3;x.strokeStyle=P.ln;x.stroke();
+   x.save();x.shadowColor=P.ln;x.shadowBlur=3;tx(x,tabT,0,ty+th/2+1,F(900,Math.max(14,Math.round(th*.62))),'#fff','center',tw-ins*2-6);x.restore()}
+  x.restore();x.restore()});
+ if(A.bye!==undefined&&A.bye!==null&&A.bye!==0){const sb=tm.t0+tm.gap*n,ub=rvEase(vpr(t,sb,sb+.5));if(ub>0){x.save();x.globalAlpha=ub;const yb=y0+n*pitch+pitch*.1;rr(x,cx-210,yb,420,46,23);x.fillStyle='rgba(0,0,0,.45)';x.fill();x.lineWidth=2;x.strokeStyle=P.p2;x.stroke();tx(x,'🛌 مستريحة: '+(T[A.bye]||''),cx,yb+24,F(800,24),P.ac,'center',400);x.restore()}}
  const u2=rvEase(vpr(t,.9,1.5));x.save();x.globalAlpha=u2;x.translate(0,(1-u2)*90);
- x.save();x.shadowColor='rgba(0,0,0,.5)';x.shadowBlur=14;x.shadowOffsetY=5;rr(x,50,H-96,W-100,58,29);let g4=x.createLinearGradient(0,H-96,0,H-38);g4.addColorStop(0,'#ffbb45');g4.addColorStop(1,'#e05500');x.fillStyle=g4;x.fill();x.restore();
- rr(x,50,H-96,W-100,58,29);x.lineWidth=3;x.strokeStyle='rgba(70,22,0,.85)';x.stroke();
- tx(x,'الرابطة الولائية لكرة القدم تيبازة · ESM',cx,H-66,F(900,24),'#fff','center',W-150);x.restore()}
+ x.save();x.shadowColor='rgba(0,0,0,.5)';x.shadowBlur=14;x.shadowOffsetY=5;rr(x,50,H-96,W-100,58,29);let g4=x.createLinearGradient(0,H-96,0,H-38);g4.addColorStop(0,P.p1);g4.addColorStop(1,P.p3);x.fillStyle=g4;x.fill();x.restore();
+ rr(x,50,H-96,W-100,58,29);x.lineWidth=3;x.strokeStyle=P.ln;x.stroke();
+ x.save();x.shadowColor=P.ln;x.shadowBlur=3;tx(x,'الرابطة الولائية لكرة القدم تيبازة · ESM',cx,H-66,F(900,24),'#fff','center',W-150);x.restore();x.restore()}
 
 let rvAs=null;
 async function rvPreview(){const tok=++RV.tok;$('rvInfo').textContent='⏳ تجهيز المعاينة…';
@@ -8960,6 +8962,14 @@ document.addEventListener('click',e=>{if(e.target.closest('#adminPv'))open()});
 }catch(e){console.log('PV init',e)}
 })();
 
+</script>
+<script>
+(function(){const d=document.getElementById('rv');if(!d)return;
+ const sync=()=>{d.querySelectorAll('[data-rcol]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.rcol===RV.col));const ci=document.getElementById('rvColC');if(ci&&/^#[0-9a-f]{6}$/i.test(RV.col))ci.value=RV.col};
+ const setc=c=>{if(RV.run)return;RV.col=c;try{localStorage.setItem('rv-col',c)}catch(e){}sync();if(RV.blob)rvReset();if(typeof rvAs!=='undefined'&&rvAs){const cv=document.getElementById('rvc');try{rvFrame(cv.getContext('2d'),rvAs,rvTiming(rvAs.rows.length).total)}catch(e){}}};
+ d.addEventListener('click',e=>{const b=e.target.closest('[data-rcol]');if(b)setc(b.dataset.rcol)});
+ d.addEventListener('input',e=>{if(e.target.id==='rvColC')setc(e.target.value)});
+ sync();new MutationObserver(sync).observe(d,{attributes:true,attributeFilter:['open']})})();
 </script>
 </body>
 </html>
