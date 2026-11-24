@@ -8682,7 +8682,7 @@ function buildScenes(A){
   const pul=1+.025*Math.sin(t*3);x.scale(pul,pul);
   x.shadowColor='rgba(242,182,50,.7)';x.shadowBlur=50;x.fillStyle='#fff';x.beginPath();x.arc(0,0,176,0,7);x.fill();x.shadowBlur=0;
   x.lineWidth=10;x.strokeStyle=GOLD;x.beginPath();x.arc(0,0,184,0,7);x.stroke();
-  circImg(x,A.tl,0,0,160);x.restore();
+  contain(x,A.tl,0,0,250,250);x.restore();
   const u=ez(seg(t,.8,1.5));x.globalAlpha=u;T2(x,A.name,W/2,790+(1-u)*30,58,900,'#fff','center',W-80);
   T2(x,'🏟️ ملعب '+A.stad,W/2,858,28,700,GOLD2,'center',W-100);
   x.globalAlpha=ez(seg(t,1.4,2.2));
@@ -8707,10 +8707,10 @@ function buildScenes(A){
    RR(x,36,y-38,W-72,78,22);x.fillStyle='rgba(255,255,255,.09)';x.fill();
    const oc=m.outcome==='w'?'#4ade80':m.outcome==='l'?'#f87171':'#facc15';x.fillStyle=oc;RR(x,W-52,y-38,16,78,8);x.fill();
    const hid=m.isHome?A.tId:m.oppId,aid=m.isHome?m.oppId:A.tId,sh=m.isHome?m.myScore:m.oppScore,sa=m.isHome?m.oppScore:m.myScore;
-   T2(x,'ج'+m.round,W-86,y,22,800,GOLD);
-   contain(x,A.im[hid],W-150,y,44,44);T2(x,T[hid]||'',W-180,y,23,hid==A.tId?900:700,hid==A.tId?GOLD2:'#fff','right',190);
-   RR(x,W/2-62,y-26,124,52,16);x.fillStyle=oc;x.fill();T2(x,sa+' - '+sh,W/2,y+1,34,900,NAVY);x.direction='ltr';
-   contain(x,A.im[aid],150,y,44,44);T2(x,T[aid]||'',120,y,23,aid==A.tId?900:700,aid==A.tId?GOLD2:'#fff','left',190);x.restore()});
+   T2(x,'ج'+m.round,W-84,y,22,800,GOLD);
+   contain(x,A.im[hid],W-134,y,46,46);T2(x,T[hid]||'',W-166,y,22,hid==A.tId?900:700,hid==A.tId?GOLD2:'#fff','right',150);
+   RR(x,W/2-48,y-26,96,52,16);x.fillStyle=oc;x.fill();T2(x,sa+' - '+sh,W/2,y+1,32,900,NAVY);
+   contain(x,A.im[aid],74,y,46,46);T2(x,T[aid]||'',106,y,22,aid==A.tId?900:700,aid==A.tId?GOLD2:'#fff','left',150);x.restore()});
   FOOT(x,A)}});
  if(A.sc.length)scenes.push({d:2.5+A.sc.length*.6,f:(x,t,d)=>{
   TOP(x,A,t);T2(x,'🥅 هدافو النادي',W/2,330,50,900,'#fff');const mx=Math.max(...A.sc.map(g=>g.c));
