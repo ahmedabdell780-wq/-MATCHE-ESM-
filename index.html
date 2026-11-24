@@ -4504,7 +4504,7 @@ function admin(){
  }
 
  if(adminSec === 'tools'){
-   return navBar + `<h2>🏋️ حصة تدريبية مباشرة</h2><div class="card"><p class="hint" style="text-align:right;margin:0 0 8px">صوّر حصة تدريبية لأي فريق وأذعها مباشرة: شعار النادي يرفرف في جهة وشعار التطبيق في الجهة الأخرى.</p><button class="btn" id="trOpen" style="width:100%">🎥 بدء حصة تدريبية مباشرة</button></div><h2>📊 ملصق الترتيب المعتمد</h2><div class="card">${chips()}<select id="us" class="f">${Array.from({length:isSenior()?30:22},(_,i)=>`<option value="${i+1}" ${i+1===(up||lastRound())?'selected':''}>بعد الجولة ${i+1}</option>`).join('')}</select><label>🎯 تظليل فريق في الملصق (اختياري)</label><select id="hlT" class="f"><option value="">— بدون تظليل —</option>${Object.keys(T).map(i=>`<option value="${i}" ${String(HL.team)===i?'selected':''}>${esc(T[i])}</option>`).join('')}</select><div class="swatches">${HLC.map(c=>`<button type="button" class="sw" data-hc="${c}" style="background:${c}" aria-label="لون" aria-pressed="${HL.color===c}"></button>`).join('')}<input type="color" id="hlC" value="${HL.color}" aria-label="لون مخصص"></div><button class="btn" id="adminPoster" style="width:100%;margin-top:8px">إنشاء الملصق</button><button class="btn" id="adminVideo" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#156834,#1f9a4f);color:#fff">🎬 إنشاء فيديو الملصق</button>${isSenior()?'<button class="btn" id="adminSrVideo" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#0a2a4e,#1f86c8);color:#fff">🏛️ فيديو الأكابر الشامل (تصميم جديد)</button>':''}</div>${bkCard()}${rulesCard()}<h2>🧰 أدوات</h2><div class="card"><button class="btn" id="mig" style="width:100%;margin-bottom:8px">🔒 نقل التشكيلات القديمة إلى مساحة خاصة</button><button class="btn alt" id="seed" style="width:100%">استيراد نتائج الجولات 1-3 السابقة</button><button class="btn" id="seedS" style="width:100%;margin-top:8px">⚽ استيراد نتائج الأكابر (الجولات 1-7)</button></div>`;
+   return navBar + `<h2>🏋️ حصة تدريبية مباشرة</h2><div class="card"><p class="hint" style="text-align:right;margin:0 0 8px">صوّر حصة تدريبية لأي فريق وأذعها مباشرة: شعار النادي يرفرف في جهة وشعار التطبيق في الجهة الأخرى.</p><button class="btn" id="trOpen" style="width:100%">🎥 بدء حصة تدريبية مباشرة</button></div><h2>📊 ملصق الترتيب المعتمد</h2><div class="card">${chips()}<select id="us" class="f">${Array.from({length:isSenior()?30:22},(_,i)=>`<option value="${i+1}" ${i+1===(up||lastRound())?'selected':''}>بعد الجولة ${i+1}</option>`).join('')}</select><label>🎯 تظليل فريق في الملصق (اختياري)</label><select id="hlT" class="f"><option value="">— بدون تظليل —</option>${Object.keys(T).map(i=>`<option value="${i}" ${String(HL.team)===i?'selected':''}>${esc(T[i])}</option>`).join('')}</select><div class="swatches">${HLC.map(c=>`<button type="button" class="sw" data-hc="${c}" style="background:${c}" aria-label="لون" aria-pressed="${HL.color===c}"></button>`).join('')}<input type="color" id="hlC" value="${HL.color}" aria-label="لون مخصص"></div><button class="btn" id="adminPoster" style="width:100%;margin-top:8px">إنشاء الملصق</button><button class="btn" id="adminVideo" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#156834,#1f9a4f);color:#fff">🎬 إنشاء فيديو الملصق</button>${isSenior()?'<button class="btn" id="adminSrVideo" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#0a2a4e,#1f86c8);color:#fff">🏛️ فيديو الأكابر الشامل (تصميم جديد)</button>':''}<button class=\"btn\" id=\"adminPv\" style=\"width:100%;margin-top:8px;background:linear-gradient(135deg,#7a1f3d,#c0392b);color:#fff\">🎙️ فيديو المقدّم (مباراة بمباراة · تحكم بالوقت)</button></div>${bkCard()}${rulesCard()}<h2>🧰 أدوات</h2><div class="card"><button class="btn" id="mig" style="width:100%;margin-bottom:8px">🔒 نقل التشكيلات القديمة إلى مساحة خاصة</button><button class="btn alt" id="seed" style="width:100%">استيراد نتائج الجولات 1-3 السابقة</button><button class="btn" id="seedS" style="width:100%;margin-top:8px">⚽ استيراد نتائج الأكابر (الجولات 1-7)</button></div>`;
  }
 
   if(adminSec === 'act'){
@@ -8801,6 +8801,157 @@ function mount(){const h=$$('tmHeader');if(!h||$$('tvOpen'))return;
  const upd=()=>{try{wm.src=lgSrc()}catch(e){}};upd();const nm=$$('tmName');if(nm)new MutationObserver(upd).observe(nm,{childList:true,characterData:true,subtree:true})}
 mount();
 }catch(e){console.log('TV init',e)}
+})();
+
+</script>
+<script>
+/* ===== 🎙️ فيديو المقدّم: مباراة بمباراة — مدة قابلة للضبط + تحكم يدوي + تعليق صوتي حر ===== */
+(function(){
+try{
+const W=720,H=1280,$$=id=>document.getElementById(id);
+const cl=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)),ez=u=>1-Math.pow(1-cl(u),3),eb=u=>{u=cl(u);const c=1.70158;return 1+(c+1)*Math.pow(u-1,3)+c*Math.pow(u-1,2)},sg=(t,a,b)=>cl((t-a)/(b-a));
+const FF=()=>{try{return PS.f}catch(e){return 'Tajawal'}},fn=(w,s)=>`${w} ${s}px "${FF()}",Tajawal,system-ui,sans-serif`;
+const GOLD='#f2b632',GOLD2='#ffe08a',NAVY='#06142e',NAVY2='#0b2a5b',SEA='#2b8fd6';
+const isS=()=>typeof isSenior==='function'&&isSenior();
+const lgSrc=()=>isS()?window.SENIOR_LOGO:((typeof LEAGUE!=='undefined'&&LEAGUE)||'league-logo.png');
+const now=()=>performance.now()/1000,sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function T2(x,s,X,Y,sz,w,col,al,mw){s=String(s);let n=sz;x.font=fn(w,n);if(mw){while(x.measureText(s).width>mw&&n>14){n-=2;x.font=fn(w,n)}}x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.direction='rtl';x.fillText(s,X,Y)}
+const RR=(x,X,Y,w,h,r)=>{x.beginPath();x.roundRect(X,Y,w,h,r)};
+function star(x,cx,cy,R,col){x.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,r=i%2?R*.45:R;x.lineTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r)}x.closePath();x.fillStyle=col;x.fill()}
+function contain(x,im,cx,cy,bx,by){if(!im)return;const k=Math.min(bx/im.width,by/im.height);x.drawImage(im,cx-im.width*k/2,cy-im.height*k/2,im.width*k,im.height*k)}
+function BG(x,t){let g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,NAVY);g.addColorStop(.55,NAVY2);g.addColorStop(1,'#0a1f45');x.fillStyle=g;x.fillRect(0,0,W,H);
+ for(let i=0;i<5;i++){const a=.05+.03*Math.sin(t*.8+i),cx=60+i*150,gg=x.createRadialGradient(cx,-40,10,cx,-40,520);gg.addColorStop(0,`rgba(255,255,255,${a*2})`);gg.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=gg;x.fillRect(0,0,W,700)}
+ for(let i=0;i<9;i++){x.globalAlpha=.07;x.strokeStyle='#fff';x.lineWidth=3;x.beginPath();x.arc((i*97+40)%W,H-((t*40+i*180)%(H+120)),18+i%3*8,0,7);x.stroke()}x.globalAlpha=1;
+ for(let k=0;k<4;k++){const y0=H-170+k*34;x.beginPath();x.moveTo(0,H);for(let X=0;X<=W;X+=12)x.lineTo(X,y0+Math.sin(t*(1.1+k*.15)+X/(70+k*14)+k*1.7)*(16-k*2));x.lineTo(W,H);x.closePath();x.fillStyle=`rgba(${43+k*10},${143+k*18},214,${.30-k*.05})`;x.fill()}
+ x.strokeStyle=GOLD;x.lineWidth=4;RR(x,16,16,W-32,H-32,34);x.stroke();x.strokeStyle='rgba(242,182,50,.35)';x.lineWidth=1.5;RR(x,28,28,W-56,H-56,26);x.stroke()}
+const P={u:1,rows:[],bye:0,im:{},lg:null,slides:[],i:0,s0:0,prevI:-1,prevSl:0,trT:-9,paused:false,pT:0,ext:0,mode:'auto',dur:5,mic:true,rec:false,cd:0,run:false,raf:0,blob:null,url:null,an:null,ready:false,done:null,fin:null};
+const loc=()=>(P.paused?P.pT:now())-P.s0,dOf=s=>s.d||P.dur;
+async function load(u){
+ P.ready=false;P.u=u;const pr=pairs(u),c=cat;
+ P.rows=pr.m.map(([h,a])=>{const v=S[K(c,u,h,a)]||{},ok=v.status==='confirmed'&&v.sh!==undefined&&v.sh!==''&&v.sh!=null&&v.sa!==undefined&&v.sa!==''&&!v.pp&&!v.ex;
+  let day='';if(v.date){try{day=new Date(v.date+'T12:00').toLocaleDateString('ar-DZ',{weekday:'long',day:'numeric',month:'long'})}catch(e){}}
+  let tm='';if(v.date){try{tm=(dtm(v,c)||'').replace(':','H')}catch(e){}}
+  return{h,a,ok,sh:ok?+v.sh:0,sa:ok?+v.sa:0,pp:!!v.pp,ex:!!v.ex,day,time:tm,stad:v.stad||((typeof STAD!=='undefined'&&STAD[h])||'')}});
+ P.bye=pr.bye?+pr.bye:0;const ids=new Set();P.rows.forEach(m=>{ids.add(m.h);ids.add(m.a)});if(P.bye)ids.add(P.bye);
+ P.im={};await Promise.all([...ids].map(async id=>{P.im[id]=await imgOf((OLD.DEF&&OLD.DEF[id])||LG[id])}));P.lg=await imgOf(lgSrc());
+ try{await document.fonts.load(fn(900,40));await document.fonts.load(fn(700,40))}catch(e){}
+ const n=P.rows.length;P.slides=[{k:'intro',d:4}];P.rows.forEach((m,i)=>P.slides.push({k:'match',m,i,n}));P.slides.push({k:'recap',d:Math.max(7,3+n*.9)});P.slides.push({k:'outro',d:4});
+ P.i=0;P.prevI=-1;P.ready=true}
+/* ---- الشرائح ---- */
+function head(x,t,sub){contain(x,P.lg,W/2,108,140,140);T2(x,sub||(isS()?(window.SRT1||''):'مباريات رابطة تيبازة'),W/2,206,22,800,GOLD,'center',W-120);for(let i=-1;i<=1;i++)star(x,W/2+i*26,236,i?8:11,GOLD)}
+function foot(x){T2(x,'ESM · '+(window.SRT1||'الرابطة الولائية لكرة القدم تيبازة'),W/2,H-52,20,700,'rgba(255,255,255,.85)','center',W-120)}
+function slide(x,sl,s,t){
+ if(sl.k==='intro'){const e=eb(sg(s,0,1.1));x.save();x.translate(W/2,470);x.scale(.55+.45*e,.55+.45*e);
+  x.save();x.rotate(t*.6);x.strokeStyle=GOLD;x.lineWidth=5;x.setLineDash([22,16]);x.beginPath();x.arc(0,0,280,0,7);x.stroke();x.restore();
+  x.shadowColor='rgba(242,182,50,.55)';x.shadowBlur=40;contain(x,P.lg,0,0,460,460);x.restore();
+  x.globalAlpha=ez(sg(s,1,1.7));T2(x,'مباريات الجولة '+P.u,W/2,830,56,900,'#fff','center',W-80);
+  x.globalAlpha=ez(sg(s,1.4,2.1));T2(x,isS()?(window.SRT1||''):('فئة '+cat),W/2,905,32,800,GOLD,'center',W-100);
+  x.globalAlpha=ez(sg(s,1.8,2.5));T2(x,'موسم 2026 / 2027',W/2,965,28,700,'rgba(255,255,255,.85)');
+  x.globalAlpha=ez(sg(s,2.2,2.9));RR(x,W/2-170,1030,340,70,35);x.fillStyle=GOLD;x.fill();T2(x,P.rows.length+' مباريات',W/2,1066,32,900,NAVY);x.globalAlpha=1;return}
+ if(sl.k==='match'){const m=sl.m;head(x,t);
+  T2(x,'الجولة '+P.u,W/2,300,50,900,'#fff');RR(x,W/2-120,338,240,46,23);x.fillStyle='rgba(242,182,50,.16)';x.fill();x.strokeStyle=GOLD;x.lineWidth=2;x.stroke();T2(x,'المباراة '+(sl.i+1)+' من '+sl.n,W/2,362,24,800,GOLD2);
+  const cy=640,u=eb(sg(s,.1,.8));
+  RR(x,36,430,W-72,420,36);x.fillStyle='rgba(255,255,255,.07)';x.fill();x.strokeStyle='rgba(242,182,50,.55)';x.lineWidth=2.5;x.stroke();
+  const side=(id,X,lab,dir)=>{x.save();x.translate(X+dir*(1-u)*160,0);x.globalAlpha=cl(u);x.shadowColor='rgba(0,0,0,.35)';x.shadowBlur=24;x.fillStyle='#fff';x.beginPath();x.arc(0,cy-30,88,0,7);x.fill();x.shadowBlur=0;x.lineWidth=6;x.strokeStyle=GOLD;x.beginPath();x.arc(0,cy-30,94,0,7);x.stroke();contain(x,P.im[id],0,cy-30,132,132);
+   T2(x,T[id]||'',0,cy+98,30,900,'#fff','center',200);T2(x,lab,0,cy+142,20,700,GOLD2);x.restore()};
+  side(m.h,W-150,'🏠 صاحب الأرض',1);side(m.a,150,'✈️ الضيف',-1);
+  // الوسط: النتيجة أو الموعد
+  x.save();x.translate(W/2,cy-30);const c=ez(sg(s,.5,1.1));x.globalAlpha=c;x.scale(.7+.3*c,.7+.3*c);
+  if(m.ok){const p=ez(sg(s,.8,1.8)),sh=Math.round(m.sh*p),sa=Math.round(m.sa*p),hw=m.sh>m.sa,aw=m.sa>m.sh;x.direction='ltr';
+   T2(x,sa,-62,0,92,900,aw?GOLD:'#fff','center');T2(x,sh,62,0,92,900,hw?GOLD:'#fff','center');T2(x,'-',0,-4,60,900,SEA,'center');x.direction='rtl';
+   RR(x,-92,70,184,40,20);x.fillStyle='rgba(74,222,128,.2)';x.fill();T2(x,'نهاية المباراة',0,91,22,800,'#4ade80')}
+  else if(m.pp||m.ex){T2(x,m.ex?'معفاة':'مؤجلة',0,0,56,900,'#facc15','center',200)}
+  else{T2(x,'VS',0,-10,84,900,GOLD,'center');RR(x,-92,60,184,40,20);x.fillStyle='rgba(250,204,21,.18)';x.fill();T2(x,'لم تُلعب بعد',0,81,22,800,'#facc15')}
+  x.restore();
+  // معلومات
+  const info=[];if(m.day)info.push(['📅',m.day]);if(m.time)info.push(['⏰',m.time]);if(m.stad)info.push(['🏟️','ملعب '+m.stad]);
+  info.forEach((it,i)=>{const e=ez(sg(s,1.1+i*.2,1.7+i*.2));if(e<=0)return;const y=950+i*76;x.save();x.globalAlpha=e;x.translate(0,(1-e)*30);RR(x,90,y-28,W-180,56,28);x.fillStyle='rgba(255,255,255,.09)';x.fill();T2(x,it[0]+'  '+it[1],W/2,y+1,28,800,'#fff','center',W-240);x.restore()});
+  foot(x);return}
+ if(sl.k==='recap'){head(x,t);T2(x,'📋 ملخص الجولة '+P.u,W/2,310,48,900,'#fff');
+  const n=P.rows.length,pitch=Math.min(100,(H-520)/Math.max(1,n+(P.bye?1:0)));
+  P.rows.forEach((m,i)=>{const e=ez(sg(s,.3+i*.28,.9+i*.28));if(e<=0)return;const y=400+i*pitch;x.save();x.globalAlpha=e;x.translate((i%2?-1:1)*(1-e)*140,0);
+   RR(x,36,y-pitch*.4,W-72,pitch*.8,20);x.fillStyle='rgba(255,255,255,.09)';x.fill();
+   contain(x,P.im[m.h],W-92,y,pitch*.55,pitch*.55);T2(x,T[m.h]||'',W-128,y,22,800,'#fff','right',165);
+   RR(x,W/2-62,y-pitch*.3,124,pitch*.6,14);x.fillStyle=m.ok?GOLD:'rgba(255,255,255,.15)';x.fill();x.direction='ltr';T2(x,m.ok?(m.sa+' - '+m.sh):'vs',W/2,y+1,30,900,m.ok?NAVY:'#fff');x.direction='rtl';
+   contain(x,P.im[m.a],92,y,pitch*.55,pitch*.55);T2(x,T[m.a]||'',128,y,22,800,'#fff','left',165);x.restore()});
+  if(P.bye){const e=ez(sg(s,.5+n*.28,1.1+n*.28));x.globalAlpha=e;T2(x,'🛌 مستريحة: '+(T[P.bye]||''),W/2,400+n*pitch+10,26,800,GOLD2,'center',W-100);x.globalAlpha=1}
+  foot(x);return}
+ const e=eb(sg(s,0,1));x.save();x.translate(W/2,520);x.scale(e,e);x.shadowColor='rgba(242,182,50,.6)';x.shadowBlur=40;contain(x,P.lg,0,0,420,420);x.restore();
+ x.globalAlpha=ez(sg(s,.7,1.4));T2(x,'شكراً لمتابعتكم',W/2,860,50,900,'#fff','center',W-80);T2(x,'نلتقي في الجولة القادمة',W/2,935,34,800,GOLD,'center',W-80);
+ x.globalAlpha=ez(sg(s,1.2,1.9));for(let i=-1;i<=1;i++)star(x,W/2+i*44,1010,i?16:22,GOLD);T2(x,'ESM · '+(window.SRT1||''),W/2,1100,24,700,'rgba(255,255,255,.85)','center',W-100);x.globalAlpha=1}
+function paint(){const cv=$$('pvc');if(!cv||!P.ready)return;const x=cv.getContext('2d'),t=now();BG(x,t);
+ const sl=P.slides[P.rec||P.cd?P.i:Math.min(1,P.slides.length-1)],s=P.rec||P.cd?loc():2.2;
+ const tr=cl((t-P.trT)/.45);
+ if(P.rec&&P.prevI>=0&&tr<1){x.save();x.globalAlpha=1-ez(tr);x.translate(-ez(tr)*90,0);slide(x,P.slides[P.prevI],P.prevSl,t);x.restore();x.save();x.globalAlpha=ez(tr);x.translate((1-ez(tr))*90,0);slide(x,sl,s,t);x.restore()}
+ else{x.save();slide(x,sl,s,t);x.restore()}
+ if(P.cd){x.fillStyle='rgba(6,20,46,.72)';x.fillRect(0,0,W,H);T2(x,P.cd,W/2,H/2,260,900,GOLD);T2(x,'استعدّ…',W/2,H/2+190,40,800,'#fff')}}
+/* ---- التحكم ---- */
+function go(d){if(!P.rec)return;if(d>0&&P.i>=P.slides.length-1)return finish();if(d<0&&P.i<=0)return;
+ P.prevI=P.i;P.prevSl=loc();P.i+=d;P.s0=now();P.pT=P.s0;P.ext=0;P.trT=now();ui()}
+function pause(){if(!P.rec)return;if(P.paused){P.s0+=now()-P.pT;P.paused=false}else{P.pT=now();P.paused=true}ui()}
+function ui(){const g=id=>$$(id);if(!g('pvd'))return;const sl=P.slides[P.i]||{};
+ g('pvPause').textContent=P.paused?'▶ متابعة':'⏸ إيقاف مؤقت';
+ const lab=sl.k==='match'?'المباراة '+(sl.i+1)+'/'+sl.n:sl.k==='intro'?'المقدمة':sl.k==='recap'?'الملخص':'الختام';
+ const left=Math.max(0,dOf(sl)+P.ext-loc());g('pvCnt').textContent=P.rec?(lab+(P.mode==='auto'?(P.paused?' · ⏸':' · متبقي '+Math.ceil(left)+' ث'):' · يدوي 👆')):'';
+ g('pvMode').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===P.mode));g('pvSec').textContent=P.dur+' ث'}
+function meter(){if(!P.an||!P.rec)return;const a=new Uint8Array(P.an.fftSize);P.an.getByteTimeDomainData(a);let m=0;for(const v of a)m=Math.max(m,Math.abs(v-128));$$('pvLvl').style.width=Math.min(100,m/90*100)+'%'}
+function tick(){P.raf=requestAnimationFrame(tick);try{paint()}catch(e){console.log('pv paint',e)}
+ if(P.rec){meter();ui();const sl=P.slides[P.i];if(P.mode==='auto'&&!P.paused&&loc()>=dOf(sl)+P.ext)go(1)}}
+async function open(){mk();const d=$$('pvd');const sel=$$('pvRd');const lr=(typeof up!=='undefined'&&up)||(typeof lastRound==='function'&&lastRound())||1;
+ sel.innerHTML=Array.from({length:isS()?30:22},(_,i)=>`<option value="${i+1}" ${i+1===lr?'selected':''}>الجولة ${i+1}</option>`).join('');
+ reset();d.showModal();await prep(lr);cancelAnimationFrame(P.raf);tick()}
+async function prep(u){$$('pvGo').disabled=true;$$('pvInfo').textContent='⏳ تجهيز المباريات والشعارات…';try{await load(u);$$('pvInfo').textContent=P.rows.length+' مباريات · '+(P.mode==='auto'?'تلقائي: كل مباراة '+P.dur+' ثوانٍ':'يدوي: أنت تنتقل بين المباراة والأخرى');$$('pvGo').disabled=false;ui()}catch(e){console.log(e);$$('pvInfo').textContent='⚠️ تعذّر التجهيز'}}
+function reset(){P.blob=null;if(P.url){URL.revokeObjectURL(P.url);P.url=null}$$('pvPrev').hidden=true;$$('pvPrev').removeAttribute('src');$$('pvc').hidden=false;['pvDl','pvSh'].forEach(i=>$$(i).hidden=true);$$('pvGo').hidden=false;$$('pvCtl').hidden=true;$$('pvSet').hidden=false;$$('pvX').hidden=false}
+let rec=null,ac=null,wl=null,mic=null,chunks=[];
+async function start(){
+ if(P.run||!P.ready)return;if(!window.MediaRecorder||!HTMLCanvasElement.prototype.captureStream)return toast('⚠️ هذا المتصفح لا يدعم التصوير. استعمل Safari أو Chrome حديثاً');
+ P.run=true;$$('pvGo').disabled=true;mic=null;ac=null;
+ try{
+  P.mic=$$('pvMic').checked;
+  if(P.mic){try{mic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}})}catch(e){mic=null;toast('⚠️ لم يُسمح بالميكروفون — سيُسجَّل الفيديو بلا صوت')}}
+  const cv=$$('pvc'),stream=cv.captureStream(30);
+  if(mic){ac=new(window.AudioContext||window.webkitAudioContext)();await ac.resume();const src=ac.createMediaStreamSource(mic),g=ac.createGain(),dst=ac.createMediaStreamDestination();g.gain.value=1.25;src.connect(g);g.connect(dst);P.an=ac.createAnalyser();P.an.fftSize=512;g.connect(P.an);dst.stream.getAudioTracks().forEach(t=>stream.addTrack(t))}else P.an=null;
+  try{if(navigator.wakeLock)wl=await navigator.wakeLock.request('screen')}catch(e){wl=null}
+  const mime=vMime(!!mic);chunks=[];rec=new MediaRecorder(stream,Object.assign({videoBitsPerSecond:5000000},mime?{mimeType:mime}:{}));
+  rec.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};P.done=new Promise(r=>rec.onstop=r);
+  $$('pvSet').hidden=true;$$('pvGo').hidden=true;$$('pvX').hidden=true;$$('pvCtl').hidden=false;
+  P.i=0;P.prevI=-1;P.s0=now();P.cd=3;for(let k=3;k>=1;k--){P.cd=k;await sleep(850)}P.cd=0;
+  P.i=0;P.s0=now();P.pT=P.s0;P.paused=false;P.ext=0;P.trT=-9;rec.start(1000);P.rec=true;$$('pvInfo').textContent=mic?'🔴 جاري التسجيل بالصوت — تكلّم بحرية وتحكّم بالانتقال':'🔴 جاري التسجيل (بدون صوت)';ui()
+ }catch(e){console.log(e);fail()}}
+async function finish(){if(!P.rec)return;P.rec=false;P.paused=false;
+ try{rec.stop();await P.done}catch(e){}
+ try{mic&&mic.getTracks().forEach(t=>t.stop())}catch(e){}try{ac&&ac.close()}catch(e){}try{wl&&wl.release()}catch(e){}
+ const type=(rec.mimeType||'video/webm').split(';')[0];P.blob=new Blob(chunks,{type});if(P.url)URL.revokeObjectURL(P.url);P.url=URL.createObjectURL(P.blob);
+ const pv=$$('pvPrev');pv.src=P.url;pv.hidden=false;$$('pvc').hidden=true;$$('pvCtl').hidden=true;['pvDl','pvSh'].forEach(i=>$$(i).hidden=false);$$('pvX').hidden=false;
+ $$('pvInfo').textContent='✅ جاهز ('+(P.blob.size/1048576).toFixed(1)+' م.ب · '+(type.includes('mp4')?'MP4':'WebM')+')';P.run=false}
+function fail(){P.rec=false;P.run=false;try{mic&&mic.getTracks().forEach(t=>t.stop())}catch(e){}try{ac&&ac.close()}catch(e){}$$('pvInfo').textContent='⚠️ تعذّر التسجيل على هذا المتصفح';reset()}
+const fname=()=>`مباريات_الجولة_${P.u}.${P.blob&&P.blob.type.includes('mp4')?'mp4':'webm'}`;
+function mk(){if($$('pvd'))return;const d=document.createElement('dialog');d.id='pvd';
+ d.innerHTML=`<style>#pvd{border:2px solid ${GOLD};border-radius:22px;background:#07163a;color:#fff;padding:14px;width:min(96vw,440px);max-height:96vh;overflow:auto}#pvd::backdrop{background:rgba(0,0,0,.78)}#pvd canvas,#pvd video{width:100%;max-height:50vh;aspect-ratio:9/16;object-fit:contain;border-radius:14px;background:#000;display:block;margin:8px auto}#pvd .r{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0}#pvd .r>*{flex:1 1 auto}#pvd button{padding:11px 10px;border-radius:14px;border:0;font:800 15px inherit;font-family:inherit;background:${GOLD};color:#06142e;cursor:pointer}#pvd button.alt{background:rgba(255,255,255,.14);color:#fff}#pvd button[aria-pressed=true]{outline:3px solid #fff}#pvd button[hidden],#pvd .r[hidden]{display:none}#pvd select{padding:10px;border-radius:12px;border:1px solid ${GOLD};background:#0b2a5b;color:#fff;font:700 15px inherit;font-family:inherit}#pvd label{font-size:14px}#pvLw{height:8px;border-radius:6px;background:rgba(255,255,255,.15);overflow:hidden}#pvLvl{height:100%;width:0;background:linear-gradient(90deg,#4ade80,#facc15,#f87171)}</style>
+ <h3 style="margin:0 0 4px;color:${GOLD}">🎙️ فيديو المقدّم — مباراة بمباراة</h3>
+ <div id="pvSet"><div class="r"><select id="pvRd"></select></div>
+ <div class="r"><span style="flex:0 0 auto">⏱ مدة كل مباراة</span><button class="alt" id="pvMin" style="flex:0 0 46px">−</button><b id="pvSec" style="flex:0 0 52px;text-align:center">5 ث</b><button class="alt" id="pvPlus" style="flex:0 0 46px">+</button></div>
+ <div class="r" id="pvMode"><button class="alt" data-m="auto" aria-pressed="true">⏱ تلقائي</button><button class="alt" data-m="manual" aria-pressed="false">👆 يدوي (أنا أتحكم)</button></div>
+ <label class="r"><input type="checkbox" id="pvMic" checked style="flex:0 0 auto"> <span>🎙️ تسجيل صوتي (للتعليق الحر أثناء العرض)</span></label></div>
+ <div id="pvInfo" style="font-size:14px;opacity:.92;min-height:20px"></div>
+ <canvas id="pvc" width="${W}" height="${H}"></canvas><video id="pvPrev" controls playsinline hidden></video>
+ <div id="pvCtl" hidden><div id="pvCnt" style="text-align:center;font-weight:800;color:${GOLD2}"></div><div id="pvLw"><div id="pvLvl"></div></div>
+ <div class="r"><button class="alt" id="pvPrevB">⏮ السابقة</button><button id="pvNextB">التالية ⏭</button></div>
+ <div class="r"><button class="alt" id="pvPause">⏸ إيقاف مؤقت</button><button class="alt" id="pvExt">+5 ث</button><button id="pvEnd" style="background:#ef4444;color:#fff">⏹ إنهاء</button></div></div>
+ <div class="r"><button id="pvGo">🔴 بدء التسجيل</button><button id="pvDl" hidden>⬇️ تحميل</button><button class="alt" id="pvSh" hidden>📤 مشاركة</button><button class="alt" id="pvX">إغلاق</button></div>`;
+ document.body.appendChild(d);
+ d.addEventListener('cancel',e=>{if(P.run)e.preventDefault()});
+ d.addEventListener('change',e=>{if(e.target.id==='pvRd'&&!P.run)prep(+e.target.value)});
+ d.addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;const id=b.id;
+  if(b.dataset.m){P.mode=b.dataset.m;ui();$$('pvInfo').textContent=P.rec?$$('pvInfo').textContent:(P.rows.length+' مباريات · '+(P.mode==='auto'?'تلقائي: كل مباراة '+P.dur+' ثوانٍ':'يدوي: أنت تنتقل بين المباراة والأخرى'))}
+  else if(id==='pvMin'){P.dur=Math.max(2,P.dur-1);ui()}else if(id==='pvPlus'){P.dur=Math.min(120,P.dur+1);ui()}
+  else if(id==='pvGo')start();else if(id==='pvNextB')go(1);else if(id==='pvPrevB')go(-1);else if(id==='pvPause')pause();else if(id==='pvExt'){P.ext+=5;ui()}else if(id==='pvEnd')finish();
+  else if(id==='pvX'&&!P.run){cancelAnimationFrame(P.raf);d.close()}
+  else if(id==='pvDl'&&P.blob){const a=document.createElement('a');a.href=P.url;a.download=fname();document.body.appendChild(a);a.click();a.remove()}
+  else if(id==='pvSh'&&P.blob){const f=new File([P.blob],fname(),{type:P.blob.type});try{if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],title:f.name});else toast('⚠️ المشاركة غير مدعومة هنا، استعمل «تحميل»')}catch(er){}}});
+ $$('pvc').addEventListener('click',()=>{if(P.rec)go(1)})}
+document.addEventListener('click',e=>{if(e.target.closest('#adminPv'))open()});
+}catch(e){console.log('PV init',e)}
 })();
 
 </script>
