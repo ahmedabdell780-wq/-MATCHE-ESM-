@@ -7991,10 +7991,11 @@ function rvSRItems(rows,r){const ds=[...new Set(rows.map(q=>q.date).filter(Boole
 function rvFrameSR(x,A,t){const{W,H,ims}=A,items=A.items,cx=W/2;
  x.setTransform(1,0,0,1,0,0);x.globalAlpha=1;x.direction='rtl';x.clearRect(0,0,W,H);x.drawImage(A.bg,0,0);
  [[W*.06,.36],[W*.94,.36]].forEach(([lx,ly])=>{const q=x.createRadialGradient(lx,H*ly,5,lx,H*ly,W*.4);q.addColorStop(0,`rgba(255,255,255,${.16+.1*Math.sin(t*2.6+lx)})`);q.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=q;x.fillRect(0,0,W,H*.8)});
+ rvSRBack(x,A,t);
  /* العنوان */
  const u0=rvEase(vpr(t,0,.6));x.save();x.globalAlpha=u0;x.translate(0,(1-u0)*-40);
  tx(x,window.SRT1||'البطولة الولائية لكرة القدم تيبازة',cx,Math.round(H*.052),F(900,Math.round(W*.056)),'#fff','center',W-50);
- tx(x,'القسم الشرفي · أكابر · الموسم 2026-2027 · الجولة '+RV.r,cx,Math.round(H*.052)+Math.round(W*.048),F(800,Math.round(W*.029)),'rgba(255,255,255,.88)','center',W-40);x.restore();
+ tx(x,'القسم الشرفي · أكابر · الموسم 2026-2027 · الجولة '+RV.r,cx,Math.round(H*.052)+Math.round(W*.048),F(800,Math.round(W*.029)),'rgba(255,255,255,.88)','center',W-40);x.restore();rvSRHead(x,A,t);
  const sh=rvEase(vpr(t,.2,1.3));if(sh>0&&sh<1){x.save();x.globalAlpha=.35*(1-sh);const sx=-120+sh*(W+240);x.fillStyle='#fff';x.beginPath();x.moveTo(sx,0);x.lineTo(sx+60,0);x.lineTo(sx+20,H*.11);x.lineTo(sx-40,H*.11);x.closePath();x.fill();x.restore()}
  /* الأبعاد */
  const top=Math.round(H*.135),bot=H-Math.round(H*.115),avail=bot-top,nr=items.filter(i=>i.t==='row').length,nb=items.length-nr,rbH=Math.round(W*.05),byeH=A.bye?Math.round(W*.075):0;
@@ -8005,8 +8006,8 @@ function rvFrameSR(x,A,t){const{W,H,ims}=A,items=A.items,cx=W/2;
  const fake=(P,dy)=>{x.save();x.translate(0,dy||6);rvPoly(x,P);x.fillStyle='rgba(0,0,0,.35)';x.fill();x.restore()};
  items.forEach((it,i)=>{const s=.85+.36*i,u=rvEase(vpr(t,s,s+.55));
   if(it.t==='rib'){const w=Math.round(W*.62),ins=rbH*.3,yy=y;y+=rbH+10;if(u<=0)return;x.save();x.globalAlpha=u;x.translate(0,(1-u)*-26);
-   const P=[[cx-w/2,yy],[cx+w/2,yy],[cx+w/2-ins,yy+rbH],[cx-w/2+ins,yy+rbH]];fake(P,4);rvPoly(x,P);x.fillStyle=redG(yy,rbH);x.fill();x.strokeStyle='rgba(255,255,255,.35)';x.lineWidth=1.5;x.stroke();
-   tx(x,it.txt,cx,yy+rbH/2+1,F(900,Math.round(rbH*.58)),'#fff','center',w-ins*2-16);x.restore();return}
+   const P=[[cx-w/2,yy],[cx+w/2,yy],[cx+w/2-ins,yy+rbH],[cx-w/2+ins,yy+rbH]];fake(P,4);rvPoly(x,P);x.fillStyle=redG(yy,rbH);x.fill();x.strokeStyle='rgba(232,183,101,.85)';x.lineWidth=1.8;x.stroke();svStar(x,cx-w/2+ins+rbH*.55,yy+rbH/2,rbH*.2,rbH*.09,'#e8b765');svStar(x,cx+w/2-ins-rbH*.55,yy+rbH/2,rbH*.2,rbH*.09,'#e8b765');
+   tx(x,it.txt,cx,yy+rbH/2+1,F(900,Math.round(rbH*.58)),'#fff','center',w-ins*2-16-rbH*1.5);x.restore();return}
   const q=it.q,yy=y;y+=unit;if(u<=0)return;x.save();x.globalAlpha=Math.min(1,u*1.3);
   const lw=ww,L0=m,R0=W-m;
   const wing=(side,im)=>{const dir=side==='r'?1:-1,off=(1-u)*dir*180;x.save();x.translate(off,0);
@@ -8027,7 +8028,7 @@ function rvFrameSR(x,A,t){const{W,H,ims}=A,items=A.items,cx=W/2;
   /* VS / النتيجة */
   const pv=rvEb(u),vh=rh*1.12;x.save();x.translate(cx,yy+rh/2);x.scale(.55+.45*pv,.55+.45*pv);
   const VP=[[-vw*.55,-vh/2],[vw*.55,-vh/2],[vw*.36,vh/2],[-vw*.36,vh/2]];x.save();x.translate(0,4);rvPoly(x,VP);x.fillStyle='rgba(0,0,0,.4)';x.fill();x.restore();
-  rvPoly(x,VP);let vg=x.createLinearGradient(0,-vh/2,0,vh/2);vg.addColorStop(0,'#ea2d33');vg.addColorStop(1,'#8f0b10');x.fillStyle=vg;x.fill();x.strokeStyle='rgba(255,255,255,.55)';x.lineWidth=2;x.stroke();
+  rvPoly(x,VP);let vg=x.createLinearGradient(0,-vh/2,0,vh/2);vg.addColorStop(0,'#ea2d33');vg.addColorStop(1,'#8f0b10');x.fillStyle=vg;x.fill();x.strokeStyle='rgba(232,183,101,.92)';x.lineWidth=2.2;x.stroke();
   if(q.has){x.direction='ltr';tx(x,q.v.sa+' - '+q.v.sh,0,2,F(900,Math.round(rh*.4)),'#fff','center',vw*.95);x.direction='rtl'}
   else if(q.pp||q.ex)tx(x,q.ex?'معفاة':'مؤجلة',0,2,F(900,Math.round(rh*.26)),'#ffd54a','center',vw*.9);
   else tx(x,'VS',0,2,'italic '+F(900,Math.round(rh*.42)),'#fff','center');x.restore();
@@ -8037,10 +8038,32 @@ function rvFrameSR(x,A,t){const{W,H,ims}=A,items=A.items,cx=W/2;
   tx(x,pt,cx,py+pH/2+1,F(800,Math.round(pH*.58)),'#fff','center',pw-ins*2-10);x.restore();x.restore()});
  if(A.bye){const sb=.85+.36*items.length,ub=rvEase(vpr(t,sb,sb+.5));if(ub>0){x.save();x.globalAlpha=ub;const bw=Math.round(W*.6),bh=byeH-6,ins=bh*.3,yb=y+2;const P=[[cx-bw/2,yb],[cx+bw/2,yb],[cx+bw/2-ins,yb+bh],[cx-bw/2+ins,yb+bh]];fake(P,3);rvPoly(x,P);x.fillStyle=redG(yb,bh);x.fill();tx(x,'مستريحة هذه الجولة: '+(T[A.bye]||''),cx,yb+bh/2+1,F(900,Math.round(bh*.5)),'#fff','center',bw-ins*2-14);x.restore()}}
  /* التذييل */
- const u2=rvEase(vpr(t,.9,1.6));x.save();x.globalAlpha=u2;x.translate(0,(1-u2)*60);const fy=H-Math.round(H*.056);
- if(ims.L){const k=Math.min(W*.2/ims.L.width,W*.2/ims.L.height);x.drawImage(ims.L,W*.04,fy-ims.L.height*k/2-2,ims.L.width*k,ims.L.height*k);}
+ const u2=rvEase(vpr(t,.9,1.6));x.save();x.globalAlpha=u2;x.translate(0,(1-u2)*60);const fy=H-Math.round(H*.056);rvSRFoot(x,A,t);
+ if(ims.L){const mr=Math.round(W*.078);svMedal(x,W*.04+mr,H-mr-Math.round(W*.026),mr,ims.L)}
  const lx=W*.04+W*.215;tx(x,'رابطة كرة القدم لولاية تيبازة',lx,fy-W*.034,F(900,Math.round(W*.029)),'#fff','left',W*.4);tx(x,'البطولة الولائية · القسم الشرفي',lx,fy,F(700,Math.round(W*.025)),'rgba(255,255,255,.85)','left',W*.4);tx(x,'الموسم الرياضي 2026-2027',lx,fy+W*.034,F(700,Math.round(W*.025)),'rgba(255,255,255,.85)','left',W*.4);
  tx(x,'MOUBARATI LIVE',W*.97,fy-W*.012,F(900,Math.round(W*.03)),'#fff','right',W*.27);tx(x,'النتائج والترتيب مباشرة',W*.97,fy+W*.03,F(700,Math.round(W*.023)),'rgba(255,255,255,.85)','right',W*.27);x.restore()}
+/* ===== لمسات الشعار لفيديو جولة الأكابر (أعمدة إيونية · أمواج · مياندر · علامة مائية) — نفس لغة «الفيديو الشامل» ===== */
+function rvSRBack(x,A,t){const{W,H,ims}=A,cx=W/2,ua=rvEase(vpr(t,0,.9));
+ /* عمودان إيونيان على الجانبين (عمود الشعار) */
+ svCol(x,W*.05,H*.93,H*.84,W*.12,.13*ua);svCol(x,W*.95,H*.93,H*.84,W*.12,.13*ua);
+ /* علامة مائية: شعار الرابطة يتنفّس ببطء */
+ if(ims.L){const k=Math.min(W*.86/ims.L.width,W*.86/ims.L.height),br=1+.015*Math.sin(t*.9);x.save();x.globalAlpha=.075*ua;x.translate(cx,H*.5);x.scale(br,br);x.drawImage(ims.L,-ims.L.width*k/2,-ims.L.height*k/2,ims.L.width*k,ims.L.height*k);x.restore()}
+ /* شرارات ذهبية صاعدة */
+ x.save();x.fillStyle='#e8b765';for(let i=0;i<22;i++){const px=((i*97)%100)/100*W,sp=14+(i*13)%22,m=H*.9,yy=(((H*.98-(t*sp+i*53))%m)+m)%m+H*.05,r=1.6+(i%3)*.9;x.globalAlpha=(.10+.38*Math.abs(Math.sin(t*1.3+i)))*ua;x.beginPath();x.arc(px,yy,r,0,7);x.fill()}x.restore()}
+function rvSRHead(x,A,t){const{W,H}=A,cx=W/2,u=rvEase(vpr(t,0,.8)),ku=W/210;
+ x.save();x.globalAlpha=u;
+ svKey(x,0,Math.round(H*.008),W,ku,'rgba(232,183,101,.65)',2.5);
+ /* فاصل تحت العنوان: مياندر قصير بين نجمتين */
+ const yy=Math.round(H*.052)+Math.round(W*.048)+Math.round(W*.035),kw=W*.46,k2=W/260;
+ svKey(x,cx-kw/2,yy-3,kw,k2,'rgba(232,183,101,.75)',2.2);
+ svStar(x,cx-kw/2-16,yy+4,7,3,'#e8b765');svStar(x,cx+kw/2+16,yy+4,7,3,'#e8b765');
+ x.restore()}
+function rvSRFoot(x,A,t){const{W,H}=A,y0=H-Math.round(H*.094),ku=W/210;
+ /* أمواج البحر (موجة الشعار) خلف التذييل */
+ svWave(x,W,y0,9,W/9.6,t*1.4,'rgba(31,134,200,.42)',H);
+ svWave(x,W,y0+Math.round(H*.014),7,W/11,-t*1.7+1,'rgba(143,208,238,.26)',H);
+ svWave(x,W,y0+Math.round(H*.03),6,W/13,t*2+2,'rgba(5,22,46,.93)',H);
+ svKey(x,0,H-Math.round(ku*7),W,ku,'rgba(232,183,101,.7)',2.5)}
 const rvEb=u=>{u=vcl(u);const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(u-1,3)+c1*Math.pow(u-1,2)};
 let rvAs=null;
 async function rvPreview(){const tok=++RV.tok;$('rvInfo').textContent='⏳ تجهيز المعاينة…';
