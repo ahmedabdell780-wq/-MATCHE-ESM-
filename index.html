@@ -1825,6 +1825,8 @@ function canManageTeamRoster(targetTeamId) {
   }
   return false;
 }
+/* قوائم لاعبي الفريق الأول (بطولة الأكابر) — تُستعمل تلقائياً إن لم توجد قائمة محفوظة */
+window.SENIOR_ROSTER_SEED = {5:{SENIOR:['بن جيلالي معمر','مصطفى محمد أمين','أزري محمد الأمين','فضيل نضال','منصور بلال','حباب فارس','خروبي زكرياء','حموم ونيس','أحباب حمزة','رياض يوسف نجيب','الباي سليم','بصايلية يونس','فريدي نسيم','بن فردي أحمد','زعميش عبد الوهاب','دريد أمين','دواجي زين الدين','بوشو عزالدين','عماري محمد رضا','بوزار الطيب','خراز تميم الدار','بلمادي سيد علي']}};
 function rosterList(c, targetTeam){
   const targetCat = c || cat || 'U15';
   let tId = targetTeam;
@@ -1846,6 +1848,9 @@ function rosterList(c, targetTeam){
   }
   if (tId == 5 && DEFAULT_ROSTER[targetCat]) {
     return DEFAULT_ROSTER[targetCat];
+  }
+  if (window.SENIOR_ROSTER_SEED && window.SENIOR_ROSTER_SEED[tId] && window.SENIOR_ROSTER_SEED[tId][targetCat]) {
+    return window.SENIOR_ROSTER_SEED[tId][targetCat];
   }
   return [];
 }
@@ -4045,7 +4050,10 @@ async function onAuth(u){
  roundAuto=true;round=curRound();
  OLD.state({user:{role:me.role==='admin'?'admin':(isVis()?'visitor':'official'),teamId:me.teamId,name:me.name}});
  if(me.role==='admin'||!isVis())subs.push((me.role==='admin'?db.collection('rosters'):db.collection('rosters').where('teamId','==',me.teamId)).onSnapshot(s=>{
-  s.docs.forEach(d=>{const r=d.data();RO[r.teamId]=RO[r.teamId]||{};RO[r.teamId][r.cat]=r.roster||[];RS[d.id]=JSON.stringify(r.roster||[])})}));
+  s.docs.forEach(d=>{const r=d.data();RO[r.teamId]=RO[r.teamId]||{};RO[r.teamId][r.cat]=r.roster||[];RS[d.id]=JSON.stringify(r.roster||[])});
+   /* زرع قائمة اتحاد القليعة (الأكابر) في السحابة مرة واحدة إن لم تكن موجودة */
+   try{if(me&&me.role==='admin'&&!window.__srSeeded&&!s.docs.some(d=>d.id==='5_SENIOR')){window.__srSeeded=true;const L=window.SENIOR_ROSTER_SEED[5].SENIOR;RO[5]=RO[5]||{};RO[5].SENIOR=[...L];RS['5_SENIOR']=JSON.stringify(L);db.collection('rosters').doc('5_SENIOR').set({teamId:5,cat:'SENIOR',roster:L}).catch(()=>{})}}catch(e){}
+  }));
 if(me.role==='admin'||!isVis()){listenLineups();listenPhotos();listenStaff()}listenMsgs();listenEdits();listenCC();listenCT();actLogin();
  show();
 }
