@@ -787,6 +787,88 @@ body.sr-mode .rk.g3{background:#b9773a}
 body.sr-mode .rk.lo{background:#8c1d2f}
 body.sr-mode .tophd{background:linear-gradient(135deg,#0a2a4e,#0f4378);border:1.5px solid #e8b765;border-radius:18px;padding:10px 12px;color:#fff;box-shadow:0 6px 16px rgba(10,42,78,.25)}
 
+/* ==================== نوافذ الأكابر «الشاطئ الإغريقي»: إدارة اللاعبين · صور اللاعبين · الطاقم الفني والإداري ==================== */
+body.sr-mode dialog#stf,body.sr-mode dialog#phd{padding:0;width:min(94vw,520px);border-radius:26px;background:#fffdf7;color:#0a2a4e;border:2px solid #e8b765;box-shadow:0 26px 60px rgba(6,22,44,.55);overflow:auto}
+body.sr-mode dialog#stf::backdrop,body.sr-mode dialog#phd::backdrop{background:rgba(6,22,44,.72);backdrop-filter:blur(3px)}
+body.sr-mode dialog#stf>h2,body.sr-mode dialog#phd>h2{position:sticky;top:0;z-index:3;margin:0!important;padding:18px 18px 24px;background:linear-gradient(135deg,#0a2a4e,#0f4378);color:#fbf1d8;font-size:17px;font-weight:900;text-shadow:0 2px 6px rgba(0,0,0,.4)}
+body.sr-mode dialog#stf>h2::before,body.sr-mode dialog#phd>h2::before{display:none}
+body.sr-mode dialog#stf>h2::after,body.sr-mode dialog#phd>h2::after{content:"";position:absolute;left:0;right:0;bottom:0;height:9px;background:#b9773a var(--srkey) repeat-x center/auto 9px}
+body.sr-mode dialog#stf>:not(h2),body.sr-mode dialog#phd>:not(h2){margin-left:16px!important;margin-right:16px!important}
+body.sr-mode dialog#stf>h2+*,body.sr-mode dialog#phd>h2+*{margin-top:14px!important}
+body.sr-mode dialog#stf>:last-child,body.sr-mode dialog#phd>:last-child{margin-bottom:16px!important}
+body.sr-mode dialog#stf select.f,body.sr-mode dialog#phd select.f,body.sr-mode dialog#stf input:not([type=file]){background:#fff;color:#0a2a4e;border:1.5px solid #dccfae;border-radius:12px;padding:10px 12px;width:100%}
+body.sr-mode dialog#stf label{display:block;margin:10px 2px 4px;font-size:12.5px;font-weight:800;color:#0a2a4e}
+/* الطاقم: بطاقة النادي */
+body.sr-mode #stTeamBar .stb{background:linear-gradient(135deg,#0a2a4e,#0f4378);border:1.5px solid #e8b765;border-radius:20px;padding:12px 14px;color:#fbf1d8;box-shadow:0 6px 16px rgba(10,42,78,.25)}
+body.sr-mode #stTeamBar .stb .lg{width:54px;height:54px;border-radius:50%;background:#fff;padding:4px;box-shadow:0 0 0 3px #e8b765}
+body.sr-mode #stTeamBar .stb b{font-size:16px;color:#fbf1d8}
+body.sr-mode #stTeamBar .stb small{color:#e8b765!important;font-weight:700}
+body.sr-mode #stAdd{background:linear-gradient(135deg,#e8b765,#b9773a);color:#0a2a4e;border:0;font-weight:900}
+body.sr-mode #stForm.card{background:#faf3e1;border:1.5px dashed #b9773a;border-radius:20px}
+body.sr-mode #stf .sth{color:#0a2a4e;font-size:15px;font-weight:900;margin:16px 0 10px}
+body.sr-mode #stf .sth::before{content:"◆";color:#b9773a;font-size:13px}
+body.sr-mode #stf .sth::after{content:"";flex:1;height:2px;border-radius:2px;background:linear-gradient(90deg,#b9773a,rgba(185,119,58,0))}
+body.sr-mode #stf .hint{border:1.5px dashed #dccfae;border-radius:14px;background:#faf3e1;padding:12px;color:#6a7890}
+body.sr-mode #stf .stc{position:relative;background:linear-gradient(135deg,#fffdf7,#faf3e1);border:1.5px solid #dccfae;border-inline-start:6px solid #b9773a;border-radius:20px;padding:12px;box-shadow:0 5px 14px rgba(10,42,78,.08)}
+body.sr-mode #stf .stc:has(.cp.adm){border-inline-start-color:#0f4378}
+body.sr-mode #stf .sta{width:66px;height:84px;border-radius:34px 34px 12px 12px;border:2.5px solid #e8b765;background:linear-gradient(160deg,#0f4378,#0a2a4e);color:#e8b765;font-size:28px;font-weight:900;box-shadow:0 6px 14px rgba(10,42,78,.3)}
+body.sr-mode #stf .sti b{font-size:15.5px;color:#0a2a4e}
+body.sr-mode #stf .sti small{color:#6a7890;font-weight:700}
+body.sr-mode #stf .cp{background:#0f4378;color:#fbf1d8;border:1px solid #e8b765;font-weight:800}
+body.sr-mode #stf .cp.adm{background:#0a2a4e}
+body.sr-mode #stf .cp.cat{background:linear-gradient(90deg,#e8b765,#b9773a);color:#0a2a4e;border-color:transparent}
+body.sr-mode #stf .stc .act{gap:8px}
+body.sr-mode #stf .stc .act .btn.sm{width:38px;height:38px;padding:0;border-radius:50%;display:grid;place-items:center;font-size:16px}
+/* صور اللاعبين: شبكة بطاقات بوجه بقوس إغريقي */
+body.sr-mode #phd>p{background:#faf3e1;border-inline-start:4px solid #b9773a;border-radius:12px;padding:9px 12px;margin-bottom:0!important;line-height:1.7;color:#6a7890!important}
+body.sr-mode #phList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-height:56vh!important;padding:4px 2px 8px}
+body.sr-mode #phList>.card:not(.u){grid-column:1/-1;border:2px dashed #dccfae;background:#faf3e1;color:#6a7890}
+body.sr-mode #phList .u.card{margin:0!important;padding:14px 8px 10px!important;flex-direction:column;flex-wrap:nowrap;justify-content:flex-start;gap:10px;text-align:center;border-radius:22px;background:linear-gradient(#fffdf7,#faf3e1);border:1.5px solid #dccfae;border-top:5px solid #b9773a;box-shadow:0 6px 16px rgba(10,42,78,.1)}
+body.sr-mode #phList .u.card>div:first-child{flex-direction:column;gap:8px!important;width:100%;justify-content:flex-start}
+body.sr-mode #phList .u.card>div:first-child>img,body.sr-mode #phList .u.card>div:first-child>div{width:84px!important;height:106px!important;border-radius:44px 44px 14px 14px!important;border:3px solid #e8b765;box-shadow:0 8px 16px rgba(10,42,78,.25)}
+body.sr-mode #phList .u.card>div:first-child>div{background:linear-gradient(160deg,#0f4378,#0a2a4e)!important;color:#e8b765!important;font-size:34px!important;font-weight:900}
+body.sr-mode #phList .u.card b{font-size:13px!important;line-height:1.35;min-height:35px;display:flex;align-items:center;justify-content:center;color:#0a2a4e}
+body.sr-mode #phList .u.card .act{justify-content:center;gap:8px}
+body.sr-mode #phList .u.card .act .btn.sm{width:40px;height:40px;padding:0;border-radius:50%;display:grid;place-items:center;font-size:17px}
+body.sr-mode #phList .u.card .act .btn:not(.red){background:linear-gradient(135deg,#e8b765,#b9773a);color:#0a2a4e;border:0}
+/* إدارة اللاعبين */
+body.sr-mode #playersModal{background:rgba(6,22,44,.72)}
+body.sr-mode #playersModal .modal-card{padding:0;max-width:560px!important;border-radius:26px;border:2px solid #e8b765;background:#fffdf7;color:#0a2a4e;box-shadow:0 26px 60px rgba(6,22,44,.55)}
+body.sr-mode #playersModal .modal-head{position:sticky;top:0;z-index:3;margin:0;padding:18px 18px 24px;background:linear-gradient(135deg,#0a2a4e,#0f4378)}
+body.sr-mode #playersModal .modal-head::after{content:"";position:absolute;left:0;right:0;bottom:0;height:9px;background:#b9773a var(--srkey) repeat-x center/auto 9px}
+body.sr-mode #playersModal .modal-head h3{color:#fbf1d8;font-size:17px;text-shadow:0 2px 6px rgba(0,0,0,.4)}
+body.sr-mode #playersModal .modal-close{width:36px;height:36px;padding:0;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.14);border:1px solid rgba(232,183,101,.6);color:#fff;font-size:22px}
+body.sr-mode #playersModal .modal-card>:not(.modal-head){margin-left:18px;margin-right:18px}
+body.sr-mode #playersModal .modal-card>:last-child{margin-bottom:18px}
+body.sr-mode #playersModal .auth-note{margin-top:14px;margin-bottom:0;font-size:12.5px;line-height:1.75;color:#6a7890;background:#faf3e1;border-inline-start:4px solid #b9773a;border-radius:12px;padding:9px 12px}
+body.sr-mode #playersModalTeamBanner{background:linear-gradient(135deg,#0a2a4e,#0f4378)!important;border:1.5px solid #e8b765!important;border-radius:20px!important;padding:12px 14px!important;box-shadow:0 6px 16px rgba(10,42,78,.25)}
+body.sr-mode #playersModalTeamLogo{width:52px!important;height:52px!important;border:0!important;background:#fff!important;box-shadow:0 0 0 3px #e8b765!important}
+body.sr-mode #playersModalTeamName{color:#fbf1d8!important;font-size:16px!important}
+body.sr-mode #playersModalTeamRoleBadge{color:#e8b765!important}
+body.sr-mode #playersModalAdminSelectBox label{color:#e8b765!important}
+body.sr-mode #adminPlayersTeamSelect{border:1.5px solid #e8b765!important;background:#fffdf7!important;color:#0a2a4e;border-radius:10px!important}
+body.sr-mode .players-cat-tabs{display:none!important}
+.players-sr-bar{display:none}
+body.sr-mode .players-sr-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;margin-bottom:0;padding:10px 14px;border-radius:16px;background:linear-gradient(90deg,rgba(232,183,101,.3),rgba(232,183,101,.08));border:1.5px solid #e8b765;font-weight:900;color:#0a2a4e}
+body.sr-mode .players-sr-bar b{min-width:34px;height:34px;display:grid;place-items:center;border-radius:11px;background:linear-gradient(135deg,#0f4378,#0a2a4e);color:#e8b765;box-shadow:inset 0 0 0 1px rgba(232,183,101,.5)}
+body.sr-mode #newPlayerInput,body.sr-mode #searchPlayerInput{background:#fff;color:#0a2a4e;border:1.5px solid #dccfae!important;border-radius:14px!important;padding:11px 14px!important}
+body.sr-mode #searchPlayerInput{border-radius:999px!important}
+body.sr-mode .btn-add-p{flex:1 0 150px;background:linear-gradient(135deg,#e8b765,#b9773a)!important;color:#0a2a4e!important;font-weight:900!important;border-radius:14px!important;box-shadow:0 6px 14px rgba(185,119,58,.4)}
+body.sr-mode #playersCategoryLabel{color:#b9773a!important}
+body.sr-mode #playersListContainer{max-height:44vh!important;gap:9px!important}
+body.sr-mode #playersListContainer .note{border:2px dashed #dccfae;border-radius:16px;background:#faf3e1;color:#6a7890}
+body.sr-mode .player-item-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 10px;border-radius:18px;background:linear-gradient(135deg,#fffdf7,#faf3e1);border:1.5px solid #dccfae;border-inline-start:6px solid #b9773a;box-shadow:0 4px 12px rgba(10,42,78,.07)}
+body.sr-mode .player-row-info{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+body.sr-mode .player-row-idx{flex:none;min-width:36px;height:36px;display:grid;place-items:center;border-radius:11px;background:linear-gradient(135deg,#0f4378,#0a2a4e);color:#e8b765;font-weight:900;font-size:12.5px;box-shadow:inset 0 0 0 1px rgba(232,183,101,.5)}
+body.sr-mode .player-row-ph{flex:none;width:38px;height:48px;border-radius:20px 20px 8px 8px;object-fit:cover;border:2px solid #e8b765;background:linear-gradient(160deg,#0f4378,#0a2a4e);color:#e8b765;display:grid;place-items:center;font-weight:900;font-size:17px}
+body.sr-mode .player-row-name{font-weight:800;font-size:14.5px;color:#0a2a4e;min-width:0;overflow:hidden;text-overflow:ellipsis}
+body.sr-mode .player-row-actions{display:flex;gap:6px;flex:none}
+body.sr-mode .player-btn-edit,body.sr-mode .player-btn-del{padding:7px 11px;border-radius:999px;font-family:inherit;font-weight:800;font-size:12px;cursor:pointer}
+body.sr-mode .player-btn-edit{background:linear-gradient(135deg,#0f4378,#0a2a4e);color:#fbf1d8;border:1px solid #e8b765}
+body.sr-mode .player-btn-del{background:transparent;color:#a3202f;border:1.5px solid #d9a3aa}
+body.sr-mode #playersModal .modal-card>div:last-child{border-top:2px solid #dccfae!important}
+body.sr-mode #playersModal button[onclick="closePlayersModal()"]{background:linear-gradient(135deg,#0f4378,#0a2a4e)!important;color:#fbf1d8!important;border:1px solid #e8b765!important;border-radius:14px!important;padding:10px 22px!important}
+
 </style>
 <script>
 /* الخط المختار من «المظهر» — مصدر واحد لكل البطاقات والطباعة */
@@ -948,6 +1030,7 @@ body.sr-mode .tophd{background:linear-gradient(135deg,#0a2a4e,#0f4378);border:1.
    <button type="button" class="players-cat-tab" data-pcat="U17" onclick="switchPlayerModalCat('U17')">🧑 U17 (<span id="countBadgeU17">0</span>)</button>
    <button type="button" class="players-cat-tab" data-pcat="U20" onclick="switchPlayerModalCat('U20')">🧔 U20 (<span id="countBadgeU20">0</span>)</button>
   </div>
+ <div class="players-sr-bar"><span>🏛️ الفريق الأول · بطولة الأكابر</span><b id="playersSrCount">0</b></div>
 
   <div class="player-add-box" style="display:flex;gap:8px;margin:10px 0;flex-wrap:wrap;">
    <input type="text" id="newPlayerInput" placeholder="اكتب اسم ولقب اللاعب الجديد (أو عدة أسماء مفصولة بفاصلة)..." style="flex:1;min-width:220px;padding:9px 12px;border:1.5px solid var(--line,#cbd5e1);border-radius:10px;font-family:inherit;font-size:13px;">
@@ -1858,6 +1941,8 @@ function switchPlayerModalCat(c){
   renderPlayersModalList();
 }
 function renderPlayersModalList(){
+  const SR = (typeof isSenior==='function' && isSenior());
+  const srAvatar = (t,n)=>{ if(!SR) return ''; let im=null; try{ im=(typeof photoOf==='function')?photoOf(t,n):null }catch(e){} const ch=String(n||'?').trim().charAt(0).replace(/[<>&"']/g,''); return im ? '<img class="player-row-ph" src="'+im+'" alt="">' : '<span class="player-row-ph">'+ch+'</span>'; };
   const tId = window.activePlayerModalTeam || (currentUser && currentUser.role === 'official' ? currentUser.teamId : (typeof team !== 'undefined' ? team : 5));
   const c = window.activePlayerModalCat || cat || 'U15';
   const list = rosterList(c, tId);
@@ -1867,7 +1952,9 @@ function renderPlayersModalList(){
   const b20 = document.getElementById('countBadgeU20'); if(b20) b20.textContent = rosterList('U20', tId).length;
   
   const lbl = document.getElementById('playersCategoryLabel');
-  if(lbl) lbl.textContent = (T[tId] ? T[tId] + ' · ' : '') + 'إجمالي فئة ' + c + ': ' + list.length + ' لاعب';
+  if(lbl) lbl.textContent = SR ? (T[tId] ? T[tId] + ' · ' : '') + 'إجمالي الفريق الأول: ' + list.length + ' لاعب' : (T[tId] ? T[tId] + ' · ' : '') + 'إجمالي فئة ' + c + ': ' + list.length + ' لاعب';
+  { const sc=document.getElementById('playersSrCount'); if(sc) sc.textContent=list.length;
+    const nt=document.querySelector('#playersModal .auth-note'); if(nt){ if(!nt.dataset.o) nt.dataset.o=nt.textContent; nt.textContent = SR ? 'أضف لاعبي الفريق الأول في بطولة الأكابر، وعدّل أسماءهم أو احذفهم — تُحفظ كل التعديلات بشكل دائم في التطبيق.' : nt.dataset.o; } }
   
   const query = (document.getElementById('searchPlayerInput')?.value || '').trim().toLowerCase();
   const box = document.getElementById('playersListContainer');
@@ -1880,7 +1967,7 @@ function renderPlayersModalList(){
     if(query && !name.toLowerCase().includes(query)) return;
     html += '<div class="player-item-row">' +
       '<div class="player-row-info">' +
-        '<span class="player-row-idx">#' + (idx + 1) + '</span>' +
+        '<span class="player-row-idx">#' + (idx + 1) + '</span>' + srAvatar(tId, name) +
         '<span class="player-row-name">' + name + '</span>' +
       '</div>' +
       (canEdit ? (
@@ -1893,7 +1980,7 @@ function renderPlayersModalList(){
   });
   
   if(!html){
-    html = '<p class="note" style="text-align:center;padding:16px;">' + (query ? 'لا توجد نتائج مطابقة لبحثك.' : 'لا يوجد لاعبون مسجلون في هذه الفئة لنادي ' + (T[tId] || '') + ' حالياً.') + '</p>';
+    html = '<p class="note" style="text-align:center;padding:16px;">' + (query ? 'لا توجد نتائج مطابقة لبحثك.' : (SR ? 'لا يوجد لاعبون مسجلون في الفريق الأول لنادي ' : 'لا يوجد لاعبون مسجلون في هذه الفئة لنادي ') + (T[tId] || '') + ' حالياً.') + '</p>';
   }
   box.innerHTML = html;
 
@@ -5397,7 +5484,7 @@ function drawPh(){
  $('phList').innerHTML=names.length?names.map((n,i)=>{const im=photoOf(phTeam,n);return`<div class="u card" style="margin-bottom:6px;padding:8px"><div style="display:flex;align-items:center;gap:10px">${im?`<img src="${im}" style="width:46px;height:58px;border-radius:10px;object-fit:cover">`:`<div style="width:46px;height:58px;border-radius:10px;background:var(--field);display:grid;place-items:center;font-size:22px;color:var(--mu)">${esc(n[0])}</div>`}<b style="font-size:14px">${esc(n)}</b></div><div class="act" style="margin:0"><button class="btn sm" data-pu="${i}">📷</button>${im?`<button class="btn sm red" data-pd="${i}">🗑</button>`:''}</div></div>`}).join(''):'<div class="card" style="text-align:center;color:var(--mu)">لا يوجد لاعبون في قائمة هذه الفئة. أضفهم من «إدارة اللاعبين».</div>';
  $('phList').dataset.names=JSON.stringify(names)
 }
-function openPh(){phTeam=me.role==='admin'?(+$('phTeamSel').value||5):me.teamId;if(me.role==='admin'){$('phTeamSel').innerHTML=Object.keys(T).map(i=>`<option value="${i}" ${+i===phTeam?'selected':''}>${esc(T[i])}</option>`).join('')}$('phCat').textContent=cat;drawPh();$('phd').showModal()}
+function openPh(){phTeam=me.role==='admin'?(+$('phTeamSel').value||5):me.teamId;if(me.role==='admin'){$('phTeamSel').innerHTML=Object.keys(T).map(i=>`<option value="${i}" ${+i===phTeam?'selected':''}>${esc(T[i])}</option>`).join('')}$('phCat').textContent=(typeof isSenior==='function'&&isSenior())?'الأكابر':cat;drawPh();$('phd').showModal()}
 $('phTeamSel').onchange=e=>{phTeam=+e.target.value;drawPh()};
 $('phc').onclick=()=>$('phd').close();
 $('phd').addEventListener('click',async e=>{
@@ -5605,14 +5692,15 @@ async function posterMatch(r,h,a){
 
 /* ===== الطاقم الفني والإداري ===== */
 let STAFF={},stTeam=5,stEdit=null,stImg='';
-const STC=['مدرب رئيسي','مدرب مساعد','مدرب حراس المرمى','مدرب بدني','معالج'],STA=['رئيس النادي','نائب الرئيس','الأمين العام','أمين المال','مسؤول الفئات الشبانية','مسؤول الإعلام','مكلف بالتنظيم'],STCATS=['ALL','U15','U17','U20'];
-const catLb=c=>!c||c==='ALL'?'كل الفئات':c;
+const STC=['مدرب رئيسي','مدرب مساعد','مدرب حراس المرمى','مدرب بدني','معالج'],STA=['رئيس النادي','نائب الرئيس','الأمين العام','أمين المال','مسؤول الفئات الشبانية','مسؤول الإعلام','مكلف بالتنظيم'],STCATS=['ALL','U15','U17','U20'],STA_S=['رئيس النادي','نائب الرئيس','الأمين العام','أمين المال','مدير رياضي','مسؤول الإعلام','مكلف بالتنظيم'];
+const stSr=()=>typeof isSenior==='function'&&isSenior(),STAL=()=>stSr()?STA_S:STA;
+const catLb=c=>!c||c==='ALL'?'كل الفئات':c==='SENIOR'?'الفريق الأول':c;
 function listenStaff(){
  const q=me.role==='admin'?db.collection('staff'):db.collection('staff').where('teamId','==',me.teamId);
  subs.push(q.onSnapshot(sn=>{sn.docChanges().forEach(c=>{if(c.type==='removed')delete STAFF[c.doc.id];else STAFF[c.doc.id]=Object.assign({id:c.doc.id},c.doc.data())});if($('stf').open)drawStaff()},()=>{}))
 }
-function staffOf(t){const rk=m=>{const L=m.kind==='coach'?STC:STA,i=L.indexOf(m.role);return(m.kind==='coach'?0:100)+(i<0?50:i)};
- return Object.values(STAFF).filter(m=>m.teamId==t).sort((a,b)=>rk(a)-rk(b)||STCATS.indexOf(a.cat||'ALL')-STCATS.indexOf(b.cat||'ALL')||(a.order||0)-(b.order||0))}
+function staffOf(t){const rk=m=>{const L=m.kind==='coach'?STC:STAL(),i=L.indexOf(m.role);return(m.kind==='coach'?0:100)+(i<0?50:i)};
+ return Object.values(STAFF).filter(m=>m.teamId==t&&(String(m.id).startsWith('sr_')===stSr())).sort((a,b)=>rk(a)-rk(b)||STCATS.indexOf(a.cat||'ALL')-STCATS.indexOf(b.cat||'ALL')||(a.order||0)-(b.order||0))}
 const coachesFor=(t,c)=>staffOf(t).filter(m=>m.kind==='coach'&&(!m.cat||m.cat==='ALL'||m.cat===c));
 window.renderCoachBar=(t,c)=>{const el=document.getElementById('lineupCoachBar');if(!el)return;const L=coachesFor(t,c);
  if(!L.length){el.style.display='none';el.innerHTML='';return}
@@ -5620,9 +5708,9 @@ window.renderCoachBar=(t,c)=>{const el=document.getElementById('lineupCoachBar')
  el.innerHTML='<span style="font-weight:800;color:#92400e">🧑‍🏫 الطاقم الفني:</span>'+L.map(m=>`<span style="display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #fde68a;border-radius:20px;padding:2px 10px 2px 3px">${m.img?`<img src="${m.img}" alt="" style="width:26px;height:26px;border-radius:50%;object-fit:cover">`:''}<b style="color:#0f2a1c">${esc(m.name)}</b><small style="color:#92400e">${esc(m.role)}</small></span>`).join('')};
 window.coachText=(t,c)=>{const L=coachesFor(t,c);return L.length?'🧑‍🏫 الطاقم الفني: '+L.map(m=>m.name+' ('+m.role+')').join('، '):''};
 const stCanW=()=>me&&(me.role==='admin'||me.perm!=='view_only');
-function fillRoles(kind,val){const L=kind==='coach'?STC:STA,known=L.includes(val);
+function fillRoles(kind,val){const L=kind==='coach'?STC:STAL(),known=L.includes(val);
  $('stRole').innerHTML=L.map(r=>`<option ${r===val?'selected':''}>${esc(r)}</option>`).join('')+`<option value="__x" ${val&&!known?'selected':''}>أخرى…</option>`;
- $('stRoleX').hidden=!(val&&!known);$('stRoleX').value=val&&!known?val:'';$('stCatW').hidden=kind!=='coach'}
+ $('stRoleX').hidden=!(val&&!known);$('stRoleX').value=val&&!known?val:'';$('stCatW').hidden=kind!=='coach'||stSr()}
 function stPreview(){$('stPrev').hidden=!stImg;if(stImg)$('stPrev').src=stImg;$('stNoPic').hidden=!stImg}
 function stOpenForm(id){stEdit=id||null;const m=id?STAFF[id]:null;say('stErr','');
  $('stName').value=m?m.name:'';$('stKind').value=m?m.kind:'coach';fillRoles($('stKind').value,m?m.role:STC[0]);
@@ -5632,7 +5720,7 @@ function drawStaff(){
  const canW=stCanW(),L=staffOf(stTeam),co=L.filter(m=>m.kind==='coach'),ad=L.filter(m=>m.kind!=='coach');
  $('stTeamBar').innerHTML=`<div class="stb">${lg(stTeam)}<div style="flex:1"><b>${esc(T[stTeam])}</b><br><small style="color:var(--mu)">🔒 بيانات الطاقم خاصة بالنادي ومشرفه فقط</small></div></div>`+(me.role==='admin'?`<select class="f" id="stTeamSel" style="margin-bottom:10px">${Object.keys(T).map(i=>`<option value="${i}" ${+i===stTeam?'selected':''}>${esc(T[i])}</option>`).join('')}</select>`:'');
  $('stAdd').hidden=!canW;
- const card=m=>`<div class="stc"><div class="sta">${m.img?`<img src="${m.img}" alt="">`:esc((m.name||'?')[0])}</div><div class="sti"><b>${esc(m.name)}</b><span class="cp ${m.kind==='coach'?'':'adm'}">${esc(m.role)}</span>${m.kind==='coach'?`<span class="cp cat">🎯 ${esc(catLb(m.cat))}</span>`:''}${m.phone?`<small>📞 ${esc(m.phone)}</small>`:''}</div>${canW?`<div class="act" style="margin:0;flex-direction:column"><button class="btn sm" data-se="${m.id}" aria-label="تعديل">✏️</button><button class="btn sm red" data-sd="${m.id}" aria-label="حذف">🗑</button></div>`:''}</div>`;
+ const card=m=>`<div class="stc"><div class="sta">${m.img?`<img src="${m.img}" alt="">`:esc((m.name||'?')[0])}</div><div class="sti"><b>${esc(m.name)}</b><span class="cp ${m.kind==='coach'?'':'adm'}">${esc(m.role)}</span>${m.kind==='coach'&&!stSr()?`<span class="cp cat">🎯 ${esc(catLb(m.cat))}</span>`:''}${m.phone?`<small>📞 ${esc(m.phone)}</small>`:''}</div>${canW?`<div class="act" style="margin:0;flex-direction:column"><button class="btn sm" data-se="${m.id}" aria-label="تعديل">✏️</button><button class="btn sm red" data-sd="${m.id}" aria-label="حذف">🗑</button></div>`:''}</div>`;
  $('stList').innerHTML=`<div class="sth">🎽 الطاقم الفني (${co.length})</div>${co.map(card).join('')||'<div class="hint">لا يوجد مدربون مسجلون بعد</div>'}<div class="sth">🗂 الطاقم الإداري (${ad.length})</div>${ad.map(card).join('')||'<div class="hint">لا يوجد إداريون مسجلون بعد</div>'}`;
 }
 function openStaff(){stTeam=me.role==='admin'?(stTeam||5):me.teamId;$('stForm').hidden=true;drawStaff();$('stf').showModal()}
@@ -5681,8 +5769,8 @@ $('stf').addEventListener('click',async e=>{ const tc = e.target.closest('[data-
 $('stSave').onclick=async()=>{say('stErr','');
  const name=$('stName').value.trim(),kind=$('stKind').value;let role=$('stRole').value;if(role==='__x')role=$('stRoleX').value.trim();
  if(!name)return say('stErr','⚠️ أدخل الاسم واللقب');if(!role)return say('stErr','⚠️ حدّد المنصب');
- const id=stEdit||(stTeam+'_'+Date.now().toString(36)),old=stEdit?STAFF[stEdit]:null,b=$('stSave');
- const d={teamId:stTeam,name,kind,role,cat:kind==='coach'?$('stCat').value:'',phone:$('stPhone').value.trim(),img:stImg||'',order:old&&old.order?old.order:Date.now()};
+ const id=stEdit||((stSr()?'sr_':'')+stTeam+'_'+Date.now().toString(36)),old=stEdit?STAFF[stEdit]:null,b=$('stSave');
+ const d={teamId:stTeam,name,kind,role,cat:kind==='coach'?(stSr()?'SENIOR':$('stCat').value):'',phone:$('stPhone').value.trim(),img:stImg||'',order:old&&old.order?old.order:Date.now()};
  b.disabled=true;b.textContent='⏳ جارٍ الحفظ…';
  try{await db.collection('staff').doc(id).set(d);$('stForm').hidden=true;toast('✅ تم حفظ البيانات')}catch(x){say('stErr','⛔ رُفض الحفظ: لا تملك الصلاحية أو القواعد غير منشورة')}
  b.disabled=false;b.textContent='💾 حفظ'};
