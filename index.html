@@ -4371,9 +4371,9 @@ function loadImg(src){
    ====================================================== */
 
 /* Global referee data: { id: {id,name,role,phone,photo,notes} } */
-let REFS = {};
+let REFEREES_DB = {};
 /* Referee assignments per match key: { matchKey: {main,asst1,asst2,fourth} } */
-let REF_ASSIGN = {};
+let REFEREE_ASSIGN = {};
 
 /* Firestore listeners for refs (called after firebase init) */
 function listenRefs(){
@@ -4381,15 +4381,15 @@ function listenRefs(){
   try{
     db.collection('referees').onSnapshot(sn=>{
       sn.docChanges().forEach(ch=>{
-        if(ch.type==='removed') delete REFS[ch.doc.id];
-        else REFS[ch.doc.id] = Object.assign({id:ch.doc.id}, ch.doc.data());
+        if(ch.type==='removed') delete REFEREES_DB[ch.doc.id];
+        else REFEREES_DB[ch.doc.id] = Object.assign({id:ch.doc.id}, ch.doc.data());
       });
       if(tab==='ref') draw();
     });
     db.collection('refAssignments').onSnapshot(sn=>{
       sn.docChanges().forEach(ch=>{
-        if(ch.type==='removed') delete REF_ASSIGN[ch.doc.id];
-        else REF_ASSIGN[ch.doc.id] = ch.doc.data();
+        if(ch.type==='removed') delete REFEREE_ASSIGN[ch.doc.id];
+        else REFEREE_ASSIGN[ch.doc.id] = ch.doc.data();
       });
       draw();
     });
@@ -4397,7 +4397,7 @@ function listenRefs(){
 }
 
 /* Referee role labels */
-const REF_ROLES = {
+const REFEREE_ROLES = {
   main:   {ar:'الحكم الرئيسي',  cls:'main',  ic:'🟨'},
   asst1:  {ar:'المساعد الأول',  cls:'asst',  ic:'🚩'},
   asst2:  {ar:'المساعد الثاني', cls:'asst',  ic:'🚩'},
@@ -4405,7 +4405,7 @@ const REF_ROLES = {
 };
 
 /* Get ref info for a match key */
-function matchRefs(k){ return REF_ASSIGN[k.replace('|','_')] || null; }
+function matchRefs(k){ return REFEREE_ASSIGN[k.replace('|','_')] || null; }
 
 /* Render referee row inside a match card */
 function refRowHtml(k){
@@ -4415,9 +4415,9 @@ function refRowHtml(k){
   ['main','asst1','asst2','fourth'].forEach(role=>{
     const rid = ra[role];
     if(!rid) return;
-    const r = REFS[rid];
+    const r = REFEREES_DB[rid];
     if(!r) return;
-    parts.push(`<span class="ref-lbl">${REF_ROLES[role].ic} ${REF_ROLES[role].ar}:</span><span class="ref-val">${esc(r.name)}</span>`);
+    parts.push(`<span class="ref-lbl">${REFEREE_ROLES[role].ic} ${REFEREE_ROLES[role].ar}:</span><span class="ref-val">${esc(r.name)}</span>`);
   });
   if(!parts.length) return '';
   return `<div class="match-ref-row">${parts.join('<span style="color:#334155;margin:0 4px">|</span>')}</div>`;
@@ -4434,23 +4434,23 @@ function referees(){
     <div class="sn-t">
       <b style="font-size:16px">🏅 لجنة التحكيم</b>
       <span style="font-size:12px;color:#94a3b8">بطولة الأكابر - الرابطة الولائية تيبازة</span>
-      <em style="font-size:11px;color:#f59e0b">${Object.keys(REFS).length} حكم مسجّل</em>
+      <em style="font-size:11px;color:#f59e0b">${Object.keys(REFEREES_DB).length} حكم مسجّل</em>
     </div>
     ${isAd?`<button class="btn sm alt" data-ref-add="1" style="margin-right:auto">➕ إضافة حكم</button>`:''}
   </div>`;
 
   /* Tab switcher: Roster | Assignment */
   h += `<div style="display:flex;gap:8px;margin-bottom:16px">
-    <button class="btn sm ${!$('refView')||$('refView').dataset.v!=='assign'?'':'alt'}" data-ref-view="roster" style="flex:1">👥 قائمة الحكام</button>
-    <button class="btn sm ${$('refView')&&$('refView').dataset.v==='assign'?'':'alt'}" data-ref-view="assign" style="flex:1">📋 تعيينات الجولة</button>
+    <button class="btn sm ${mode!=='assign'?'':'alt'}" data-ref-view="roster" style="flex:1">👥 قائمة الحكام</button>
+    <button class="btn sm ${mode==='assign'?'':'alt'}" data-ref-view="assign" style="flex:1">📋 تعيينات الجولة</button>
   </div>
-  <div id="refView" data-v="${window._refViewMode||'roster'}">`;
+  <div id="refView" data-v="${mode}">`;
 
   const mode = window._refViewMode || 'roster';
 
   if(mode === 'roster'){
     /* ── Referee Cards Grid ── */
-    const list = Object.values(REFS).sort((a,b)=>(a.name||'').localeCompare(b.name||'','ar'));
+    const list = Object.values(REFEREES_DB).sort((a,b)=>(a.name||'').localeCompare(b.name||'','ar'));
     if(!list.length){
       h += `<div class="card" style="text-align:center;color:#64748b;padding:30px">لا يوجد حكام مسجّلون بعد</div>`;
     } else {
@@ -4459,7 +4459,7 @@ function referees(){
         const avatarHtml = r.photo
           ? `<img src="${esc(r.photo)}" class="ref-avatar" alt="">`
           : `<div class="ref-avatar-placeholder">🏅</div>`;
-        const roleLbl = REF_ROLES[r.role]||REF_ROLES.main;
+        const roleLbl = REFEREE_ROLES[r.role]||REFEREE_ROLES.main;
         h += `<div class="ref-card">
           ${avatarHtml}
           <div class="ref-name">${esc(r.name)}</div>
@@ -4493,15 +4493,15 @@ function referees(){
       </tr></thead><tbody>`;
 
     const refOpts = `<option value="">— بدون —</option>` +
-      Object.values(REFS).sort((a,b)=>(a.name||'').localeCompare(b.name||'','ar'))
+      Object.values(REFEREES_DB).sort((a,b)=>(a.name||'').localeCompare(b.name||'','ar'))
         .map(r=>`<option value="${r.id}">${esc(r.name)}</option>`).join('');
 
     p.m.forEach(([hm,aw],i)=>{
       const k = K(cat,rsel,hm,aw);
       const kk = k.replace('|','_');
-      const ra = REF_ASSIGN[kk] || {};
+      const ra = REFEREE_ASSIGN[kk] || {};
       const mk = (role)=>{
-        if(!isAd) return `<span style="color:#cbd5e1">${ra[role]&&REFS[ra[role]]?esc(REFS[ra[role]].name):'-'}</span>`;
+        if(!isAd) return `<span style="color:#cbd5e1">${ra[role]&&REFEREES_DB[ra[role]]?esc(REFEREES_DB[ra[role]].name):'-'}</span>`;
         return `<select class="ref-sel" id="rs_${kk}_${role}">${refOpts.replace(`value="${ra[role]||''}"`,`value="${ra[role]||''}" selected`)}</select>`;
       };
       h += `<tr>
@@ -4560,7 +4560,7 @@ async function saveRefAssignment(matchKey){
       by: me.uid
     };
     await db.collection('refAssignments').doc(matchKey).set(data);
-    REF_ASSIGN[matchKey] = data;
+    REFEREE_ASSIGN[matchKey] = data;
     toast('✅ تم حفظ تعيين الحكام');
     draw();
   }catch(e){ toast('❌ خطأ: '+e.message); }
@@ -4583,10 +4583,10 @@ async function saveRefProfile(){
   try{
     if(id){
       await db.collection('referees').doc(id).set(data, {merge:true});
-      REFS[id] = Object.assign({id}, data);
+      REFEREES_DB[id] = Object.assign({id}, data);
     } else {
       const ref = await db.collection('referees').add(data);
-      REFS[ref.id] = Object.assign({id:ref.id}, data);
+      REFEREES_DB[ref.id] = Object.assign({id:ref.id}, data);
     }
     toast('✅ تم حفظ بيانات الحكم');
     document.getElementById('refDlg').close();
@@ -4599,7 +4599,7 @@ async function deleteRef(id){
   if(!confirm('حذف هذا الحكم نهائياً؟')) return;
   try{
     await db.collection('referees').doc(id).delete();
-    delete REFS[id];
+    delete REFEREES_DB[id];
     toast('تم الحذف');
     draw();
   }catch(e){ toast('❌ '+e.message); }
@@ -4609,7 +4609,7 @@ async function deleteRef(id){
 function openRefDlg(id){
   const dlg = document.getElementById('refDlg');
   if(!dlg) return;
-  const r = id ? REFS[id] : null;
+  const r = id ? REFEREES_DB[id] : null;
   $('refDlgTitle').textContent = id ? '✏️ تعديل بيانات الحكم' : '➕ إضافة حكم جديد';
   $('refDlgId').value = id||'';
   $('refDlgName').value = r?r.name:'';
@@ -4621,8 +4621,19 @@ function openRefDlg(id){
 }
 
 /* ───────────── Referee Card Canvas Export ───────────── */
+
+/* roundRect polyfill for older browsers */
+if(!CanvasRenderingContext2D.prototype.roundRect){
+  CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){
+    this.beginPath();this.moveTo(x+r,y);this.lineTo(x+w-r,y);
+    this.arcTo(x+w,y,x+w,y+r,r);this.lineTo(x+w,y+h-r);
+    this.arcTo(x+w,y+h,x+w-r,y+h,r);this.lineTo(x+r,y+h);
+    this.arcTo(x,y+h,x,y+h-r,r);this.lineTo(x,y+r);
+    this.arcTo(x,y,x+r,y,r);this.closePath();return this;
+  };
+}
 async function drawRefCard(refId){
-  const r = REFS[refId];
+  const r = REFEREES_DB[refId];
   if(!r){ toast('الحكم غير موجود'); return; }
   const W=800, H=1000;
   const cv = document.createElement('canvas');
@@ -4697,7 +4708,7 @@ async function drawRefCard(refId){
   c.fillText(r.name||'', W/2, nameY);
 
   /* Role badge */
-  const roleLbl = REF_ROLES[r.role]||REF_ROLES.main;
+  const roleLbl = REFEREE_ROLES[r.role]||REFEREE_ROLES.main;
   const roleColors = {main:['rgba(245,158,11,0.25)','#fbbf24'], asst:['rgba(99,102,241,0.25)','#a5b4fc'], fourth:['rgba(16,185,129,0.25)','#6ee7b7']};
   const rc = roleColors[roleLbl.cls]||roleColors.main;
   const roleText = `${roleLbl.ic} ${roleLbl.ar}`;
@@ -4729,7 +4740,7 @@ async function drawRefCard(refId){
 }
 
 async function downloadRefCard(refId){
-  const r = REFS[refId];
+  const r = REFEREES_DB[refId];
   if(!r) return;
   toast('⏳ جارٍ إنشاء بطاقة الحكم...');
   try{
@@ -4743,7 +4754,7 @@ async function downloadRefCard(refId){
 }
 
 async function downloadRefVideo(refId){
-  const r = REFS[refId];
+  const r = REFEREES_DB[refId];
   if(!r){ toast('الحكم غير موجود'); return; }
   toast('⏳ جارٍ إنشاء الفيديو...');
   try{
@@ -4841,7 +4852,6 @@ function fixtures(){
   const k=K(cat,round,hm,aw),v=S[k],has=v&&v.sh!==undefined&&v.sh!=='';
   h+=`<div class="card mc${isMine(hm)||isMine(aw)?' favm':''}" style="--c1:${tcs(hm)};--c2:${tcs(aw)}">${mh(hm,aw,has,v)}
   <div class="meta"><span>${mi(v)}</span>${has?stBadge(v):v&&v.pp?'<span class="b wt">⏳ مؤجلة</span>':v&&v.ex?'<span class="b no">معفاة</span>':''}${erBadge(k)}</div>
-  ${isSenior()&&matchRefs(k)?refRowHtml(k):''}
   ${isSenior()&&matchRefs(k)?refRowHtml(k):''}
   <details class="mc-menu"><summary class="btn sm alt mc-menu-toggle">⚙️ خيارات المباراة ▾</summary><div class="act mc-menu-items"><button class="btn sm alt" data-lu="${round}-${hm}-${aw}">📋 التشكيلة والتبديلات</button>${me?`<button class="btn sm alt" data-lp="${k}">🎽 ملصق التشكيلة</button>`:''}${me&&(me.role==='admin'||hm==me.teamId||aw==me.teamId)?`<button class="btn sm alt" data-ps="${round}-${hm}-${aw}">🖨 ورقة رسمية</button>`:''}${me&&me.role==='admin'?`<button class="btn sm alt" data-rec="${k}">🎥 تصوير مباشر</button>`:''}<button class="btn sm alt" data-tl="${k}">⏱️ أحداث اللقاء</button><button class="btn sm alt" data-mp="${round}-${hm}-${aw}">📣 ملصق المباراة</button>${me?`<button class="btn sm alt" data-mv="${round}-${hm}-${aw}">🎬 فيديو المباراة</button>`:''}${v&&(v.gh||v.ga)?`<button class="btn sm alt" data-gp="${k}">⚽ ملصق / فيديو الهدف</button>`:''}${has?`<button class="btn sm alt" data-sc="r:${k}">📤 بطاقة النتيجة</button>`:''}<button class="btn sm alt" data-fp="${k}">📝 منشور</button>${canEdit(hm,aw,v,k)?`<button class="btn sm" data-e="${k}">✏️ ${has?'تعديل النتيجة':'الموعد / النتيجة'}</button>`:''}${erBtns(hm,aw,v,k)}${canConfirm(hm,aw,v)&&has?`${me.role==='admin'?`<button class="btn sm" data-ok="${k}">✅ اعتماد</button>`:`<button class="btn sm red" data-no="${k}">❌ اعتراض</button>`}`:''}</div></details></div>`});
  return h+`<div class="bye">🛌 مستريحة: ${esc(T[p.bye])}</div>`
