@@ -1888,7 +1888,7 @@ function openPlayersModal(c, tId){
     if (adminSelectBox) adminSelectBox.style.display = 'block';
     if (adminSelect) {
       let opts = '';
-      for (let id = 1; id <= 11; id++) {
+      for (const id of Object.keys(T).map(Number).sort((a,b)=>a-b)) {
         opts += `<option value="${id}" ${id == window.activePlayerModalTeam ? 'selected' : ''}>${T[id]}</option>`;
       }
       adminSelect.innerHTML = opts;
