@@ -18,6 +18,18 @@ service cloud.firestore {
       return isAdmin() && myDoc().get('adminLevel', '') != 'assist';
     }
 
+    function isAssist() {
+      return isAdmin() && myDoc().get('adminLevel', '') == 'assist';
+    }
+
+    // توصية المشرف المساعد (asstRec): يجوز له كتابتها باسمه فقط، وبقيمة approve/reject فقط
+    function recOk() {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(['asstRec'])
+        || (request.resource.data.asstRec is map
+            && request.resource.data.asstRec.by == request.auth.uid
+            && request.resource.data.asstRec.act in ['approve', 'reject']);
+    }
+
     function isManager() {
       return signedIn() && myDoc().role == 'manager' && myDoc().status == 'approved';
     }
@@ -59,13 +71,18 @@ service cloud.firestore {
         && request.resource.data.status == 'pending'
         && request.resource.data.teamId is int
         && request.resource.data.keys().hasOnly(['name','phone','teamId','role','kind','status','perm','date']);
-      // المشرف العام: كل شيء. المشرف المساعد: يعدّل/يعتمد/يجمّد الحسابات العادية فقط:
+      // المشرف العام: كل شيء. المشرف المساعد: يعدّل/يجمّد الحسابات العادية فقط:
       // لا يلمس حساب مشرف، ولا يجعل أحداً مشرفاً، ولا يغيّر adminLevel، ولا يحذف نهائياً.
+      // ولا يضبط الفريق ولا الصلاحيات (teamId/perm/kind/role/league): يغيّر status فقط (تجميد/إعادة تفعيل)
+      // ويكتب توصيته في asstRec. والحساب «الجديد» (pending) يبقى معلّقاً: اعتماده أو رفضه للمشرف العام وحده.
       allow update: if isSuper()
         || (isAdmin()
             && resource.data.role != 'admin'
             && request.resource.data.role != 'admin'
-            && request.resource.data.get('adminLevel', '') == '');
+            && request.resource.data.get('adminLevel', '') == ''
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'asstRec'])
+            && (resource.data.get('status', '') != 'pending' || request.resource.data.status == 'pending')
+            && recOk());
       allow delete: if isSuper();
     }
 
@@ -218,14 +235,19 @@ service cloud.firestore {
     // ===== طلبات تعديل النتائج المعتمدة (تحتاج موافقة المشرف) =====
     // القراءة: المشرف الكل، والنادي طلبات ناديه فقط
     // الإنشاء: عضو النادي (غير المقيَّد بالمشاهدة) لناديه فقط وبحالة pending
-    // التعديل: المشرف بحرية (موافقة/رفض)، والنادي لإعادة الإرسال أو الإلغاء فقط
+    // التعديل: المشرف العام بحرية (موافقة/رفض)، والمشرف المساعد يكتب توصيته asstRec فقط،
+    // والنادي لإعادة الإرسال أو الإلغاء فقط
     match /editRequests/{id} {
       allow read: if isAdmin() || (signedIn() && isClubMember(resource.data.teamId));
       allow create: if canWrite()
         && isClubMember(request.resource.data.teamId)
         && request.resource.data.status == 'pending'
         && request.resource.data.by == request.auth.uid;
-      allow update: if isAdmin()
+      allow update: if isSuper()
+        || (isAssist()
+            && resource.data.status == 'pending'
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['asstRec'])
+            && recOk())
         || (canWrite()
             && isClubMember(resource.data.teamId)
             && request.resource.data.teamId == resource.data.teamId

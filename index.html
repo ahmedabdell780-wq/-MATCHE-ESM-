@@ -1356,7 +1356,7 @@ body.sr-mode #playersModal button[onclick="closePlayersModal()"]{background:line
   <label style="font-weight:700;font-size:13px;display:block;margin-bottom:4px">الرتبة والدور (Role):</label>
   <select id="upmRoleSel" class="f" style="margin-bottom:12px">
     <option value="manager">⚽ مسؤول نادٍ (إدخال وتعديل النتائج وإدارة فريقه)</option>
-    <option value="assist">🛡️ مشرف مساعد (يدير النتائج والفرق والحكام والحسابات العادية — بلا تعيين مشرفين ولا حذف نهائي ولا استرجاع نسخ)</option>
+    <option value="assist">🛡️ مشرف مساعد (يدير النتائج والفرق والحكام ويجمّد الحسابات العادية — بلا ضبط الفريق والصلاحيات ولا اعتماد الحسابات ولا تعيين مشرفين ولا حذف نهائي ولا استرجاع نسخ)</option>
     <option value="admin">👑 مشرف عام (كامل الصلاحيات في المنصة)</option>
   </select>
 
@@ -1379,6 +1379,17 @@ body.sr-mode #playersModal button[onclick="closePlayersModal()"]{background:line
     <button type="button" class="btn" id="saveUserPermBtn" style="flex:1">💾 حفظ التعديلات</button>
     <button type="button" class="btn alt" id="cancelUserPermBtn">إلغاء</button>
   </div>
+</dialog>
+
+<!-- 🛡️ إضافة مشرف مساعد (للمشرف العام فقط) -->
+<dialog id="asstAddModal" style="max-width:440px;width:92%;padding:18px 20px;border-radius:18px;border:1.5px solid var(--ln);box-shadow:0 20px 50px rgba(0,0,0,0.35);font-family:inherit;text-align:right">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;border-bottom:1px solid var(--ln);padding-bottom:10px">
+    <h3 style="margin:0;font-size:17px;color:#0f2a1c">🛡️ إضافة مشرف مساعد</h3>
+    <button type="button" id="asClose" style="background:none;border:none;font-size:20px;cursor:pointer;color:#64748b">&times;</button>
+  </div>
+  <p class="hint" style="margin:0 0 8px;text-align:right">اختر حساباً معتمداً ليصير مشرفاً مساعداً. يبقى تحت إشرافك: قراراته في الطلبات المعلّقة تصلك كتوصية وأنت من يعتمد. لا يضبط الفريق والصلاحيات ولا يعتمد الحسابات ولا يعيّن مشرفين ولا يحذف نهائياً.</p>
+  <input id="asQ" type="search" class="f" autocomplete="off" placeholder="ابحث بالاسم أو الهاتف" style="margin-bottom:8px">
+  <div id="asList" style="max-height:48vh;overflow:auto"></div>
 </dialog>
 
 
@@ -4081,6 +4092,7 @@ async function onAuth(u){
    subs.push(db.collection('activity').onSnapshot(s=>{ACT={};s.docs.forEach(d=>{ACT[d.id]=d.data()});if(tab==='a'&&adminSec==='act')draw()},()=>{}));
   subs.push(db.collection('users').onSnapshot(s=>{
     U=s.docs.filter(d=>d.data().role!=='admin').map(d=>Object.assign({id:d.id},d.data()));
+     ADM=s.docs.filter(d=>d.data().role==='admin').map(d=>Object.assign({id:d.id},d.data()));
     const pendCount = U.filter(u=>u.status==='pending').length;
     updateAppBadge(pendCount);
     
@@ -4225,6 +4237,8 @@ async function erCancel(k){
 }
 async function erDecide(id,ok){
  const r=ER[id];if(!r||!me||me.role!=='admin'||r.status!=='pending')return;
+ if(isAssist()){let rs='';if(!ok){const x=prompt('سبب التوصية بالرفض (اختياري):','');if(x===null)return;rs=x.trim()}else if(!confirm('إرسال توصيتك بالموافقة للمشرف العام؟ هو من يطبّق التعديل.'))return;
+  try{await db.collection('editRequests').doc(id).update({asstRec:{act:ok?'approve':'reject',reason:rs,by:me.uid,byName:me.name||'',at:Date.now()}});toast('📨 أُرسلت توصيتك للمشرف العام')}catch(e){toast('⛔ تعذّر الإرسال')}return}
  const k=r.key,h=+r.home,a=+r.away;let reason='';
  if(ok){if(!confirm('تطبيق هذا التعديل على المباراة واعتماده؟'))return}
  else{const x=prompt('سبب الرفض (اختياري):','');if(x===null)return;reason=x.trim()}
@@ -4249,7 +4263,7 @@ function erSection(){
  const dt=t=>{try{return new Date(t).toLocaleString('ar-DZ',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}catch(e){return''}};
  const card=(r,pend)=>{
   const h=+r.home,a=+r.away,m=/^(?:([A-Z0-9]+)\|)?(\d+):/.exec(r.key||''),diff=erDiff(r.old||{},r.neu||{},h,a);
-  const foot=pend?`<div class="act" style="margin:6px 0 0"><button class="btn sm" data-ero="${esc(r.id)}">✅ موافقة وتطبيق</button><button class="btn sm red" data-erj="${esc(r.id)}">❌ رفض</button></div>`
+  const foot=pend?`${r.asstRec?`<div class="ern">🛡️ المشرف المساعد ${esc(r.asstRec.byName||'')} يوصي ب${r.asstRec.act==='approve'?'الموافقة':'الرفض'}${r.asstRec.reason?' — '+esc(r.asstRec.reason):''}</div>`:''}<div class="act" style="margin:6px 0 0"><button class="btn sm" data-ero="${esc(r.id)}">${isAssist()?'👍 توصية بالموافقة':'✅ موافقة وتطبيق'}</button><button class="btn sm red" data-erj="${esc(r.id)}">${isAssist()?'👎 توصية بالرفض':'❌ رفض'}</button></div>`
    :`<div class="ern">${r.status==='approved'?'<span class="b ok">✅ تمت الموافقة</span>':r.status==='rejected'?'<span class="b no">❌ مرفوض</span>'+(r.reason?' '+esc(r.reason):''):'<span class="b wt">أُلغي</span>'} · ${esc(dt(r.decidedAt||r.t))}</div>`;
   return`<div class="card erq"><div class="erh"><b>${esc(T[h])} ضد ${esc(T[a])}</b><small>${esc((m&&m[1])||'U15')} · الجولة ${m?m[2]:''}</small></div>
 <div class="ern">🏷 الطالب: <b>${esc(T[r.teamId]||'')}</b>${r.byName?' · '+esc(r.byName):''} · ${esc(dt(r.t))}</div>
@@ -5296,21 +5310,22 @@ const HLC=['#f59e0b','#ef4444','#3b82f6','#8b5cf6','#10b981','#ec4899'];
 let adminSec = 'users';
 
 /* ===== لوحة الحسابات والطلبات (واجهة احترافية) ===== */
+var ADM=[];
 let acF='all',acQ='';
 const acDig=x=>String(x||'').replace(/[٠-٩]/g,d=>d.charCodeAt(0)-1632).replace(/\D/g,'');
 function acInfo(u){
  const club=u.role==='admin'?false:(u.kind!=='visitor');
  const tidOk=typeof u.teamId==='number'&&u.teamId>0;
  let lvl='ok',msg='يستطيع إدخال نتائج فريقه (المباريات غير المعتمدة والجولة الحالية)';
- if(u.status==='pending'){lvl='pend';msg='بانتظار اعتمادك — حدِّد الفريق من «🛡️ الصلاحيات» ثم اعتمد'}
+ if(u.status==='pending'){lvl='pend';msg=isAssist()?(u.asstRec?'✅ أُرسلت توصيتك للمشرف العام — بانتظار قراره':'بانتظار قرار المشرف العام — أرسل توصيتك وهو من يضبط الفريق ويعتمد'):'بانتظار اعتمادك — حدِّد الفريق من «🛡️ الصلاحيات» ثم اعتمد'}
  else if(u.status==='suspended'){lvl='sus';msg='الحساب مجمَّد ولا يستطيع الدخول'}
- else if(u.role==='admin'){lvl='ok';msg='مشرف عام — كل الصلاحيات'}
+ else if(u.role==='admin'){lvl='ok';msg=u.adminLevel==='assist'?'🛡️ مشرف مساعد — تحت إشراف المشرف العام، وأي شيء ينتظر الموافقة يُرفع إليه ليقرّر':'مشرف عام — كل الصلاحيات'}
  else if(u.kind==='visitor'&&tidOk){lvl='bad';msg='الحساب مسجَّل «زائر» رغم تحديد فريق — افتح «الصلاحيات» واحفظ ليصير مسؤول نادٍ'}
  else if(u.kind==='visitor'){lvl='vis';msg='زائر — مشاهدة فقط (لا فريق مرتبط)'}
  else if(!tidOk){lvl='bad';msg='لا يستطيع التعديل: الفريق غير محدد أو صيغته خاطئة — افتح «الصلاحيات» واحفظ'}
  else if(u.perm==='entry'){lvl='ok';msg='📝 مسيّر بطولة الأكابر — يُدخل نتائج ومعلومات مباريات «'+(window.T_SENIOR[u.teamId]||'؟')+'» فقط (بلا تحميل ولا رفع ولا رسائل)'}
  else if(u.perm==='view_only'){lvl='warn';msg='مشاهدة فقط بقرارك — لا يستطيع تعديل النتائج'}
- return{club,tidOk,lvl,msg}
+ return{club,tidOk,lvl,msg:(isAssist()&&lvl==='bad')?'⚠️ تحتاج ضبط الفريق/الصلاحيات — يتولاه المشرف العام':msg}
 }
 function acCard(u,dupP){
  const i=acInfo(u),A=(typeof ACT!=='undefined'&&ACT[u.id])||null,on=!!(A&&A.lastSeen>Date.now()-4*60e3);
@@ -5323,18 +5338,21 @@ function acCard(u,dupP){
  const note=i.lvl==='pend'?'warn':i.lvl==='sus'?'grey':i.lvl==='vis'?'grey':i.lvl;
  const ico={ok:'✅',bad:'⚠️',warn:'👁',grey:'ℹ️'}[note]||'ℹ️';
  const seen=A?`<div class="ac-seen">${on?'🟢 متصل الآن':'🕒 آخر ظهور: '+esc(new Date(A.lastSeen||A.lastLogin).toLocaleString('ar-DZ',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}))} · دخل ${A.logins||1} مرة</div>`:'';
+ const rec=(u.asstRec&&u.status==='pending')?`<div class="ac-note ok"><span>🛡️</span><span>المشرف المساعد ${esc(u.asstRec.byName||'')} يوصي ب${u.asstRec.act==='approve'?'اعتماد':'رفض'} هذا الحساب — القرار للمشرف العام</span></div>`:'';
  let bar='';
  if(u.status==='pending'){
-  bar=`<button class="ac-btn ok grow" data-u="${u.id}" data-s="approved">✅ اعتماد الحساب</button><button class="ac-btn ghost" data-uem="${u.id}">🛡️ الصلاحيات</button><button class="ac-btn no" data-u="${u.id}" data-s="suspended">رفض</button>`;
+  bar=`<button class="ac-btn ok grow" data-u="${u.id}" data-s="approved">${isAssist()?'👍 توصية بالاعتماد':'✅ اعتماد الحساب'}</button>${isSuper()?`<button class="ac-btn ghost" data-uem="${u.id}">🛡️ الصلاحيات</button>`:''}<button class="ac-btn no" data-u="${u.id}" data-s="suspended">${isAssist()?'👎 توصية بالرفض':'رفض'}</button>`;
  }else if(u.status==='suspended'){
-  bar=`<button class="ac-btn ok grow" data-u="${u.id}" data-s="approved">↩ إعادة التفعيل</button><button class="ac-btn ghost" data-uem="${u.id}">🛡️ الصلاحيات</button><button class="ac-btn no" data-ud="${u.id}" data-un="${nm}">🗑 حذف</button>`;
+  bar=`<button class="ac-btn ok grow" data-u="${u.id}" data-s="approved">↩ إعادة التفعيل</button>${isSuper()?`<button class="ac-btn ghost" data-uem="${u.id}">🛡️ الصلاحيات</button>`:''}<button class="ac-btn no" data-ud="${u.id}" data-un="${nm}">🗑 حذف</button>`;
  }else{
   const sgb=(pm,lab,on)=>on?`<button class="on${pm==='full'?' full':''}">${lab}</button>`:`<button data-up="${u.id}" data-pm="${pm}">${lab}</button>`;
    const seg=(i.club&&u.role!=='admin')?`<div class="ac-seg" role="group" aria-label="الصلاحية">${sgb('full','✏️ تعديل',!u.perm||u.perm==='full')}${sgb('view_only','👁 مشاهدة',u.perm==='view_only')}${sgb('entry','📝 أكابر',u.perm==='entry')}</div>`:'';
-  bar=`${seg}<button class="ac-btn${i.lvl==='bad'?'':' ghost'}" data-uem="${u.id}">🛡️ ${i.lvl==='bad'?'إصلاح الصلاحيات':'الصلاحيات'}</button>
+  bar=`${isSuper()?seg+`<button class="ac-btn${i.lvl==='bad'?'':' ghost'}" data-uem="${u.id}">🛡️ ${i.lvl==='bad'?'إصلاح الصلاحيات':'الصلاحيات'}</button>`:''}
    ${u.role==='admin'?'':`<details class="ac-more"><summary>⋯</summary><div class="ac-more-p"><button class="ac-btn no" data-u="${u.id}" data-s="suspended">⏸ تجميد</button><button class="ac-btn no" data-ud="${u.id}" data-un="${nm}">🗑 حذف</button></div></details>`}`;
  }
- return `<div class="ac ${i.lvl==='ok'?'':i.lvl}" data-acid="${u.id}"><div class="ac-top"><div class="ac-av${on?' on':''}" style="--c:${col}">${esc(ini)}</div><div class="ac-main"><div class="ac-name">${nm}</div><div class="ac-sub">${kindP}${ph?`<a class="ac-pill tel" href="tel:${ph}">📞 ${ph}</a>`:''}${dup?'<span class="ac-pill red">رقم مكرر</span>':''}</div></div><div class="ac-st">${stP}</div></div><div class="ac-note ${note}"><span>${ico}</span><span>${esc(i.msg)}</span></div>${seen}<div class="ac-bar">${bar}</div></div>`
+ if(u.role==='admin'&&!isSuper())bar='';
+ if(u.role==='admin'&&u.adminLevel==='assist'&&isSuper())bar+=`<button class="ac-btn no" data-asdem="${u.id}" data-un="${nm}">⬇ إلغاء الإشراف</button>`;
+ return `<div class="ac ${i.lvl==='ok'?'':i.lvl}" data-acid="${u.id}"><div class="ac-top"><div class="ac-av${on?' on':''}" style="--c:${col}">${esc(ini)}</div><div class="ac-main"><div class="ac-name">${nm}</div><div class="ac-sub">${kindP}${ph?`<a class="ac-pill tel" href="tel:${ph}">📞 ${ph}</a>`:''}${dup?'<span class="ac-pill red">رقم مكرر</span>':''}</div></div><div class="ac-st">${stP}</div></div><div class="ac-note ${note}"><span>${ico}</span><span>${esc(i.msg)}</span></div>${rec}${seen}<div class="ac-bar">${bar}</div></div>`
 }
 function acModel(){
  const dupP={};U.forEach(u=>{if(u.status!=='deleted'){const k=acDig(u.phone).slice(-9);if(k)dupP[k]=(dupP[k]||0)+1}});
@@ -5344,7 +5362,16 @@ function acModel(){
  const fl={all:()=>true,pend:x=>x.u.status==='pending',club:x=>x.u.status==='approved'&&x.u.kind!=='visitor'&&x.u.role!=='admin',vis:x=>x.u.kind==='visitor'&&x.u.status==='approved',view:x=>x.u.status==='approved'&&x.u.kind!=='visitor'&&x.u.perm==='view_only',sus:x=>x.u.status==='suspended',bad:x=>x.i.lvl==='bad'};
  return{all,dupP,fl,hit}
 }
+function acAdmHTML(){
+ const q=acQ.trim().toLowerCase(),qd=acDig(q);
+ const rows=ADM.filter(u=>u.status!=='deleted'&&(!q||String(u.name||'').toLowerCase().includes(q)||(qd&&acDig(u.phone).includes(qd))));
+ rows.sort((a,b)=>(a.adminLevel==='assist'?1:0)-(b.adminLevel==='assist'?1:0)||String(a.name||'').localeCompare(String(b.name||''),'ar'));
+ const top=isSuper()?`<button type="button" class="ac-btn ok" data-asopen="1" style="width:100%;margin:0 0 10px">➕ إضافة مشرف مساعد</button>`:`<div class="ax-empty">🛡️ المشرفون المساعدون يعملون تحت إشراف المشرف العام.</div>`;
+ const note=`<p class="hint" style="margin:0 0 10px;text-align:right">المشرف المساعد يبقى دائماً تحت إشراف المشرف العام: قراراته في الطلبات المعلّقة تصل إليه كتوصية، وهو وحده من يعتمد.</p>`;
+ return `<div class="ax-h">🛡️ المشرفون <em>${rows.length}</em></div>${top}${note}${rows.map(u=>acCard(u,{})).join('')||'<div class="ax-empty">لا يوجد مشرفون مطابقون</div>'}`
+}
 function acListHTML(){
+ if(acF==='adm')return acAdmHTML();
  const m=acModel(),f=m.fl[acF]||m.fl.all,rows=m.all.filter(x=>f(x)&&m.hit(x));
  const pend=rows.filter(x=>x.u.status==='pending'),rest=rows.filter(x=>x.u.status!=='pending');
  const rank=x=>(x.i.lvl==='bad'?0:1),nameOf=x=>String(T[x.u.teamId]||'~')+String(x.u.name||'');
@@ -5361,11 +5388,31 @@ function acPanel(){
  const kp=(l,v,c)=>`<div class="ax-k ${c||''}"><b>${v}</b><small>${l}</small></div>`;
  return `<div class="ax-kpis">${kp('الإجمالي',m.all.length)}${kp('نشطون',m.all.filter(x=>x.u.status==='approved').length,'g')}${kp('بانتظار',n('pend'),n('pend')?'w':'')}${kp('تحتاج انتباه',n('bad'),n('bad')?'r':'')}</div>
  <div class="ax-tools"><div class="ax-sw"><span>🔎</span><input id="acQ" type="search" inputmode="search" autocomplete="off" placeholder="ابحث بالاسم أو الهاتف أو الفريق" value="${esc(acQ)}"></div>
- <div class="ax-chips">${chip('all','الكل')}${chip('pend','⏳ الجدد')}${chip('club','⚽ مسؤولو الأندية')}${chip('vis','👁 زوار')}${chip('view','مشاهدة فقط')}${chip('bad','⚠️ تحتاج إصلاح','bad')}${chip('sus','⏸ مجمَّدون')}</div></div>
+ <div class="ax-chips"><button type="button" class="ax-chip${acF==='adm'?' on':''}" data-acf="adm">🛡️ المشرفون <i>${ADM.filter(x=>x.status!=='deleted').length}</i></button>${chip('all','الكل')}${chip('pend','⏳ الجدد')}${chip('club','⚽ مسؤولو الأندية')}${chip('vis','👁 زوار')}${chip('view','مشاهدة فقط')}${chip('bad','⚠️ تحتاج إصلاح','bad')}${chip('sus','⏸ مجمَّدون')}</div></div>
  <div id="acList">${acListHTML()}</div>`
 }
 document.addEventListener('input',e=>{const t=e.target;if(t&&t.id==='acQ'){acQ=t.value;const l=document.getElementById('acList');if(l)l.innerHTML=acListHTML()}});
 document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-acf]');if(!b)return;acF=b.dataset.acf;document.querySelectorAll('[data-acf]').forEach(x=>x.classList.toggle('on',x===b));const l=document.getElementById('acList');if(l)l.innerHTML=acListHTML()});
+
+/* ===== المشرفون المساعدون: إضافة / إلغاء (للمشرف العام فقط) ===== */
+function asRender(){
+ const q=((document.getElementById('asQ')||{}).value||'').trim().toLowerCase(),qd=acDig(q);
+ const rows=U.filter(u=>u.status==='approved'&&u.perm!=='entry'&&(!q||String(u.name||'').toLowerCase().includes(q)||(qd&&acDig(u.phone).includes(qd)))).slice(0,40);
+ const el=document.getElementById('asList');if(!el)return;
+ el.innerHTML=rows.map(u=>`<div class="card u" style="margin:0 0 6px"><div><b>${esc(u.name||'بدون اسم')}</b><br><small>${u.kind==='visitor'?'👁 زائر':esc(T[u.teamId]||'')} · ${esc(u.phone||'')}</small></div><div class="act" style="margin:0"><button type="button" class="btn sm" data-asp="${u.id}" data-un="${esc(u.name||'')}">🛡️ تعيين</button></div></div>`).join('')||'<div class="ax-empty">لا توجد حسابات معتمدة مطابقة</div>'
+}
+document.addEventListener('click',async e=>{
+ const t=e.target.closest&&e.target.closest('[data-asopen],[data-asp],[data-asdem],#asClose');if(!t)return;
+ if(t.id==='asClose'){document.getElementById('asstAddModal').close();return}
+ if(!isSuper())return toast('⛔ إدارة المشرفين للمشرف العام فقط');
+ if(t.dataset.asopen){const q=document.getElementById('asQ');if(q)q.value='';asRender();document.getElementById('asstAddModal').showModal();return}
+ if(t.dataset.asp){const nm=t.dataset.un||'';if(!confirm('تعيين «'+nm+'» مشرفاً مساعداً تحت إشرافك؟'))return;
+  try{await db.collection('users').doc(t.dataset.asp).update({role:'admin',adminLevel:'assist',kind:'club',perm:'full',status:'approved',league:''});document.getElementById('asstAddModal').close();acF='adm';toast('🛡️ أُضيف «'+nm+'» كمشرف مساعد');draw()}catch(x){toast('⛔ تعذر التعيين: تحقق من القواعد أو الاتصال')}return}
+ if(t.dataset.asdem){const nm=t.dataset.un||'';if(!confirm('إلغاء إشراف «'+nm+'» وإعادته حساباً عادياً؟'))return;
+  const u=ADM.find(x=>x.id===t.dataset.asdem)||{},tid=+u.teamId>0;
+  try{await db.collection('users').doc(t.dataset.asdem).update({role:'manager',adminLevel:'',kind:tid?'club':'visitor',perm:tid?'full':'view_only'});toast('⬇ أُلغي الإشراف');draw()}catch(x){toast('⛔ تعذر التنفيذ')}}
+});
+document.addEventListener('input',e=>{if(e.target&&e.target.id==='asQ')asRender()});
 
 function admin(){
  const p9=u=>String(u.phone||'').replace(/[٠-٩]/g,d=>d.charCodeAt(0)-1632).replace(/\D/g,'').slice(-9),dupP={};U.forEach(u=>{if(u.status!=='deleted'){const k=p9(u);if(k)dupP[k]=(dupP[k]||0)+1}});
@@ -5424,6 +5471,7 @@ function upmHint(){
   if(en)h.innerHTML='📝 <b>حساب مسيّر بطولة الأكابر</b>: يرى بطولة الأكابر فقط، ويُدخل نتائج ومعلومات مباريات <b>فريقه</b> فقط. لا يستطيع التحميل ولا الرفع ولا الفيديو ولا الملصقات ولا الرسائل ولا قوائم اللاعبين. <b>اختر فريقه من الأكابر</b> ثم احفظ.';
 }
 function openUserPermModal(uid){
+  if(!isSuper()){toast('⛔ ضبط الفريق والصلاحيات للمشرف العام فقط');return}
   const u = U.find(x => x.id === uid);
   if(!u) return;
   activePermUserId = uid;
@@ -5453,6 +5501,7 @@ $('cancelUserPermBtn').onclick = closeUserPermModal;
 
 $('saveUserPermBtn').onclick = async () => {
   if(!activePermUserId) return;
+  if(!isSuper()){toast('⛔ ضبط الفريق والصلاحيات للمشرف العام فقط');return}
   const btn = $('saveUserPermBtn');
   btn.disabled = true;
   btn.textContent = '⏳ جارٍ الحفظ…';
@@ -5463,7 +5512,10 @@ $('saveUserPermBtn').onclick = async () => {
   const adminLevel = roleSel==='assist'?'assist':'';
   if(!isSuper()&&(roleSel==='admin'||roleSel==='assist')){toast('⛔ تعيين المشرفين للمشرف العام فقط');btn.disabled=false;btn.textContent='💾 حفظ التعديلات';return}
   const perm = $('upmPermSel').value;
-  const status = $('upmStatusSel').value;
+  const _tg=U.find(x=>x.id===activePermUserId),_sv=$('upmStatusSel').value;
+  const _gate=isAssist()&&_tg&&_tg.status==='pending'&&_sv!=='pending';
+  const status=_gate?'pending':_sv;
+  const _rec=_gate?{asstRec:{act:_sv==='approved'?'approve':'reject',by:me.uid,byName:me.name||'',at:Date.now()}}:((isSuper()&&_tg&&_tg.asstRec)?{asstRec:null}:{});
   
   /* kind يجب أن يتبع الفريق/الدور، وإلا يبقى الحساب «زائراً» رغم منحه الصلاحية (هذا كان سبب عدم القدرة على التعديل) */
   const isClub = role === 'admin' || teamId > 0;
@@ -5471,7 +5523,7 @@ $('saveUserPermBtn').onclick = async () => {
   const permFinal = (!isClub) ? 'view_only' : perm;
   if(perm==='entry'&&!(teamId>0)){toast('⚠️ اختر فريق الأكابر الذي يمثّله المسيّر');btn.disabled=false;btn.textContent='💾 حفظ التعديلات';return}
   try{
-    await db.collection('users').doc(activePermUserId).update(Object.assign({teamId:teamId,role:(perm==='entry'?'manager':role),adminLevel:(perm==='entry'?'':adminLevel),kind:kind,perm:permFinal,status:status},perm==='entry'?{league:'senior',canSenior:true}:Object.assign({league:''},((U.find(x=>x.id===activePermUserId)||{}).perm==='entry')?{canSenior:false}:{})));
+    await db.collection('users').doc(activePermUserId).update(Object.assign({teamId:teamId,role:(perm==='entry'?'manager':role),adminLevel:(perm==='entry'?'':adminLevel),kind:kind,perm:permFinal,status:status},_rec,perm==='entry'?{league:'senior',canSenior:true}:Object.assign({league:''},((U.find(x=>x.id===activePermUserId)||{}).perm==='entry')?{canSenior:false}:{})));
     
     // تحديث الذاكرة المحلية فوراً
     const u = U.find(x => x.id === activePermUserId);
@@ -5487,7 +5539,7 @@ $('saveUserPermBtn').onclick = async () => {
     
     closeUserPermModal();
     draw();
-    toast(isClub?'✅ تم تحديث صلاحيات الحساب — تُطبَّق فوراً على جهازه':'✅ حُفظ كزائر (مشاهدة فقط) — اختر فريقاً ليتمكن من التعديل');
+    toast(_gate?'📨 حُفظت الصلاحيات وأُرسلت توصيتك للمشرف العام — هو من يعتمد الحساب':isClub?'✅ تم تحديث صلاحيات الحساب — تُطبَّق فوراً على جهازه':'✅ حُفظ كزائر (مشاهدة فقط) — اختر فريقاً ليتمكن من التعديل');
   }catch(e){
     console.error('Update user perm error:', e);
     toast('⛔ تعذر حفظ الصلاحيات: تحقق من القواعد أو الاتصال');
@@ -5966,9 +6018,11 @@ document.addEventListener('click',async e=>{
      try{await db.collection('users').doc(b.dataset.ud).update({status:'deleted'});toast('🗑 نُقل إلى المحذوفين (يمكن استرجاعه)')}catch(x){toast('⛔ تعذر التنفيذ')}}
     else if(b.dataset.uh){if(!isSuper())return toast('⛔ الحذف النهائي للمشرف العام فقط');const nm=b.dataset.un||'';if(!confirm('حذف «'+nm+'» نهائياً؟ لا يمكن التراجع، وسيحتاج للتسجيل من جديد.'))return;
      try{await db.collection('users').doc(b.dataset.uh).delete();toast('❌ حُذف نهائياً')}catch(x){toast('⛔ تعذر الحذف')}}
- else if(b.dataset.up){if(b.dataset.pm==='entry'){openUserPermModal(b.dataset.up);$('upmPermSel').value='entry';upmFillTeams(true,0);upmHint();return}
+ else if(b.dataset.up){if(!isSuper())return toast('⛔ ضبط الفريق والصلاحيات للمشرف العام فقط');if(b.dataset.pm==='entry'){openUserPermModal(b.dataset.up);$('upmPermSel').value='entry';upmFillTeams(true,0);upmHint();return}
   try{const was=(U.find(x=>x.id===b.dataset.up)||{}).perm;await db.collection('users').doc(b.dataset.up).update(Object.assign({perm:b.dataset.pm,kind:'club',league:''},was==='entry'?{canSenior:false}:{}));toast(b.dataset.pm==='view_only'?'👁 صار الحساب للمشاهدة فقط':(was==='entry'?'✏️ مُنحت صلاحية التعديل — افتح «🛡️ الصلاحيات» وأعد اختيار فريقه من الفئات الشبانية':'✏️ مُنحت صلاحية التعديل'))}catch(x){toast('⛔ تعذر التنفيذ')}}
-    else if(b.dataset.u)try{await db.collection('users').doc(b.dataset.u).update({status:b.dataset.s})}catch(x){toast('⛔ تعذر التنفيذ')}
+    else if(b.dataset.u){const _t=U.find(x=>x.id===b.dataset.u);
+  if(isAssist()&&_t&&_t.status==='pending'){try{await db.collection('users').doc(b.dataset.u).update({asstRec:{act:b.dataset.s==='approved'?'approve':'reject',by:me.uid,byName:me.name||'',at:Date.now()}});toast('📨 أُرسلت توصيتك للمشرف العام — هو من يقرّر')}catch(x){toast('⛔ تعذر الإرسال')}}
+  else try{await db.collection('users').doc(b.dataset.u).update(Object.assign({status:b.dataset.s},(isSuper()&&_t&&_t.asstRec)?{asstRec:null}:{}))}catch(x){toast('⛔ تعذر التنفيذ')}}
  else if(['seed','seedS','mig'].includes(b.id)&&!isSuper())toast('⛔ للمشرف العام فقط')
  else if(b.id==='seed')importSeed()
   else if(b.id==='seedS')importSeedSenior()
