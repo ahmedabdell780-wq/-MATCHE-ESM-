@@ -5374,7 +5374,8 @@ function acCard(u,dupP){
    ${u.role==='admin'?'':`<details class="ac-more"><summary>⋯</summary><div class="ac-more-p"><button class="ac-btn no" data-u="${u.id}" data-s="suspended">⏸ تجميد</button><button class="ac-btn no" data-ud="${u.id}" data-un="${nm}">🗑 حذف</button></div></details>`}`;
  }
  if(u.role==='admin'&&!isSuper())bar='';
- if(u.role==='admin'&&u.adminLevel==='assist'&&isSuper())bar+=`<button class="ac-btn" data-asperm="${u.id}">⚙️ صلاحيات المساعد</button><button class="ac-btn no" data-asdem="${u.id}" data-un="${nm}">⬇ إلغاء الإشراف</button>`;
+ if(u.role==='admin'&&isSuper()&&me&&u.id!==me.uid){const as=u.adminLevel==='assist';
+  bar+=(as?`<button class="ac-btn" data-asperm="${u.id}">⚙️ صلاحيات المساعد</button><button class="ac-btn no" data-asdem="${u.id}" data-un="${nm}">⬇ إلغاء الإشراف</button>`:`<button class="ac-btn" data-asmk="${u.id}" data-un="${nm}">🛡️ تحويل إلى مشرف مساعد</button>`)+`<button class="ac-btn no" data-asdel="${u.id}" data-un="${nm}">🗑 حذف</button>`}
  return `<div class="ac ${i.lvl==='ok'?'':i.lvl}" data-acid="${u.id}"><div class="ac-top"><div class="ac-av${on?' on':''}" style="--c:${col}">${esc(ini)}</div><div class="ac-main"><div class="ac-name">${nm}</div><div class="ac-sub">${kindP}${ph?`<a class="ac-pill tel" href="tel:${ph}">📞 ${ph}</a>`:''}${dup?'<span class="ac-pill red">رقم مكرر</span>':''}</div></div><div class="ac-st">${stP}</div></div><div class="ac-note ${note}"><span>${ico}</span><span>${esc(i.msg)}</span></div>${rec}${seen}<div class="ac-bar">${bar}</div></div>`
 }
 function acModel(){
@@ -5425,7 +5426,7 @@ function asRender(){
  el.innerHTML=rows.map(u=>`<div class="card u" style="margin:0 0 6px"><div><b>${esc(u.name||'بدون اسم')}</b><br><small>${u.kind==='visitor'?'👁 زائر':esc(T[u.teamId]||'')} · ${esc(u.phone||'')}</small></div><div class="act" style="margin:0"><button type="button" class="btn sm" data-asp="${u.id}" data-un="${esc(u.name||'')}">🛡️ تعيين</button></div></div>`).join('')||'<div class="ax-empty">لا توجد حسابات معتمدة مطابقة</div>'
 }
 document.addEventListener('click',async e=>{
- const t=e.target.closest&&e.target.closest('[data-asopen],[data-asp],[data-asdem],[data-asperm],#asClose,#asPClose,#asPSave');if(!t)return;
+ const t=e.target.closest&&e.target.closest('[data-asopen],[data-asp],[data-asdem],[data-asperm],[data-asmk],[data-asdel],#asClose,#asPClose,#asPSave');if(!t)return;
  if(t.id==='asPClose'){document.getElementById('asstPermModal').close();return}
  if(t.id==='asClose'){document.getElementById('asstAddModal').close();return}
  if(!isSuper())return toast('⛔ إدارة المشرفين للمشرف العام فقط');
@@ -5433,6 +5434,14 @@ document.addEventListener('click',async e=>{
   document.getElementById('asPN').textContent=u.name||'';['approve','teamPerms','suspend','editReq'].forEach(k=>{const c=document.getElementById('asP_'+k);if(c)c.checked=!!P[k]});document.getElementById('asstPermModal').showModal();return}
  if(t.id==='asPSave'){const P={};['approve','teamPerms','suspend','editReq'].forEach(k=>{P[k]=!!document.getElementById('asP_'+k).checked});
   try{await db.collection('users').doc(asPU).update({asstPerms:P});document.getElementById('asstPermModal').close();toast('✅ حُفظت صلاحيات المشرف المساعد');draw()}catch(x){toast('⛔ تعذر الحفظ')}return}
+ if(t.dataset.asmk||t.dataset.asdel){const id=t.dataset.asmk||t.dataset.asdel,nm=t.dataset.un||'',u=ADM.find(x=>x.id===id)||{};
+  const supers=ADM.filter(x=>x.status!=='deleted'&&x.adminLevel!=='assist').length;
+  if(id===(me&&me.uid))return toast('⛔ لا يمكنك تعديل حسابك أنت');
+  if(u.adminLevel!=='assist'&&supers<=1)return toast('⛔ هذا آخر مشرف عام — لا يمكن تحويله أو حذفه');
+  if(t.dataset.asmk){if(!confirm('تحويل «'+nm+'» من مشرف عام إلى مشرف مساعد؟ يفقد كل الصلاحيات المباشرة حتى تمنحه إياها.'))return;
+   try{await db.collection('users').doc(id).update({adminLevel:'assist',asstPerms:{approve:false,teamPerms:false,suspend:false,editReq:false}});toast('🛡️ صار «'+nm+'» مشرفاً مساعداً — اضغط ⚙️ لتحديد صلاحياته');draw()}catch(x){toast('⛔ تعذر التنفيذ')}return}
+  if(!confirm('حذف «'+nm+'»؟ يفقد الإشراف والدخول فوراً، وينتقل إلى «🗑 سلة المحذوفات» ويمكنك استرجاعه أو حذفه نهائياً من هناك.'))return;
+  try{await db.collection('users').doc(id).update({role:'manager',adminLevel:'',asstPerms:null,kind:'visitor',perm:'view_only',status:'deleted'});toast('🗑 حُذف المشرف ونُقل إلى السلة');draw()}catch(x){toast('⛔ تعذر الحذف')}return}
  if(t.dataset.asopen){const q=document.getElementById('asQ');if(q)q.value='';asRender();document.getElementById('asstAddModal').showModal();return}
  if(t.dataset.asp){const nm=t.dataset.un||'';if(!confirm('تعيين «'+nm+'» مشرفاً مساعداً تحت إشرافك؟'))return;
   try{await db.collection('users').doc(t.dataset.asp).update({role:'admin',adminLevel:'assist',kind:'club',perm:'full',status:'approved',league:'',asstPerms:{approve:false,teamPerms:false,suspend:false,editReq:false}});document.getElementById('asstAddModal').close();acF='adm';toast('🛡️ أُضيف «'+nm+'» كمشرف مساعد');draw()}catch(x){toast('⛔ تعذر التعيين: تحقق من القواعد أو الاتصال')}return}
