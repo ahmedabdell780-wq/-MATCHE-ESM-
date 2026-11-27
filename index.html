@@ -724,20 +724,6 @@ header,header.menu-open{z-index:100}
 /* ===== End Referee Tab CSS ===== */
 
 /* ===== Senior theme text & button color fixes ===== */
-body.senior-theme .tn { color: #e2e8f0 !important; text-shadow: 0 1px 3px rgba(0,0,0,0.5) !important; }
-body.senior-theme .meta { color: #94a3b8 !important; }
-body.senior-theme .meta span { color: #94a3b8 !important; }
-body.senior-theme .card.mc .act .btn.alt,
-body.senior-theme .card.mc .act .btn.sm.alt {
-  color: #fbbf24 !important;
-  border-color: rgba(245,158,11,0.45) !important;
-  background: rgba(10,20,45,0.65) !important;
-}
-body.senior-theme .card.mc .act .btn.sm:not(.alt):not(.red) { color: #fff !important; }
-body.senior-theme .card.mc .act .btn.red { color: #fca5a5 !important; }
-body.senior-theme .b.ok { background: #14532d !important; color: #86efac !important; }
-body.senior-theme .b.wt { background: #78350f !important; color: #fde68a !important; }
-body.senior-theme .b.no { background: #7f1d1d !important; color: #fca5a5 !important; }
 /* Dropdown menu styles for match cards */
 .mc-menu { display:block; }
 .mc-menu-toggle {
@@ -765,14 +751,6 @@ body.senior-theme .b.no { background: #7f1d1d !important; color: #fca5a5 !import
   from { opacity:0; transform:translateY(-6px); }
   to   { opacity:1; transform:translateY(0); }
 }
-body.senior-theme .mc-menu-toggle {
-  color: #fbbf24 !important;
-  border-color: rgba(245,158,11,0.5) !important;
-  background: rgba(10,20,45,0.7) !important;
-}
-body.senior-theme .mc-menu-toggle:hover {
-  background: rgba(245,158,11,0.15) !important;
-}
 /* ===== End senior theme fixes ===== */
 
 
@@ -786,75 +764,17 @@ body.sr-mode header .htxt small{white-space:normal;max-width:none;overflow:visib
   100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.45)); }
 }
 
-body.senior-theme #leagueLogoImg {
-  animation: seniorLogoPulse 2.8s infinite ease-in-out;
-  background: transparent !important;
-  border-radius: 50%;
-}
 
-body.senior-theme {
-  background: radial-gradient(circle at 50% 0%, #101c38 0%, #060c18 60%, #03070f 100%) !important;
-  color: #e2e8f0;
-}
 
-body.senior-theme header {
-  background: linear-gradient(135deg, rgba(16, 28, 56, 0.95), rgba(7, 13, 26, 0.98)) !important;
-  border-bottom: 2px solid #f59e0b !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.55), 0 0 15px rgba(245, 158, 11, 0.25) !important;
-}
 
-body.senior-theme .htxt h1 {
-  background: linear-gradient(135deg, #ffffff 30%, #fbbf24 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: 900;
-}
 
-body.senior-theme .league-switcher {
-  background: rgba(7, 13, 26, 0.92) !important;
-  border-bottom: 1px solid rgba(245, 158, 11, 0.25) !important;
-}
 
-body.senior-theme .card.mc {
-  background: linear-gradient(145deg, rgba(18, 32, 64, 0.75), rgba(10, 18, 36, 0.85)) !important;
-  border: 1px solid rgba(245, 158, 11, 0.28) !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
-  border-radius: 18px !important;
-  backdrop-filter: blur(12px);
-}
 
-body.senior-theme .card.mc:hover {
-  border-color: #f59e0b !important;
-  box-shadow: 0 10px 30px rgba(245, 158, 11, 0.25) !important;
-}
 
-body.senior-theme .vsb {
-  background: linear-gradient(135deg, #f59e0b, #b45309) !important;
-  color: #000 !important;
-  font-weight: 900 !important;
-  border: 2px solid #ffd54a !important;
-  box-shadow: 0 0 15px rgba(245, 158, 11, 0.5) !important;
-}
 
-body.senior-theme .crest {
-  border: 2px solid rgba(245, 158, 11, 0.5) !important;
-  background: rgba(15, 23, 42, 0.6) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-}
 
-body.senior-theme .rnd {
-  background: rgba(15, 25, 48, 0.8) !important;
-  border: 1px solid rgba(245, 158, 11, 0.3) !important;
-}
 
-body.senior-theme nav.nav {
-  background: linear-gradient(180deg, rgba(10, 18, 36, 0.95), #060b14) !important;
-  border-top: 1px solid rgba(245, 158, 11, 0.25) !important;
-}
 
-body.senior-theme nav.nav button[pressed] {
-  color: #fbbf24 !important;
-}
 
 /* ==================== واجهة بطولة الأكابر «الشاطئ الإغريقي» — مختلفة كلياً عن الفئات الشبانية ==================== */
 body.sr-mode{--bg:#f3ecdc;--card:#fffdf7;--panel:#fffdf7;--tx:#10294a;--ink:#10294a;--mu:#6a7890;--muted:#6a7890;--ln:#dccfae;--line:#dccfae;--field:#faf3e1;--hero:linear-gradient(135deg,#0a2a4e,#0f4378);--g:#0f4378;--g2:#0a2a4e;--gold:#e8b765;--bodybg:radial-gradient(120% 55% at 50% 0,#fbf6ea 0,#f3ecdc 55%,#eadfc4 100%);--srkey:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='14'%3E%3Cpath d='M0 12H36M2 12V2h20v8H9V5h7' fill='none' stroke='%23f6eedc' stroke-width='1.6'/%3E%3C/svg%3E")}
@@ -4071,7 +3991,6 @@ window.switchLeagueMode = function(mode){
   const lSub = $('leagueSubTxt');
   if(lSub) lSub.textContent = isS ? window.SRT2 : 'الفئات الشبانية 2026/2027 · وسط غرب';
   document.body.classList.toggle('sr-mode', isS);
-  document.body.classList.toggle('senior-theme', isS);
   try{document.body.style.setProperty('--srlogo', isS ? 'url('+window.SENIOR_LOGO_M+')' : 'none')}catch(e){}
   try{ const gl=$('leagueLogoImg'); if(gl) gl.alt = isS ? window.SRT_FULL : 'شعار رابطة تيبازة'; }catch(e){}
 
@@ -4818,7 +4737,7 @@ async function downloadRefVideo(refId){
 
 /* ---- رسم الواجهة ---- */
 function draw(){
- try{updateSeniorVisibility(); document.body.classList.toggle('senior-theme', isSenior()); document.body.classList.toggle('sr-mode', isSenior());}catch(e){}
+ try{updateSeniorVisibility(); document.body.classList.toggle('sr-mode', isSenior());}catch(e){}
 try{ccUi();document.body.classList.toggle('vw',isView());document.body.classList.toggle('se',isEntry())}catch(e){}if(!me&&tab==='a')return;try{$('app').innerHTML=tab==='m'?fixtures():tab==='r'?results():tab==='s'?standings():tab==='g'?scorers():tab==='ref'?referees():admin()}catch(err){console.error('draw failed',err);$('app').innerHTML='<div class="card" style="direction:ltr;text-align:left;border:2px solid #b91c1c"><b style="color:#b91c1c">\u26a0\ufe0f Render error (tab '+tab+')</b><pre style="white-space:pre-wrap;word-break:break-word;font-size:12px;margin:8px 0 0">'+String(err&&err.message||err).replace(/</g,'&lt;')+'\n'+String(err&&err.stack||'').split('\n').slice(0,4).join('\n').replace(/</g,'&lt;')+'</pre></div>'}}
 const lg=id=>`<img class="lg" src="${LG[id]}" alt="">`;
 const lastRound=()=>{for(let r=22;r>=1;r--)if(pairs(r).m.some(([h,a])=>{const v=S[K(cat,r,h,a)];return v&&v.status==='confirmed'&&v.sh!==''&&v.sh!=null}))return r;return 1};
