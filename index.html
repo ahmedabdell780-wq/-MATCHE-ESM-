@@ -118,7 +118,7 @@ nav button[aria-pressed=true] .lb{margin-top:-18px}
 .glass{position:relative;margin:auto;width:min(100%,410px);padding:26px 22px 18px;border-radius:28px;border:1.5px solid transparent;background:linear-gradient(165deg,#0f2f5ef2,#07183aef 55%,#050f26f5) padding-box,conic-gradient(from var(--ga),#c8814f,#fbf3e0,#2a8fd0,#8a1c2f,#c8814f) border-box;box-shadow:0 28px 70px #000a,0 0 0 1px #ffffff10 inset,0 0 60px #1f6fd033;text-align:center;animation:gin .8s cubic-bezier(.2,.8,.2,1) both,gborder 7s linear infinite}
 @keyframes gin{from{opacity:0;transform:translateY(26px) scale(.95)}to{opacity:1;transform:none}}
 @keyframes gborder{to{--ga:360deg}}
-.glogo{position:relative;width:176px;height:176px;margin:-4px auto 12px;display:grid;place-items:center}
+.glogo{position:relative;width:118px;height:118px;margin:2px auto 12px;display:grid;place-items:center}
 .glogo::before{content:"";position:absolute;inset:-9px;border-radius:50%;background:conic-gradient(from 0deg,#c8814f,#fbf3e0 18%,#2a8fd0 40%,#8a1c2f 62%,#c8814f 82%,#fbf3e0);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2px));mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2px));animation:gspin 8s linear infinite}
 .glogo::after{content:"";position:absolute;inset:-20px;border-radius:50%;background:radial-gradient(circle,#eebb8655,transparent 68%);animation:gpulse 3.6s ease-in-out infinite;z-index:-1}
 @keyframes gpulse{0%,100%{transform:scale(.92);opacity:.6}50%{transform:scale(1.12);opacity:1}}
@@ -145,6 +145,7 @@ nav button[aria-pressed=true] .lb{margin-top:-18px}
 .gf label{color:#fbf3e0d9;font-size:13px;margin:12px 2px 5px}
 .gf input,.gf select.f{background:#ffffff14;border:1.5px solid #eebb8640;color:#fff;border-radius:13px;padding:12px 13px;font-size:15px;transition:.25s;outline:0}
 .gf input::placeholder{color:#ffffff6e}
+.gf input:-webkit-autofill,.gf input:-webkit-autofill:focus{-webkit-text-fill-color:#fff;caret-color:#fff;-webkit-box-shadow:0 0 0 60px #12305c inset;transition:background-color 9999s}
 .gf input:focus,.gf select.f:focus{border-color:#eebb86;background:#ffffff24;box-shadow:0 0 0 3px #eebb8638,0 0 22px #c8814f33}
 .gf select.f option{color:#0b1722;background:#fff}
 .gf .hint{margin:8px 0 0;text-align:right;color:#fbf3e0d0;background:#eebb8614;border:1px solid #eebb8628;border-radius:11px;padding:8px 10px}
