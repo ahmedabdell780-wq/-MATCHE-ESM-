@@ -3420,11 +3420,13 @@ var halfRounds = window.halfRounds || (function(){ return isSenior() ? 15 : 11; 
 
 const K=(c,r,h,a)=>(c==='U15'?'':c+'|')+r+':'+h+'-'+a;
 const pairs=r=>{
-  const isS = isSenior();
+  const isS = (typeof isSenior === 'function' ? isSenior() : (window.leagueMode === 'senior'));
   const N = isS ? 15 : 11;
-  const arr = isS ? R_SENIOR : R_YOUTH;
+  const arr = isS ? (window.R_SENIOR || (typeof R_SENIOR !== 'undefined' ? R_SENIOR : [])) : (window.R_YOUTH || (typeof R_YOUTH !== 'undefined' ? R_YOUTH : []));
+  if(!arr || !arr.length) return {bye:1, m:[]};
   const w = arr[(r-1)%N];
-  return {bye:w[0], m:w[1].map(p=>r>N?[p[1],p[0]]:[p[0],p[1]])};
+  if(!w) return {bye:1, m:[]};
+  return {bye:w[0], m:(w[1]||[]).map(p=>r>N?[p[1],p[0]]:[p[0],p[1]])};
 };
 const ph=s=>{s=String(s||'').replace(/[٠-٩]/g,d=>d.charCodeAt(0)-1632).replace(/[۰-۹]/g,d=>d.charCodeAt(0)-1776).replace(/\D/g,'');return s.length>=9?s.slice(-9):s};
 const mail=v=>{v=String(v||'').trim().toLowerCase();if(v.includes('@'))return v;const d=ph(v);if(/^\d{6,}$/.test(d))return d+'@esm.local';return/^[a-z0-9._-]+$/.test(v)?v+'@esm.local':''};
@@ -3983,6 +3985,7 @@ window.switchLeagueMode = function(mode){
   const lSub = $('leagueSubTxt');
   if(lSub) lSub.textContent = isS ? window.SRT2 : 'الفئات الشبانية 2026/2027 · وسط غرب';
   document.body.classList.toggle('sr-mode', isS);
+  document.body.classList.toggle('senior-theme', isS);
   try{document.body.style.setProperty('--srlogo', isS ? 'url('+window.SENIOR_LOGO_M+')' : 'none')}catch(e){}
   try{ const gl=$('leagueLogoImg'); if(gl) gl.alt = isS ? window.SRT_FULL : 'شعار رابطة تيبازة'; }catch(e){}
 
@@ -4266,7 +4269,7 @@ function listenEdits(){
 
 /* ---- رسم الواجهة ---- */
 function draw(){
- try{updateSeniorVisibility()}catch(e){}
+ try{updateSeniorVisibility(); document.body.classList.toggle('senior-theme', isSenior()); document.body.classList.toggle('sr-mode', isSenior());}catch(e){}
 try{ccUi();document.body.classList.toggle('vw',isView());document.body.classList.toggle('se',isEntry())}catch(e){}if(!me&&tab==='a')return;try{$('app').innerHTML=tab==='m'?fixtures():tab==='r'?results():tab==='s'?standings():tab==='g'?scorers():admin()}catch(err){console.error('draw failed',err);$('app').innerHTML='<div class="card" style="direction:ltr;text-align:left;border:2px solid #b91c1c"><b style="color:#b91c1c">\u26a0\ufe0f Render error (tab '+tab+')</b><pre style="white-space:pre-wrap;word-break:break-word;font-size:12px;margin:8px 0 0">'+String(err&&err.message||err).replace(/</g,'&lt;')+'\n'+String(err&&err.stack||'').split('\n').slice(0,4).join('\n').replace(/</g,'&lt;')+'</pre></div>'}}
 const lg=id=>`<img class="lg" src="${LG[id]}" alt="">`;
 const lastRound=()=>{for(let r=22;r>=1;r--)if(pairs(r).m.some(([h,a])=>{const v=S[K(cat,r,h,a)];return v&&v.status==='confirmed'&&v.sh!==''&&v.sh!=null}))return r;return 1};
@@ -5587,7 +5590,7 @@ $('phf').onchange=async e=>{const f=e.target.files[0];if(!f||!phTarget)return;
  try{const img=await resizePhoto(f);await db.collection('photos').doc(pid(phTeam,phTarget)).set(Object.assign({teamId:phTeam,name:phTarget,img},phLg()));PH[phTeam+'|'+nrm(phTarget)]=img;drawPh();toast('✅ حُفظت الصورة')}catch(x){toast('⛔ تعذر حفظ الصورة (قد لا تملك الصلاحية)')}};
 
 /* ---- أدوات الرسم ---- */
-async function tcol(id){const im=await imgOf(OLD.DEF[id]);if(!im)return[31,90,52];const c=document.createElement('canvas');c.width=c.height=24;const x=c.getContext('2d');x.drawImage(im,0,0,24,24);const d=x.getImageData(0,0,24,24).data;let R=0,G=0,B=0,W=0;
+async function tcol(id){const logoSrc = (typeof teamLogo === 'function' ? teamLogo(id) : null) || (OLD && OLD.DEF && OLD.DEF[id]) || (typeof LG !== 'undefined' && LG && LG[id]); const im = await imgOf(logoSrc); if(!im) return isSenior() ? [10, 24, 40] : [31, 90, 52];const c=document.createElement('canvas');c.width=c.height=24;const x=c.getContext('2d');x.drawImage(im,0,0,24,24);const d=x.getImageData(0,0,24,24).data;let R=0,G=0,B=0,W=0;
  for(let i=0;i<d.length;i+=4){const a=d[i+3]/255,r=d[i],g=d[i+1],b=d[i+2],mx=Math.max(r,g,b),mn=Math.min(r,g,b),s=(mx-mn)/(mx||1),w=a*(.1+s*s)*((mx>45&&mx<245)?1:.15);R+=r*w;G+=g*w;B+=b*w;W+=w}
  return W?[R/W,G/W,B/W].map(Math.round):[31,90,52]}
 const rgba=(c,a)=>`rgba(${c[0]},${c[1]},${c[2]},${a})`;
@@ -6994,7 +6997,7 @@ function vSprCard(g,c){const cw=130,ch=200,m=26,cv=document.createElement('canva
  tx(x,String(g.n).split(' ').slice(0,2).join(' '),X0+cw/2,Y0+ch-32,F(700,16),'#fff','center',cw-14);return cv}
 async function vAssets(V,W,H,dy){
  const{r,h,a}=V,key=(cat==='U15'?'':cat+'|')+r+':'+h+'-'+a,v=S[key]||{};
- const[c1,c2,lh,la,Lg]=await Promise.all([tcol(h),tcol(a),imgOf(OLD.DEF[h]),imgOf(OLD.DEF[a]),imgOf(isSenior()&&window.SENIOR_LOGO?window.SENIOR_LOGO:(typeof LEAGUE!=='undefined'?LEAGUE:null))]);const SR=isSenior();
+ const[c1,c2,lh,la,Lg]=await Promise.all([tcol(h),tcol(a),imgOf(teamLogo(h)),imgOf(teamLogo(a)),imgOf(isSenior()&&window.SENIOR_LOGO?window.SENIOR_LOGO:(typeof LEAGUE!=='undefined'?LEAGUE:null))]);const SR=isSenior();
  const has=v&&v.sh!==undefined&&v.sh!==''&&v.sh!==null;
  const pool=async(t,s)=>{const o=[];for(const g of parseG(s||'')){if(!g.n)continue;const p=photoOf(t,g.n),im=p?await imgOf(p):null;if(im)o.push({n:g.n,m:g.m,k:g.k||1,im})}o.sort((p,q)=>(+(p.m||999))-(+(q.m||999)));return o.slice(0,4)};
  const[gA,gH]=await Promise.all([pool(a,v.ga),pool(h,v.gh)]);
@@ -7044,6 +7047,54 @@ function vSfx(ac,dst,b){
  [3.0,3.16,3.32].forEach((d,i)=>tone(b+d,880+i*220,.16,.18,'triangle'));
  noise(b+3.8,.7,300,2800,.3);[4.5,4.7,4.9].forEach((d,i)=>tone(b+d,660+i*165,.22,.14,'triangle'));
 }
+
+function downloadVideoFile(blob, defaultName){
+  if(!blob || !blob.size){
+    toast('⚠️ لم يتم إنشاء الفيديو أو أنه فارغ');
+    return;
+  }
+  const isMp4 = (blob.type || '').includes('mp4');
+  let name = (defaultName || 'video').trim().replace(/[/\\?%*:|"<>]/g, '-');
+  if(!name.endsWith('.mp4') && !name.endsWith('.webm')){
+    name += isMp4 ? '.mp4' : '.webm';
+  }
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = name;
+  a.rel = 'noopener';
+  a.target = '_blank';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => {
+    try { a.remove(); } catch(e){}
+    try { URL.revokeObjectURL(url); } catch(e){}
+  }, 4000);
+  toast('📥 جاري تنزيل الفيديو: ' + name);
+}
+
+async function shareVideoFile(blob, defaultName, title){
+  if(!blob || !blob.size){
+    toast('⚠️ لا يوجد فيديو جاهز للمشاركة');
+    return;
+  }
+  const isMp4 = (blob.type || '').includes('mp4');
+  let name = (defaultName || 'video').trim().replace(/[/\\?%*:|"<>]/g, '-');
+  if(!name.endsWith('.mp4') && !name.endsWith('.webm')){
+    name += isMp4 ? '.mp4' : '.webm';
+  }
+  const file = new File([blob], name, { type: blob.type || (isMp4 ? 'video/mp4' : 'video/webm') });
+  if(navigator.canShare && navigator.canShare({ files: [file] })){
+    try {
+      await navigator.share({ files: [file], title: title || name });
+      return;
+    } catch(e){
+      if(e && e.name === 'AbortError') return;
+    }
+  }
+  downloadVideoFile(blob, name);
+}
+
 async function vStart(){
  if(vRun||!vCur)return;const V=vCur,F916=V.fmt==='916',W=1080,H=F916?1920:1350,dy=F916?250:0;
  vRun=true;$('vGo').disabled=true;$('vInfo').textContent='⏳ تجهيز العناصر…';
@@ -7055,13 +7106,13 @@ async function vStart(){
   const mime=vMime(!!dst),rec=new MediaRecorder(stream,Object.assign({videoBitsPerSecond:10000000},mime?{mimeType:mime}:{})),ch=[];
   rec.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};const done=new Promise(r=>rec.onstop=r);
   if(ac)vSfx(ac,dst,ac.currentTime+.08);
-  rec.start();$('vInfo').textContent='🔴 جاري التسجيل… لا تغلق الشاشة';
+  rec.start(500);$('vInfo').textContent='🔴 جاري التسجيل… لا تغلق الشاشة';
   const T0=performance.now();
   await new Promise(res=>{const tick=()=>{const t=(performance.now()-T0)/1000;vFrame(x,A,Math.min(t,VD));$('vBar').style.width=Math.min(100,t/VD*100)+'%';if(t<VD+.4)requestAnimationFrame(tick);else res()};requestAnimationFrame(tick)});
   rec.stop();await done;try{ac&&ac.close()}catch(e){}
   const type=(rec.mimeType||mime||'video/webm').split(';')[0];vBlob=new Blob(ch,{type});
   if(vUrl)URL.revokeObjectURL(vUrl);vUrl=URL.createObjectURL(vBlob);
-  const pv=$('vPrev');pv.src=vUrl;pv.hidden=false;$('vStage').hidden=true;['vShare','vDl'].forEach(i=>$(i).hidden=false);$('vGo').hidden=true;
+  const pv=$('vPrev');pv.src=vUrl;pv.hidden=false;try{pv.load()}catch(e){};$('vStage').hidden=true;['vShare','vDl'].forEach(i=>$(i).hidden=false);$('vGo').hidden=true;
   $('vInfo').textContent=`✅ جاهز (${(vBlob.size/1048576).toFixed(1)} م.ب · ${type.includes('mp4')?'MP4':'WebM'})`+(type.includes('mp4')?'':' — فيسبوك يفضّل MP4، وبعض الأجهزة تنتج WebM.')
  }catch(e){$('vInfo').textContent='⚠️ تعذّر إنشاء الفيديو على هذا المتصفح.';$('vGo').disabled=false;console.log(e)}
  vRun=false
@@ -7099,8 +7150,8 @@ $('vd').addEventListener('click',async e=>{ const tc = e.target.closest('[data-t
  const b=e.target.closest('button');if(!b)return;
  if(b.dataset.vf&&!vRun){vCur.fmt=b.dataset.vf;document.querySelectorAll('#vFmt .chip').forEach(c=>c.setAttribute('aria-pressed',c===b))}
  else if(b.id==='vGo')vStart();
- else if(b.id==='vDl'&&vBlob){const f=vFile(),a=document.createElement('a');a.href=vUrl;a.download=f.name;document.body.appendChild(a);a.click();a.remove()}
- else if(b.id==='vShare'&&vBlob){const f=vFile();try{if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],title:f.name});else toast('⚠️ المشاركة غير مدعومة هنا، استعمل «تحميل»')}catch(x){}}
+ else if(b.id==='vDl'&&vBlob){downloadVideoFile(vBlob, vFile().name)}
+ else if(b.id==='vShare'&&vBlob){await shareVideoFile(vBlob, vFile().name, 'فيديو المباراة')}
  else if(b.id==='vX'&&!vRun){$('vd').close()}});
 $('vd').addEventListener('cancel',e=>{if(vRun)e.preventDefault()});
 /* ===== فيديو ملصق الترتيب المعتمد (متحرك · بنفس هوية الملصق) ===== */
@@ -7245,13 +7296,13 @@ async function avStart(){
   const mime=vMime(!!dst),rec=new MediaRecorder(stream,Object.assign({videoBitsPerSecond:10000000},mime?{mimeType:mime}:{})),ch=[];
   rec.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};const done=new Promise(r=>rec.onstop=r);
   if(ac)avSfx(ac,dst,ac.currentTime+.08,A);
-  rec.start();$('avInfo').textContent='🔴 جاري التسجيل… لا تغلق الشاشة';
+  rec.start(500);$('avInfo').textContent='🔴 جاري التسجيل… لا تغلق الشاشة';
   const T0=performance.now();
   await new Promise(res=>{const tick=()=>{const t=(performance.now()-T0)/1000;avFrame(x,A,Math.min(t,A.D));$('avBar').style.width=Math.min(100,t/A.D*100)+'%';if(t<A.D+.4)requestAnimationFrame(tick);else res()};requestAnimationFrame(tick)});
   rec.stop();await done;try{ac&&ac.close()}catch(e){}
   const type=(rec.mimeType||mime||'video/webm').split(';')[0];AV.blob=new Blob(ch,{type});
   if(AV.url)URL.revokeObjectURL(AV.url);AV.url=URL.createObjectURL(AV.blob);
-  const pv=$('avPrev');pv.src=AV.url;pv.hidden=false;$('avStage').hidden=true;['avShare','avDl'].forEach(i=>$(i).hidden=false);$('avGo').hidden=true;
+  const pv=$('avPrev');pv.src=AV.url;pv.hidden=false;try{pv.load()}catch(e){};$('avStage').hidden=true;['avShare','avDl'].forEach(i=>$(i).hidden=false);$('avGo').hidden=true;
   $('avInfo').textContent='✅ جاهز ('+(AV.blob.size/1048576).toFixed(1)+' م.ب · '+(type.includes('mp4')?'MP4':'WebM')+')'+(type.includes('mp4')?'':' — فيسبوك يفضّل MP4، وبعض الأجهزة تنتج WebM.')
  }catch(e){$('avInfo').textContent='⚠️ تعذّر إنشاء الفيديو على هذا المتصفح.';$('avGo').disabled=false;console.log(e)}
  AV.run=false
@@ -7289,8 +7340,8 @@ $('avd').addEventListener('click',async e=>{ const tc = e.target.closest('[data-
  const b=e.target.closest('button');if(!b)return;
  if(b.dataset.af&&!AV.run){if(AV.fmt!==b.dataset.af){AV.fmt=b.dataset.af;document.querySelectorAll('#avFmt .chip').forEach(c=>c.setAttribute('aria-pressed',c===b));avReset();avPrep()}}
  else if(b.id==='avGo')avStart();
- else if(b.id==='avDl'&&AV.blob){const f=avFile(),a=document.createElement('a');a.href=AV.url;a.download=f.name;document.body.appendChild(a);a.click();a.remove()}
- else if(b.id==='avShare'&&AV.blob){const f=avFile();try{if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],title:f.name});else toast('⚠️ المشاركة غير مدعومة هنا، استعمل «تحميل»')}catch(x){}}
+ else if(b.id==='avDl'&&AV.blob){downloadVideoFile(AV.blob, avFile().name)}
+ else if(b.id==='avShare'&&AV.blob){await shareVideoFile(AV.blob, avFile().name, 'فيديو الترتيب المعتمد')}
  else if(b.id==='avX'&&!AV.run){AV.tok++;$('avd').close()}});
 $('avd').addEventListener('cancel',e=>{if(AV.run)e.preventDefault()});
 
@@ -7534,7 +7585,7 @@ async function svStart(){if(SV.run||!SV.A)return;SV.run=true;$('svGo').disabled=
    const g=setInterval(()=>{const t=(performance.now()-T0)/1000;if(t>A.D+4){clearInterval(g);res()}},500)});
   rec.stop();await done;try{ac&&ac.close()}catch(e){}try{wl&&wl.release()}catch(e){}
   const type=(rec.mimeType||mime||'video/webm').split(';')[0];SV.blob=new Blob(ch,{type});if(SV.url)URL.revokeObjectURL(SV.url);SV.url=URL.createObjectURL(SV.blob);
-  const pv=$('svPrev');pv.src=SV.url;pv.hidden=false;$('svStage').hidden=true;['svShare','svDl'].forEach(i=>$(i).hidden=false);$('svGo').hidden=true;
+  const pv=$('svPrev');pv.src=SV.url;pv.hidden=false;try{pv.load()}catch(e){};$('svStage').hidden=true;['svShare','svDl'].forEach(i=>$(i).hidden=false);$('svGo').hidden=true;
   $('svInfo').textContent='✅ جاهز ('+(SV.blob.size/1048576).toFixed(1)+' م.ب · '+(type.includes('mp4')?'MP4':'WebM')+')'+(bad?' — ⚠️ حدثت أخطاء رسم في '+bad+' إطار':'')
  }catch(e){try{wl&&wl.release()}catch(x){}$('svInfo').textContent='⚠️ تعذّر إنشاء الفيديو على هذا المتصفح.';$('svGo').disabled=false;console.log(e)}
  SV.run=false}
@@ -7542,8 +7593,8 @@ const svFile=()=>{const ext=SV.blob.type.includes('mp4')?'mp4':'webm';return new
 $('svd').addEventListener('change',e=>{if(e.target.id==='svRd'&&!SV.run){SV.u=+e.target.value;svReset();svPrep()}});
 $('svd').addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;
  if(b.id==='svGo')svStart();
- else if(b.id==='svDl'&&SV.blob){const f=svFile(),a=document.createElement('a');a.href=SV.url;a.download=f.name;document.body.appendChild(a);a.click();a.remove()}
- else if(b.id==='svShare'&&SV.blob){const f=svFile();try{if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],title:f.name});else toast('⚠️ المشاركة غير مدعومة هنا، استعمل «تحميل»')}catch(x){}}
+ else if(b.id==='svDl'&&SV.blob){downloadVideoFile(SV.blob, svFile().name)}
+ else if(b.id==='svShare'&&SV.blob){await shareVideoFile(SV.blob, svFile().name, 'إحصائيات البطولة')}
  else if(b.id==='svX'&&!SV.run){SV.tok++;$('svd').close()}});
 $('svd').addEventListener('cancel',e=>{if(SV.run)e.preventDefault()});
 
@@ -7812,11 +7863,11 @@ async function mkStart(){
   const mime=vMime(!!dst),rec=new MediaRecorder(stream,Object.assign({videoBitsPerSecond:10000000},mime?{mimeType:mime}:{})),ch=[];
   rec.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};const done=new Promise(r=>rec.onstop=r);
   if(ac)mkSfx(ac,dst,ac.currentTime+.08,A);
-  rec.start();$('mkInfo').textContent='🔴 جاري التسجيل… لا تغلق الشاشة';const T0=performance.now();
+  rec.start(500);$('mkInfo').textContent='🔴 جاري التسجيل… لا تغلق الشاشة';const T0=performance.now();
   await new Promise(res=>{const tick=()=>{const t=(performance.now()-T0)/1000;mkFrame(x,A,Math.min(t,A.D));$('mkBar').style.width=Math.min(100,t/A.D*100)+'%';if(t<A.D+.3)requestAnimationFrame(tick);else res()};requestAnimationFrame(tick)});
   rec.stop();await done;try{ac&&ac.close()}catch(e){}
   const type=(rec.mimeType||mime||'video/webm').split(';')[0];MK.blob=new Blob(ch,{type});if(MK.url)URL.revokeObjectURL(MK.url);MK.url=URL.createObjectURL(MK.blob);
-  const pv=$('mkPrev');pv.src=MK.url;pv.hidden=false;$('mkStage').hidden=true;['mkShare','mkDl'].forEach(i=>$(i).hidden=false);$('mkGo').hidden=true;
+  const pv=$('mkPrev');pv.src=MK.url;pv.hidden=false;try{pv.load()}catch(e){};$('mkStage').hidden=true;['mkShare','mkDl'].forEach(i=>$(i).hidden=false);$('mkGo').hidden=true;
   $('mkInfo').textContent=`✅ جاهز (${(MK.blob.size/1048576).toFixed(1)} م.ب · ${type.includes('mp4')?'MP4':'WebM'})`+(type.includes('mp4')?'':' — فيسبوك يفضّل MP4، وبعض الأجهزة تنتج WebM.')
  }catch(e){$('mkInfo').textContent='⚠️ تعذّر إنشاء الفيديو على هذا المتصفح.';$('mkGo').disabled=false;try{ac&&ac.close()}catch(x){}console.log(e)}
  MK.run=false}
@@ -7833,8 +7884,8 @@ $('mk').addEventListener('click',async e=>{const b=e.target.closest('button');if
  else if(b.id==='mkPng')mkPng();
  else if(b.id==='mkPost')openPost(MK_TTL[MK.kind]+' · منشور فيسبوك',mkPostCur());
  else if(b.id==='mkXiSave'){try{await db.collection('public').doc(mkXiKey()).set({c:MK.c,r:MK.r,form:MK.form,slots:MK.slots.map(s=>s||null),at:Date.now()});toast('💾 حُفظت تشكيلة الجولة')}catch(x){toast('⛔ تعذّر الحفظ (للمشرف فقط)')}}
- else if(b.id==='mkDl'&&MK.blob){const f=mkFile(),a=document.createElement('a');a.href=MK.url;a.download=f.name;document.body.appendChild(a);a.click();a.remove()}
- else if(b.id==='mkShare'&&MK.blob){const f=mkFile();try{if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],title:f.name});else toast('⚠️ المشاركة غير مدعومة هنا، استعمل «تحميل»')}catch(x){}}
+ else if(b.id==='mkDl'&&MK.blob){downloadVideoFile(MK.blob, mkFile().name)}
+ else if(b.id==='mkShare'&&MK.blob){await shareVideoFile(MK.blob, mkFile().name, 'بطاقة الماتش داي')}
  else if(b.id==='mkX'&&!MK.run)$('mk').close()});
 $('mk').addEventListener('change',e=>{const t=e.target;
  if(t.id==='mkPick'){MK.pick=t.value;mkReset();mkPreview()}
@@ -7867,7 +7918,7 @@ async function gvAssets(){
  const key=GV.k,m=/^(?:([A-Z0-9]+)\|)?(\d+):(\d+)-(\d+)$/.exec(key),v=S[key]||{},h=+m[3],a=+m[4],side=GV.s,tid=side==='h'?h:a,g=parseG(side==='h'?v.gh:v.ga)[GV.i];
  if(!g)throw new Error('goal not found');
  const GS=goalState(v,side,GV.i),{W,H}=gvDim(),dy=(H-1350)/2,c=await tcol(tid);
- const[lh,la,ph,L0]=await Promise.all([imgOf(OLD.DEF[h]),imgOf(OLD.DEF[a]),imgOf(photoOf(tid,g.n)),imgOf(isSenior()&&window.SENIOR_LOGO?window.SENIOR_LOGO:(typeof LEAGUE!=='undefined'?LEAGUE:null))]),lt=side==='h'?lh:la,L=L0,Ls=L0;
+ const[lh,la,ph,L0]=await Promise.all([imgOf(teamLogo(h)),imgOf(teamLogo(a)),imgOf(photoOf(tid,g.n)),imgOf(isSenior()&&window.SENIOR_LOGO?window.SENIOR_LOGO:(typeof LEAGUE!=='undefined'?LEAGUE:null))]),lt=side==='h'?lh:la,L=L0,Ls=L0;
  const cv=(w,hh)=>{const e=document.createElement('canvas');e.width=w;e.height=hh;const q=e.getContext('2d');q.direction='rtl';return[e,q]};
  // الخلفية الثابتة
  const[bg,bx]=cv(W,H);bgBase(bx,W,H,c);if(isSenior())mkBgSR(bx,W,H,Ls);if(lt){bx.save();bx.globalAlpha=.1;bx.drawImage(lt,W-720,260+dy,760,760);bx.restore()}tx(bx,'GOAL',W/2,250+dy,F(900,330),'rgba(255,255,255,.07)');
@@ -7956,13 +8007,13 @@ async function gvStart(){
   const mime=vMime(!!dst),rec=new MediaRecorder(stream,Object.assign({videoBitsPerSecond:10000000},mime?{mimeType:mime}:{})),ch=[];
   rec.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};const done=new Promise(r=>rec.onstop=r);
   if(ac)gvSfx(ac,dst,ac.currentTime+.08);
-  rec.start();$('gvInfo').textContent='🔴 جاري التسجيل… لا تغلق الشاشة';
+  rec.start(500);$('gvInfo').textContent='🔴 جاري التسجيل… لا تغلق الشاشة';
   const T0=performance.now();
   await new Promise(res=>{const tick=()=>{const t=(performance.now()-T0)/1000;gvFrame(x,A,Math.min(t,GVD));$('gvBar').style.width=Math.min(100,t/GVD*100)+'%';if(t<GVD+.3)requestAnimationFrame(tick);else res()};requestAnimationFrame(tick)});
   rec.stop();await done;try{ac&&ac.close()}catch(e){}
   const type=(rec.mimeType||mime||'video/webm').split(';')[0];GV.blob=new Blob(ch,{type});
   if(GV.url)URL.revokeObjectURL(GV.url);GV.url=URL.createObjectURL(GV.blob);
-  const pv=$('gvPrev');pv.src=GV.url;pv.hidden=false;$('gvStage').hidden=true;['gvShare','gvDl'].forEach(i=>$(i).hidden=false);$('gvGo').hidden=true;
+  const pv=$('gvPrev');pv.src=GV.url;pv.hidden=false;try{pv.load()}catch(e){};$('gvStage').hidden=true;['gvShare','gvDl'].forEach(i=>$(i).hidden=false);$('gvGo').hidden=true;
   $('gvInfo').textContent=`✅ جاهز (${(GV.blob.size/1048576).toFixed(1)} م.ب · ${type.includes('mp4')?'MP4':'WebM'})`+(type.includes('mp4')?'':' — فيسبوك يفضّل MP4، وبعض الأجهزة تنتج WebM.')
  }catch(e){$('gvInfo').textContent='⚠️ تعذّر إنشاء الفيديو على هذا المتصفح.';$('gvGo').disabled=false;try{ac&&ac.close()}catch(x){}console.log(e)}
  GV.run=false}
@@ -7970,8 +8021,8 @@ const gvFile=()=>{const ext=GV.blob.type.includes('mp4')?'mp4':'webm',g=parseG((
 $('gv').addEventListener('click',async e=>{const b=e.target.closest('button');if(!b||GV.run&&b.id!=='gvX')return;
  if(b.dataset.gf){GV.f=b.dataset.gf;gvReset();gvSync();gvPreview()}
  else if(b.id==='gvGo')gvStart();
- else if(b.id==='gvDl'&&GV.blob){const f=gvFile(),a=document.createElement('a');a.href=GV.url;a.download=f.name;document.body.appendChild(a);a.click();a.remove()}
- else if(b.id==='gvShare'&&GV.blob){const f=gvFile();try{if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],title:f.name});else toast('⚠️ المشاركة غير مدعومة هنا، استعمل «تحميل»')}catch(x){}}
+ else if(b.id==='gvDl'&&GV.blob){downloadVideoFile(GV.blob, gvFile().name)}
+ else if(b.id==='gvShare'&&GV.blob){await shareVideoFile(GV.blob, gvFile().name, 'فيديو الهدف')}
  else if(b.id==='gvX'&&!GV.run)$('gv').close()});
 $('gvSnd').addEventListener('change',()=>{GV.snd=$('gvSnd').checked});
 $('gv').addEventListener('cancel',e=>{if(GV.run)e.preventDefault()});
@@ -8176,13 +8227,13 @@ async function rvStart(){
   rvFrame(x,A,0);
   const stream=cv.captureStream(30),mime=vMime(false),rec=new MediaRecorder(stream,Object.assign({videoBitsPerSecond:10000000},mime?{mimeType:mime}:{})),ch=[];
   rec.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};const done=new Promise(r=>rec.onstop=r);
-  rec.start();$('rvInfo').textContent='🔴 جاري التسجيل… لا تغلق الشاشة';
+  rec.start(500);$('rvInfo').textContent='🔴 جاري التسجيل… لا تغلق الشاشة';
   const T0=performance.now();
   await new Promise(res=>{const tick=()=>{const t=(performance.now()-T0)/1000;rvFrame(x,A,Math.min(t,D));$('rvBar').style.width=Math.min(100,t/D*100)+'%';if(t<D+.3)requestAnimationFrame(tick);else res()};requestAnimationFrame(tick)});
   rec.stop();await done;
   const type=(rec.mimeType||mime||'video/webm').split(';')[0];RV.blob=new Blob(ch,{type});
   if(RV.url)URL.revokeObjectURL(RV.url);RV.url=URL.createObjectURL(RV.blob);
-  const pv=$('rvPrev');pv.src=RV.url;pv.hidden=false;$('rvStage').hidden=true;['rvShare','rvDl'].forEach(i=>$(i).hidden=false);$('rvGo').hidden=true;
+  const pv=$('rvPrev');pv.src=RV.url;pv.hidden=false;try{pv.load()}catch(e){};$('rvStage').hidden=true;['rvShare','rvDl'].forEach(i=>$(i).hidden=false);$('rvGo').hidden=true;
   $('rvInfo').textContent=`✅ جاهز (${(RV.blob.size/1048576).toFixed(1)} م.ب · ${type.includes('mp4')?'MP4':'WebM'})`+(type.includes('mp4')?'':' — فيسبوك يفضّل MP4، وبعض الأجهزة تنتج WebM.')
  }catch(e){$('rvInfo').textContent='⚠️ تعذّر إنشاء الفيديو على هذا المتصفح.';$('rvGo').disabled=false;console.log(e)}
  RV.run=false}
@@ -8194,8 +8245,8 @@ $('rv').addEventListener('click',async e=>{const b=e.target.closest('button');if
  else if(b.id==='rvPrevR'&&RV.r>1){RV.r--;rvReset();rvSync();rvPreview()}
  else if(b.id==='rvNextR'&&RV.r<(isSenior()?30:22)){RV.r++;rvReset();rvSync();rvPreview()}
  else if(b.id==='rvGo')rvStart();
- else if(b.id==='rvDl'&&RV.blob){const f=rvFile(),a=document.createElement('a');a.href=RV.url;a.download=f.name;document.body.appendChild(a);a.click();a.remove()}
- else if(b.id==='rvShare'&&RV.blob){const f=rvFile();try{if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],title:f.name});else toast('⚠️ المشاركة غير مدعومة هنا، استعمل «تحميل»')}catch(x){}}
+ else if(b.id==='rvDl'&&RV.blob){downloadVideoFile(RV.blob, rvFile().name)}
+ else if(b.id==='rvShare'&&RV.blob){await shareVideoFile(RV.blob, rvFile().name, 'فيديو الجولة')}
  else if(b.id==='rvX'&&!RV.run)$('rv').close()});
 $('rv').addEventListener('cancel',e=>{if(RV.run)e.preventDefault()});
 
@@ -8900,9 +8951,9 @@ function curRound(c){
    return{all:false,last:0}}
   return{all:true,last}};
  /* F = أول جولة لم تُحسم بعد */
- let F=0;
- for(let r=1;r<=22;r++){if(!st(r).all){F=r;break}}
- if(!F)return 22;
+ let F=0, maxR = (typeof maxRounds === 'function' ? maxRounds() : (isSenior() ? 30 : 22));
+ for(let r=1;r<=maxR;r++){if(!st(r).all){F=r;break}}
+ if(!F)return maxR;
  if(F>1){                               // الجولة السابقة تبقى ظاهرة 24 ساعة بعد نهاية آخر لقاء فيها
   const p=st(F-1);
   if(p.all&&Date.now()-p.last<24*36e5)return F-1}
