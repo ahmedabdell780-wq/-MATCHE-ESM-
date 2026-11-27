@@ -13,6 +13,11 @@ service cloud.firestore {
       return signedIn() && myDoc().role == 'admin';
     }
 
+    // مشرف عام كامل (المشرف المساعد: role == 'admin' + adminLevel == 'assist' — بلا تعيين مشرفين ولا حذف حسابات)
+    function isSuper() {
+      return isAdmin() && myDoc().get('adminLevel', '') != 'assist';
+    }
+
     function isManager() {
       return signedIn() && myDoc().role == 'manager' && myDoc().status == 'approved';
     }
@@ -54,7 +59,14 @@ service cloud.firestore {
         && request.resource.data.status == 'pending'
         && request.resource.data.teamId is int
         && request.resource.data.keys().hasOnly(['name','phone','teamId','role','kind','status','perm','date']);
-      allow update, delete: if isAdmin();
+      // المشرف العام: كل شيء. المشرف المساعد: يعدّل/يعتمد/يجمّد الحسابات العادية فقط:
+      // لا يلمس حساب مشرف، ولا يجعل أحداً مشرفاً، ولا يغيّر adminLevel، ولا يحذف نهائياً.
+      allow update: if isSuper()
+        || (isAdmin()
+            && resource.data.role != 'admin'
+            && request.resource.data.role != 'admin'
+            && request.resource.data.get('adminLevel', '') == '');
+      allow delete: if isSuper();
     }
 
     // ===== النتائج =====

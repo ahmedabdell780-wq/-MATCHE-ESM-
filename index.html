@@ -1347,6 +1347,7 @@ body.sr-mode #playersModal button[onclick="closePlayersModal()"]{background:line
   <label style="font-weight:700;font-size:13px;display:block;margin-bottom:4px">الرتبة والدور (Role):</label>
   <select id="upmRoleSel" class="f" style="margin-bottom:12px">
     <option value="manager">⚽ مسؤول نادٍ (إدخال وتعديل النتائج وإدارة فريقه)</option>
+    <option value="assist">🛡️ مشرف مساعد (يدير النتائج والفرق والحكام والحسابات العادية — بلا تعيين مشرفين ولا حذف نهائي ولا استرجاع نسخ)</option>
     <option value="admin">👑 مشرف عام (كامل الصلاحيات في المنصة)</option>
   </select>
 
@@ -3437,6 +3438,9 @@ const ph=s=>{s=String(s||'').replace(/[٠-٩]/g,d=>d.charCodeAt(0)-1632).replace
 const mail=v=>{v=String(v||'').trim().toLowerCase();if(v.includes('@'))return v;const d=ph(v);if(/^\d{6,}$/.test(d))return d+'@esm.local';return/^[a-z0-9._-]+$/.test(v)?v+'@esm.local':''};
 const isVis=()=>!!(me&&(me.kind==='visitor'||me.role==='visitor'));
 const isEntry=()=>!!(me&&me.role!=='admin'&&me.perm==='entry');
+/* مشرف عام كامل الصلاحيات (≠ المشرف المساعد: role=='admin' + adminLevel=='assist') */
+const isSuper=()=>!!(me&&me.role==='admin'&&me.adminLevel!=='assist');
+const isAssist=()=>!!(me&&me.role==='admin'&&me.adminLevel==='assist');
 const rdoc=(n,p)=>{const v=$('rk')&&$('rk').value==='visitor';return{name:n,phone:p,teamId:v?0:+$('rt').value,role:'manager',kind:v?'visitor':'club',status:'pending',perm:v?'view_only':'full',date:new Date().toISOString().slice(0,10)}};
 const mails=v=>{const b=mail(v);return /^\d{9}@esm\.local$/.test(b)?[b,...[2,3,4,5].map(n=>b.replace('@',`.${n}@`))]:(b?[b]:[])};
 let PUBRO={},ME={},MES={},meReady=false,RO={},RS={},LU={},LSS={},auth,db,me=null,S={},U=[],cat='U15',round=1,tab='m',subs=[],reg=false,cur=null,MSG=[],MSGn=0,MSGopen=null,ACT={},ACTT=0,ER={};
@@ -4123,7 +4127,7 @@ function show(){
  $('out').hidden=!ok;
  $('na').hidden=!(ok&&me.role==='admin');
 if(ok){setTimeout(pushResume,2500);setTimeout(syncLocalScores,3500);if(!isVis()&&!isEntry())rcWake(lsGet(LK.r)||LIVE_RELAY)}
- msgUi();$('who').textContent=ok?(me.role==='admin'?'👑 المشرف':isVis()?'👁️ زائر':isEntry()?'📝 مسيّر · '+(T[me.teamId]||''):'⚽ '+(T[me.teamId]||'')):'👁️ زائر';
+ msgUi();$('who').textContent=ok?(me.role==='admin'?(me.adminLevel==='assist'?'🛡️ مشرف مساعد':'👑 المشرف'):isVis()?'👁️ زائر':isEntry()?'📝 مسيّر · '+(T[me.teamId]||''):'⚽ '+(T[me.teamId]||'')):'👁️ زائر';
  draw()
 }
 
@@ -4451,8 +4455,14 @@ function referees(){
     </select>
     <label style="font-size:12px;color:#94a3b8;display:block;margin-bottom:4px">رقم الهاتف</label>
     <input id="refDlgPhone" class="f" placeholder="0xxxxxxxxx" type="tel" style="margin-bottom:10px;width:100%;direction:ltr;box-sizing:border-box">
-    <label style="font-size:12px;color:#94a3b8;display:block;margin-bottom:4px">صورة الحكم (رابط URL أو اتركه فارغاً)</label>
-    <input id="refDlgPhoto" class="f" placeholder="https://..." type="url" style="margin-bottom:10px;width:100%;direction:ltr;box-sizing:border-box">
+    <label style="font-size:12px;color:#94a3b8;display:block;margin-bottom:4px">صورة الحكم (اختيارية)</label>
+    <input id="refDlgPhoto" type="hidden">
+    <input id="refDlgFile" type="file" accept="image/*" hidden>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <img id="refDlgPrev" alt="" hidden style="width:64px;height:80px;object-fit:cover;border-radius:12px;border:2px solid #e8b765;background:#fff">
+      <button type="button" class="btn sm alt" id="refDlgPick">📷 اختيار صورة</button>
+      <button type="button" class="btn sm red" id="refDlgClr" hidden>🗑 إزالة</button>
+    </div>
     <label style="font-size:12px;color:#94a3b8;display:block;margin-bottom:4px">ملاحظات</label>
     <textarea id="refDlgNotes" class="f" rows="2" placeholder="..." style="margin-bottom:14px;width:100%;box-sizing:border-box;resize:none"></textarea>
     <div style="display:flex;gap:8px">
@@ -4524,6 +4534,9 @@ async function deleteRef(id){
   }catch(e){ toast('❌ '+e.message); }
 }
 
+function refPhotoUi(){const v=$('refDlgPhoto').value,p=$('refDlgPrev');p.hidden=!v;if(v)p.src=v;$('refDlgClr').hidden=!v}
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('#refDlgPick,#refDlgClr');if(!b)return;if(b.id==='refDlgPick')$('refDlgFile').click();else{$('refDlgPhoto').value='';refPhotoUi()}});
+document.addEventListener('change',async e=>{if(!e.target||e.target.id!=='refDlgFile')return;const f=e.target.files&&e.target.files[0];e.target.value='';if(!f)return;try{$('refDlgPhoto').value=await resizePhoto(f);refPhotoUi()}catch(x){toast('⚠️ تعذّرت قراءة الصورة')}});
 /* Open referee add/edit dialog */
 function openRefDlg(id){
   const dlg = document.getElementById('refDlg');
@@ -4534,7 +4547,7 @@ function openRefDlg(id){
   $('refDlgName').value = r?r.name:'';
   $('refDlgRole').value = r?r.role:'main';
   $('refDlgPhone').value = r?r.phone:'';
-  $('refDlgPhoto').value = r?r.photo:'';
+  $('refDlgPhoto').value = r&&r.photo?r.photo:'';refPhotoUi();
   $('refDlgNotes').value = r?r.notes:'';
   dlg.showModal();
 }
@@ -5094,7 +5107,7 @@ function acCard(u,dupP){
  const nm=esc(u.name||'بدون اسم'),ph=esc(u.phone||''),tm=i.tidOk?esc(((u.perm==='entry'?window.T_SENIOR:T)[u.teamId])||('فريق '+u.teamId)):'';
  const dup=dupP[acDig(u.phone).slice(-9)]>1;
  const stP={approved:'<span class="b ok">✅ نشط</span>',pending:'<span class="b wt">⏳ جديد</span>',suspended:'<span class="b no">⏸ مجمَّد</span>'}[u.status]||'';
- const kindP=u.role==='admin'?'<span class="ac-pill warn">👑 مشرف</span>':(u.kind==='visitor'?'<span class="ac-pill grey">👁 زائر</span>':(tm?`<span class="ac-pill team">${u.perm==='entry'?'📝 مسيّر الأكابر · ':'⚽ '}${tm}</span>`:'<span class="ac-pill red">⚽ بلا فريق</span>'));
+ const kindP=u.role==='admin'?(u.adminLevel==='assist'?'<span class="ac-pill warn">🛡️ مشرف مساعد</span>':'<span class="ac-pill warn">👑 مشرف</span>'):(u.kind==='visitor'?'<span class="ac-pill grey">👁 زائر</span>':(tm?`<span class="ac-pill team">${u.perm==='entry'?'📝 مسيّر الأكابر · ':'⚽ '}${tm}</span>`:'<span class="ac-pill red">⚽ بلا فريق</span>'));
  const note=i.lvl==='pend'?'warn':i.lvl==='sus'?'grey':i.lvl==='vis'?'grey':i.lvl;
  const ico={ok:'✅',bad:'⚠️',warn:'👁',grey:'ℹ️'}[note]||'ℹ️';
  const seen=A?`<div class="ac-seen">${on?'🟢 متصل الآن':'🕒 آخر ظهور: '+esc(new Date(A.lastSeen||A.lastLogin).toLocaleString('ar-DZ',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}))} · دخل ${A.logins||1} مرة</div>`:'';
@@ -5209,7 +5222,9 @@ function openUserPermModal(uid){
   // ملء خيارات الأندية
   upmFillTeams(u.perm==='entry',u.teamId);
   
-  $('upmRoleSel').value = (u.role === 'admin') ? 'admin' : 'manager';
+  if(!isSuper()&&u.role==='admin'){toast('⛔ تعديل حسابات المشرفين للمشرف العام فقط');return}
+  [...$('upmRoleSel').options].forEach(o=>{o.hidden=o.disabled=(!isSuper()&&(o.value==='admin'||o.value==='assist'))});
+  $('upmRoleSel').value = (u.role === 'admin') ? (u.adminLevel==='assist'?'assist':'admin') : 'manager';
   $('upmPermSel').value = u.perm || 'full'; upmHint();
   $('upmStatusSel').value = u.status || 'approved';
   
@@ -5231,7 +5246,10 @@ $('saveUserPermBtn').onclick = async () => {
   btn.textContent = '⏳ جارٍ الحفظ…';
   
   const teamId = +$('upmTeamSel').value;
-  const role = $('upmRoleSel').value;
+  const roleSel = $('upmRoleSel').value;
+  const role = roleSel==='assist'?'admin':roleSel;
+  const adminLevel = roleSel==='assist'?'assist':'';
+  if(!isSuper()&&(roleSel==='admin'||roleSel==='assist')){toast('⛔ تعيين المشرفين للمشرف العام فقط');btn.disabled=false;btn.textContent='💾 حفظ التعديلات';return}
   const perm = $('upmPermSel').value;
   const status = $('upmStatusSel').value;
   
@@ -5241,13 +5259,14 @@ $('saveUserPermBtn').onclick = async () => {
   const permFinal = (!isClub) ? 'view_only' : perm;
   if(perm==='entry'&&!(teamId>0)){toast('⚠️ اختر فريق الأكابر الذي يمثّله المسيّر');btn.disabled=false;btn.textContent='💾 حفظ التعديلات';return}
   try{
-    await db.collection('users').doc(activePermUserId).update(Object.assign({teamId:teamId,role:(perm==='entry'?'manager':role),kind:kind,perm:permFinal,status:status},perm==='entry'?{league:'senior',canSenior:true}:Object.assign({league:''},((U.find(x=>x.id===activePermUserId)||{}).perm==='entry')?{canSenior:false}:{})));
+    await db.collection('users').doc(activePermUserId).update(Object.assign({teamId:teamId,role:(perm==='entry'?'manager':role),adminLevel:(perm==='entry'?'':adminLevel),kind:kind,perm:permFinal,status:status},perm==='entry'?{league:'senior',canSenior:true}:Object.assign({league:''},((U.find(x=>x.id===activePermUserId)||{}).perm==='entry')?{canSenior:false}:{})));
     
     // تحديث الذاكرة المحلية فوراً
     const u = U.find(x => x.id === activePermUserId);
     if(u){
       u.teamId = teamId;
       u.role = role;
+      u.adminLevel = adminLevel;
       u.kind = kind;
       u.perm = permFinal;
       u.league = perm==='entry'?'senior':'';
@@ -5730,11 +5749,12 @@ document.addEventListener('click',async e=>{
  else if(b.dataset.uem){openUserPermModal(b.dataset.uem);return}
  else if(b.dataset.ud){const nm=b.dataset.un||'';if(!confirm('نقل حساب «'+nm+'» إلى المحذوفين؟\nيفقد الدخول فوراً، ويمكنك استرجاعه لاحقاً من قسم «المحذوفون».'))return;
      try{await db.collection('users').doc(b.dataset.ud).update({status:'deleted'});toast('🗑 نُقل إلى المحذوفين (يمكن استرجاعه)')}catch(x){toast('⛔ تعذر التنفيذ')}}
-    else if(b.dataset.uh){const nm=b.dataset.un||'';if(!confirm('حذف «'+nm+'» نهائياً؟ لا يمكن التراجع، وسيحتاج للتسجيل من جديد.'))return;
+    else if(b.dataset.uh){if(!isSuper())return toast('⛔ الحذف النهائي للمشرف العام فقط');const nm=b.dataset.un||'';if(!confirm('حذف «'+nm+'» نهائياً؟ لا يمكن التراجع، وسيحتاج للتسجيل من جديد.'))return;
      try{await db.collection('users').doc(b.dataset.uh).delete();toast('❌ حُذف نهائياً')}catch(x){toast('⛔ تعذر الحذف')}}
  else if(b.dataset.up){if(b.dataset.pm==='entry'){openUserPermModal(b.dataset.up);$('upmPermSel').value='entry';upmFillTeams(true,0);upmHint();return}
   try{const was=(U.find(x=>x.id===b.dataset.up)||{}).perm;await db.collection('users').doc(b.dataset.up).update(Object.assign({perm:b.dataset.pm,kind:'club',league:''},was==='entry'?{canSenior:false}:{}));toast(b.dataset.pm==='view_only'?'👁 صار الحساب للمشاهدة فقط':(was==='entry'?'✏️ مُنحت صلاحية التعديل — افتح «🛡️ الصلاحيات» وأعد اختيار فريقه من الفئات الشبانية':'✏️ مُنحت صلاحية التعديل'))}catch(x){toast('⛔ تعذر التنفيذ')}}
     else if(b.dataset.u)try{await db.collection('users').doc(b.dataset.u).update({status:b.dataset.s})}catch(x){toast('⛔ تعذر التنفيذ')}
+ else if(['seed','seedS','mig'].includes(b.id)&&!isSuper())toast('⛔ للمشرف العام فقط')
  else if(b.id==='seed')importSeed()
   else if(b.id==='seedS')importSeedSenior()
  else if(b.id==='mig')migrateLineups()
@@ -6889,6 +6909,7 @@ async function bkExport(){
 }
 let BK=null;
 async function bkPick(file){
+ if(!isSuper())return toast('⛔ استرجاع النسخ الاحتياطية للمشرف العام فقط');
  try{const o=JSON.parse(await file.text());if(!o||o.app!=='esm-matches'||!o.collections)throw 0;BK=o}catch(e){return toast('⚠️ هذا ليس ملف نسخة احتياطية صالحاً')}
  const cols=BK_COLS.filter(c=>BK.collections[c]);
  $('bkSum').textContent='📅 تاريخ النسخة: '+(BK.date?BK.date.slice(0,16).replace('T',' '):'غير معروف');
