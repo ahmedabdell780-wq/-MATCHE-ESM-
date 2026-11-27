@@ -30,6 +30,11 @@ service cloud.firestore {
             && request.resource.data.asstRec.act in ['approve', 'reject']);
     }
 
+    // صلاحية مباشرة منحها المشرف العام لمساعد بعينه (asstPerms.<k> == true). المشرف العام يملكها دائماً.
+    function ap(k) {
+      return isSuper() || (isAssist() && myDoc().get('asstPerms', {}).get(k, false) == true);
+    }
+
     function isManager() {
       return signedIn() && myDoc().role == 'manager' && myDoc().status == 'approved';
     }
@@ -73,15 +78,20 @@ service cloud.firestore {
         && request.resource.data.keys().hasOnly(['name','phone','teamId','role','kind','status','perm','date']);
       // المشرف العام: كل شيء. المشرف المساعد: يعدّل/يجمّد الحسابات العادية فقط:
       // لا يلمس حساب مشرف، ولا يجعل أحداً مشرفاً، ولا يغيّر adminLevel، ولا يحذف نهائياً.
-      // ولا يضبط الفريق ولا الصلاحيات (teamId/perm/kind/role/league): يغيّر status فقط (تجميد/إعادة تفعيل)
-      // ويكتب توصيته في asstRec. والحساب «الجديد» (pending) يبقى معلّقاً: اعتماده أو رفضه للمشرف العام وحده.
+      // وصلاحياته على الحسابات يحدّدها المشرف العام لكل مساعد (asstPerms، ولا يكتبها المساعد):
+      //  teamPerms = ضبط الفريق/الصلاحيات · suspend = تغيير الحالة بعد الاعتماد (تجميد/تفعيل/حذف إلى السلة)
+      //  approve = اعتماد/رفض الحساب الجديد (pending). وبدونها: يكتب توصيته في asstRec فقط ويبقى الحساب معلّقاً.
       allow update: if isSuper()
         || (isAdmin()
             && resource.data.role != 'admin'
             && request.resource.data.role != 'admin'
             && request.resource.data.get('adminLevel', '') == ''
-            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'asstRec'])
-            && (resource.data.get('status', '') != 'pending' || request.resource.data.status == 'pending')
+            && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['asstPerms'])
+            && (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'asstRec']) || ap('teamPerms'))
+            && (resource.data.get('status', '') != 'pending' || request.resource.data.status == 'pending' || ap('approve'))
+            && (resource.data.get('status', '') == 'pending'
+                || !request.resource.data.diff(resource.data).affectedKeys().hasAny(['status'])
+                || ap('suspend'))
             && recOk());
       allow delete: if isSuper();
     }
@@ -244,6 +254,7 @@ service cloud.firestore {
         && request.resource.data.status == 'pending'
         && request.resource.data.by == request.auth.uid;
       allow update: if isSuper()
+        || (isAssist() && ap('editReq'))
         || (isAssist()
             && resource.data.status == 'pending'
             && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['asstRec'])

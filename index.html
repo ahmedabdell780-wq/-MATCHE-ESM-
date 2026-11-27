@@ -1356,7 +1356,7 @@ body.sr-mode #playersModal button[onclick="closePlayersModal()"]{background:line
   <label style="font-weight:700;font-size:13px;display:block;margin-bottom:4px">الرتبة والدور (Role):</label>
   <select id="upmRoleSel" class="f" style="margin-bottom:12px">
     <option value="manager">⚽ مسؤول نادٍ (إدخال وتعديل النتائج وإدارة فريقه)</option>
-    <option value="assist">🛡️ مشرف مساعد (يدير النتائج والفرق والحكام ويجمّد الحسابات العادية — بلا ضبط الفريق والصلاحيات ولا اعتماد الحسابات ولا تعيين مشرفين ولا حذف نهائي ولا استرجاع نسخ)</option>
+    <option value="assist">🛡️ مشرف مساعد (يدير النتائج والفرق والحكام — وصلاحياته على الحسابات وطلبات التعديل يحدّدها المشرف العام (⚙️) — بلا تعيين مشرفين ولا حذف نهائي ولا استرجاع نسخ)</option>
     <option value="admin">👑 مشرف عام (كامل الصلاحيات في المنصة)</option>
   </select>
 
@@ -1387,11 +1387,28 @@ body.sr-mode #playersModal button[onclick="closePlayersModal()"]{background:line
     <h3 style="margin:0;font-size:17px;color:#0f2a1c">🛡️ إضافة مشرف مساعد</h3>
     <button type="button" id="asClose" style="background:none;border:none;font-size:20px;cursor:pointer;color:#64748b">&times;</button>
   </div>
-  <p class="hint" style="margin:0 0 8px;text-align:right">اختر حساباً معتمداً ليصير مشرفاً مساعداً. يبقى تحت إشرافك: قراراته في الطلبات المعلّقة تصلك كتوصية وأنت من يعتمد. لا يضبط الفريق والصلاحيات ولا يعتمد الحسابات ولا يعيّن مشرفين ولا يحذف نهائياً.</p>
+  <p class="hint" style="margin:0 0 8px;text-align:right">اختر حساباً معتمداً ليصير مشرفاً مساعداً. يبقى تحت إشرافك: قراراته في الطلبات المعلّقة تصلك كتوصية وأنت من يعتمد. صلاحياته المباشرة تحدّدها أنت بعد التعيين من ⚙️، وبدونها يرفع كل ما ينتظر الموافقة كتوصية إليك. لا يعيّن مشرفين ولا يحذف نهائياً.</p>
   <input id="asQ" type="search" class="f" autocomplete="off" placeholder="ابحث بالاسم أو الهاتف" style="margin-bottom:8px">
   <div id="asList" style="max-height:48vh;overflow:auto"></div>
 </dialog>
 
+<!-- ⚙️ صلاحيات المشرف المساعد (يحدّدها المشرف العام لكل مساعد) -->
+<dialog id="asstPermModal" style="max-width:440px;width:92%;padding:18px 20px;border-radius:18px;border:1.5px solid var(--ln);box-shadow:0 20px 50px rgba(0,0,0,0.35);font-family:inherit;text-align:right">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;border-bottom:1px solid var(--ln);padding-bottom:10px">
+    <h3 style="margin:0;font-size:17px;color:#0f2a1c">⚙️ صلاحيات المشرف المساعد</h3>
+    <button type="button" id="asPClose" style="background:none;border:none;font-size:20px;cursor:pointer;color:#64748b">&times;</button>
+  </div>
+  <b id="asPN" style="font-size:15px;color:#0f2a1c"></b>
+  <p class="hint" style="margin:6px 0 4px;text-align:right">فعّل ما تريد أن يقرّره بنفسه. وما لم تفعّله يرفعه إليك كتوصية وأنت من يعتمد.</p>
+    <label style="display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--ln);cursor:pointer"><input type="checkbox" id="asP_approve" style="margin-top:4px;width:18px;height:18px"><span><b style="font-size:14px">✅ اعتماد ورفض الحسابات الجديدة مباشرة</b><br><small style="color:#64748b">بدل إرسال توصية إليك</small></span></label>
+    <label style="display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--ln);cursor:pointer"><input type="checkbox" id="asP_teamPerms" style="margin-top:4px;width:18px;height:18px"><span><b style="font-size:14px">🛡️ ضبط الفريق والصلاحيات للحسابات</b><br><small style="color:#64748b">فتح نافذة «الصلاحيات» وتعديل الفريق ونوع الصلاحية</small></span></label>
+    <label style="display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--ln);cursor:pointer"><input type="checkbox" id="asP_suspend" style="margin-top:4px;width:18px;height:18px"><span><b style="font-size:14px">⏸ التجميد وإعادة التفعيل والحذف</b><br><small style="color:#64748b">للحسابات العادية (الحذف إلى السلة، وليس نهائياً)</small></span></label>
+    <label style="display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--ln);cursor:pointer"><input type="checkbox" id="asP_editReq" style="margin-top:4px;width:18px;height:18px"><span><b style="font-size:14px">📝 الموافقة على طلبات تعديل النتائج مباشرة</b><br><small style="color:#64748b">بدل إرسال توصية إليك</small></span></label>
+  <div class="act" style="margin:12px 0 0">
+    <button type="button" class="btn" id="asPSave" style="flex:1">💾 حفظ الصلاحيات</button>
+    <button type="button" class="btn alt" id="asPClose2" onclick="document.getElementById('asstPermModal').close()">إلغاء</button>
+  </div>
+</dialog>
 
 <!-- 🪪 بطاقة إحصائيات اللاعب (Player Card) -->
 <dialog id="playerCardModal" style="max-width:390px;width:92%;padding:0;border-radius:28px;border:none;background:transparent;box-shadow:0 25px 60px rgba(0,0,0,0.55);overflow:hidden;font-family:inherit;text-align:right">
@@ -3461,6 +3478,9 @@ const isEntry=()=>!!(me&&me.role!=='admin'&&me.perm==='entry');
 /* مشرف عام كامل الصلاحيات (≠ المشرف المساعد: role=='admin' + adminLevel=='assist') */
 const isSuper=()=>!!(me&&me.role==='admin'&&me.adminLevel!=='assist');
 const isAssist=()=>!!(me&&me.role==='admin'&&me.adminLevel==='assist');
+/* صلاحيات المشرف المساعد يحدّدها المشرف العام لكل مساعد (asstPerms): approve · teamPerms · suspend · editReq */
+const aperm=k=>isSuper()||(isAssist()&&!!(me.asstPerms&&me.asstPerms[k]));
+const asRec=()=>isAssist()&&!aperm('approve');
 const rdoc=(n,p)=>{const v=$('rk')&&$('rk').value==='visitor';return{name:n,phone:p,teamId:v?0:+$('rt').value,role:'manager',kind:v?'visitor':'club',status:'pending',perm:v?'view_only':'full',date:new Date().toISOString().slice(0,10)}};
 const mails=v=>{const b=mail(v);return /^\d{9}@esm\.local$/.test(b)?[b,...[2,3,4,5].map(n=>b.replace('@',`.${n}@`))]:(b?[b]:[])};
 let PUBRO={},ME={},MES={},meReady=false,RO={},RS={},LU={},LSS={},auth,db,me=null,S={},U=[],cat='U15',round=1,tab='m',subs=[],reg=false,cur=null,MSG=[],MSGn=0,MSGopen=null,ACT={},ACTT=0,ER={};
@@ -4093,6 +4113,7 @@ async function onAuth(u){
   subs.push(db.collection('users').onSnapshot(s=>{
     U=s.docs.filter(d=>d.data().role!=='admin').map(d=>Object.assign({id:d.id},d.data()));
      ADM=s.docs.filter(d=>d.data().role==='admin').map(d=>Object.assign({id:d.id},d.data()));
+     {const _m=me&&ADM.find(x=>x.id===me.uid);if(_m)Object.assign(me,_m)}
     const pendCount = U.filter(u=>u.status==='pending').length;
     updateAppBadge(pendCount);
     
@@ -4237,7 +4258,7 @@ async function erCancel(k){
 }
 async function erDecide(id,ok){
  const r=ER[id];if(!r||!me||me.role!=='admin'||r.status!=='pending')return;
- if(isAssist()){let rs='';if(!ok){const x=prompt('سبب التوصية بالرفض (اختياري):','');if(x===null)return;rs=x.trim()}else if(!confirm('إرسال توصيتك بالموافقة للمشرف العام؟ هو من يطبّق التعديل.'))return;
+ if(isAssist()&&!aperm('editReq')){let rs='';if(!ok){const x=prompt('سبب التوصية بالرفض (اختياري):','');if(x===null)return;rs=x.trim()}else if(!confirm('إرسال توصيتك بالموافقة للمشرف العام؟ هو من يطبّق التعديل.'))return;
   try{await db.collection('editRequests').doc(id).update({asstRec:{act:ok?'approve':'reject',reason:rs,by:me.uid,byName:me.name||'',at:Date.now()}});toast('📨 أُرسلت توصيتك للمشرف العام')}catch(e){toast('⛔ تعذّر الإرسال')}return}
  const k=r.key,h=+r.home,a=+r.away;let reason='';
  if(ok){if(!confirm('تطبيق هذا التعديل على المباراة واعتماده؟'))return}
@@ -4263,7 +4284,7 @@ function erSection(){
  const dt=t=>{try{return new Date(t).toLocaleString('ar-DZ',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}catch(e){return''}};
  const card=(r,pend)=>{
   const h=+r.home,a=+r.away,m=/^(?:([A-Z0-9]+)\|)?(\d+):/.exec(r.key||''),diff=erDiff(r.old||{},r.neu||{},h,a);
-  const foot=pend?`${r.asstRec?`<div class="ern">🛡️ المشرف المساعد ${esc(r.asstRec.byName||'')} يوصي ب${r.asstRec.act==='approve'?'الموافقة':'الرفض'}${r.asstRec.reason?' — '+esc(r.asstRec.reason):''}</div>`:''}<div class="act" style="margin:6px 0 0"><button class="btn sm" data-ero="${esc(r.id)}">${isAssist()?'👍 توصية بالموافقة':'✅ موافقة وتطبيق'}</button><button class="btn sm red" data-erj="${esc(r.id)}">${isAssist()?'👎 توصية بالرفض':'❌ رفض'}</button></div>`
+  const foot=pend?`${r.asstRec?`<div class="ern">🛡️ المشرف المساعد ${esc(r.asstRec.byName||'')} يوصي ب${r.asstRec.act==='approve'?'الموافقة':'الرفض'}${r.asstRec.reason?' — '+esc(r.asstRec.reason):''}</div>`:''}<div class="act" style="margin:6px 0 0"><button class="btn sm" data-ero="${esc(r.id)}">${(isAssist()&&!aperm('editReq'))?'👍 توصية بالموافقة':'✅ موافقة وتطبيق'}</button><button class="btn sm red" data-erj="${esc(r.id)}">${(isAssist()&&!aperm('editReq'))?'👎 توصية بالرفض':'❌ رفض'}</button></div>`
    :`<div class="ern">${r.status==='approved'?'<span class="b ok">✅ تمت الموافقة</span>':r.status==='rejected'?'<span class="b no">❌ مرفوض</span>'+(r.reason?' '+esc(r.reason):''):'<span class="b wt">أُلغي</span>'} · ${esc(dt(r.decidedAt||r.t))}</div>`;
   return`<div class="card erq"><div class="erh"><b>${esc(T[h])} ضد ${esc(T[a])}</b><small>${esc((m&&m[1])||'U15')} · الجولة ${m?m[2]:''}</small></div>
 <div class="ern">🏷 الطالب: <b>${esc(T[r.teamId]||'')}</b>${r.byName?' · '+esc(r.byName):''} · ${esc(dt(r.t))}</div>
@@ -5310,22 +5331,24 @@ const HLC=['#f59e0b','#ef4444','#3b82f6','#8b5cf6','#10b981','#ec4899'];
 let adminSec = 'users';
 
 /* ===== لوحة الحسابات والطلبات (واجهة احترافية) ===== */
-var ADM=[];
+var ADM=[],asPU='';
+const AP_L={approve:'اعتماد الحسابات',teamPerms:'ضبط الفريق والصلاحيات',suspend:'التجميد والحذف',editReq:'طلبات تعديل النتائج'};
+const asSum=u=>{const k=Object.keys(AP_L).filter(x=>u.asstPerms&&u.asstPerms[x]);return k.length?'صلاحياته المباشرة: '+k.map(x=>AP_L[x]).join(' · ')+' — وما عداها يرفعه توصية للمشرف العام':'بلا صلاحيات مباشرة: كل ما ينتظر الموافقة يرفعه توصية للمشرف العام'};
 let acF='all',acQ='';
 const acDig=x=>String(x||'').replace(/[٠-٩]/g,d=>d.charCodeAt(0)-1632).replace(/\D/g,'');
 function acInfo(u){
  const club=u.role==='admin'?false:(u.kind!=='visitor');
  const tidOk=typeof u.teamId==='number'&&u.teamId>0;
  let lvl='ok',msg='يستطيع إدخال نتائج فريقه (المباريات غير المعتمدة والجولة الحالية)';
- if(u.status==='pending'){lvl='pend';msg=isAssist()?(u.asstRec?'✅ أُرسلت توصيتك للمشرف العام — بانتظار قراره':'بانتظار قرار المشرف العام — أرسل توصيتك وهو من يضبط الفريق ويعتمد'):'بانتظار اعتمادك — حدِّد الفريق من «🛡️ الصلاحيات» ثم اعتمد'}
+ if(u.status==='pending'){lvl='pend';msg=asRec()?(u.asstRec?'✅ أُرسلت توصيتك للمشرف العام — بانتظار قراره':'بانتظار قرار المشرف العام — أرسل توصيتك وهو من يضبط الفريق ويعتمد'):'بانتظار اعتمادك — حدِّد الفريق من «🛡️ الصلاحيات» ثم اعتمد'}
  else if(u.status==='suspended'){lvl='sus';msg='الحساب مجمَّد ولا يستطيع الدخول'}
- else if(u.role==='admin'){lvl='ok';msg=u.adminLevel==='assist'?'🛡️ مشرف مساعد — تحت إشراف المشرف العام، وأي شيء ينتظر الموافقة يُرفع إليه ليقرّر':'مشرف عام — كل الصلاحيات'}
+ else if(u.role==='admin'){lvl='ok';msg=u.adminLevel==='assist'?'🛡️ مشرف مساعد — '+asSum(u):'مشرف عام — كل الصلاحيات'}
  else if(u.kind==='visitor'&&tidOk){lvl='bad';msg='الحساب مسجَّل «زائر» رغم تحديد فريق — افتح «الصلاحيات» واحفظ ليصير مسؤول نادٍ'}
  else if(u.kind==='visitor'){lvl='vis';msg='زائر — مشاهدة فقط (لا فريق مرتبط)'}
  else if(!tidOk){lvl='bad';msg='لا يستطيع التعديل: الفريق غير محدد أو صيغته خاطئة — افتح «الصلاحيات» واحفظ'}
  else if(u.perm==='entry'){lvl='ok';msg='📝 مسيّر بطولة الأكابر — يُدخل نتائج ومعلومات مباريات «'+(window.T_SENIOR[u.teamId]||'؟')+'» فقط (بلا تحميل ولا رفع ولا رسائل)'}
  else if(u.perm==='view_only'){lvl='warn';msg='مشاهدة فقط بقرارك — لا يستطيع تعديل النتائج'}
- return{club,tidOk,lvl,msg:(isAssist()&&lvl==='bad')?'⚠️ تحتاج ضبط الفريق/الصلاحيات — يتولاه المشرف العام':msg}
+ return{club,tidOk,lvl,msg:(isAssist()&&!aperm('teamPerms')&&lvl==='bad')?'⚠️ تحتاج ضبط الفريق/الصلاحيات — يتولاه المشرف العام':msg}
 }
 function acCard(u,dupP){
  const i=acInfo(u),A=(typeof ACT!=='undefined'&&ACT[u.id])||null,on=!!(A&&A.lastSeen>Date.now()-4*60e3);
@@ -5341,17 +5364,17 @@ function acCard(u,dupP){
  const rec=(u.asstRec&&u.status==='pending')?`<div class="ac-note ok"><span>🛡️</span><span>المشرف المساعد ${esc(u.asstRec.byName||'')} يوصي ب${u.asstRec.act==='approve'?'اعتماد':'رفض'} هذا الحساب — القرار للمشرف العام</span></div>`:'';
  let bar='';
  if(u.status==='pending'){
-  bar=`<button class="ac-btn ok grow" data-u="${u.id}" data-s="approved">${isAssist()?'👍 توصية بالاعتماد':'✅ اعتماد الحساب'}</button>${isSuper()?`<button class="ac-btn ghost" data-uem="${u.id}">🛡️ الصلاحيات</button>`:''}<button class="ac-btn no" data-u="${u.id}" data-s="suspended">${isAssist()?'👎 توصية بالرفض':'رفض'}</button>`;
+  bar=`<button class="ac-btn ok grow" data-u="${u.id}" data-s="approved">${asRec()?'👍 توصية بالاعتماد':'✅ اعتماد الحساب'}</button>${aperm('teamPerms')?`<button class="ac-btn ghost" data-uem="${u.id}">🛡️ الصلاحيات</button>`:''}<button class="ac-btn no" data-u="${u.id}" data-s="suspended">${asRec()?'👎 توصية بالرفض':'رفض'}</button>`;
  }else if(u.status==='suspended'){
-  bar=`<button class="ac-btn ok grow" data-u="${u.id}" data-s="approved">↩ إعادة التفعيل</button>${isSuper()?`<button class="ac-btn ghost" data-uem="${u.id}">🛡️ الصلاحيات</button>`:''}<button class="ac-btn no" data-ud="${u.id}" data-un="${nm}">🗑 حذف</button>`;
+  bar=`<button class="ac-btn ok grow" data-u="${u.id}" data-s="approved">↩ إعادة التفعيل</button>${aperm('teamPerms')?`<button class="ac-btn ghost" data-uem="${u.id}">🛡️ الصلاحيات</button>`:''}<button class="ac-btn no" data-ud="${u.id}" data-un="${nm}">🗑 حذف</button>`;
  }else{
   const sgb=(pm,lab,on)=>on?`<button class="on${pm==='full'?' full':''}">${lab}</button>`:`<button data-up="${u.id}" data-pm="${pm}">${lab}</button>`;
    const seg=(i.club&&u.role!=='admin')?`<div class="ac-seg" role="group" aria-label="الصلاحية">${sgb('full','✏️ تعديل',!u.perm||u.perm==='full')}${sgb('view_only','👁 مشاهدة',u.perm==='view_only')}${sgb('entry','📝 أكابر',u.perm==='entry')}</div>`:'';
-  bar=`${isSuper()?seg+`<button class="ac-btn${i.lvl==='bad'?'':' ghost'}" data-uem="${u.id}">🛡️ ${i.lvl==='bad'?'إصلاح الصلاحيات':'الصلاحيات'}</button>`:''}
+  bar=`${aperm('teamPerms')?seg+`<button class="ac-btn${i.lvl==='bad'?'':' ghost'}" data-uem="${u.id}">🛡️ ${i.lvl==='bad'?'إصلاح الصلاحيات':'الصلاحيات'}</button>`:''}
    ${u.role==='admin'?'':`<details class="ac-more"><summary>⋯</summary><div class="ac-more-p"><button class="ac-btn no" data-u="${u.id}" data-s="suspended">⏸ تجميد</button><button class="ac-btn no" data-ud="${u.id}" data-un="${nm}">🗑 حذف</button></div></details>`}`;
  }
  if(u.role==='admin'&&!isSuper())bar='';
- if(u.role==='admin'&&u.adminLevel==='assist'&&isSuper())bar+=`<button class="ac-btn no" data-asdem="${u.id}" data-un="${nm}">⬇ إلغاء الإشراف</button>`;
+ if(u.role==='admin'&&u.adminLevel==='assist'&&isSuper())bar+=`<button class="ac-btn" data-asperm="${u.id}">⚙️ صلاحيات المساعد</button><button class="ac-btn no" data-asdem="${u.id}" data-un="${nm}">⬇ إلغاء الإشراف</button>`;
  return `<div class="ac ${i.lvl==='ok'?'':i.lvl}" data-acid="${u.id}"><div class="ac-top"><div class="ac-av${on?' on':''}" style="--c:${col}">${esc(ini)}</div><div class="ac-main"><div class="ac-name">${nm}</div><div class="ac-sub">${kindP}${ph?`<a class="ac-pill tel" href="tel:${ph}">📞 ${ph}</a>`:''}${dup?'<span class="ac-pill red">رقم مكرر</span>':''}</div></div><div class="ac-st">${stP}</div></div><div class="ac-note ${note}"><span>${ico}</span><span>${esc(i.msg)}</span></div>${rec}${seen}<div class="ac-bar">${bar}</div></div>`
 }
 function acModel(){
@@ -5367,7 +5390,7 @@ function acAdmHTML(){
  const rows=ADM.filter(u=>u.status!=='deleted'&&(!q||String(u.name||'').toLowerCase().includes(q)||(qd&&acDig(u.phone).includes(qd))));
  rows.sort((a,b)=>(a.adminLevel==='assist'?1:0)-(b.adminLevel==='assist'?1:0)||String(a.name||'').localeCompare(String(b.name||''),'ar'));
  const top=isSuper()?`<button type="button" class="ac-btn ok" data-asopen="1" style="width:100%;margin:0 0 10px">➕ إضافة مشرف مساعد</button>`:`<div class="ax-empty">🛡️ المشرفون المساعدون يعملون تحت إشراف المشرف العام.</div>`;
- const note=`<p class="hint" style="margin:0 0 10px;text-align:right">المشرف المساعد يبقى دائماً تحت إشراف المشرف العام: قراراته في الطلبات المعلّقة تصل إليه كتوصية، وهو وحده من يعتمد.</p>`;
+ const note=`<p class="hint" style="margin:0 0 10px;text-align:right">المشرف المساعد يبقى دائماً تحت إشراف المشرف العام: قراراته في الطلبات المعلّقة تصل المشرف العام كتوصية، ما لم يمنحه صلاحية القرار المباشر.</p>`;
  return `<div class="ax-h">🛡️ المشرفون <em>${rows.length}</em></div>${top}${note}${rows.map(u=>acCard(u,{})).join('')||'<div class="ax-empty">لا يوجد مشرفون مطابقون</div>'}`
 }
 function acListHTML(){
@@ -5402,15 +5425,20 @@ function asRender(){
  el.innerHTML=rows.map(u=>`<div class="card u" style="margin:0 0 6px"><div><b>${esc(u.name||'بدون اسم')}</b><br><small>${u.kind==='visitor'?'👁 زائر':esc(T[u.teamId]||'')} · ${esc(u.phone||'')}</small></div><div class="act" style="margin:0"><button type="button" class="btn sm" data-asp="${u.id}" data-un="${esc(u.name||'')}">🛡️ تعيين</button></div></div>`).join('')||'<div class="ax-empty">لا توجد حسابات معتمدة مطابقة</div>'
 }
 document.addEventListener('click',async e=>{
- const t=e.target.closest&&e.target.closest('[data-asopen],[data-asp],[data-asdem],#asClose');if(!t)return;
+ const t=e.target.closest&&e.target.closest('[data-asopen],[data-asp],[data-asdem],[data-asperm],#asClose,#asPClose,#asPSave');if(!t)return;
+ if(t.id==='asPClose'){document.getElementById('asstPermModal').close();return}
  if(t.id==='asClose'){document.getElementById('asstAddModal').close();return}
  if(!isSuper())return toast('⛔ إدارة المشرفين للمشرف العام فقط');
+ if(t.dataset.asperm){asPU=t.dataset.asperm;const u=ADM.find(x=>x.id===asPU)||{},P=u.asstPerms||{};
+  document.getElementById('asPN').textContent=u.name||'';['approve','teamPerms','suspend','editReq'].forEach(k=>{const c=document.getElementById('asP_'+k);if(c)c.checked=!!P[k]});document.getElementById('asstPermModal').showModal();return}
+ if(t.id==='asPSave'){const P={};['approve','teamPerms','suspend','editReq'].forEach(k=>{P[k]=!!document.getElementById('asP_'+k).checked});
+  try{await db.collection('users').doc(asPU).update({asstPerms:P});document.getElementById('asstPermModal').close();toast('✅ حُفظت صلاحيات المشرف المساعد');draw()}catch(x){toast('⛔ تعذر الحفظ')}return}
  if(t.dataset.asopen){const q=document.getElementById('asQ');if(q)q.value='';asRender();document.getElementById('asstAddModal').showModal();return}
  if(t.dataset.asp){const nm=t.dataset.un||'';if(!confirm('تعيين «'+nm+'» مشرفاً مساعداً تحت إشرافك؟'))return;
-  try{await db.collection('users').doc(t.dataset.asp).update({role:'admin',adminLevel:'assist',kind:'club',perm:'full',status:'approved',league:''});document.getElementById('asstAddModal').close();acF='adm';toast('🛡️ أُضيف «'+nm+'» كمشرف مساعد');draw()}catch(x){toast('⛔ تعذر التعيين: تحقق من القواعد أو الاتصال')}return}
+  try{await db.collection('users').doc(t.dataset.asp).update({role:'admin',adminLevel:'assist',kind:'club',perm:'full',status:'approved',league:'',asstPerms:{approve:false,teamPerms:false,suspend:false,editReq:false}});document.getElementById('asstAddModal').close();acF='adm';toast('🛡️ أُضيف «'+nm+'» كمشرف مساعد');draw()}catch(x){toast('⛔ تعذر التعيين: تحقق من القواعد أو الاتصال')}return}
  if(t.dataset.asdem){const nm=t.dataset.un||'';if(!confirm('إلغاء إشراف «'+nm+'» وإعادته حساباً عادياً؟'))return;
   const u=ADM.find(x=>x.id===t.dataset.asdem)||{},tid=+u.teamId>0;
-  try{await db.collection('users').doc(t.dataset.asdem).update({role:'manager',adminLevel:'',kind:tid?'club':'visitor',perm:tid?'full':'view_only'});toast('⬇ أُلغي الإشراف');draw()}catch(x){toast('⛔ تعذر التنفيذ')}}
+  try{await db.collection('users').doc(t.dataset.asdem).update({role:'manager',adminLevel:'',kind:tid?'club':'visitor',perm:tid?'full':'view_only',asstPerms:null});toast('⬇ أُلغي الإشراف');draw()}catch(x){toast('⛔ تعذر التنفيذ')}}
 });
 document.addEventListener('input',e=>{if(e.target&&e.target.id==='asQ')asRender()});
 
@@ -5471,7 +5499,7 @@ function upmHint(){
   if(en)h.innerHTML='📝 <b>حساب مسيّر بطولة الأكابر</b>: يرى بطولة الأكابر فقط، ويُدخل نتائج ومعلومات مباريات <b>فريقه</b> فقط. لا يستطيع التحميل ولا الرفع ولا الفيديو ولا الملصقات ولا الرسائل ولا قوائم اللاعبين. <b>اختر فريقه من الأكابر</b> ثم احفظ.';
 }
 function openUserPermModal(uid){
-  if(!isSuper()){toast('⛔ ضبط الفريق والصلاحيات للمشرف العام فقط');return}
+  if(!aperm('teamPerms')){toast('⛔ ضبط الفريق والصلاحيات للمشرف العام، أو بصلاحية يمنحك إياها');return}
   const u = U.find(x => x.id === uid);
   if(!u) return;
   activePermUserId = uid;
@@ -5501,7 +5529,7 @@ $('cancelUserPermBtn').onclick = closeUserPermModal;
 
 $('saveUserPermBtn').onclick = async () => {
   if(!activePermUserId) return;
-  if(!isSuper()){toast('⛔ ضبط الفريق والصلاحيات للمشرف العام فقط');return}
+  if(!aperm('teamPerms')){toast('⛔ ضبط الفريق والصلاحيات للمشرف العام، أو بصلاحية يمنحك إياها');return}
   const btn = $('saveUserPermBtn');
   btn.disabled = true;
   btn.textContent = '⏳ جارٍ الحفظ…';
@@ -5513,9 +5541,9 @@ $('saveUserPermBtn').onclick = async () => {
   if(!isSuper()&&(roleSel==='admin'||roleSel==='assist')){toast('⛔ تعيين المشرفين للمشرف العام فقط');btn.disabled=false;btn.textContent='💾 حفظ التعديلات';return}
   const perm = $('upmPermSel').value;
   const _tg=U.find(x=>x.id===activePermUserId),_sv=$('upmStatusSel').value;
-  const _gate=isAssist()&&_tg&&_tg.status==='pending'&&_sv!=='pending';
+  const _gate=isAssist()&&!aperm('approve')&&_tg&&_tg.status==='pending'&&_sv!=='pending';
   const status=_gate?'pending':_sv;
-  const _rec=_gate?{asstRec:{act:_sv==='approved'?'approve':'reject',by:me.uid,byName:me.name||'',at:Date.now()}}:((isSuper()&&_tg&&_tg.asstRec)?{asstRec:null}:{});
+  const _rec=_gate?{asstRec:{act:_sv==='approved'?'approve':'reject',by:me.uid,byName:me.name||'',at:Date.now()}}:((aperm('approve')&&_tg&&_tg.asstRec)?{asstRec:null}:{});
   
   /* kind يجب أن يتبع الفريق/الدور، وإلا يبقى الحساب «زائراً» رغم منحه الصلاحية (هذا كان سبب عدم القدرة على التعديل) */
   const isClub = role === 'admin' || teamId > 0;
@@ -6014,15 +6042,16 @@ document.addEventListener('click',async e=>{
  else if(b.dataset.ok)setSt(b.dataset.ok,'confirmed')
  else if(b.dataset.no)setSt(b.dataset.no,'disputed')
  else if(b.dataset.uem){openUserPermModal(b.dataset.uem);return}
- else if(b.dataset.ud){const nm=b.dataset.un||'';if(!confirm('نقل حساب «'+nm+'» إلى المحذوفين؟\nيفقد الدخول فوراً، ويمكنك استرجاعه لاحقاً من قسم «المحذوفون».'))return;
+ else if(b.dataset.ud){if(isAssist()&&!aperm('suspend'))return toast('⛔ الحذف للمشرف العام، أو بصلاحية يمنحك إياها');const nm=b.dataset.un||'';if(!confirm('نقل حساب «'+nm+'» إلى المحذوفين؟\nيفقد الدخول فوراً، ويمكنك استرجاعه لاحقاً من قسم «المحذوفون».'))return;
      try{await db.collection('users').doc(b.dataset.ud).update({status:'deleted'});toast('🗑 نُقل إلى المحذوفين (يمكن استرجاعه)')}catch(x){toast('⛔ تعذر التنفيذ')}}
     else if(b.dataset.uh){if(!isSuper())return toast('⛔ الحذف النهائي للمشرف العام فقط');const nm=b.dataset.un||'';if(!confirm('حذف «'+nm+'» نهائياً؟ لا يمكن التراجع، وسيحتاج للتسجيل من جديد.'))return;
      try{await db.collection('users').doc(b.dataset.uh).delete();toast('❌ حُذف نهائياً')}catch(x){toast('⛔ تعذر الحذف')}}
- else if(b.dataset.up){if(!isSuper())return toast('⛔ ضبط الفريق والصلاحيات للمشرف العام فقط');if(b.dataset.pm==='entry'){openUserPermModal(b.dataset.up);$('upmPermSel').value='entry';upmFillTeams(true,0);upmHint();return}
+ else if(b.dataset.up){if(!aperm('teamPerms'))return toast('⛔ ضبط الفريق والصلاحيات للمشرف العام، أو بصلاحية يمنحك إياها');if(b.dataset.pm==='entry'){openUserPermModal(b.dataset.up);$('upmPermSel').value='entry';upmFillTeams(true,0);upmHint();return}
   try{const was=(U.find(x=>x.id===b.dataset.up)||{}).perm;await db.collection('users').doc(b.dataset.up).update(Object.assign({perm:b.dataset.pm,kind:'club',league:''},was==='entry'?{canSenior:false}:{}));toast(b.dataset.pm==='view_only'?'👁 صار الحساب للمشاهدة فقط':(was==='entry'?'✏️ مُنحت صلاحية التعديل — افتح «🛡️ الصلاحيات» وأعد اختيار فريقه من الفئات الشبانية':'✏️ مُنحت صلاحية التعديل'))}catch(x){toast('⛔ تعذر التنفيذ')}}
     else if(b.dataset.u){const _t=U.find(x=>x.id===b.dataset.u);
-  if(isAssist()&&_t&&_t.status==='pending'){try{await db.collection('users').doc(b.dataset.u).update({asstRec:{act:b.dataset.s==='approved'?'approve':'reject',by:me.uid,byName:me.name||'',at:Date.now()}});toast('📨 أُرسلت توصيتك للمشرف العام — هو من يقرّر')}catch(x){toast('⛔ تعذر الإرسال')}}
-  else try{await db.collection('users').doc(b.dataset.u).update(Object.assign({status:b.dataset.s},(isSuper()&&_t&&_t.asstRec)?{asstRec:null}:{}))}catch(x){toast('⛔ تعذر التنفيذ')}}
+  if(asRec()&&_t&&_t.status==='pending'){try{await db.collection('users').doc(b.dataset.u).update({asstRec:{act:b.dataset.s==='approved'?'approve':'reject',by:me.uid,byName:me.name||'',at:Date.now()}});toast('📨 أُرسلت توصيتك للمشرف العام — هو من يقرّر')}catch(x){toast('⛔ تعذر الإرسال')}}
+  else if(isAssist()&&!aperm('suspend')&&_t&&_t.status!=='pending')toast('⛔ التجميد وإعادة التفعيل للمشرف العام، أو بصلاحية يمنحك إياها');
+  else try{await db.collection('users').doc(b.dataset.u).update(Object.assign({status:b.dataset.s},(aperm('approve')&&_t&&_t.asstRec)?{asstRec:null}:{}))}catch(x){toast('⛔ تعذر التنفيذ')}}
  else if(['seed','seedS','mig'].includes(b.id)&&!isSuper())toast('⛔ للمشرف العام فقط')
  else if(b.id==='seed')importSeed()
   else if(b.id==='seedS')importSeedSenior()
