@@ -27,14 +27,19 @@ service cloud.firestore {
     }
 
     // ===== حساب «مسيّر بطولة الأكابر» (perm == 'entry') =====
-    // يُدخل النتائج والمعلومات لمباريات فريقه في بطولة الأكابر فقط:
-    // لا قوائم لاعبين ولا صور ولا طاقم ولا تشكيلات ولا رسائل ولا مراسلة أندية.
+    // يُدخل النتائج والمعلومات لمباريات فريقه في بطولة الأكابر فقط، ويدير قائمة لاعبي فريقه
+    // وصورهم وطاقمه الفني والإداري (الأكابر حصراً): لا تشكيلات ولا رسائل ولا مراسلة أندية.
     function isEntry() {
       return signedIn() && myDoc().get('perm', 'full') == 'entry';
     }
     // عضو نادٍ كامل الصلاحيات (ليس مسيّر أكابر)
     function isFullMember(tid) {
       return isClubMember(tid) && !isEntry();
+    }
+    // مسيّر أكابر معتمد: perm == 'entry' + league == 'senior' + حساب معتمد + غير مقيَّد بالمشاهدة
+    function isSeniorEntry() {
+      return isManager() && isEntry() && myDoc().get('league', '') == 'senior'
+        && myDoc().get('kind', 'club') != 'visitor';
     }
     // حسابات league == 'senior' تكتب مفاتيح الأكابر فقط (SENIOR_...)
     function scopeOk(k) {
@@ -85,7 +90,12 @@ service cloud.firestore {
     match /rosters/{id} {
       allow read: if signedIn() || isAdmin();
       allow create, update: if isAdmin()
-        || (canWrite() && !isEntry() && request.resource.data.teamId == myDoc().teamId);
+        || (canWrite() && !isEntry() && request.resource.data.teamId == myDoc().teamId)
+        // مسيّر الأكابر: قائمة «الفريق الأول» لفريقه فقط (الوثيقة <teamId>_SENIOR)
+        || (isSeniorEntry()
+            && request.resource.data.teamId == myDoc().teamId
+            && request.resource.data.cat == 'SENIOR'
+            && id == string(myDoc().teamId) + '_SENIOR');
       allow delete: if isAdmin();
     }
 
@@ -103,19 +113,40 @@ service cloud.firestore {
     match /photos/{id} {
       allow read: if true;
       allow create, update: if isAdmin()
-        || (canWrite() && !isEntry() && request.resource.data.teamId == myDoc().teamId);
+        || (canWrite() && !isEntry() && request.resource.data.teamId == myDoc().teamId)
+        // مسيّر الأكابر: صور فريقه الموسومة league == 'senior' فقط
+        || (isSeniorEntry()
+            && request.resource.data.teamId == myDoc().teamId
+            && request.resource.data.league == 'senior'
+            && (resource == null || resource.data.get('league', '') == 'senior'));
       allow delete: if isAdmin()
-        || (canWrite() && !isEntry() && resource.data.teamId == myDoc().teamId);
+        || (canWrite() && !isEntry() && resource.data.teamId == myDoc().teamId)
+        || (isSeniorEntry()
+            && resource.data.teamId == myDoc().teamId
+            && resource.data.get('league', '') == 'senior');
     }
 
     // ===== الطاقم الفني والإداري (Staff) =====
     // خاصة: المشرف + أعضاء النادي المعتمدون لفريقهم فقط (تحوي أرقام هواتف وصوراً)
     match /staff/{id} {
-      allow read: if isAdmin() || (signedIn() && isFullMember(resource.data.teamId));
+      allow read: if isAdmin() || (signedIn() && isFullMember(resource.data.teamId))
+        || (isSeniorEntry() && resource.data.teamId == myDoc().teamId
+            && resource.data.league == 'senior');
       allow create, update: if isAdmin()
-        || (canWrite() && !isEntry() && request.resource.data.teamId == myDoc().teamId);
+        || (canWrite() && !isEntry() && request.resource.data.teamId == myDoc().teamId)
+        // مسيّر الأكابر: طاقم الأكابر لفريقه فقط (المعرّف sr_<teamId>_… والحقل league == 'senior')
+        || (isSeniorEntry()
+            && request.resource.data.teamId == myDoc().teamId
+            && request.resource.data.league == 'senior'
+            && id.matches('sr_' + string(myDoc().teamId) + '_.*')
+            && (resource == null || (resource.data.teamId == myDoc().teamId
+                && resource.data.get('league', '') == 'senior')));
       allow delete: if isAdmin()
-        || (canWrite() && !isEntry() && resource.data.teamId == myDoc().teamId);
+        || (canWrite() && !isEntry() && resource.data.teamId == myDoc().teamId)
+        || (isSeniorEntry()
+            && resource.data.teamId == myDoc().teamId
+            && resource.data.get('league', '') == 'senior'
+            && id.matches('sr_.*'));
     }
 
     // ===== بيانات عامة: البث المباشر، قواعد الإيقاف، حضور الزوار =====

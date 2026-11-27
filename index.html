@@ -4027,7 +4027,7 @@ async function onAuth(u){
   if(n.status!=='approved'){toast('⛔ تغيّرت حالة حسابك — سيتم تسجيل خروجك');setTimeout(()=>auth.signOut(),1200);return}
   const ch=['perm','kind','teamId','role','league'].some(f=>String(n[f])!==String(me[f]));
   Object.assign(me,n);
-  if(ch){try{OLD.state({user:{role:me.role==='admin'?'admin':(isVis()||isEntry()?'visitor':'official'),teamId:me.teamId,name:me.name}})}catch(e){}toast('🔄 تم تحديث صلاحيات حسابك');draw()}
+  if(ch){try{OLD.state({user:{role:me.role==='admin'?'admin':(isVis()?'visitor':'official'),teamId:me.teamId,name:me.name}})}catch(e){}toast('🔄 تم تحديث صلاحيات حسابك');draw()}
  },()=>{}))}
  if(me.role==='admin'){
   let prevPendingCount = -1;
@@ -4056,13 +4056,13 @@ async function onAuth(u){
   }));
 }
  roundAuto=true;round=curRound();
- OLD.state({user:{role:me.role==='admin'?'admin':(isVis()||isEntry()?'visitor':'official'),teamId:me.teamId,name:me.name}});
+ OLD.state({user:{role:me.role==='admin'?'admin':(isVis()?'visitor':'official'),teamId:me.teamId,name:me.name}});
  if(me.role==='admin'||!isVis())subs.push((me.role==='admin'?db.collection('rosters'):db.collection('rosters').where('teamId','==',me.teamId)).onSnapshot(s=>{
   s.docs.forEach(d=>{const r=d.data();RO[r.teamId]=RO[r.teamId]||{};RO[r.teamId][r.cat]=r.roster||[];RS[d.id]=JSON.stringify(r.roster||[])});
    /* زرع قائمة اتحاد القليعة (الأكابر) في السحابة مرة واحدة إن لم تكن موجودة */
    try{if(me&&me.role==='admin'&&!window.__srSeeded&&!s.docs.some(d=>d.id==='5_SENIOR')){window.__srSeeded=true;const L=window.SENIOR_ROSTER_SEED[5].SENIOR;RO[5]=RO[5]||{};RO[5].SENIOR=[...L];RS['5_SENIOR']=JSON.stringify(L);db.collection('rosters').doc('5_SENIOR').set({teamId:5,cat:'SENIOR',roster:L}).catch(()=>{})}}catch(e){}
   }));
-if(!isEntry()&&(me.role==='admin'||!isVis())){listenLineups();listenPhotos();listenStaff()}if(!isEntry()){listenMsgs();listenCC();listenCT()}listenEdits();actLogin();
+if(!isEntry()&&(me.role==='admin'||!isVis())){listenLineups()}if(me.role==='admin'||!isVis()){listenPhotos();listenStaff()}if(!isEntry()){listenMsgs();listenCC();listenCT()}listenEdits();actLogin();
  show();
 }
 /* نشر التبديلات علناً: id = المفتاح_الفريق */
@@ -4314,7 +4314,7 @@ function standings(){
 /* ---- الصور: نفس تصميم النسخة السابقة ---- */
 async function poster(k){
  if(!up)up=lastRound();
- OLD.load(S);OLD.state({cat,team:me?(me.role==='admin'?5:me.teamId):5,round,rosters:RO,user:me?{role:me.role==='admin'?'admin':(isEntry()?'visitor':'official'),teamId:me.teamId,name:me.name}:null});
+ OLD.load(S);OLD.state({cat,team:me?(me.role==='admin'?5:me.teamId):5,round,rosters:RO,user:me?{role:me.role==='admin'?'admin':'official',teamId:me.teamId,name:me.name}:null});
  $('rr').value=round;$('upto').value=up;toast('⏳ جاري إنشاء الصورة…');
  await OLD.shot(k==='s'?'t':'r')
 }
@@ -5485,27 +5485,29 @@ async function importSeed(){
 }
 
 /* ===== صور اللاعبين + ملصق الهدف + ملصق المباراة ===== */
-let PH={};
+let PH={},PHU={};const phLg=()=>(typeof isSenior==='function'&&isSenior())?{league:'senior'}:{};
 const nrm=s=>String(s||'').replace(/[\u064B-\u065F\u0670]/g,'').replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/\s+/g,' ').trim();
 const pid=(t,n)=>{let h=5381;const s=nrm(n);for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return t+'_'+(h>>>0).toString(36)};
 const photoOf=(t,n)=>{n=nrm(n);if(!n)return null;if(PH[t+'|'+n])return PH[t+'|'+n];const pre=t+'|',ks=Object.keys(PH).filter(x=>x.startsWith(pre)),nt=n.split(' '),ns=n.replace(/ /g,'');
  const k=ks.find(x=>{const y=x.slice(pre.length),ys=y.replace(/ /g,'');return y.includes(n)||n.includes(y)||ys===ns||(ys&&(ys.includes(ns)||ns.includes(ys)))})||ks.find(x=>{const yt=x.slice(pre.length).split(' ');return nt.length>=2&&yt.length>=2&&(nt.every(w=>yt.includes(w))||yt.every(w=>nt.includes(w)))});return k?PH[k]:null};
 const imgOf=s=>new Promise(r=>{if(!s)return r(null);const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=s});
-function listenPhotos(){ if(!me||(isVis()&&me.role!=='admin'))return; const q=me.role==='admin'?db.collection('photos'):db.collection('photos').where('teamId','==',+me.teamId);
- subs.push(q.onSnapshot(s=>{s.docChanges().forEach(c=>{const d=c.doc.data(),k=d.teamId+'|'+nrm(d.name);if(c.type==='removed'){delete PHO[k];if(PHS[k])PH[k]=PHS[k];else delete PH[k]}else{PH[k]=d.img;PHO[k]=1}});photosReady=true;if($('phd').open)drawPh();try{syncShowcase()}catch(e){}},()=>{}))
+/* مشرف: وسم الصور القديمة لأسماء لاعبي الأكابر بـ league:'senior' (ليتمكّن مسيّر الفريق من إدارتها) */
+function tagPhSenior(){try{Object.keys(PHU).forEach(id=>{const u=PHU[id],r=RO[u.t]||{};const inS=(r.SENIOR||[]).some(x=>nrm(typeof x==='string'?x:x&&x.name)===u.n);const inY=Object.keys(r).some(c=>c!=='SENIOR'&&(r[c]||[]).some(x=>nrm(typeof x==='string'?x:x&&x.name)===u.n));delete PHU[id];if(inS&&!inY)u.ref.update({league:'senior'}).catch(()=>{})})}catch(e){}}
+function listenPhotos(){ if(!me||(isVis()&&me.role!=='admin'))return; const q=me.role==='admin'?db.collection('photos'):(isEntry()?db.collection('photos').where('teamId','==',+me.teamId).where('league','==','senior'):db.collection('photos').where('teamId','==',+me.teamId));
+ subs.push(q.onSnapshot(s=>{s.docChanges().forEach(c=>{const d=c.doc.data(),k=d.teamId+'|'+nrm(d.name);if(c.type==='removed'){delete PHO[k];if(PHS[k])PH[k]=PHS[k];else delete PH[k]}else{PH[k]=d.img;PHO[k]=1;if(me.role==='admin'&&d.league!=='senior')PHU[c.doc.id]={t:+d.teamId,n:nrm(d.name),ref:c.doc.ref}}});photosReady=true;if(me.role==='admin')setTimeout(tagPhSenior,5000);if($('phd').open)drawPh();try{syncShowcase()}catch(e){}},()=>{}))
 }
 async function resizePhoto(file){
  const url=URL.createObjectURL(file),im=await imgOf(url);URL.revokeObjectURL(url);if(!im)throw 0;
  const W=400,H=500,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
  const sc=Math.max(W/im.width,H/im.height),w=im.width*sc,h=im.height*sc;x.drawImage(im,(W-w)/2,Math.min(0,-(h-H)*0.28),w,h);
- let q=.9,o=c.toDataURL('image/jpeg',q);while(o.length>100000&&q>.4){q-=.1;o=c.toDataURL('image/jpeg',q)}return o
+ const TD=window.__rawToDataURL||HTMLCanvasElement.prototype.toDataURL;let q=.9,o=TD.call(c,'image/jpeg',q);while(o.length>100000&&q>.4){q-=.1;o=TD.call(c,'image/jpeg',q)}return o
 }
 window.__renamePhoto=async(t,o,n)=>{try{const k=t+'|'+nrm(o);const im=PH[k];if(!im||nrm(o)===nrm(n))return;
- await db.collection('photos').doc(pid(t,n)).set({teamId:+t,name:n,img:im});PH[t+'|'+nrm(n)]=im;
+ await db.collection('photos').doc(pid(t,n)).set(Object.assign({teamId:+t,name:n,img:im},phLg()));PH[t+'|'+nrm(n)]=im;
  try{await db.collection('photos').doc(pid(t,o)).delete()}catch(e){}delete PH[k]}catch(e){}};
 let phTeam=5,phTarget=null;
 function drawPh(){
- OLD.load(S);OLD.state({cat,rosters:RO||{},team:phTeam,user:me?{role:me.role==='admin'?'admin':(isVis()||isEntry()?'visitor':'official'),teamId:me.teamId}:{role:'visitor',teamId:5}});
+ OLD.load(S);OLD.state({cat,rosters:RO||{},team:phTeam,user:me?{role:me.role==='admin'?'admin':(isVis()?'visitor':'official'),teamId:me.teamId}:{role:'visitor',teamId:5}});
  let names=[];try{names=OLD.rosterList(cat,phTeam)||[]}catch(e){}
  names=names.map(x=>typeof x==='string'?x:(x&&x.name)||'').filter(Boolean);
  $('phTeamSel').hidden=me.role!=='admin';
@@ -5556,7 +5558,7 @@ $('phd').addEventListener('click',async e=>{
  else if(b.dataset.pd!==undefined){const n=names[+b.dataset.pd];try{await db.collection('photos').doc(pid(phTeam,n)).delete();delete PH[phTeam+'|'+nrm(n)];drawPh();toast('🗑 حُذفت الصورة')}catch(x){toast('⛔ لا تملك الصلاحية')}}
 });
 $('phf').onchange=async e=>{const f=e.target.files[0];if(!f||!phTarget)return;
- try{const img=await resizePhoto(f);await db.collection('photos').doc(pid(phTeam,phTarget)).set({teamId:phTeam,name:phTarget,img});PH[phTeam+'|'+nrm(phTarget)]=img;drawPh();toast('✅ حُفظت الصورة')}catch(x){toast('⛔ تعذر حفظ الصورة (قد لا تملك الصلاحية)')}};
+ try{const img=await resizePhoto(f);await db.collection('photos').doc(pid(phTeam,phTarget)).set(Object.assign({teamId:phTeam,name:phTarget,img},phLg()));PH[phTeam+'|'+nrm(phTarget)]=img;drawPh();toast('✅ حُفظت الصورة')}catch(x){toast('⛔ تعذر حفظ الصورة (قد لا تملك الصلاحية)')}};
 
 /* ---- أدوات الرسم ---- */
 async function tcol(id){const im=await imgOf(OLD.DEF[id]);if(!im)return[31,90,52];const c=document.createElement('canvas');c.width=c.height=24;const x=c.getContext('2d');x.drawImage(im,0,0,24,24);const d=x.getImageData(0,0,24,24).data;let R=0,G=0,B=0,W=0;
@@ -5724,8 +5726,8 @@ const STC=['مدرب رئيسي','مدرب مساعد','مدرب حراس الم
 const stSr=()=>typeof isSenior==='function'&&isSenior(),STAL=()=>stSr()?STA_S:STA;
 const catLb=c=>!c||c==='ALL'?'كل الفئات':c==='SENIOR'?'الفريق الأول':c;
 function listenStaff(){
- const q=me.role==='admin'?db.collection('staff'):db.collection('staff').where('teamId','==',me.teamId);
- subs.push(q.onSnapshot(sn=>{sn.docChanges().forEach(c=>{if(c.type==='removed')delete STAFF[c.doc.id];else STAFF[c.doc.id]=Object.assign({id:c.doc.id},c.doc.data())});if($('stf').open)drawStaff()},()=>{}))
+ const q=me.role==='admin'?db.collection('staff'):(isEntry()?db.collection('staff').where('teamId','==',me.teamId).where('league','==','senior'):db.collection('staff').where('teamId','==',me.teamId));
+ subs.push(q.onSnapshot(sn=>{sn.docChanges().forEach(c=>{if(c.type==='removed')delete STAFF[c.doc.id];else{STAFF[c.doc.id]=Object.assign({id:c.doc.id},c.doc.data());if(me.role==='admin'&&/^sr_/.test(c.doc.id)&&c.doc.data().league!=='senior')c.doc.ref.update({league:'senior'}).catch(()=>{})}});if($('stf').open)drawStaff()},()=>{}))
 }
 function staffOf(t){const rk=m=>{const L=m.kind==='coach'?STC:STAL(),i=L.indexOf(m.role);return(m.kind==='coach'?0:100)+(i<0?50:i)};
  return Object.values(STAFF).filter(m=>m.teamId==t&&(String(m.id).startsWith('sr_')===stSr())).sort((a,b)=>rk(a)-rk(b)||STCATS.indexOf(a.cat||'ALL')-STCATS.indexOf(b.cat||'ALL')||(a.order||0)-(b.order||0))}
@@ -5798,7 +5800,7 @@ $('stSave').onclick=async()=>{say('stErr','');
  const name=$('stName').value.trim(),kind=$('stKind').value;let role=$('stRole').value;if(role==='__x')role=$('stRoleX').value.trim();
  if(!name)return say('stErr','⚠️ أدخل الاسم واللقب');if(!role)return say('stErr','⚠️ حدّد المنصب');
  const id=stEdit||((stSr()?'sr_':'')+stTeam+'_'+Date.now().toString(36)),old=stEdit?STAFF[stEdit]:null,b=$('stSave');
- const d={teamId:stTeam,name,kind,role,cat:kind==='coach'?(stSr()?'SENIOR':$('stCat').value):'',phone:$('stPhone').value.trim(),img:stImg||'',order:old&&old.order?old.order:Date.now()};
+ const d={teamId:stTeam,name,kind,role,cat:kind==='coach'?(stSr()?'SENIOR':$('stCat').value):'',phone:$('stPhone').value.trim(),img:stImg||'',order:old&&old.order?old.order:Date.now()};if(stSr())d.league='senior';
  b.disabled=true;b.textContent='⏳ جارٍ الحفظ…';
  try{await db.collection('staff').doc(id).set(d);$('stForm').hidden=true;toast('✅ تم حفظ البيانات')}catch(x){say('stErr','⛔ رُفض الحفظ: لا تملك الصلاحية أو القواعد غير منشورة')}
  b.disabled=false;b.textContent='💾 حفظ'};
@@ -9428,7 +9430,7 @@ function vFrameSR(x,A,t){
  const on=()=>{try{return typeof isEntry==='function'&&isEntry()}catch(e){return false}};
  let last=0;const deny=()=>{const n=Date.now();if(n-last>1500){last=n;try{toast('⛔ غير متاح لحسابك: إدخال النتائج والمعلومات فقط')}catch(e){}}};
  const st=document.createElement('style');
- st.textContent='body.se [data-lu],body.se [data-lp],body.se [data-ps],body.se [data-mp],body.se [data-mv],body.se [data-gp],body.se [data-sc],body.se [data-fp],body.se [data-shot],body.se [data-mk],body.se [data-pt],body.se [data-pg],body.se [data-rec],body.se [data-ok],body.se [data-no],body.se [data-md],body.se #plBtn,body.se #phBtn,body.se #msgBtn,body.se #ccBtn,body.se #ctBtn,body.se #tvOpen,body.se #adminPv,body.se #leagueSwitcher,body.se #tmClubsBar,body.se input[type=file]{display:none!important}';
+ st.textContent='body.se [data-lu],body.se [data-lp],body.se [data-ps],body.se [data-mp],body.se [data-mv],body.se [data-gp],body.se [data-sc],body.se [data-fp],body.se [data-shot],body.se [data-mk],body.se [data-pt],body.se [data-pg],body.se [data-rec],body.se [data-ok],body.se [data-no],body.se [data-md],body.se #msgBtn,body.se #ccBtn,body.se #ctBtn,body.se #tvOpen,body.se #adminPv,body.se #leagueSwitcher,body.se #tmClubsBar,body.se .stb .w.lg,body.se input[type=file]:not(#phf):not(#stFile){display:none!important}';
  document.head.appendChild(st);
  /* تحميل */
  const oc=HTMLAnchorElement.prototype.click;
@@ -9439,17 +9441,19 @@ function vFrameSR(x,A,t){
  /* تسجيل فيديو */
  if(window.MediaRecorder){const MR=window.MediaRecorder;class MR2 extends MR{constructor(...a){if(on()){deny();throw new Error('denied')}super(...a)}}MR2.isTypeSupported=MR.isTypeSupported.bind(MR);window.MediaRecorder=MR2}
  /* تصدير الصور */
- const tb=HTMLCanvasElement.prototype.toBlob,td=HTMLCanvasElement.prototype.toDataURL;
+ const tb=HTMLCanvasElement.prototype.toBlob,td=HTMLCanvasElement.prototype.toDataURL;window.__rawToDataURL=td;
+ /* الملفات المسموحة لمسيّر الأكابر: صور اللاعبين والطاقم فقط */
+ const OKF=el=>!!el&&(el.id==='phf'||el.id==='stFile');
  HTMLCanvasElement.prototype.toBlob=function(cb){if(on()){deny();try{cb&&cb(null)}catch(e){}return}return tb.apply(this,arguments)};
  HTMLCanvasElement.prototype.toDataURL=function(){if(on()){deny();return''}return td.apply(this,arguments)};
  /* رفع الملفات */
- const ic=HTMLInputElement.prototype.click;HTMLInputElement.prototype.click=function(){if(on()&&this.type==='file'){deny();return}return ic.apply(this,arguments)};
- if(HTMLInputElement.prototype.showPicker){const sp=HTMLInputElement.prototype.showPicker;HTMLInputElement.prototype.showPicker=function(){if(on()&&this.type==='file'){deny();return}return sp.apply(this,arguments)}}
- document.addEventListener('click',e=>{if(!on())return;const tc=e.target.closest&&e.target.closest('[data-tmteam]');if(tc&&+tc.dataset.tmteam!==+me.teamId){e.preventDefault();e.stopPropagation();deny();return}const t=e.target;const f=t.closest&&t.closest('input[type=file]');const lb=t.closest&&t.closest('label');const c=lb&&lb.control;if(f||(c&&c.type==='file')){e.preventDefault();e.stopPropagation();deny()}},true);
- document.addEventListener('change',e=>{if(on()&&e.target&&e.target.type==='file'){e.target.value='';e.stopImmediatePropagation();deny()}},true);
+ const ic=HTMLInputElement.prototype.click;HTMLInputElement.prototype.click=function(){if(on()&&this.type==='file'&&!OKF(this)){deny();return}return ic.apply(this,arguments)};
+ if(HTMLInputElement.prototype.showPicker){const sp=HTMLInputElement.prototype.showPicker;HTMLInputElement.prototype.showPicker=function(){if(on()&&this.type==='file'&&!OKF(this)){deny();return}return sp.apply(this,arguments)}}
+ document.addEventListener('click',e=>{if(!on())return;const tc=e.target.closest&&e.target.closest('[data-tmteam]');if(tc&&+tc.dataset.tmteam!==+me.teamId){e.preventDefault();e.stopPropagation();deny();return}const t=e.target;const f=t.closest&&t.closest('input[type=file]');const lb=t.closest&&t.closest('label');const c=lb&&lb.control;if((f&&!OKF(f))||(c&&c.type==='file'&&!OKF(c))){e.preventDefault();e.stopPropagation();deny()}},true);
+ document.addEventListener('change',e=>{if(on()&&e.target&&e.target.type==='file'&&!OKF(e.target)){e.target.value='';e.stopImmediatePropagation();deny()}},true);
  /* إخفاء أي زر تحميل/رفع/فيديو/ملصق/صور مهما كان مكانه */
  const RX=/تحميل|تنزيل|رفع|مشاركة|فيديو|ملصق|بطاقة بتصميم|نسخ احتياطي|استرجاع|اختيار صورة|إرفاق|📷|📎|⬇|⬆|📥|📤|🎞|🎬|🖼|🎥|📸/;
- let tmr=0;const sweep=()=>{tmr=0;if(!on())return;document.querySelectorAll('button,a.btn,label,[role=button]').forEach(el=>{if(/^\s*(💾|✅)?\s*(حفظ|إلغاء)/.test(el.textContent||''))return;if(RX.test(el.textContent||'')||RX.test(el.getAttribute('aria-label')||'')){el.style.setProperty('display','none','important');el.setAttribute('data-se-hidden','1')}})};
+ let tmr=0;const sweep=()=>{tmr=0;if(!on())return;document.querySelectorAll('button,a.btn,label,[role=button]').forEach(el=>{if(/^\s*(💾|✅)?\s*(حفظ|إلغاء)/.test(el.textContent||''))return;const tx=el.textContent||'';if(el.id==='plBtn'||el.id==='phBtn'||el.id==='stBtn'||el.id==='stPick')return;const inMg=el.closest&&el.closest('#phd,#stf,#playersModal');const RXI=/تحميل|تنزيل|رفع|مشاركة|فيديو|ملصق|بطاقة بتصميم|نسخ احتياطي|استرجاع|إرفاق|⬇|⬆|📥|📤|🎞|🎬|🖼|🎥|📸/;if(inMg&&/^\s*(📷|📷\s*)?\s*(اختيار صورة|تغيير|📷)?\s*$|📷/.test(tx)&&!RXI.test(tx))return;if(RX.test(tx)||RX.test(el.getAttribute('aria-label')||'')){el.style.setProperty('display','none','important');el.setAttribute('data-se-hidden','1')}})};
  new MutationObserver(()=>{if(!tmr&&on())tmr=setTimeout(sweep,80)}).observe(document.body,{childList:true,subtree:true});
  document.addEventListener('click',()=>{if(on())setTimeout(sweep,150)},true);
 })();
