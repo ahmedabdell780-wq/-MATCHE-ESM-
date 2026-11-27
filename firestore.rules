@@ -291,6 +291,16 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
+    // ===== لجنة التحكيم: الحكام وتعييناتهم (يديرها المشرف والمشرف المساعد؛ يقرؤها المسجَّلون) =====
+    match /referees/{id} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+    match /refAssignments/{id} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
     // ===== الإشعارات (Notifications) — إن وُجدت =====
     match /notifications/{id} {
       allow read: if signedIn();
