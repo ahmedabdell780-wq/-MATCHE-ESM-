@@ -691,6 +691,60 @@ header,header.menu-open{z-index:100}
 .sn-t span{font-size:12px;font-weight:700;color:#f2d27a;line-height:1.35}
 .sn-t em{font-style:normal;font-size:11px;opacity:.75}
 /* ترويسة بطولة الأكابر: اسم كامل على سطرين */
+
+/* ===== Senior theme text & button color fixes ===== */
+body.senior-theme .tn { color: #e2e8f0 !important; text-shadow: 0 1px 3px rgba(0,0,0,0.5) !important; }
+body.senior-theme .meta { color: #94a3b8 !important; }
+body.senior-theme .meta span { color: #94a3b8 !important; }
+body.senior-theme .card.mc .act .btn.alt,
+body.senior-theme .card.mc .act .btn.sm.alt {
+  color: #fbbf24 !important;
+  border-color: rgba(245,158,11,0.45) !important;
+  background: rgba(10,20,45,0.65) !important;
+}
+body.senior-theme .card.mc .act .btn.sm:not(.alt):not(.red) { color: #fff !important; }
+body.senior-theme .card.mc .act .btn.red { color: #fca5a5 !important; }
+body.senior-theme .b.ok { background: #14532d !important; color: #86efac !important; }
+body.senior-theme .b.wt { background: #78350f !important; color: #fde68a !important; }
+body.senior-theme .b.no { background: #7f1d1d !important; color: #fca5a5 !important; }
+/* Dropdown menu styles for match cards */
+.mc-menu { display:block; }
+.mc-menu-toggle {
+  cursor: pointer;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 5px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  user-select: none;
+  list-style: none;
+  margin-bottom: 2px;
+}
+.mc-menu-toggle::-webkit-details-marker { display: none; }
+.mc-menu-toggle::marker { display: none; }
+.mc-menu[open] .mc-menu-items {
+  display: flex !important;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 8px 0 2px;
+  animation: mcFadeIn 0.18s ease;
+}
+.mc-menu:not([open]) .mc-menu-items { display: none !important; }
+@keyframes mcFadeIn {
+  from { opacity:0; transform:translateY(-6px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+body.senior-theme .mc-menu-toggle {
+  color: #fbbf24 !important;
+  border-color: rgba(245,158,11,0.5) !important;
+  background: rgba(10,20,45,0.7) !important;
+}
+body.senior-theme .mc-menu-toggle:hover {
+  background: rgba(245,158,11,0.15) !important;
+}
+/* ===== End senior theme fixes ===== */
+
+
 body.sr-mode header .htxt h1{white-space:normal;font-size:14.5px;line-height:1.25;overflow:visible;text-overflow:clip}
 body.sr-mode header .htxt small{white-space:normal;max-width:none;overflow:visible;font-size:10px;line-height:1.35;padding:2px 8px;border-radius:10px}
 
@@ -4303,7 +4357,7 @@ function fixtures(){
   const k=K(cat,round,hm,aw),v=S[k],has=v&&v.sh!==undefined&&v.sh!=='';
   h+=`<div class="card mc${isMine(hm)||isMine(aw)?' favm':''}" style="--c1:${tcs(hm)};--c2:${tcs(aw)}">${mh(hm,aw,has,v)}
   <div class="meta"><span>${mi(v)}</span>${has?stBadge(v):v&&v.pp?'<span class="b wt">⏳ مؤجلة</span>':v&&v.ex?'<span class="b no">معفاة</span>':''}${erBadge(k)}</div>
-  <div class="act"><button class="btn sm alt" data-lu="${round}-${hm}-${aw}">📋 التشكيلة والتبديلات</button>${me?`<button class="btn sm alt" data-lp="${k}">🎽 ملصق التشكيلة</button>`:''}${me&&(me.role==='admin'||hm==me.teamId||aw==me.teamId)?`<button class="btn sm alt" data-ps="${round}-${hm}-${aw}">🖨 ورقة رسمية</button>`:''}${me&&me.role==='admin'?`<button class="btn sm alt" data-rec="${k}">🎥 تصوير مباشر</button>`:''}<button class="btn sm alt" data-tl="${k}">⏱️ أحداث اللقاء</button><button class="btn sm alt" data-mp="${round}-${hm}-${aw}">📣 ملصق المباراة</button>${me?`<button class="btn sm alt" data-mv="${round}-${hm}-${aw}">🎬 فيديو المباراة</button>`:''}${v&&(v.gh||v.ga)?`<button class="btn sm alt" data-gp="${k}">⚽ ملصق / فيديو الهدف</button>`:''}${has?`<button class="btn sm alt" data-sc="r:${k}">📤 بطاقة النتيجة</button>`:''}<button class="btn sm alt" data-fp="${k}">📝 منشور</button>${canEdit(hm,aw,v,k)?`<button class="btn sm" data-e="${k}">✏️ ${has?'تعديل النتيجة':'الموعد / النتيجة'}</button>`:''}${erBtns(hm,aw,v,k)}${canConfirm(hm,aw,v)&&has?`${me.role==='admin'?`<button class="btn sm" data-ok="${k}">✅ اعتماد</button>`:`<button class="btn sm red" data-no="${k}">❌ اعتراض</button>`}`:''}</div></div>`});
+  <details class="mc-menu"><summary class="btn sm alt mc-menu-toggle">⚙️ خيارات المباراة ▾</summary><div class="act mc-menu-items"><button class="btn sm alt" data-lu="${round}-${hm}-${aw}">📋 التشكيلة والتبديلات</button>${me?`<button class="btn sm alt" data-lp="${k}">🎽 ملصق التشكيلة</button>`:''}${me&&(me.role==='admin'||hm==me.teamId||aw==me.teamId)?`<button class="btn sm alt" data-ps="${round}-${hm}-${aw}">🖨 ورقة رسمية</button>`:''}${me&&me.role==='admin'?`<button class="btn sm alt" data-rec="${k}">🎥 تصوير مباشر</button>`:''}<button class="btn sm alt" data-tl="${k}">⏱️ أحداث اللقاء</button><button class="btn sm alt" data-mp="${round}-${hm}-${aw}">📣 ملصق المباراة</button>${me?`<button class="btn sm alt" data-mv="${round}-${hm}-${aw}">🎬 فيديو المباراة</button>`:''}${v&&(v.gh||v.ga)?`<button class="btn sm alt" data-gp="${k}">⚽ ملصق / فيديو الهدف</button>`:''}${has?`<button class="btn sm alt" data-sc="r:${k}">📤 بطاقة النتيجة</button>`:''}<button class="btn sm alt" data-fp="${k}">📝 منشور</button>${canEdit(hm,aw,v,k)?`<button class="btn sm" data-e="${k}">✏️ ${has?'تعديل النتيجة':'الموعد / النتيجة'}</button>`:''}${erBtns(hm,aw,v,k)}${canConfirm(hm,aw,v)&&has?`${me.role==='admin'?`<button class="btn sm" data-ok="${k}">✅ اعتماد</button>`:`<button class="btn sm red" data-no="${k}">❌ اعتراض</button>`}`:''}</div></details></div>`});
  return h+`<div class="bye">🛌 مستريحة: ${esc(T[p.bye])}</div>`
 }
 function results(){
