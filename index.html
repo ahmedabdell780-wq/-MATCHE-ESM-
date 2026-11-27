@@ -4901,25 +4901,58 @@ async function refRoundImage(){
   if(!isAdminLike())return;toast('⏳ جارٍ إنشاء صورة التعيينات…');
   try{const D=await refRoundData();if(!D.ms.some(m=>m.refs.some(Boolean)))toast('ℹ️ لا توجد تعيينات محفوظة لهذه الجولة بعد — ستظهر الخانات فارغة');
     try{await document.fonts.ready}catch(e){}
-    const cv=document.createElement('canvas');cv.width=RFO_W;cv.height=RFO_H;drawRefRound(cv,D,Infinity);await saveImg(cv,`referees_round_${D.rsel}.png`);toast('✅ تم إنشاء الصورة')}
+    const cv=document.createElement('canvas');cv.width=RFO_W;cv.height=RFO_H;drawRefRound(cv,D,Infinity);await OLD.saveImg(cv,`referees_round_${D.rsel}.png`);toast('✅ تم إنشاء الصورة')}
   catch(e){toast('❌ '+(e&&e.message||e))}
+}
+let RFO={blob:null,url:'',run:false,D:null};
+function rfoDlg(){
+  let d=document.getElementById('rfoDlg');if(d)return d;
+  d=document.createElement('dialog');d.id='rfoDlg';d.style.cssText='width:min(96vw,440px);border-radius:18px;border:1.5px solid #e8b765;background:#fffdf7;color:#10294a;padding:16px';
+  d.innerHTML=`<h3 style="margin:0 0 10px;color:#0a2a4e">🎞️ فيديو قائمة حكّام الجولة</h3>
+  <div id="rfoStage" style="border-radius:12px;overflow:hidden;background:#0a2a4e;line-height:0"><canvas id="rfoCv" width="${RFO_W}" height="${RFO_H}" style="width:100%;max-height:56vh;object-fit:contain;display:block"></canvas></div>
+  <video id="rfoPrev" controls playsinline muted hidden style="width:100%;max-height:56vh;border-radius:12px;background:#000"></video>
+  <div id="rfoInfo" style="margin:10px 0;font-size:13px;min-height:20px;color:#8a5a2c;font-weight:700">اضغط «ابدأ» لإنشاء الفيديو (نحو 7 ثوانٍ) ولا تغلق الشاشة أثناء التسجيل.</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+   <button class="btn" id="rfoGo" style="flex:1 1 100%">▶ ابدأ إنشاء الفيديو</button>
+   <button class="btn" id="rfoShare" hidden style="flex:1">📤 مشاركة / حفظ</button>
+   <button class="btn alt" id="rfoDl" hidden style="flex:1">⬇ تنزيل</button>
+   <button class="btn alt" id="rfoX" style="flex:1 1 100%">إغلاق</button>
+  </div>`;
+  document.body.appendChild(d);
+  d.addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;
+    if(b.id==='rfoX'){if(!RFO.run){d.close()}}
+    else if(b.id==='rfoGo')rfoRun();
+    else if(b.id==='rfoShare'&&RFO.blob)shareVideoFile(RFO.blob,'referees_round_'+RFO.D.rsel,'حكّام الجولة '+RFO.D.rsel);
+    else if(b.id==='rfoDl'&&RFO.blob)downloadVideoFile(RFO.blob,'referees_round_'+RFO.D.rsel)});
+  d.addEventListener('close',()=>{try{$('rfoPrev').pause()}catch(e){}});
+  return d
 }
 async function refRoundVideo(){
   if(!isAdminLike())return;
-  if(!window.MediaRecorder){toast('⚠️ متصفحك لا يدعم تسجيل الفيديو');return}
-  toast('⏳ جارٍ إنشاء الفيديو… (نحو 7 ثوانٍ)');
+  if(!window.MediaRecorder||!HTMLCanvasElement.prototype.captureStream){toast('⚠️ متصفحك لا يدعم تسجيل الفيديو — استخدم «الصورة»');return}
+  const d=rfoDlg();$('rfoPrev').hidden=true;$('rfoStage').hidden=false;['rfoShare','rfoDl'].forEach(i=>$(i).hidden=true);$('rfoGo').hidden=false;$('rfoGo').disabled=true;
+  $('rfoInfo').textContent='⏳ تجهيز الشعارات والأسماء…';d.showModal();
+  try{RFO.D=await refRoundData();try{await Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,1500))])}catch(e){}
+    drawRefRound($('rfoCv'),RFO.D,Infinity);$('rfoInfo').textContent='اضغط «ابدأ» لإنشاء الفيديو (نحو 7 ثوانٍ) ولا تغلق الشاشة أثناء التسجيل.';$('rfoGo').disabled=false}
+  catch(e){$('rfoInfo').textContent='❌ '+(e&&e.message||e)}
+}
+async function rfoRun(){
+  if(RFO.run||!RFO.D)return;RFO.run=true;const D=RFO.D,cv=$('rfoCv'),go=$('rfoGo');go.disabled=true;$('rfoPrev').hidden=true;$('rfoStage').hidden=false;
   try{
-    const D=await refRoundData();try{await document.fonts.ready}catch(e){}
-    const cv=document.createElement('canvas');cv.width=RFO_W;cv.height=RFO_H;
-    const mt=vMime(false),st=cv.captureStream(30),rec=new MediaRecorder(st,Object.assign({videoBitsPerSecond:10e6},mt?{mimeType:mt}:{})),ch=[];
-    rec.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};
-    const total=.7+(D.ms.length+1)*.3+.5+2.6,done=new Promise(r=>rec.onstop=r);
-    drawRefRound(cv,D,0);rec.start(200);const t0=performance.now();
-    await new Promise(res=>{const f=()=>{const t=(performance.now()-t0)/1000;drawRefRound(cv,D,Math.min(t,total));if(t>=total)res();else requestAnimationFrame(f)};requestAnimationFrame(f)});
+    const mt=vMime(false),st=cv.captureStream(30),rec=new MediaRecorder(st,Object.assign({videoBitsPerSecond:10000000},mt?{mimeType:mt}:{})),ch=[];
+    rec.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};const done=new Promise(r=>rec.onstop=r);
+    const total=.7+(D.ms.length+1)*.3+.5+2.6;drawRefRound(cv,D,0);rec.start(500);$('rfoInfo').textContent='🔴 جاري التسجيل… لا تغلق الشاشة';
+    const t0=performance.now();
+    await new Promise(res=>{const f=()=>{const t=(performance.now()-t0)/1000;drawRefRound(cv,D,Math.min(t,total));if(t>=total+.3)res();else requestAnimationFrame(f)};requestAnimationFrame(f)});
     rec.stop();await done;
-    const type=(mt||'video/webm').split(';')[0],blob=new Blob(ch,{type});
-    downloadVideoFile(blob,`referees_round_${D.rsel}`);toast('✅ تم إنشاء الفيديو')
-  }catch(e){toast('❌ فيديو: '+(e&&e.message||e))}
+    const type=(rec.mimeType||mt||'video/webm').split(';')[0];RFO.blob=new Blob(ch,{type});
+    if(!RFO.blob.size)throw new Error('الفيديو فارغ');
+    if(RFO.url)URL.revokeObjectURL(RFO.url);RFO.url=URL.createObjectURL(RFO.blob);
+    const pv=$('rfoPrev');pv.src=RFO.url;pv.hidden=false;$('rfoStage').hidden=true;try{pv.load()}catch(e){}
+    ['rfoShare','rfoDl'].forEach(i=>$(i).hidden=false);go.hidden=true;
+    $('rfoInfo').textContent=`✅ جاهز (${(RFO.blob.size/1048576).toFixed(1)} م.ب · ${type.includes('mp4')?'MP4':'WebM'})`+(type.includes('mp4')?'':' — فيسبوك يفضّل MP4، وبعض الأجهزة تنتج WebM.')
+  }catch(e){$('rfoInfo').textContent='⚠️ تعذّر إنشاء الفيديو على هذا المتصفح: '+(e&&e.message||'');go.disabled=false;go.textContent='↻ إعادة المحاولة';console.log(e)}
+  RFO.run=false
 }
 const isAdminLike=()=>!!(me&&me.role==='admin');
 
