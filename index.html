@@ -4439,14 +4439,14 @@ function referees(){
     ${isAd?`<button class="btn sm alt" data-ref-add="1" style="margin-right:auto">➕ إضافة حكم</button>`:''}
   </div>`;
 
+  const mode = window._refViewMode || 'roster';
+
   /* Tab switcher: Roster | Assignment */
   h += `<div style="display:flex;gap:8px;margin-bottom:16px">
     <button class="btn sm ${mode!=='assign'?'':'alt'}" data-ref-view="roster" style="flex:1">👥 قائمة الحكام</button>
     <button class="btn sm ${mode==='assign'?'':'alt'}" data-ref-view="assign" style="flex:1">📋 تعيينات الجولة</button>
   </div>
   <div id="refView" data-v="${mode}">`;
-
-  const mode = window._refViewMode || 'roster';
 
   if(mode === 'roster'){
     /* ── Referee Cards Grid ── */
