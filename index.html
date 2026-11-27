@@ -692,6 +692,37 @@ header,header.menu-open{z-index:100}
 .sn-t em{font-style:normal;font-size:11px;opacity:.75}
 /* ترويسة بطولة الأكابر: اسم كامل على سطرين */
 
+
+/* ===== Referee Tab - تبويب الحكام ===== */
+.ref-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;padding:4px 0 20px}
+.ref-card{background:linear-gradient(160deg,#0d1f3f 0%,#0a1628 60%,#071020 100%);border:1.5px solid rgba(245,158,11,0.4);border-radius:16px;padding:14px 10px 12px;text-align:center;position:relative;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,0.5),0 0 0 1px rgba(245,158,11,0.1);transition:transform .2s,box-shadow .2s}
+.ref-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,0.6),0 0 12px rgba(245,158,11,0.2)}
+.ref-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,#f59e0b,#fbbf24,#f59e0b,transparent)}
+.ref-avatar{width:72px;height:72px;border-radius:50%;object-fit:cover;border:2.5px solid #f59e0b;box-shadow:0 0 12px rgba(245,158,11,0.4);margin:0 auto 8px;display:block;background:#1e3a5f}
+.ref-avatar-placeholder{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#1e3a5f,#0d1f3f);border:2.5px solid rgba(245,158,11,0.3);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 8px}
+.ref-name{color:#f1f5f9;font-weight:700;font-size:13px;margin-bottom:3px;line-height:1.3}
+.ref-role{font-size:11px;padding:2px 8px;border-radius:20px;display:inline-block;margin-bottom:6px;font-weight:600}
+.ref-role.main{background:rgba(245,158,11,0.2);color:#fbbf24;border:1px solid rgba(245,158,11,0.3)}
+.ref-role.asst{background:rgba(99,102,241,0.2);color:#a5b4fc;border:1px solid rgba(99,102,241,0.3)}
+.ref-role.fourth{background:rgba(16,185,129,0.2);color:#6ee7b7;border:1px solid rgba(16,185,129,0.3)}
+.ref-phone{color:#64748b;font-size:11px;direction:ltr;margin-bottom:8px}
+.ref-acts{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
+.ref-badge{font-size:10px;padding:2px 7px;border-radius:12px;background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.25)}
+/* Match card referee row */
+.match-ref-row{display:flex;align-items:center;gap:6px;margin-top:5px;padding:5px 8px;background:rgba(10,20,45,0.5);border-radius:8px;border:1px solid rgba(245,158,11,0.15);font-size:11px;color:#94a3b8;flex-wrap:wrap}
+.match-ref-row .ref-lbl{color:#f59e0b;font-weight:700;font-size:10px;white-space:nowrap}
+.match-ref-row .ref-val{color:#e2e8f0;font-size:11px}
+/* Ref assignment header */
+.ref-section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.ref-round-sel{background:#0d1f3f;color:#e2e8f0;border:1.5px solid rgba(245,158,11,0.3);border-radius:8px;padding:5px 10px;font-family:inherit;font-size:13px}
+.ref-assign-table{width:100%;border-collapse:separate;border-spacing:0 6px}
+.ref-assign-table th{color:#f59e0b;font-size:11px;text-align:right;padding:0 6px 4px;font-weight:700}
+.ref-assign-table td{background:rgba(10,20,45,0.5);border:1px solid rgba(245,158,11,0.1);padding:6px 8px;font-size:12px;color:#cbd5e1}
+.ref-assign-table td:first-child{border-radius:8px 0 0 8px}
+.ref-assign-table td:last-child{border-radius:0 8px 8px 0}
+.ref-sel{background:#0a1a33;color:#e2e8f0;border:1px solid rgba(245,158,11,0.2);border-radius:6px;padding:3px 6px;font-size:11px;font-family:inherit;width:100%;min-width:100px}
+/* ===== End Referee Tab CSS ===== */
+
 /* ===== Senior theme text & button color fixes ===== */
 body.senior-theme .tn { color: #e2e8f0 !important; text-shadow: 0 1px 3px rgba(0,0,0,0.5) !important; }
 body.senior-theme .meta { color: #94a3b8 !important; }
@@ -1005,7 +1036,7 @@ body.sr-mode #playersModal button[onclick="closePlayersModal()"]{background:line
 </div>
 <div id="liveBar" hidden></div>
 <main id="app"></main>
-<nav id="nav"><button data-t="m" aria-pressed="true"><span class="ic">⚽</span><span class="lb">المباريات</span></button><button data-t="r" aria-pressed="false"><span class="ic">📋</span><span class="lb">النتائج</span></button><button data-t="s" aria-pressed="false"><span class="ic">🏆</span><span class="lb">الترتيب</span></button><button data-t="g" aria-pressed="false"><span class="ic">🥅</span><span class="lb">الهدافون</span></button><button data-t="a" id="na" aria-pressed="false" hidden><span class="ic">👑</span><span class="lb">الإدارة</span></button></nav>
+<nav id="nav"><button data-t="m" aria-pressed="true"><span class="ic">⚽</span><span class="lb">المباريات</span></button><button data-t="r" aria-pressed="false"><span class="ic">📋</span><span class="lb">النتائج</span></button><button data-t="s" aria-pressed="false"><span class="ic">🏆</span><span class="lb">الترتيب</span></button><button data-t="g" aria-pressed="false"><span class="ic">🥅</span><span class="lb">الهدافون</span></button><button data-t="ref" id="nref" aria-pressed="false" hidden><span class="ic">🏅</span><span class="lb">الحكام</span></button><button data-t="a" id="na" aria-pressed="false" hidden><span class="ic">👑</span><span class="lb">الإدارة</span></button></nav>
 <dialog id="dg"><h2 id="dt" style="margin-top:0"></h2>
 <label>حالة المباراة</label><select id="ms" class="f"><option value="sched">📅 مبرمجة — حفظ الموعد والملعب فقط</option><option value="done">✅ منتهية — إدخال النتيجة</option><option value="pp">⏳ مؤجلة</option><option value="ex">🚫 معفاة</option></select>
 <div id="schedBox" class="sec"><label>تاريخ المباراة</label><input id="sd" type="date"><label>التوقيت</label><input id="stm" type="time"><div class="act" style="margin:4px 0 0;justify-content:space-between;align-items:center"><small class="hint" id="tmHint" style="text-align:right;flex:1;margin:0"></small><button type="button" class="btn sm alt" id="tmDef">↺ الافتراضي</button></div>
@@ -3996,6 +4027,7 @@ function updateSeniorVisibility(){
   if(sw){
     sw.style.display = (can && !en) ? 'flex' : 'none';
   }
+  if($('nref')) $('nref').hidden = !can;
   if(en && !window.isSenior()){ window.switchLeagueMode('senior'); return; }
   if(!can && window.isSenior()){
     window.switchLeagueMode('youth');
@@ -4078,7 +4110,7 @@ function init(){
   $('app').hidden=false;
   draw();
 },()=>{$('app').hidden=false;draw();});
- listenPublic(); listenShowcase();
+ listenPublic(); listenShowcase(); listenRefs();
  /* قوائم اللاعبين (أسماء فقط) عامة: لتعمل «🪪 بطاقة أي لاعب» للجميع حتى الزوار */
  try{db.collection('rosters').onSnapshot(sn=>{sn.docs.forEach(d=>{const r=d.data();PUBRO[r.teamId]=PUBRO[r.teamId]||{};PUBRO[r.teamId][r.cat]=r.roster||[]})},()=>{})}catch(e){}
  /* التبديلات عامة للجميع (حتى الزوار) — التشكيلات نفسها تبقى خاصة */
@@ -4321,10 +4353,462 @@ function listenEdits(){
  },()=>{}))
 }
 
+
+
+/* Helper: load image as HTMLImageElement */
+function loadImg(src){
+  return new Promise((res,rej)=>{
+    if(!src){rej(new Error('no src'));return;}
+    const img=new Image();
+    img.crossOrigin='anonymous';
+    img.onload=()=>res(img);
+    img.onerror=e=>rej(e);
+    img.src=src;
+  });
+}
+/* ======================================================
+   REFEREES MODULE - تبويب الحكام
+   ====================================================== */
+
+/* Global referee data: { id: {id,name,role,phone,photo,notes} } */
+let REFS = {};
+/* Referee assignments per match key: { matchKey: {main,asst1,asst2,fourth} } */
+let REF_ASSIGN = {};
+
+/* Firestore listeners for refs (called after firebase init) */
+function listenRefs(){
+  if(!db) return;
+  try{
+    db.collection('referees').onSnapshot(sn=>{
+      sn.docChanges().forEach(ch=>{
+        if(ch.type==='removed') delete REFS[ch.doc.id];
+        else REFS[ch.doc.id] = Object.assign({id:ch.doc.id}, ch.doc.data());
+      });
+      if(tab==='ref') draw();
+    });
+    db.collection('refAssignments').onSnapshot(sn=>{
+      sn.docChanges().forEach(ch=>{
+        if(ch.type==='removed') delete REF_ASSIGN[ch.doc.id];
+        else REF_ASSIGN[ch.doc.id] = ch.doc.data();
+      });
+      draw();
+    });
+  }catch(e){ console.warn('listenRefs',e); }
+}
+
+/* Referee role labels */
+const REF_ROLES = {
+  main:   {ar:'الحكم الرئيسي',  cls:'main',  ic:'🟨'},
+  asst1:  {ar:'المساعد الأول',  cls:'asst',  ic:'🚩'},
+  asst2:  {ar:'المساعد الثاني', cls:'asst',  ic:'🚩'},
+  fourth: {ar:'الحكم الرابع',   cls:'fourth', ic:'📋'},
+};
+
+/* Get ref info for a match key */
+function matchRefs(k){ return REF_ASSIGN[k.replace('|','_')] || null; }
+
+/* Render referee row inside a match card */
+function refRowHtml(k){
+  const ra = matchRefs(k);
+  if(!ra) return '';
+  const parts = [];
+  ['main','asst1','asst2','fourth'].forEach(role=>{
+    const rid = ra[role];
+    if(!rid) return;
+    const r = REFS[rid];
+    if(!r) return;
+    parts.push(`<span class="ref-lbl">${REF_ROLES[role].ic} ${REF_ROLES[role].ar}:</span><span class="ref-val">${esc(r.name)}</span>`);
+  });
+  if(!parts.length) return '';
+  return `<div class="match-ref-row">${parts.join('<span style="color:#334155;margin:0 4px">|</span>')}</div>`;
+}
+
+/* ───────────── referees() - main render function ───────────── */
+function referees(){
+  const isAd = me && me.role==='admin';
+
+  /* Header */
+  let h = `<div style="padding:0 0 20px">
+  <div class="sn-banner" style="margin-bottom:16px">
+    <img src="${window.SENIOR_LOGO_M||''}" alt="" style="width:52px;height:52px;border-radius:50%;border:2px solid #f59e0b">
+    <div class="sn-t">
+      <b style="font-size:16px">🏅 لجنة التحكيم</b>
+      <span style="font-size:12px;color:#94a3b8">بطولة الأكابر - الرابطة الولائية تيبازة</span>
+      <em style="font-size:11px;color:#f59e0b">${Object.keys(REFS).length} حكم مسجّل</em>
+    </div>
+    ${isAd?`<button class="btn sm alt" data-ref-add="1" style="margin-right:auto">➕ إضافة حكم</button>`:''}
+  </div>`;
+
+  /* Tab switcher: Roster | Assignment */
+  h += `<div style="display:flex;gap:8px;margin-bottom:16px">
+    <button class="btn sm ${!$('refView')||$('refView').dataset.v!=='assign'?'':'alt'}" data-ref-view="roster" style="flex:1">👥 قائمة الحكام</button>
+    <button class="btn sm ${$('refView')&&$('refView').dataset.v==='assign'?'':'alt'}" data-ref-view="assign" style="flex:1">📋 تعيينات الجولة</button>
+  </div>
+  <div id="refView" data-v="${window._refViewMode||'roster'}">`;
+
+  const mode = window._refViewMode || 'roster';
+
+  if(mode === 'roster'){
+    /* ── Referee Cards Grid ── */
+    const list = Object.values(REFS).sort((a,b)=>(a.name||'').localeCompare(b.name||'','ar'));
+    if(!list.length){
+      h += `<div class="card" style="text-align:center;color:#64748b;padding:30px">لا يوجد حكام مسجّلون بعد</div>`;
+    } else {
+      h += `<div class="ref-grid">`;
+      list.forEach(r=>{
+        const avatarHtml = r.photo
+          ? `<img src="${esc(r.photo)}" class="ref-avatar" alt="">`
+          : `<div class="ref-avatar-placeholder">🏅</div>`;
+        const roleLbl = REF_ROLES[r.role]||REF_ROLES.main;
+        h += `<div class="ref-card">
+          ${avatarHtml}
+          <div class="ref-name">${esc(r.name)}</div>
+          <div class="ref-role ${roleLbl.cls}">${roleLbl.ic} ${roleLbl.ar}</div>
+          ${r.phone?`<div class="ref-phone">📞 ${esc(r.phone)}</div>`:''}
+          <div class="ref-acts">
+            <button class="btn sm alt" data-ref-card="${r.id}" title="تحميل بطاقة الحكم">🖼️</button>
+            <button class="btn sm alt" data-ref-vid="${r.id}" title="فيديو تعريفي">🎬</button>
+            ${isAd?`<button class="btn sm alt" data-ref-edit="${r.id}" title="تعديل">✏️</button>`:''}
+            ${isAd?`<button class="btn sm red" data-ref-del="${r.id}" title="حذف">🗑️</button>`:''}
+          </div>
+        </div>`;
+      });
+      h += `</div>`;
+    }
+  } else {
+    /* ── Assignment Table per Round ── */
+    const rsel = window._refRound || round;
+    const p = pairs(rsel);
+    h += `<div class="ref-section-hdr">
+      <b style="color:#f59e0b">تعيينات الجولة ${rsel}</b>
+      <select class="ref-round-sel" id="refRoundSel" onchange="window._refRound=+this.value;draw()">
+        ${Array.from({length:maxRounds()},(_,i)=>`<option value="${i+1}" ${i+1===rsel?'selected':''}>${i+1<=halfRounds()?'ذهاب':'إياب'} - الجولة ${i+1}</option>`).join('')}
+      </select>
+    </div>
+    <table class="ref-assign-table">
+      <thead><tr>
+        <th>#</th><th>المباراة</th>
+        <th>الحكم الرئيسي</th><th>المساعد الأول</th><th>المساعد الثاني</th><th>الحكم الرابع</th>
+        ${isAd?'<th>حفظ</th>':''}
+      </tr></thead><tbody>`;
+
+    const refOpts = `<option value="">— بدون —</option>` +
+      Object.values(REFS).sort((a,b)=>(a.name||'').localeCompare(b.name||'','ar'))
+        .map(r=>`<option value="${r.id}">${esc(r.name)}</option>`).join('');
+
+    p.m.forEach(([hm,aw],i)=>{
+      const k = K(cat,rsel,hm,aw);
+      const kk = k.replace('|','_');
+      const ra = REF_ASSIGN[kk] || {};
+      const mk = (role)=>{
+        if(!isAd) return `<span style="color:#cbd5e1">${ra[role]&&REFS[ra[role]]?esc(REFS[ra[role]].name):'-'}</span>`;
+        return `<select class="ref-sel" id="rs_${kk}_${role}">${refOpts.replace(`value="${ra[role]||''}"`,`value="${ra[role]||''}" selected`)}</select>`;
+      };
+      h += `<tr>
+        <td style="color:#f59e0b;font-weight:700">${i+1}</td>
+        <td style="color:#e2e8f0;font-weight:600">${esc(T[hm]||hm)} <span style="color:#64748b">×</span> ${esc(T[aw]||aw)}</td>
+        <td>${mk('main')}</td><td>${mk('asst1')}</td><td>${mk('asst2')}</td><td>${mk('fourth')}</td>
+        ${isAd?`<td><button class="btn sm alt" data-ref-save="${kk}" style="white-space:nowrap">💾 حفظ</button></td>`:''}
+      </tr>`;
+    });
+    h += `</tbody></table>`;
+  }
+
+  h += `</div></div>`; /* close refView + outer */
+
+  /* Add referee dialog template */
+  h += `
+  <dialog id="refDlg" style="max-width:360px;width:95%;border-radius:16px;background:#0d1f3f;border:1.5px solid rgba(245,158,11,0.4);padding:20px;color:#e2e8f0">
+    <h3 id="refDlgTitle" style="margin:0 0 14px;color:#f59e0b">إضافة حكم</h3>
+    <input type="hidden" id="refDlgId">
+    <label style="font-size:12px;color:#94a3b8;display:block;margin-bottom:4px">الاسم الكامل *</label>
+    <input id="refDlgName" class="f" placeholder="اسم الحكم" style="margin-bottom:10px;width:100%;box-sizing:border-box">
+    <label style="font-size:12px;color:#94a3b8;display:block;margin-bottom:4px">الدور</label>
+    <select id="refDlgRole" class="f" style="margin-bottom:10px;width:100%">
+      <option value="main">🟨 الحكم الرئيسي</option>
+      <option value="asst1">🚩 المساعد الأول</option>
+      <option value="asst2">🚩 المساعد الثاني</option>
+      <option value="fourth">📋 الحكم الرابع</option>
+    </select>
+    <label style="font-size:12px;color:#94a3b8;display:block;margin-bottom:4px">رقم الهاتف</label>
+    <input id="refDlgPhone" class="f" placeholder="0xxxxxxxxx" type="tel" style="margin-bottom:10px;width:100%;direction:ltr;box-sizing:border-box">
+    <label style="font-size:12px;color:#94a3b8;display:block;margin-bottom:4px">صورة الحكم (رابط URL أو اتركه فارغاً)</label>
+    <input id="refDlgPhoto" class="f" placeholder="https://..." type="url" style="margin-bottom:10px;width:100%;direction:ltr;box-sizing:border-box">
+    <label style="font-size:12px;color:#94a3b8;display:block;margin-bottom:4px">ملاحظات</label>
+    <textarea id="refDlgNotes" class="f" rows="2" placeholder="..." style="margin-bottom:14px;width:100%;box-sizing:border-box;resize:none"></textarea>
+    <div style="display:flex;gap:8px">
+      <button class="btn" id="refDlgSave" style="flex:1">💾 حفظ</button>
+      <button class="btn alt" onclick="document.getElementById('refDlg').close()" style="flex:1">إلغاء</button>
+    </div>
+  </dialog>`;
+
+  return h;
+}
+
+/* ───────────── Save referee assignment ───────────── */
+async function saveRefAssignment(matchKey){
+  if(!me||me.role!=='admin') return;
+  try{
+    const mk = function(role){ const el=document.getElementById(`rs_${matchKey}_${role}`); return el?el.value:''; };
+    const data = {
+      matchKey,
+      main:   mk('main'),
+      asst1:  mk('asst1'),
+      asst2:  mk('asst2'),
+      fourth: mk('fourth'),
+      updatedAt: Date.now(),
+      by: me.uid
+    };
+    await db.collection('refAssignments').doc(matchKey).set(data);
+    REF_ASSIGN[matchKey] = data;
+    toast('✅ تم حفظ تعيين الحكام');
+    draw();
+  }catch(e){ toast('❌ خطأ: '+e.message); }
+}
+
+/* ───────────── Save/Delete referee profile ───────────── */
+async function saveRefProfile(){
+  if(!me||me.role!=='admin') return;
+  const id = $('refDlgId').value.trim();
+  const name = $('refDlgName').value.trim();
+  if(!name){ toast('❌ الاسم مطلوب'); return; }
+  const data = {
+    name,
+    role: $('refDlgRole').value,
+    phone: $('refDlgPhone').value.trim(),
+    photo: $('refDlgPhoto').value.trim(),
+    notes: $('refDlgNotes').value.trim(),
+    updatedAt: Date.now()
+  };
+  try{
+    if(id){
+      await db.collection('referees').doc(id).set(data, {merge:true});
+      REFS[id] = Object.assign({id}, data);
+    } else {
+      const ref = await db.collection('referees').add(data);
+      REFS[ref.id] = Object.assign({id:ref.id}, data);
+    }
+    toast('✅ تم حفظ بيانات الحكم');
+    document.getElementById('refDlg').close();
+    draw();
+  }catch(e){ toast('❌ '+e.message); }
+}
+
+async function deleteRef(id){
+  if(!me||me.role!=='admin') return;
+  if(!confirm('حذف هذا الحكم نهائياً؟')) return;
+  try{
+    await db.collection('referees').doc(id).delete();
+    delete REFS[id];
+    toast('تم الحذف');
+    draw();
+  }catch(e){ toast('❌ '+e.message); }
+}
+
+/* Open referee add/edit dialog */
+function openRefDlg(id){
+  const dlg = document.getElementById('refDlg');
+  if(!dlg) return;
+  const r = id ? REFS[id] : null;
+  $('refDlgTitle').textContent = id ? '✏️ تعديل بيانات الحكم' : '➕ إضافة حكم جديد';
+  $('refDlgId').value = id||'';
+  $('refDlgName').value = r?r.name:'';
+  $('refDlgRole').value = r?r.role:'main';
+  $('refDlgPhone').value = r?r.phone:'';
+  $('refDlgPhoto').value = r?r.photo:'';
+  $('refDlgNotes').value = r?r.notes:'';
+  dlg.showModal();
+}
+
+/* ───────────── Referee Card Canvas Export ───────────── */
+async function drawRefCard(refId){
+  const r = REFS[refId];
+  if(!r){ toast('الحكم غير موجود'); return; }
+  const W=800, H=1000;
+  const cv = document.createElement('canvas');
+  cv.width=W; cv.height=H;
+  const c = cv.getContext('2d');
+
+  /* Background: dark navy gradient */
+  const bg = c.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#070f1e');
+  bg.addColorStop(0.5,'#0d1f3f');
+  bg.addColorStop(1,'#070f1e');
+  c.fillStyle=bg; c.fillRect(0,0,W,H);
+
+  /* Gold border frame */
+  c.strokeStyle='#f59e0b'; c.lineWidth=4;
+  c.strokeRect(12,12,W-24,H-24);
+  c.strokeStyle='rgba(245,158,11,0.3)'; c.lineWidth=1.5;
+  c.strokeRect(20,20,W-40,H-40);
+
+  /* Top decoration line */
+  const tl=c.createLinearGradient(0,0,W,0);
+  tl.addColorStop(0,'transparent'); tl.addColorStop(0.5,'#f59e0b'); tl.addColorStop(1,'transparent');
+  c.fillStyle=tl; c.fillRect(0,30,W,3);
+
+  /* League logo */
+  try{
+    const logoImg = await loadImg(window.SENIOR_LOGO_M||'');
+    if(logoImg) c.drawImage(logoImg, W/2-40, 50, 80, 80);
+  }catch(_){}
+
+  /* Title */
+  c.fillStyle='#f59e0b';
+  c.font='bold 18px Arial';
+  c.textAlign='center';
+  c.fillText('الرابطة الولائية لكرة القدم - تيبازة', W/2, 160);
+  c.fillStyle='rgba(245,158,11,0.3)';
+  c.font='14px Arial';
+  c.fillText('لجنة التحكيم', W/2, 185);
+
+  /* Separator */
+  c.fillStyle='rgba(245,158,11,0.4)';
+  c.fillRect(W/2-120,196,240,1.5);
+
+  /* Avatar */
+  const avatarY = 220, avatarR = 90;
+  c.save();
+  c.beginPath(); c.arc(W/2, avatarY+avatarR, avatarR, 0, Math.PI*2); c.clip();
+  if(r.photo){
+    try{
+      const img = await loadImg(r.photo);
+      c.drawImage(img, W/2-avatarR, avatarY, avatarR*2, avatarR*2);
+    }catch(_){
+      c.fillStyle='#1e3a5f'; c.fillRect(W/2-avatarR, avatarY, avatarR*2, avatarR*2);
+    }
+  } else {
+    c.fillStyle='#1e3a5f'; c.fillRect(W/2-avatarR, avatarY, avatarR*2, avatarR*2);
+    c.restore(); c.save();
+    c.font='70px Arial'; c.textAlign='center'; c.fillStyle='#f59e0b';
+    c.fillText('🏅', W/2, avatarY+avatarR+22);
+  }
+  c.restore();
+
+  /* Gold ring around avatar */
+  c.strokeStyle='#f59e0b'; c.lineWidth=4;
+  c.beginPath(); c.arc(W/2, avatarY+avatarR, avatarR+6, 0, Math.PI*2); c.stroke();
+
+  /* Name */
+  const nameY = avatarY + avatarR*2 + 50;
+  c.fillStyle='#f1f5f9';
+  c.font='bold 32px Arial';
+  c.textAlign='center';
+  c.fillText(r.name||'', W/2, nameY);
+
+  /* Role badge */
+  const roleLbl = REF_ROLES[r.role]||REF_ROLES.main;
+  const roleColors = {main:['rgba(245,158,11,0.25)','#fbbf24'], asst:['rgba(99,102,241,0.25)','#a5b4fc'], fourth:['rgba(16,185,129,0.25)','#6ee7b7']};
+  const rc = roleColors[roleLbl.cls]||roleColors.main;
+  const roleText = `${roleLbl.ic} ${roleLbl.ar}`;
+  const rw = c.measureText(roleText).width + 40;
+  c.fillStyle=rc[0];
+  c.beginPath(); c.roundRect(W/2-rw/2, nameY+14, rw, 32, 16); c.fill();
+  c.strokeStyle=rc[1]; c.lineWidth=1.5;
+  c.beginPath(); c.roundRect(W/2-rw/2, nameY+14, rw, 32, 16); c.stroke();
+  c.fillStyle=rc[1]; c.font='bold 15px Arial';
+  c.fillText(roleText, W/2, nameY+34);
+
+  /* Phone */
+  if(r.phone){
+    c.fillStyle='#64748b'; c.font='16px Arial';
+    c.fillText(`📞 ${r.phone}`, W/2, nameY+80);
+  }
+
+  /* Decorative stars */
+  c.fillStyle='rgba(245,158,11,0.6)';
+  c.font='20px Arial'; c.textAlign='center';
+  c.fillText('★ ★ ★', W/2, H-80);
+
+  /* Bottom text */
+  c.fillStyle='rgba(245,158,11,0.5)';
+  c.font='13px Arial';
+  c.fillText('L.F.W.T  TIPASA', W/2, H-50);
+
+  return cv;
+}
+
+async function downloadRefCard(refId){
+  const r = REFS[refId];
+  if(!r) return;
+  toast('⏳ جارٍ إنشاء بطاقة الحكم...');
+  try{
+    const cv = await drawRefCard(refId);
+    const a = document.createElement('a');
+    a.href = cv.toDataURL('image/png');
+    a.download = `referee_${(r.name||'ref').replace(/\s+/g,'_')}.png`;
+    a.click();
+    toast('✅ تم تحميل البطاقة');
+  }catch(e){ toast('❌ '+e.message); }
+}
+
+async function downloadRefVideo(refId){
+  const r = REFS[refId];
+  if(!r){ toast('الحكم غير موجود'); return; }
+  toast('⏳ جارٍ إنشاء الفيديو...');
+  try{
+    const W=800, H=1000;
+    const cv = document.createElement('canvas');
+    cv.width=W; cv.height=H;
+    const ctx = cv.getContext('2d');
+
+    const stream = cv.captureStream(30);
+    const rec = new MediaRecorder(stream, {mimeType:'video/webm;codecs=vp9'});
+    const chunks=[];
+    rec.ondataavailable=e=>chunks.push(e.data);
+
+    const dur=4000, fps=30, frames=dur*fps/1000;
+    let frame=0;
+
+    async function renderFrame(){
+      /* base card */
+      const base = await drawRefCard(refId);
+      ctx.drawImage(base,0,0);
+
+      /* Animated gold pulse ring */
+      const t = frame/frames;
+      const pulse = Math.sin(t*Math.PI*4)*0.3+0.7;
+      const avatarR=90, avatarY=220;
+      ctx.strokeStyle=`rgba(245,158,11,${pulse*0.8})`;
+      ctx.lineWidth=4+pulse*4;
+      ctx.beginPath(); ctx.arc(W/2, avatarY+avatarR, avatarR+6+pulse*8, 0, Math.PI*2); ctx.stroke();
+
+      /* Particle sparkles */
+      const sparkCount=6;
+      for(let i=0;i<sparkCount;i++){
+        const angle = (t*Math.PI*2 + i*Math.PI*2/sparkCount);
+        const sr = avatarR+20+Math.sin(t*8+i)*10;
+        const sx = W/2 + Math.cos(angle)*sr;
+        const sy = avatarY+avatarR + Math.sin(angle)*sr;
+        ctx.fillStyle=`rgba(245,158,11,${0.5+Math.sin(t*6+i)*0.3})`;
+        ctx.beginPath(); ctx.arc(sx,sy,3,0,Math.PI*2); ctx.fill();
+      }
+
+      frame++;
+    }
+
+    rec.start(100);
+    for(let i=0;i<frames;i++){
+      await renderFrame();
+      await new Promise(res=>setTimeout(res,1000/fps));
+    }
+    rec.stop();
+
+    await new Promise(res=>rec.onstop=res);
+    const blob = new Blob(chunks,{type:'video/webm'});
+    downloadVideoFile(blob, `referee_${(r.name||'ref').replace(/\s+/g,'_')}.webm`);
+    toast('✅ تم تحميل الفيديو');
+  }catch(e){ toast('❌ فيديو: '+e.message); }
+}
+
+/* ======================================================
+   END REFEREES MODULE
+   ====================================================== */
+
 /* ---- رسم الواجهة ---- */
 function draw(){
  try{updateSeniorVisibility(); document.body.classList.toggle('senior-theme', isSenior()); document.body.classList.toggle('sr-mode', isSenior());}catch(e){}
-try{ccUi();document.body.classList.toggle('vw',isView());document.body.classList.toggle('se',isEntry())}catch(e){}if(!me&&tab==='a')return;try{$('app').innerHTML=tab==='m'?fixtures():tab==='r'?results():tab==='s'?standings():tab==='g'?scorers():admin()}catch(err){console.error('draw failed',err);$('app').innerHTML='<div class="card" style="direction:ltr;text-align:left;border:2px solid #b91c1c"><b style="color:#b91c1c">\u26a0\ufe0f Render error (tab '+tab+')</b><pre style="white-space:pre-wrap;word-break:break-word;font-size:12px;margin:8px 0 0">'+String(err&&err.message||err).replace(/</g,'&lt;')+'\n'+String(err&&err.stack||'').split('\n').slice(0,4).join('\n').replace(/</g,'&lt;')+'</pre></div>'}}
+try{ccUi();document.body.classList.toggle('vw',isView());document.body.classList.toggle('se',isEntry())}catch(e){}if(!me&&tab==='a')return;try{$('app').innerHTML=tab==='m'?fixtures():tab==='r'?results():tab==='s'?standings():tab==='g'?scorers():tab==='ref'?referees():admin()}catch(err){console.error('draw failed',err);$('app').innerHTML='<div class="card" style="direction:ltr;text-align:left;border:2px solid #b91c1c"><b style="color:#b91c1c">\u26a0\ufe0f Render error (tab '+tab+')</b><pre style="white-space:pre-wrap;word-break:break-word;font-size:12px;margin:8px 0 0">'+String(err&&err.message||err).replace(/</g,'&lt;')+'\n'+String(err&&err.stack||'').split('\n').slice(0,4).join('\n').replace(/</g,'&lt;')+'</pre></div>'}}
 const lg=id=>`<img class="lg" src="${LG[id]}" alt="">`;
 const lastRound=()=>{for(let r=22;r>=1;r--)if(pairs(r).m.some(([h,a])=>{const v=S[K(cat,r,h,a)];return v&&v.status==='confirmed'&&v.sh!==''&&v.sh!=null}))return r;return 1};
 function chips(){
@@ -4357,6 +4841,8 @@ function fixtures(){
   const k=K(cat,round,hm,aw),v=S[k],has=v&&v.sh!==undefined&&v.sh!=='';
   h+=`<div class="card mc${isMine(hm)||isMine(aw)?' favm':''}" style="--c1:${tcs(hm)};--c2:${tcs(aw)}">${mh(hm,aw,has,v)}
   <div class="meta"><span>${mi(v)}</span>${has?stBadge(v):v&&v.pp?'<span class="b wt">⏳ مؤجلة</span>':v&&v.ex?'<span class="b no">معفاة</span>':''}${erBadge(k)}</div>
+  ${isSenior()&&matchRefs(k)?refRowHtml(k):''}
+  ${isSenior()&&matchRefs(k)?refRowHtml(k):''}
   <details class="mc-menu"><summary class="btn sm alt mc-menu-toggle">⚙️ خيارات المباراة ▾</summary><div class="act mc-menu-items"><button class="btn sm alt" data-lu="${round}-${hm}-${aw}">📋 التشكيلة والتبديلات</button>${me?`<button class="btn sm alt" data-lp="${k}">🎽 ملصق التشكيلة</button>`:''}${me&&(me.role==='admin'||hm==me.teamId||aw==me.teamId)?`<button class="btn sm alt" data-ps="${round}-${hm}-${aw}">🖨 ورقة رسمية</button>`:''}${me&&me.role==='admin'?`<button class="btn sm alt" data-rec="${k}">🎥 تصوير مباشر</button>`:''}<button class="btn sm alt" data-tl="${k}">⏱️ أحداث اللقاء</button><button class="btn sm alt" data-mp="${round}-${hm}-${aw}">📣 ملصق المباراة</button>${me?`<button class="btn sm alt" data-mv="${round}-${hm}-${aw}">🎬 فيديو المباراة</button>`:''}${v&&(v.gh||v.ga)?`<button class="btn sm alt" data-gp="${k}">⚽ ملصق / فيديو الهدف</button>`:''}${has?`<button class="btn sm alt" data-sc="r:${k}">📤 بطاقة النتيجة</button>`:''}<button class="btn sm alt" data-fp="${k}">📝 منشور</button>${canEdit(hm,aw,v,k)?`<button class="btn sm" data-e="${k}">✏️ ${has?'تعديل النتيجة':'الموعد / النتيجة'}</button>`:''}${erBtns(hm,aw,v,k)}${canConfirm(hm,aw,v)&&has?`${me.role==='admin'?`<button class="btn sm" data-ok="${k}">✅ اعتماد</button>`:`<button class="btn sm red" data-no="${k}">❌ اعتراض</button>`}`:''}</div></details></div>`});
  return h+`<div class="bye">🛌 مستريحة: ${esc(T[p.bye])}</div>`
 }
@@ -5271,6 +5757,14 @@ document.addEventListener('click',async e=>{
  else if(b.dataset.cur){roundAuto=true;round=curRound();draw()}
  else if(b.dataset.r){roundAuto=false;round=+b.dataset.r;draw()}
  else if(b.dataset.t){tab=b.dataset.t;if(tab==='m'||tab==='r'){roundAuto=true;round=curRound()}document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-pressed',x===b));if(tab==='a'&&me&&me.role==='admin'){/* clear or reduce badge */ const p=U.filter(u=>u.status==='pending').length; updateAppBadge(p); } draw()}
+ else if(b.dataset.refView){window._refViewMode=b.dataset.refView;draw()}
+ else if(b.dataset.refAdd){openRefDlg(null)}
+ else if(b.dataset.refEdit){openRefDlg(b.dataset.refEdit)}
+ else if(b.dataset.refDel){deleteRef(b.dataset.refDel)}
+ else if(b.dataset.refCard){downloadRefCard(b.dataset.refCard)}
+ else if(b.dataset.refVid){downloadRefVideo(b.dataset.refVid)}
+ else if(b.dataset.refSave){saveRefAssignment(b.dataset.refSave)}
+ else if(b.id==='refDlgSave'){saveRefProfile()}
  else if(b.dataset.lu){const[r,h,a]=b.dataset.lu.split('-').map(Number);OLD.load(S);OLD.state({cat,round:r,rosters:RO,team:me?(me.role==='admin'?5:me.teamId):5});OLD.lineup(r,h,a)}
  else if(b.dataset.lp)openLp(b.dataset.lp)
  else if(b.dataset.mv){const[r,h,a]=b.dataset.mv.split('-').map(Number);OLD.load(S);OLD.state({cat,rosters:RO});openVid(r,h,a)}
