@@ -26,6 +26,21 @@ service cloud.firestore {
       return isManager() && myDoc().get('kind', 'club') != 'visitor' && myDoc().teamId == tid;
     }
 
+    // ===== حساب «مسيّر بطولة الأكابر» (perm == 'entry') =====
+    // يُدخل النتائج والمعلومات لمباريات فريقه في بطولة الأكابر فقط:
+    // لا قوائم لاعبين ولا صور ولا طاقم ولا تشكيلات ولا رسائل ولا مراسلة أندية.
+    function isEntry() {
+      return signedIn() && myDoc().get('perm', 'full') == 'entry';
+    }
+    // عضو نادٍ كامل الصلاحيات (ليس مسيّر أكابر)
+    function isFullMember(tid) {
+      return isClubMember(tid) && !isEntry();
+    }
+    // حسابات league == 'senior' تكتب مفاتيح الأكابر فقط (SENIOR_...)
+    function scopeOk(k) {
+      return myDoc().get('league', '') != 'senior' || k.matches('SENIOR_.*');
+    }
+
     // ===== حسابات المستخدمين =====
     match /users/{uid} {
       allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
@@ -47,6 +62,7 @@ service cloud.firestore {
       allow delete: if isAdmin();
       allow create: if isAdmin()
         || (canWrite()
+          && scopeOk(k)
           && (request.resource.data.home == myDoc().teamId
               || request.resource.data.away == myDoc().teamId)
           && k == request.resource.data.key.replace('|', '_')
@@ -55,6 +71,7 @@ service cloud.firestore {
           && request.resource.data.data.get('status', '') != 'confirmed');
       allow update: if isAdmin()
         || (canWrite()
+          && scopeOk(k)
           && (resource.data.home == myDoc().teamId
               || resource.data.away == myDoc().teamId)
           && request.resource.data.home == resource.data.home
@@ -68,7 +85,7 @@ service cloud.firestore {
     match /rosters/{id} {
       allow read: if signedIn() || isAdmin();
       allow create, update: if isAdmin()
-        || (canWrite() && request.resource.data.teamId == myDoc().teamId);
+        || (canWrite() && !isEntry() && request.resource.data.teamId == myDoc().teamId);
       allow delete: if isAdmin();
     }
 
@@ -76,9 +93,9 @@ service cloud.firestore {
     // خاصة بالفريق: المشرف + الحسابات المعتمدة لنفس الفريق
     match /lineups/{id} {
       allow read: if isAdmin()
-        || (signedIn() && myDoc().status == 'approved' && myDoc().teamId == resource.data.teamId);
+        || (signedIn() && !isEntry() && myDoc().status == 'approved' && myDoc().teamId == resource.data.teamId);
       allow create, update: if isAdmin()
-        || (canWrite() && request.resource.data.teamId == myDoc().teamId);
+        || (canWrite() && !isEntry() && request.resource.data.teamId == myDoc().teamId);
       allow delete: if isAdmin();
     }
 
@@ -86,19 +103,19 @@ service cloud.firestore {
     match /photos/{id} {
       allow read: if true;
       allow create, update: if isAdmin()
-        || (canWrite() && request.resource.data.teamId == myDoc().teamId);
+        || (canWrite() && !isEntry() && request.resource.data.teamId == myDoc().teamId);
       allow delete: if isAdmin()
-        || (canWrite() && resource.data.teamId == myDoc().teamId);
+        || (canWrite() && !isEntry() && resource.data.teamId == myDoc().teamId);
     }
 
     // ===== الطاقم الفني والإداري (Staff) =====
     // خاصة: المشرف + أعضاء النادي المعتمدون لفريقهم فقط (تحوي أرقام هواتف وصوراً)
     match /staff/{id} {
-      allow read: if isAdmin() || (signedIn() && isClubMember(resource.data.teamId));
+      allow read: if isAdmin() || (signedIn() && isFullMember(resource.data.teamId));
       allow create, update: if isAdmin()
-        || (canWrite() && request.resource.data.teamId == myDoc().teamId);
+        || (canWrite() && !isEntry() && request.resource.data.teamId == myDoc().teamId);
       allow delete: if isAdmin()
-        || (canWrite() && resource.data.teamId == myDoc().teamId);
+        || (canWrite() && !isEntry() && resource.data.teamId == myDoc().teamId);
     }
 
     // ===== بيانات عامة: البث المباشر، قواعد الإيقاف، حضور الزوار =====
@@ -121,7 +138,7 @@ service cloud.firestore {
     match /messages/{id} {
       // المشرف يقرأ الكل. مسؤول النادي يقرأ فقط محادثته الفردية (clubUid == uid) ورسائل «النادي ككل» (clubUid == '')
       allow read: if isAdmin()
-        || (signedIn() && isClubMember(resource.data.teamId)
+        || (signedIn() && isFullMember(resource.data.teamId)
             && resource.data.clubUid in ['', request.auth.uid]);
       allow create: if signedIn()
         && request.resource.data.keys().hasOnly(['teamId','from','to','fromUid','fromName','text','img','t','read','clubUid'])
@@ -137,13 +154,13 @@ service cloud.firestore {
         && (request.resource.data.get('img', '') == '' || request.resource.data.img.matches('data:image/jpeg;base64,.*'))
         && request.resource.data.read == false
         && ((isAdmin() && request.resource.data.from == 'admin' && request.resource.data.to == 'club')
-            || (isClubMember(request.resource.data.teamId) && request.resource.data.from == 'club' && request.resource.data.to == 'admin'
+            || (isFullMember(request.resource.data.teamId) && request.resource.data.from == 'club' && request.resource.data.to == 'admin'
                 && request.resource.data.clubUid == request.auth.uid));
       allow update: if signedIn()
         && (
           // وضع علامة «مقروء»
           (((isAdmin() && resource.data.to == 'admin')
-              || (isClubMember(resource.data.teamId) && resource.data.to == 'club'
+              || (isFullMember(resource.data.teamId) && resource.data.to == 'club'
                   && resource.data.clubUid in ['', request.auth.uid]))
             && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read'])
             && request.resource.data.read == true)
@@ -178,10 +195,10 @@ service cloud.firestore {
     // الإنشاء: عضو نادٍ معتمد لناديه فقط. التعديل: المستلم يضع read=true لا غير.
     match /clubChats/{id} {
       allow read: if isAdmin()
-        || (isManager() && myDoc().get('kind', 'club') != 'visitor'
+        || (isManager() && !isEntry() && myDoc().get('kind', 'club') != 'visitor'
             && myDoc().teamId in resource.data.teams);
       allow create: if canWrite()
-        && isClubMember(request.resource.data.fromTeam)
+        && isFullMember(request.resource.data.fromTeam)
         && request.resource.data.keys().hasOnly(['pair','teams','fromTeam','fromUid','fromName','text','img','t','read'])
         && request.resource.data.fromUid == request.auth.uid
         && request.resource.data.teams is list
@@ -198,7 +215,7 @@ service cloud.firestore {
         && (request.resource.data.get('img', '') == '' || request.resource.data.img.matches('data:image/jpeg;base64,.*'))
         && request.resource.data.read == false
         && request.resource.data.t is int;
-      allow update: if isManager() && myDoc().get('kind', 'club') != 'visitor'
+      allow update: if isManager() && !isEntry() && myDoc().get('kind', 'club') != 'visitor'
         && myDoc().teamId in resource.data.teams
         && resource.data.fromTeam != myDoc().teamId
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read'])

@@ -1323,6 +1323,7 @@ body.sr-mode #playersModal button[onclick="closePlayersModal()"]{background:line
   <select id="upmPermSel" class="f" style="margin-bottom:12px">
     <option value="full">✏️ صلاحية كاملة (تعديل التشكيلات، النتائج، واللاعبين)</option>
     <option value="view_only">👁️ مشاهدة فقط (ممنوع من تعديل أي شيء)</option>
+    <option value="entry">📝 مسيّر بطولة الأكابر — إدخال النتائج والمعلومات فقط (بلا تحميل ولا رفع)</option>
   </select>
 
   <label style="font-weight:700;font-size:13px;display:block;margin-bottom:4px">حالة الحساب (Status):</label>
@@ -3402,6 +3403,7 @@ const pairs=r=>{
 const ph=s=>{s=String(s||'').replace(/[٠-٩]/g,d=>d.charCodeAt(0)-1632).replace(/[۰-۹]/g,d=>d.charCodeAt(0)-1776).replace(/\D/g,'');return s.length>=9?s.slice(-9):s};
 const mail=v=>{v=String(v||'').trim().toLowerCase();if(v.includes('@'))return v;const d=ph(v);if(/^\d{6,}$/.test(d))return d+'@esm.local';return/^[a-z0-9._-]+$/.test(v)?v+'@esm.local':''};
 const isVis=()=>!!(me&&(me.kind==='visitor'||me.role==='visitor'));
+const isEntry=()=>!!(me&&me.role!=='admin'&&me.perm==='entry');
 const rdoc=(n,p)=>{const v=$('rk')&&$('rk').value==='visitor';return{name:n,phone:p,teamId:v?0:+$('rt').value,role:'manager',kind:v?'visitor':'club',status:'pending',perm:v?'view_only':'full',date:new Date().toISOString().slice(0,10)}};
 const mails=v=>{const b=mail(v);return /^\d{9}@esm\.local$/.test(b)?[b,...[2,3,4,5].map(n=>b.replace('@',`.${n}@`))]:(b?[b]:[])};
 let PUBRO={},ME={},MES={},meReady=false,RO={},RS={},LU={},LSS={},auth,db,me=null,S={},U=[],cat='U15',round=1,tab='m',subs=[],reg=false,cur=null,MSG=[],MSGn=0,MSGopen=null,ACT={},ACTT=0,ER={};
@@ -3898,6 +3900,7 @@ async function exportAllCatsRoundRecap(r){
 function canViewSeniors(){
   if(!me) return false;
   if(me.role === 'admin') return true;
+  if(typeof isEntry==='function'&&isEntry()) return true;
   if(me.canSenior === true) return true;
   const p = (me.phone || me.username || '').replace(/\D/g,'');
   const allowed = (window.PUB && window.PUB.seniorPhones) || [];
@@ -3905,17 +3908,20 @@ function canViewSeniors(){
 }
 
 function updateSeniorVisibility(){
+  const en = (typeof isEntry==='function') && isEntry();
   const can = canViewSeniors();
   const sw = $('leagueSwitcher');
   if(sw){
-    sw.style.display = can ? 'flex' : 'none';
+    sw.style.display = (can && !en) ? 'flex' : 'none';
   }
+  if(en && !window.isSenior()){ window.switchLeagueMode('senior'); return; }
   if(!can && window.isSenior()){
     window.switchLeagueMode('youth');
   }
 }
 
 window.switchLeagueMode = function(mode){
+  if(typeof isEntry==='function'&&isEntry())mode='senior';
   window.leagueMode = mode || 'senior';
   localStorage.setItem('esm_league_mode', window.leagueMode);
   const isS = window.isSenior();
@@ -3968,6 +3974,7 @@ function switchLeagueMode(mode){ return window.switchLeagueMode(mode); }
 document.addEventListener('click', e => {
   const btn = e.target.closest('[data-lmode]');
   if(btn){
+    if(typeof isEntry==='function'&&isEntry()&&btn.dataset.lmode!=='senior')return;
     window.switchLeagueMode(btn.dataset.lmode);
   }
 });
@@ -4014,12 +4021,13 @@ async function onAuth(u){
  if(!p||(p.role!=='admin'&&p.status!=='approved')){
   await auth.signOut();say('le',p&&p.status==='suspended'?'⛔ الحساب معطّل من المشرف العام. تواصل معه عبر الواتساب.':p&&p.status==='deleted'?'⚠️ حُذف حسابك من قِبل المشرف. إن كان ذلك بالخطأ فتواصل معه ليسترجعه.':p?'⏳ حسابك بانتظار موافقة المشرف العام. سيُفعَّل قريباً.':'⚠️ لا توجد بيانات لهذا الحساب. أرسل «طلب إنشاء حساب» أو تواصل مع المشرف.');return}
  me=Object.assign({uid:u.uid},p);
+ if(isEntry()){try{window.switchLeagueMode('senior')}catch(e){}}
  if(me.role!=='admin'){subs.push(db.collection('users').doc(u.uid).onSnapshot(sn=>{
   if(!sn.exists||!me)return;const n=sn.data();
   if(n.status!=='approved'){toast('⛔ تغيّرت حالة حسابك — سيتم تسجيل خروجك');setTimeout(()=>auth.signOut(),1200);return}
-  const ch=['perm','kind','teamId','role'].some(f=>String(n[f])!==String(me[f]));
+  const ch=['perm','kind','teamId','role','league'].some(f=>String(n[f])!==String(me[f]));
   Object.assign(me,n);
-  if(ch){try{OLD.state({user:{role:me.role==='admin'?'admin':(isVis()?'visitor':'official'),teamId:me.teamId,name:me.name}})}catch(e){}toast('🔄 تم تحديث صلاحيات حسابك');draw()}
+  if(ch){try{OLD.state({user:{role:me.role==='admin'?'admin':(isVis()||isEntry()?'visitor':'official'),teamId:me.teamId,name:me.name}})}catch(e){}toast('🔄 تم تحديث صلاحيات حسابك');draw()}
  },()=>{}))}
  if(me.role==='admin'){
   let prevPendingCount = -1;
@@ -4048,13 +4056,13 @@ async function onAuth(u){
   }));
 }
  roundAuto=true;round=curRound();
- OLD.state({user:{role:me.role==='admin'?'admin':(isVis()?'visitor':'official'),teamId:me.teamId,name:me.name}});
+ OLD.state({user:{role:me.role==='admin'?'admin':(isVis()||isEntry()?'visitor':'official'),teamId:me.teamId,name:me.name}});
  if(me.role==='admin'||!isVis())subs.push((me.role==='admin'?db.collection('rosters'):db.collection('rosters').where('teamId','==',me.teamId)).onSnapshot(s=>{
   s.docs.forEach(d=>{const r=d.data();RO[r.teamId]=RO[r.teamId]||{};RO[r.teamId][r.cat]=r.roster||[];RS[d.id]=JSON.stringify(r.roster||[])});
    /* زرع قائمة اتحاد القليعة (الأكابر) في السحابة مرة واحدة إن لم تكن موجودة */
    try{if(me&&me.role==='admin'&&!window.__srSeeded&&!s.docs.some(d=>d.id==='5_SENIOR')){window.__srSeeded=true;const L=window.SENIOR_ROSTER_SEED[5].SENIOR;RO[5]=RO[5]||{};RO[5].SENIOR=[...L];RS['5_SENIOR']=JSON.stringify(L);db.collection('rosters').doc('5_SENIOR').set({teamId:5,cat:'SENIOR',roster:L}).catch(()=>{})}}catch(e){}
   }));
-if(me.role==='admin'||!isVis()){listenLineups();listenPhotos();listenStaff()}listenMsgs();listenEdits();listenCC();listenCT();actLogin();
+if(!isEntry()&&(me.role==='admin'||!isVis())){listenLineups();listenPhotos();listenStaff()}if(!isEntry()){listenMsgs();listenCC();listenCT()}listenEdits();actLogin();
  show();
 }
 /* نشر التبديلات علناً: id = المفتاح_الفريق */
@@ -4080,8 +4088,8 @@ function show(){
  $('app').hidden=false;   /* دائماً مرئي — الزائر والمسجّل */
  $('out').hidden=!ok;
  $('na').hidden=!(ok&&me.role==='admin');
-if(ok){setTimeout(pushResume,2500);setTimeout(syncLocalScores,3500);if(!isVis())rcWake(lsGet(LK.r)||LIVE_RELAY)}
- msgUi();$('who').textContent=ok?(me.role==='admin'?'👑 المشرف':isVis()?'👁️ زائر':'⚽ '+(T[me.teamId]||'')):'👁️ زائر';
+if(ok){setTimeout(pushResume,2500);setTimeout(syncLocalScores,3500);if(!isVis()&&!isEntry())rcWake(lsGet(LK.r)||LIVE_RELAY)}
+ msgUi();$('who').textContent=ok?(me.role==='admin'?'👑 المشرف':isVis()?'👁️ زائر':isEntry()?'📝 مسيّر · '+(T[me.teamId]||''):'⚽ '+(T[me.teamId]||'')):'👁️ زائر';
  draw()
 }
 
@@ -4093,11 +4101,12 @@ const pastLocked=k=>!!(k&&me&&me.role!=='admin'&&keyRound(k)>0&&keyRound(k)<curR
 function canEdit(h,a,v,k){
  if(!me||isVis())return false;
  if(me.perm==='view_only')return false;
+ if(isEntry()&&!isSenior())return false;
  if(me.role==='admin')return true;
  if((me.role==='manager'||!!me.teamId)&&(me.teamId==h||me.teamId==a))return!(v&&v.status==='confirmed')&&!pastLocked(k);
  return false;
 }
-const canConfirm=(h,a,v)=>me&&v&&v.status!=='confirmed'&&!isVis()&&me.perm!=='view_only'&&(me.role==='admin'||((me.role==='manager'||!!me.teamId)&&me.teamId!=v.enteredBy&&v.status==='pending_confirm'));
+const canConfirm=(h,a,v)=>me&&v&&v.status!=='confirmed'&&!isVis()&&!isEntry()&&me.perm!=='view_only'&&(me.role==='admin'||((me.role==='manager'||!!me.teamId)&&me.teamId!=v.enteredBy&&v.status==='pending_confirm'));
 
 /* ---- طلبات تعديل النتائج المعتمدة (تحتاج موافقة المشرف) ---- */
 const ER_F=['sh','sa','pp','ex','date','time','stad','ref','gh','ga','yh','ya','rh','ra'];
@@ -4232,7 +4241,7 @@ function listenEdits(){
 /* ---- رسم الواجهة ---- */
 function draw(){
  try{updateSeniorVisibility()}catch(e){}
-try{ccUi();document.body.classList.toggle('vw',isView())}catch(e){}if(!me&&tab==='a')return;try{$('app').innerHTML=tab==='m'?fixtures():tab==='r'?results():tab==='s'?standings():tab==='g'?scorers():admin()}catch(err){console.error('draw failed',err);$('app').innerHTML='<div class="card" style="direction:ltr;text-align:left;border:2px solid #b91c1c"><b style="color:#b91c1c">\u26a0\ufe0f Render error (tab '+tab+')</b><pre style="white-space:pre-wrap;word-break:break-word;font-size:12px;margin:8px 0 0">'+String(err&&err.message||err).replace(/</g,'&lt;')+'\n'+String(err&&err.stack||'').split('\n').slice(0,4).join('\n').replace(/</g,'&lt;')+'</pre></div>'}}
+try{ccUi();document.body.classList.toggle('vw',isView());document.body.classList.toggle('se',isEntry())}catch(e){}if(!me&&tab==='a')return;try{$('app').innerHTML=tab==='m'?fixtures():tab==='r'?results():tab==='s'?standings():tab==='g'?scorers():admin()}catch(err){console.error('draw failed',err);$('app').innerHTML='<div class="card" style="direction:ltr;text-align:left;border:2px solid #b91c1c"><b style="color:#b91c1c">\u26a0\ufe0f Render error (tab '+tab+')</b><pre style="white-space:pre-wrap;word-break:break-word;font-size:12px;margin:8px 0 0">'+String(err&&err.message||err).replace(/</g,'&lt;')+'\n'+String(err&&err.stack||'').split('\n').slice(0,4).join('\n').replace(/</g,'&lt;')+'</pre></div>'}}
 const lg=id=>`<img class="lg" src="${LG[id]}" alt="">`;
 const lastRound=()=>{for(let r=22;r>=1;r--)if(pairs(r).m.some(([h,a])=>{const v=S[K(cat,r,h,a)];return v&&v.status==='confirmed'&&v.sh!==''&&v.sh!=null}))return r;return 1};
 function chips(){
@@ -4305,7 +4314,7 @@ function standings(){
 /* ---- الصور: نفس تصميم النسخة السابقة ---- */
 async function poster(k){
  if(!up)up=lastRound();
- OLD.load(S);OLD.state({cat,team:me?(me.role==='admin'?5:me.teamId):5,round,rosters:RO,user:me?{role:me.role==='admin'?'admin':'official',teamId:me.teamId,name:me.name}:null});
+ OLD.load(S);OLD.state({cat,team:me?(me.role==='admin'?5:me.teamId):5,round,rosters:RO,user:me?{role:me.role==='admin'?'admin':(isEntry()?'visitor':'official'),teamId:me.teamId,name:me.name}:null});
  $('rr').value=round;$('upto').value=up;toast('⏳ جاري إنشاء الصورة…');
  await OLD.shot(k==='s'?'t':'r')
 }
@@ -4576,6 +4585,7 @@ function acInfo(u){
  else if(u.kind==='visitor'&&tidOk){lvl='bad';msg='الحساب مسجَّل «زائر» رغم تحديد فريق — افتح «الصلاحيات» واحفظ ليصير مسؤول نادٍ'}
  else if(u.kind==='visitor'){lvl='vis';msg='زائر — مشاهدة فقط (لا فريق مرتبط)'}
  else if(!tidOk){lvl='bad';msg='لا يستطيع التعديل: الفريق غير محدد أو صيغته خاطئة — افتح «الصلاحيات» واحفظ'}
+ else if(u.perm==='entry'){lvl='ok';msg='📝 مسيّر بطولة الأكابر — يُدخل نتائج ومعلومات مباريات «'+(window.T_SENIOR[u.teamId]||'؟')+'» فقط (بلا تحميل ولا رفع ولا رسائل)'}
  else if(u.perm==='view_only'){lvl='warn';msg='مشاهدة فقط بقرارك — لا يستطيع تعديل النتائج'}
  return{club,tidOk,lvl,msg}
 }
@@ -4583,10 +4593,10 @@ function acCard(u,dupP){
  const i=acInfo(u),A=(typeof ACT!=='undefined'&&ACT[u.id])||null,on=!!(A&&A.lastSeen>Date.now()-4*60e3);
  const w=String(u.name||'?').trim().split(/\s+/),ini=((w[0]||'?')[0]+(w[1]?w[1][0]:'')).toUpperCase();
  const col=u.role==='admin'?'#b7791f':(i.tidOk?`hsl(${(u.teamId*47)%360} 52% 36%)`:'#64748b');
- const nm=esc(u.name||'بدون اسم'),ph=esc(u.phone||''),tm=i.tidOk?esc(T[u.teamId]||('فريق '+u.teamId)):'';
+ const nm=esc(u.name||'بدون اسم'),ph=esc(u.phone||''),tm=i.tidOk?esc(((u.perm==='entry'?window.T_SENIOR:T)[u.teamId])||('فريق '+u.teamId)):'';
  const dup=dupP[acDig(u.phone).slice(-9)]>1;
  const stP={approved:'<span class="b ok">✅ نشط</span>',pending:'<span class="b wt">⏳ جديد</span>',suspended:'<span class="b no">⏸ مجمَّد</span>'}[u.status]||'';
- const kindP=u.role==='admin'?'<span class="ac-pill warn">👑 مشرف</span>':(u.kind==='visitor'?'<span class="ac-pill grey">👁 زائر</span>':(tm?`<span class="ac-pill team">⚽ ${tm}</span>`:'<span class="ac-pill red">⚽ بلا فريق</span>'));
+ const kindP=u.role==='admin'?'<span class="ac-pill warn">👑 مشرف</span>':(u.kind==='visitor'?'<span class="ac-pill grey">👁 زائر</span>':(tm?`<span class="ac-pill team">${u.perm==='entry'?'📝 مسيّر الأكابر · ':'⚽ '}${tm}</span>`:'<span class="ac-pill red">⚽ بلا فريق</span>'));
  const note=i.lvl==='pend'?'warn':i.lvl==='sus'?'grey':i.lvl==='vis'?'grey':i.lvl;
  const ico={ok:'✅',bad:'⚠️',warn:'👁',grey:'ℹ️'}[note]||'ℹ️';
  const seen=A?`<div class="ac-seen">${on?'🟢 متصل الآن':'🕒 آخر ظهور: '+esc(new Date(A.lastSeen||A.lastLogin).toLocaleString('ar-DZ',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}))} · دخل ${A.logins||1} مرة</div>`:'';
@@ -4596,7 +4606,8 @@ function acCard(u,dupP){
  }else if(u.status==='suspended'){
   bar=`<button class="ac-btn ok grow" data-u="${u.id}" data-s="approved">↩ إعادة التفعيل</button><button class="ac-btn ghost" data-uem="${u.id}">🛡️ الصلاحيات</button><button class="ac-btn no" data-ud="${u.id}" data-un="${nm}">🗑 حذف</button>`;
  }else{
-  const seg=(i.club&&u.role!=='admin')?`<div class="ac-seg" role="group" aria-label="الصلاحية"><button ${u.perm==='view_only'?'':'class="on full"'} ${u.perm==='view_only'?`data-up="${u.id}" data-pm="full"`:''}>✏️ تعديل</button><button ${u.perm==='view_only'?'class="on"':`data-up="${u.id}" data-pm="view_only"`}>👁 مشاهدة</button></div>`:'';
+  const sgb=(pm,lab,on)=>on?`<button class="on${pm==='full'?' full':''}">${lab}</button>`:`<button data-up="${u.id}" data-pm="${pm}">${lab}</button>`;
+   const seg=(i.club&&u.role!=='admin')?`<div class="ac-seg" role="group" aria-label="الصلاحية">${sgb('full','✏️ تعديل',!u.perm||u.perm==='full')}${sgb('view_only','👁 مشاهدة',u.perm==='view_only')}${sgb('entry','📝 أكابر',u.perm==='entry')}</div>`:'';
   bar=`${seg}<button class="ac-btn${i.lvl==='bad'?'':' ghost'}" data-uem="${u.id}">🛡️ ${i.lvl==='bad'?'إصلاح الصلاحيات':'الصلاحيات'}</button>
    ${u.role==='admin'?'':`<details class="ac-more"><summary>⋯</summary><div class="ac-more-p"><button class="ac-btn no" data-u="${u.id}" data-s="suspended">⏸ تجميد</button><button class="ac-btn no" data-ud="${u.id}" data-un="${nm}">🗑 حذف</button></div></details>`}`;
  }
@@ -4677,23 +4688,31 @@ function admin(){
 /* ===== إدارة وتعديل صلاحيات الحسابات الشاملة للمشرف العام ===== */
 let activePermUserId = null;
 
+function upmFillTeams(entry,sel){
+  const Tm=entry?window.T_SENIOR:T; let o='<option value="0">👁️ زائر (بدون فريق محدد)</option>';
+  for(const id in Tm) o+=`<option value="${id}" ${sel==id?'selected':''}>⚽ ${Tm[id]}${entry?' (الأكابر)':''}</option>`;
+  $('upmTeamSel').innerHTML=o;
+}
+function upmHint(){
+  let h=$('upmEntryHint');
+  if(!h){h=document.createElement('div');h.id='upmEntryHint';h.className='hint';h.style.cssText='margin:-6px 0 12px;text-align:right;line-height:1.7;background:#fff7e0;border:1px solid #e8b765;border-radius:10px;padding:8px 10px';$('upmPermSel').insertAdjacentElement('afterend',h);
+    $('upmPermSel').addEventListener('change',()=>{const en=$('upmPermSel').value==='entry';upmFillTeams(en,0);upmHint()})}
+  const en=$('upmPermSel').value==='entry';h.hidden=!en;
+  if(en)h.innerHTML='📝 <b>حساب مسيّر بطولة الأكابر</b>: يرى بطولة الأكابر فقط، ويُدخل نتائج ومعلومات مباريات <b>فريقه</b> فقط. لا يستطيع التحميل ولا الرفع ولا الفيديو ولا الملصقات ولا الرسائل ولا قوائم اللاعبين. <b>اختر فريقه من الأكابر</b> ثم احفظ.';
+}
 function openUserPermModal(uid){
   const u = U.find(x => x.id === uid);
   if(!u) return;
   activePermUserId = uid;
   
   $('upmUserName').textContent = u.name || 'بدون اسم';
-  $('upmUserPhone').textContent = '📞 ' + (u.phone || 'بدون هاتف') + ' · ' + (T[u.teamId] || 'بدون فريق');
+  $('upmUserPhone').textContent = '📞 ' + (u.phone || 'بدون هاتف') + ' · ' + ((u.perm==='entry'?window.T_SENIOR:T)[u.teamId] || 'بدون فريق');
   
   // ملء خيارات الأندية
-  let teamOpts = '<option value="0">👁️ زائر (بدون فريق محدد)</option>';
-  for(let id in T){
-    teamOpts += `<option value="${id}" ${u.teamId == id ? 'selected' : ''}>⚽ ${T[id]}</option>`;
-  }
-  $('upmTeamSel').innerHTML = teamOpts;
+  upmFillTeams(u.perm==='entry',u.teamId);
   
   $('upmRoleSel').value = (u.role === 'admin') ? 'admin' : 'manager';
-  $('upmPermSel').value = u.perm || 'full';
+  $('upmPermSel').value = u.perm || 'full'; upmHint();
   $('upmStatusSel').value = u.status || 'approved';
   
   $('userPermModal').showModal();
@@ -4722,14 +4741,9 @@ $('saveUserPermBtn').onclick = async () => {
   const isClub = role === 'admin' || teamId > 0;
   const kind = isClub ? 'club' : 'visitor';
   const permFinal = (!isClub) ? 'view_only' : perm;
+  if(perm==='entry'&&!(teamId>0)){toast('⚠️ اختر فريق الأكابر الذي يمثّله المسيّر');btn.disabled=false;btn.textContent='💾 حفظ التعديلات';return}
   try{
-    await db.collection('users').doc(activePermUserId).update({
-      teamId: teamId,
-      role: role,
-      kind: kind,
-      perm: permFinal,
-      status: status
-    });
+    await db.collection('users').doc(activePermUserId).update(Object.assign({teamId:teamId,role:(perm==='entry'?'manager':role),kind:kind,perm:permFinal,status:status},perm==='entry'?{league:'senior',canSenior:true}:Object.assign({league:''},((U.find(x=>x.id===activePermUserId)||{}).perm==='entry')?{canSenior:false}:{})));
     
     // تحديث الذاكرة المحلية فوراً
     const u = U.find(x => x.id === activePermUserId);
@@ -4738,6 +4752,7 @@ $('saveUserPermBtn').onclick = async () => {
       u.role = role;
       u.kind = kind;
       u.perm = permFinal;
+      u.league = perm==='entry'?'senior':'';
       u.status = status;
     }
     
@@ -4826,6 +4841,7 @@ function getTeamSeasonStats(tId, c){
 }
 
 function openTeamModal(teamId, targetCat){
+  if(typeof isEntry==='function'&&isEntry()&&+teamId!==+me.teamId){toast('⛔ غير متاح لحسابك — يخص فريقاً آخر');return}
   curTeamModalId = +teamId || 5;
   if(targetCat) curTeamCat = targetCat;
   else if(!curTeamCat) curTeamCat = cat || 'U15';
@@ -5210,7 +5226,8 @@ document.addEventListener('click',async e=>{
      try{await db.collection('users').doc(b.dataset.ud).update({status:'deleted'});toast('🗑 نُقل إلى المحذوفين (يمكن استرجاعه)')}catch(x){toast('⛔ تعذر التنفيذ')}}
     else if(b.dataset.uh){const nm=b.dataset.un||'';if(!confirm('حذف «'+nm+'» نهائياً؟ لا يمكن التراجع، وسيحتاج للتسجيل من جديد.'))return;
      try{await db.collection('users').doc(b.dataset.uh).delete();toast('❌ حُذف نهائياً')}catch(x){toast('⛔ تعذر الحذف')}}
- else if(b.dataset.up)try{await db.collection('users').doc(b.dataset.up).update({perm:b.dataset.pm,kind:'club'});toast(b.dataset.pm==='view_only'?'👁 صار الحساب للمشاهدة فقط':'✏️ مُنحت صلاحية التعديل')}catch(x){toast('⛔ تعذر التنفيذ')}
+ else if(b.dataset.up){if(b.dataset.pm==='entry'){openUserPermModal(b.dataset.up);$('upmPermSel').value='entry';upmFillTeams(true,0);upmHint();return}
+  try{const was=(U.find(x=>x.id===b.dataset.up)||{}).perm;await db.collection('users').doc(b.dataset.up).update(Object.assign({perm:b.dataset.pm,kind:'club',league:''},was==='entry'?{canSenior:false}:{}));toast(b.dataset.pm==='view_only'?'👁 صار الحساب للمشاهدة فقط':(was==='entry'?'✏️ مُنحت صلاحية التعديل — افتح «🛡️ الصلاحيات» وأعد اختيار فريقه من الفئات الشبانية':'✏️ مُنحت صلاحية التعديل'))}catch(x){toast('⛔ تعذر التنفيذ')}}
     else if(b.dataset.u)try{await db.collection('users').doc(b.dataset.u).update({status:b.dataset.s})}catch(x){toast('⛔ تعذر التنفيذ')}
  else if(b.id==='seed')importSeed()
   else if(b.id==='seedS')importSeedSenior()
@@ -5488,7 +5505,7 @@ window.__renamePhoto=async(t,o,n)=>{try{const k=t+'|'+nrm(o);const im=PH[k];if(!
  try{await db.collection('photos').doc(pid(t,o)).delete()}catch(e){}delete PH[k]}catch(e){}};
 let phTeam=5,phTarget=null;
 function drawPh(){
- OLD.load(S);OLD.state({cat,rosters:RO||{},team:phTeam,user:me?{role:me.role==='admin'?'admin':(isVis()?'visitor':'official'),teamId:me.teamId}:{role:'visitor',teamId:5}});
+ OLD.load(S);OLD.state({cat,rosters:RO||{},team:phTeam,user:me?{role:me.role==='admin'?'admin':(isVis()||isEntry()?'visitor':'official'),teamId:me.teamId}:{role:'visitor',teamId:5}});
  let names=[];try{names=OLD.rosterList(cat,phTeam)||[]}catch(e){}
  names=names.map(x=>typeof x==='string'?x:(x&&x.name)||'').filter(Boolean);
  $('phTeamSel').hidden=me.role!=='admin';
@@ -9402,6 +9419,40 @@ function vFrameSR(x,A,t){
  /* — التذييل — */
  {const p=vpr(t,.5,1.2);x.save();x.globalAlpha=o(p);x.translate(0,30*(1-o(p)));x.drawImage(A.fl,0,0);x.restore()}
  x.restore()}
+
+</script>
+<script>
+/* ===== حساب «مسيّر بطولة الأكابر» (perm = 'entry'): إدخال النتائج والمعلومات فقط =====
+   الحماية الحقيقية للكتابة في firestore.rules؛ هنا إخفاء الواجهة + حواجز منع التحميل والرفع. */
+(function(){
+ const on=()=>{try{return typeof isEntry==='function'&&isEntry()}catch(e){return false}};
+ let last=0;const deny=()=>{const n=Date.now();if(n-last>1500){last=n;try{toast('⛔ غير متاح لحسابك: إدخال النتائج والمعلومات فقط')}catch(e){}}};
+ const st=document.createElement('style');
+ st.textContent='body.se [data-lu],body.se [data-lp],body.se [data-ps],body.se [data-mp],body.se [data-mv],body.se [data-gp],body.se [data-sc],body.se [data-fp],body.se [data-shot],body.se [data-mk],body.se [data-pt],body.se [data-pg],body.se [data-rec],body.se [data-ok],body.se [data-no],body.se [data-md],body.se #plBtn,body.se #phBtn,body.se #msgBtn,body.se #ccBtn,body.se #ctBtn,body.se #tvOpen,body.se #adminPv,body.se #leagueSwitcher,body.se #tmClubsBar,body.se input[type=file]{display:none!important}';
+ document.head.appendChild(st);
+ /* تحميل */
+ const oc=HTMLAnchorElement.prototype.click;
+ HTMLAnchorElement.prototype.click=function(){if(on()&&(this.hasAttribute('download')||/^blob:/.test(this.href||''))){deny();return}return oc.apply(this,arguments)};
+ /* مشاركة */
+ try{const sh=navigator.share&&navigator.share.bind(navigator);Object.defineProperty(navigator,'share',{configurable:true,value:function(){if(on()){deny();return Promise.reject(new DOMException('denied','AbortError'))}return sh?sh.apply(null,arguments):Promise.reject(new DOMException('unsupported','NotSupportedError'))}});
+  const cs=navigator.canShare&&navigator.canShare.bind(navigator);Object.defineProperty(navigator,'canShare',{configurable:true,value:function(){return on()?false:(cs?cs.apply(null,arguments):false)}})}catch(e){}
+ /* تسجيل فيديو */
+ if(window.MediaRecorder){const MR=window.MediaRecorder;class MR2 extends MR{constructor(...a){if(on()){deny();throw new Error('denied')}super(...a)}}MR2.isTypeSupported=MR.isTypeSupported.bind(MR);window.MediaRecorder=MR2}
+ /* تصدير الصور */
+ const tb=HTMLCanvasElement.prototype.toBlob,td=HTMLCanvasElement.prototype.toDataURL;
+ HTMLCanvasElement.prototype.toBlob=function(cb){if(on()){deny();try{cb&&cb(null)}catch(e){}return}return tb.apply(this,arguments)};
+ HTMLCanvasElement.prototype.toDataURL=function(){if(on()){deny();return''}return td.apply(this,arguments)};
+ /* رفع الملفات */
+ const ic=HTMLInputElement.prototype.click;HTMLInputElement.prototype.click=function(){if(on()&&this.type==='file'){deny();return}return ic.apply(this,arguments)};
+ if(HTMLInputElement.prototype.showPicker){const sp=HTMLInputElement.prototype.showPicker;HTMLInputElement.prototype.showPicker=function(){if(on()&&this.type==='file'){deny();return}return sp.apply(this,arguments)}}
+ document.addEventListener('click',e=>{if(!on())return;const tc=e.target.closest&&e.target.closest('[data-tmteam]');if(tc&&+tc.dataset.tmteam!==+me.teamId){e.preventDefault();e.stopPropagation();deny();return}const t=e.target;const f=t.closest&&t.closest('input[type=file]');const lb=t.closest&&t.closest('label');const c=lb&&lb.control;if(f||(c&&c.type==='file')){e.preventDefault();e.stopPropagation();deny()}},true);
+ document.addEventListener('change',e=>{if(on()&&e.target&&e.target.type==='file'){e.target.value='';e.stopImmediatePropagation();deny()}},true);
+ /* إخفاء أي زر تحميل/رفع/فيديو/ملصق/صور مهما كان مكانه */
+ const RX=/تحميل|تنزيل|رفع|مشاركة|فيديو|ملصق|بطاقة بتصميم|نسخ احتياطي|استرجاع|اختيار صورة|إرفاق|📷|📎|⬇|⬆|📥|📤|🎞|🎬|🖼|🎥|📸/;
+ let tmr=0;const sweep=()=>{tmr=0;if(!on())return;document.querySelectorAll('button,a.btn,label,[role=button]').forEach(el=>{if(/^\s*(💾|✅)?\s*(حفظ|إلغاء)/.test(el.textContent||''))return;if(RX.test(el.textContent||'')||RX.test(el.getAttribute('aria-label')||'')){el.style.setProperty('display','none','important');el.setAttribute('data-se-hidden','1')}})};
+ new MutationObserver(()=>{if(!tmr&&on())tmr=setTimeout(sweep,80)}).observe(document.body,{childList:true,subtree:true});
+ document.addEventListener('click',()=>{if(on())setTimeout(sweep,150)},true);
+})();
 
 </script>
 <script>
