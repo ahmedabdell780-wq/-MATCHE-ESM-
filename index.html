@@ -2563,6 +2563,7 @@ function canEditCurrentLineup() {
   }
   return false;
 }
+const mnT = m => /^\d+$/.test(String(m).trim()) ? 'د' + m : m;
 function getTeamLineupData(teamId) {
   if (!activeLineupMatch) return { starters: [], bench: [], subs: [] };
   const key = activeLineupMatch.key;
@@ -2634,7 +2635,7 @@ function renderMatchLineupView() {
       startersBox.innerHTML = starters.map((p, idx) => {
         // Check if substituted
         const subRecord = (data.subs || []).find(s => s.outName === p.name);
-        const subNote = subRecord ? `<span style="color:#dc2626; font-size:10.5px; font-weight:bold; background:#fee2e2; padding:1px 6px; border-radius:4px;">خرج د${subRecord.minute} 🔻</span>` : '';
+        const subNote = subRecord ? `<span style="color:#dc2626; font-size:10.5px; font-weight:bold; background:#fee2e2; padding:1px 6px; border-radius:4px;">خرج ${mnT(subRecord.minute)} 🔻</span>` : '';
         const isS = suspSet.has(nrm(p.name));
         const suspNote = isS ? `<span style="color:#b91c1c; font-size:10.5px; font-weight:800; background:#fef2f2; border:1px solid #f87171; padding:1px 6px; border-radius:4px;">⚠️ معاقب وموقوف</span>` : '';
         const gkClass = p.isGk ? 'is-gk' : '';
@@ -2679,7 +2680,7 @@ function renderMatchLineupView() {
       benchBox.innerHTML = bench.map((p, idx) => {
         // Check if entered
         const subRecord = (data.subs || []).find(s => s.inName === p.name);
-        const subNote = subRecord ? `<span style="color:#16a34a; font-size:10.5px; font-weight:bold; background:#dcfce7; padding:1px 6px; border-radius:4px;">دخل د${subRecord.minute} 🔺</span>` : '';
+        const subNote = subRecord ? `<span style="color:#16a34a; font-size:10.5px; font-weight:bold; background:#dcfce7; padding:1px 6px; border-radius:4px;">دخل ${mnT(subRecord.minute)} 🔺</span>` : '';
         const isS = suspSet.has(nrm(p.name));
         const suspNote = isS ? `<span style="color:#b91c1c; font-size:10.5px; font-weight:800; background:#fef2f2; border:1px solid #f87171; padding:1px 6px; border-radius:4px;">⚠️ معاقب وموقوف</span>` : '';
 
@@ -2717,7 +2718,7 @@ function renderMatchLineupView() {
       subsBox.innerHTML = subs.map((s, idx) => `
         <div class="sub-timeline-card">
           <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-            <span style="background:#fef3c7; color:#92400e; font-weight:900; padding:2px 8px; border-radius:6px; font-size:12px;">⏱️ د${s.minute || '--'}</span>
+            <span style="background:#fef3c7; color:#92400e; font-weight:900; padding:2px 8px; border-radius:6px; font-size:12px;">⏱️ ${mnT(s.minute || '--')}</span>
             <span style="color:#dc2626; font-weight:bold;">🔻 خروج: <b>${s.outName}</b></span>
             <span style="color:#64748b;">⮀</span>
             <span style="color:#16a34a; font-weight:bold;">🔺 دخول: <b>${s.inName}</b></span>
@@ -3105,7 +3106,7 @@ function copyMatchLineupText() {
   if (data.subs && data.subs.length) {
     text += `\n⏱️ التبديلات أثناء المباراة:\n`;
     data.subs.forEach(s => {
-      text += `• د${s.minute}: 🔻 خروج: ${s.outName} ⮀ 🔺 دخول: ${s.inName} ${s.reason ? '('+s.reason+')' : ''}\n`;
+      text += `• ${mnT(s.minute)}: 🔻 خروج: ${s.outName} ⮀ 🔺 دخول: ${s.inName} ${s.reason ? '('+s.reason+')' : ''}\n`;
     });
   }
 
@@ -5473,7 +5474,7 @@ function admin(){
  }
 
  if(adminSec === 'tools'){
-   return navBar + `<h2>🏋️ حصة تدريبية مباشرة</h2><div class="card"><p class="hint" style="text-align:right;margin:0 0 8px">صوّر حصة تدريبية لأي فريق وأذعها مباشرة: شعار النادي يرفرف في جهة وشعار التطبيق في الجهة الأخرى.</p><button class="btn" id="trOpen" style="width:100%">🎥 بدء حصة تدريبية مباشرة</button></div><h2>📊 ملصق الترتيب المعتمد</h2><div class="card">${chips()}<select id="us" class="f">${Array.from({length:isSenior()?30:22},(_,i)=>`<option value="${i+1}" ${i+1===(up||lastRound())?'selected':''}>بعد الجولة ${i+1}</option>`).join('')}</select><label>🎯 تظليل فريق في الملصق (اختياري)</label><select id="hlT" class="f"><option value="">— بدون تظليل —</option>${Object.keys(T).map(i=>`<option value="${i}" ${String(HL.team)===i?'selected':''}>${esc(T[i])}</option>`).join('')}</select><div class="swatches">${HLC.map(c=>`<button type="button" class="sw" data-hc="${c}" style="background:${c}" aria-label="لون" aria-pressed="${HL.color===c}"></button>`).join('')}<input type="color" id="hlC" value="${HL.color}" aria-label="لون مخصص"></div><button class="btn" id="adminPoster" style="width:100%;margin-top:8px">إنشاء الملصق</button><button class="btn" id="adminVideo" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#156834,#1f9a4f);color:#fff">🎬 إنشاء فيديو الملصق</button>${isSenior()?'<button class="btn" id="adminSrVideo" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#0a2a4e,#1f86c8);color:#fff">🏛️ فيديو الأكابر الشامل (تصميم جديد)</button>':''}<button class=\"btn\" id=\"adminPv\" style=\"width:100%;margin-top:8px;background:linear-gradient(135deg,#7a1f3d,#c0392b);color:#fff\">🎙️ فيديو المقدّم (مباراة بمباراة · تحكم بالوقت)</button></div>${bkCard()}${rulesCard()}<h2>🧰 أدوات</h2><div class="card"><button class="btn" id="mig" style="width:100%;margin-bottom:8px">🔒 نقل التشكيلات القديمة إلى مساحة خاصة</button><button class="btn alt" id="seed" style="width:100%">استيراد نتائج الجولات 1-3 السابقة</button><button class="btn" id="seedS" style="width:100%;margin-top:8px">⚽ استيراد نتائج الأكابر (الجولات 1-7)</button></div>`;
+   return navBar + `<h2>🏋️ حصة تدريبية مباشرة</h2><div class="card"><p class="hint" style="text-align:right;margin:0 0 8px">صوّر حصة تدريبية لأي فريق وأذعها مباشرة: شعار النادي يرفرف في جهة وشعار التطبيق في الجهة الأخرى.</p><button class="btn" id="trOpen" style="width:100%">🎥 بدء حصة تدريبية مباشرة</button></div><h2>📊 ملصق الترتيب المعتمد</h2><div class="card">${chips()}<select id="us" class="f">${Array.from({length:isSenior()?30:22},(_,i)=>`<option value="${i+1}" ${i+1===(up||lastRound())?'selected':''}>بعد الجولة ${i+1}</option>`).join('')}</select><label>🎯 تظليل فريق في الملصق (اختياري)</label><select id="hlT" class="f"><option value="">— بدون تظليل —</option>${Object.keys(T).map(i=>`<option value="${i}" ${String(HL.team)===i?'selected':''}>${esc(T[i])}</option>`).join('')}</select><div class="swatches">${HLC.map(c=>`<button type="button" class="sw" data-hc="${c}" style="background:${c}" aria-label="لون" aria-pressed="${HL.color===c}"></button>`).join('')}<input type="color" id="hlC" value="${HL.color}" aria-label="لون مخصص"></div><button class="btn" id="adminPoster" style="width:100%;margin-top:8px">إنشاء الملصق</button><button class="btn" id="adminVideo" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#156834,#1f9a4f);color:#fff">🎬 إنشاء فيديو الملصق</button>${isSenior()?'<button class="btn" id="adminSrVideo" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#0a2a4e,#1f86c8);color:#fff">🏛️ فيديو الأكابر الشامل (تصميم جديد)</button>':''}<button class=\"btn\" id=\"adminPv\" style=\"width:100%;margin-top:8px;background:linear-gradient(135deg,#7a1f3d,#c0392b);color:#fff\">🎙️ فيديو المقدّم (مباراة بمباراة · تحكم بالوقت)</button></div>${bkCard()}${rulesCard()}<h2>🧰 أدوات</h2><div class="card"><button class="btn" id="mig" style="width:100%;margin-bottom:8px">🔒 نقل التشكيلات القديمة إلى مساحة خاصة</button><button class="btn alt" id="seed" style="width:100%">استيراد نتائج الجولات 1-3 السابقة</button><button class="btn" id="seedS" style="width:100%;margin-top:8px">⚽ استيراد نتائج الأكابر (الجولات 1-7)</button><button class="btn" id="shImp" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#0f5132,#198754);color:#fff">📥 استيراد ورقة مباراة: U15 · الجولة 6 (الوفاق – مولودية قوراية)</button></div>`;
  }
 
   if(adminSec === 'act'){
@@ -6061,9 +6062,10 @@ document.addEventListener('click',async e=>{
   if(asRec()&&_t&&_t.status==='pending'){try{await db.collection('users').doc(b.dataset.u).update({asstRec:{act:b.dataset.s==='approved'?'approve':'reject',by:me.uid,byName:me.name||'',at:Date.now()}});toast('📨 أُرسلت توصيتك للمشرف العام — هو من يقرّر')}catch(x){toast('⛔ تعذر الإرسال')}}
   else if(isAssist()&&!aperm('suspend')&&_t&&_t.status!=='pending')toast('⛔ التجميد وإعادة التفعيل للمشرف العام، أو بصلاحية يمنحك إياها');
   else try{await db.collection('users').doc(b.dataset.u).update(Object.assign({status:b.dataset.s},(aperm('approve')&&_t&&_t.asstRec)?{asstRec:null}:{}))}catch(x){toast('⛔ تعذر التنفيذ')}}
- else if(['seed','seedS','mig'].includes(b.id)&&!isSuper())toast('⛔ للمشرف العام فقط')
+ else if(['seed','seedS','mig','shImp'].includes(b.id)&&!isSuper())toast('⛔ للمشرف العام فقط')
  else if(b.id==='seed')importSeed()
   else if(b.id==='seedS')importSeedSenior()
+  else if(b.id==='shImp')importSheets()
  else if(b.id==='mig')migrateLineups()
  else if(b.id==='bkExp')bkExport()
  else if(b.id==='bkImp')$('bkFile').click()
@@ -6284,6 +6286,65 @@ async function put(k,h,a,data){
   }
 }
 function setSt(k,st){const m=/^(?:[A-Z0-9]+\|)?\d+:(\d+)-(\d+)$/.exec(k);put(k,+m[1],+m[2],Object.assign({},S[k],{status:st,confirmedBy:me.role==='admin'?'admin':me.teamId}))}
+
+/* ===== أوراق المباريات الجاهزة للاستيراد (تُنقل كما هي من ورقة الاتحاد) ===== */
+window.SHEET_IMPORTS=[{
+ id:'279725',cat:'U15',round:6,home:5,away:7,date:'2026-11-21',time:'12:00',ref:'BENKHOUCHA Bilal',sh:4,sa:2,
+ report:'جرت المقابلة بحضور الطبيب بوبكر سيدعلي',
+ goals:{h:[['RIAD ANIS',26,1],['RIAD ANIS',38],['YAHIAOUI MAHDI',50],['BELAIDI DJELLOUL- CHEMS- EDDINE',55]],a:[['KHADRI OKBA',20],['ACHOURI ABDERRAHIM',40,1]]},
+ teams:{
+  5:{starters:[[1,'MESKI ABDELHAK','26W42J1797','g'],[2,'AMROUCHE MOHAMED','26W42J1764'],[3,'YAMNAINE KAIS ABDELMOUIN','26W42J1804'],[4,'BELAIDI ABDELHAFED','26W42J1786'],[5,'RIAD ZAKARIA','26W42J1766'],[7,'ABIDAT MOHAMED AKRAM','26W42J1761'],[9,'RIAD ANIS','26W42J1767'],[10,'YAHIAOUI MAHDI','26W42J1768'],[12,'MOUSSAOUI YAHIA','26W42J1798'],[15,'SLIMANI LOUAY ABDEL MOUNAIM','26W42J1801'],[22,'AMOURA MOHAMED-DHAYA-EDDINE','26W42J1762','c']],
+     bench:[[6,'HAMMOUNI WAIL','26W42J1765'],[8,'HASSAINE IYAD','26W42J1788'],[11,'BELAIDI DJELLOUL- CHEMS- EDDINE','26W42J1805'],[14,'SEDDAOUI FARES','26W42J1789'],[16,'ZIBOUCHE AHMED SOHAIB','26W42J1799','g'],[17,'BENHADDOUCHE HICHAM','26W42J2059'],[18,'ABDELLAOUI BADREDDINE','26W42J1760'],[19,'CHAMI MOHAMMED DHIA EDDINE','26W42J1787'],[23,'ZIBOUCHE YACINE','26W42J1803']],
+     subs:[['HT','SEDDAOUI FARES','BELAIDI ABDELHAFED'],['HT','BENHADDOUCHE HICHAM','HASSAINE IYAD'],[44,'ABDELLAOUI BADREDDINE','MOUSSAOUI YAHIA'],[58,'CHAMI MOHAMMED DHIA EDDINE','RIAD ANIS']],
+     staff:[['CHERFAOUI ZAKI','26W42E0071','coach','مدرب رئيسي']]},
+  7:{addRoster:1,
+     starters:[[1,'MOSTEFAOUI ABDELGHANI','26W42J1825','g'],[2,'OULD BOUAMAMA IMAD EDDINE','26W42J1546'],[3,'BENKHALED SOHEYB','26W42J1539'],[4,'BOUHADDI MOHAMED REDHA','26W42J2178'],[5,'MAMOU MOUHSSIN','26W42J1548'],[6,'KHOUAS ILIES','26W42J1549'],[7,'ACHOURI ABDERRAHIM','26W42J1535','c'],[8,'DJELLILAHINE FAROUK','26W42J1534'],[9,'KHADRI OKBA','26W42J1541'],[10,'KHIAT ALA EDDINE','26W42J1540'],[11,'IKHADRIOUENE NADJIB','26W42J1547']],
+     bench:[[12,'BOUDEBZA HOUSSAM','26W42J1553'],[13,'FODIL CHERIF MOHAMED SABRI','26W42J2179'],[14,'KHERZANE HAITHEM','26W42J1542'],[15,'MAMOU IHSSEN','26W42J1545'],[16,'DJELLALI MOHAMED ABDELMOUINE','26W42J1554'],[17,'IHALOUINE OUAHID','26W42J1538'],[18,'KHADRI MEHDI','26W42J1543'],[19,'OULD MAMMAR OUSSAMA','26W42J1550'],[20,'DJELLILAHINE ABDELHAMID','26W42J2106']],
+     subs:[['HT','BOUDEBZA HOUSSAM','BENKHALED SOHEYB'],['HT','KHERZANE HAITHEM','KHOUAS ILIES'],['HT','MAMOU IHSSEN','OULD BOUAMAMA IMAD EDDINE'],[48,'DJELLALI MOHAMED ABDELMOUINE','KHADRI OKBA'],[48,'KHADRI MEHDI','DJELLILAHINE FAROUK']],
+     staff:[['MERROUCHE DJAMEL EDDINE','26W42E0057','coach','مدرب رئيسي'],['SAADI SAMI','26W42D0040','admin','كاتب الفئات الشبانية']]}
+ }
+}];
+const SH_AR={"MESKI ABDELHAK": "مسكي عبد الحق", "AMROUCHE MOHAMED": "عمروش محمد", "YAMNAINE KAIS ABDELMOUIN": "يمناين قيس عبد المعين", "BELAIDI ABDELHAFED": "بلعيدي عبد الحفيظ", "RIAD ZAKARIA": "رياض زكرياء", "ABIDAT MOHAMED AKRAM": "عبيدات محمد أكرم", "RIAD ANIS": "رياض أنيس", "YAHIAOUI MAHDI": "يحياوي مهدي", "MOUSSAOUI YAHIA": "موساوي يحيى", "SLIMANI LOUAY ABDEL MOUNAIM": "سليماني لؤي عبد المنعم", "AMOURA MOHAMED-DHAYA-EDDINE": "عمورة محمد ضياء الدين", "HAMMOUNI WAIL": "حموني وائل", "HASSAINE IYAD": "حساين إياد", "BELAIDI DJELLOUL- CHEMS- EDDINE": "بلعيدي جلول شمس الدين", "SEDDAOUI FARES": "سداوي فارس", "ZIBOUCHE AHMED SOHAIB": "زيبوش أحمد صهيب", "BENHADDOUCHE HICHAM": "بن حدوش هشام", "ABDELLAOUI BADREDDINE": "عبد اللاوي بدر الدين", "CHAMI MOHAMMED DHIA EDDINE": "شامي محمد ضياء الدين", "ZIBOUCHE YACINE": "زيبوش ياسين", "MOSTEFAOUI ABDELGHANI": "مصطفاوي عبد الغني", "OULD BOUAMAMA IMAD EDDINE": "ولد بوعمامة عماد الدين", "BENKHALED SOHEYB": "بن خالد صهيب", "BOUHADDI MOHAMED REDHA": "بوحدي محمد رضا", "MAMOU MOUHSSIN": "مامو محسن", "KHOUAS ILIES": "خواص إلياس", "ACHOURI ABDERRAHIM": "عاشوري عبد الرحيم", "DJELLILAHINE FAROUK": "جليلاحين فاروق", "KHADRI OKBA": "خضري عقبة", "KHIAT ALA EDDINE": "خياط علاء الدين", "IKHADRIOUENE NADJIB": "إخضريوان نجيب", "BOUDEBZA HOUSSAM": "بودبزة حسام", "FODIL CHERIF MOHAMED SABRI": "فضيل شريف محمد صبري", "KHERZANE HAITHEM": "خرزان هيثم", "MAMOU IHSSEN": "مامو إحسان", "DJELLALI MOHAMED ABDELMOUINE": "جلالي محمد عبد المعين", "IHALOUINE OUAHID": "إحالوين وحيد", "KHADRI MEHDI": "خضري مهدي", "OULD MAMMAR OUSSAMA": "ولد معمر أسامة", "DJELLILAHINE ABDELHAMID": "جليلاحين عبد الحميد", "CHERFAOUI ZAKI": "شرفاوي زكي", "MERROUCHE DJAMEL EDDINE": "مروش جمال الدين", "SAADI SAMI": "سعدي سامي", "BENKHOUCHA Bilal": "بن خوشة بلال"};
+const shCanon=s=>nrm(s).toLowerCase().replace(/[^\p{L}\p{N}\s]/gu,' ').split(/\s+/).filter(Boolean).sort().join(' ');
+async function importSheets(){
+ if(!me||me.role!=='admin'||!isSuper())return toast('⛔ للمشرف العام فقط');
+ const L=window.SHEET_IMPORTS||[];if(!L.length)return toast('لا توجد أوراق جاهزة');
+ const TN=window.T_YOUTH||{};
+ const desc=L.map(x=>x.cat+' · الجولة '+x.round+': '+TN[x.home]+' '+x.sh+' - '+x.sa+' '+TN[x.away]).join('\n');
+ if(!confirm('استيراد ورقة المباراة (النتيجة والهدافون والتشكيلتان والتبديلات والطاقم وأسماء اللاعبين)؟\n\n'+desc+'\n\nإن كانت المباراة مسجّلة فستُستبدل نتيجتها وتشكيلتاها بما في الورقة.'))return;
+ let ok=0,matched=0,total=0,fail=[];
+ for(const x of L){try{
+  const k=(x.cat==='U15'?'':x.cat+'|')+x.round+':'+x.home+'-'+x.away,kid=k.replace('|','_');
+  const names=t=>((RO[t]||{})[x.cat]||[]).map(e=>typeof e==='string'?e:(e&&e.name)||'').filter(Boolean);
+  const fix=(t,nm)=>{const ar=SH_AR[nm]||nm,c1=shCanon(nm),c2=shCanon(ar),h=names(t).find(e=>{const c=shCanon(e);return c===c1||c===c2});return h||ar};
+  /* 1) أسماء لاعبي الفريق الضيف في قائمة النادي (دون حذف الموجود) */
+  for(const t of Object.keys(x.teams)){const T0=x.teams[t];if(!T0.addRoster)continue;
+   const pls=T0.starters.concat(T0.bench),lat=new Set(pls.map(p=>shCanon(p[1])));
+   /* تُستبدل الأسماء اللاتينية المستوردة سابقاً بالأسماء العربية (دون المساس بغيرها) */
+   const cur=((RO[t]||{})[x.cat]||[]).filter(e=>!lat.has(shCanon(typeof e==='string'?e:(e&&e.name)||''))),have=new Set(cur.map(e=>shCanon(typeof e==='string'?e:(e&&e.name)||'')));
+   pls.forEach(p=>{const ar=SH_AR[p[1]]||p[1],c=shCanon(ar);if(!have.has(c)){have.add(c);cur.push(ar)}});
+   await db.collection('rosters').doc(t+'_'+x.cat).set({teamId:+t,cat:x.cat,roster:cur});
+   RO[t]=RO[t]||{};RO[t][x.cat]=cur;RS[t+'_'+x.cat]=JSON.stringify(cur)}
+  /* 2) التشكيلات والتبديلات */
+  for(const t of Object.keys(x.teams)){const T0=x.teams[t];
+   const pl=(p)=>{const nm=fix(t,p[1]);if(!T0.addRoster){total++;if(names(t).includes(nm))matched++}return{name:nm,num:String(p[0]),lic:p[2]||''}};
+   const subs=T0.subs.map(u=>({outName:fix(t,u[2]),inName:fix(t,u[1]),minute:u[0]==='HT'?'الاستراحة':String(u[0]),reason:''}));
+   subs.sort((a,b)=>(+a.minute||0)-(+b.minute||0));
+   const data={starters:T0.starters.map(p=>Object.assign(pl(p),{isGk:/g/.test(p[3]||''),isCaptain:/c/.test(p[3]||'')})),bench:T0.bench.map(p=>{const o=pl(p);if(/g/.test(p[3]||''))o.isGk=true;return o}),subs};
+   await db.collection('lineups').doc(kid+'_'+t).set({key:k,teamId:+t,home:x.home,away:x.away,data});
+   LU[k]=LU[k]||{};LU[k][t]=JSON.parse(JSON.stringify(data));LSS[kid+'_'+t]=JSON.stringify(data);pubSubs(k,t,data);
+   /* 3) الطاقم الفني والإداري */
+   for(const m of T0.staff||[])await db.collection('staff').doc('imp_'+m[1]).set({teamId:+t,name:SH_AR[m[0]]||m[0],kind:m[2],role:m[3],cat:m[2]==='coach'?x.cat:'',phone:'',img:'',order:Date.now()})}
+  /* 4) النتيجة والهدافون (لا إنذارات في الورقة) */
+  const gl=(t,arr)=>arr.map(g=>fix(t,g[0])+' '+g[1]+"'").join(', ');
+  const pens={h:x.goals.h.filter(g=>g[2]).map(g=>g[1]),a:x.goals.a.filter(g=>g[2]).map(g=>g[1])};
+  const d=Object.assign({},S[k]||{},{sh:x.sh,sa:x.sa,date:x.date,time:x.time,ref:SH_AR[x.ref]||x.ref,gh:gl(x.home,x.goals.h),ga:gl(x.away,x.goals.a),cyh:'',crh:'',cya:'',cra:'',report:x.report,pens,sheet:x.id,status:'confirmed',confirmedBy:'admin'});
+  delete d._hid;delete d.pp;delete d.ex;
+  await put(k,x.home,x.away,d);ok++
+ }catch(e){console.error('importSheets',e);fail.push(x.cat+' ج'+x.round+' ('+(e.code||e.message)+')')}}
+ draw();
+ toast(fail.length?('⚠️ تعذّر استيراد: '+fail.join(' · ')):('✅ استُوردت ورقة المباراة — '+matched+' من '+total+' لاعباً من الوفاق طابقوا قائمة النادي'))
+}
 async function migrateLineups(){
  if(!confirm('سيتم نقل كل تشكيلات المباريات القديمة من النتائج العامة إلى مجموعة خاصة بكل نادٍ، ثم حذفها من النتائج العامة. متابعة؟'))return;
  try{
