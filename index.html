@@ -5478,7 +5478,7 @@ function admin(){
  }
 
  if(adminSec === 'tools'){
-   return navBar + `<h2>🏋️ حصة تدريبية مباشرة</h2><div class="card"><p class="hint" style="text-align:right;margin:0 0 8px">صوّر حصة تدريبية لأي فريق وأذعها مباشرة: شعار النادي يرفرف في جهة وشعار التطبيق في الجهة الأخرى.</p><button class="btn" id="trOpen" style="width:100%">🎥 بدء حصة تدريبية مباشرة</button></div><h2>📊 ملصق الترتيب المعتمد</h2><div class="card">${chips()}<select id="us" class="f">${Array.from({length:isSenior()?30:22},(_,i)=>`<option value="${i+1}" ${i+1===(up||lastRound())?'selected':''}>بعد الجولة ${i+1}</option>`).join('')}</select><label>🎯 تظليل فريق في الملصق (اختياري)</label><select id="hlT" class="f"><option value="">— بدون تظليل —</option>${Object.keys(T).map(i=>`<option value="${i}" ${String(HL.team)===i?'selected':''}>${esc(T[i])}</option>`).join('')}</select><div class="swatches">${HLC.map(c=>`<button type="button" class="sw" data-hc="${c}" style="background:${c}" aria-label="لون" aria-pressed="${HL.color===c}"></button>`).join('')}<input type="color" id="hlC" value="${HL.color}" aria-label="لون مخصص"></div><button class="btn" id="adminPoster" style="width:100%;margin-top:8px">إنشاء الملصق</button><button class="btn" id="adminVideo" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#156834,#1f9a4f);color:#fff">🎬 إنشاء فيديو الملصق</button>${isSenior()?'<button class="btn" id="adminSrVideo" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#0a2a4e,#1f86c8);color:#fff">🏛️ فيديو الأكابر الشامل (تصميم جديد)</button>':''}<button class=\"btn\" id=\"adminPv\" style=\"width:100%;margin-top:8px;background:linear-gradient(135deg,#7a1f3d,#c0392b);color:#fff\">🎙️ فيديو المقدّم (مباراة بمباراة · تحكم بالوقت)</button></div>${bkCard()}${rulesCard()}<h2>🧰 أدوات</h2><div class="card"><button class="btn" id="mig" style="width:100%;margin-bottom:8px">🔒 نقل التشكيلات القديمة إلى مساحة خاصة</button><button class="btn alt" id="seed" style="width:100%">استيراد نتائج الجولات 1-3 السابقة</button><button class="btn" id="seedS" style="width:100%;margin-top:8px">⚽ استيراد نتائج الأكابر (الجولات 1-7)</button><button class="btn" id="shImp" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#0f5132,#198754);color:#fff">📥 استيراد ورقة مباراة: U15 · الجولة 6 (الوفاق – مولودية قوراية)</button></div>`;
+   return navBar + `<h2>🏋️ حصة تدريبية مباشرة</h2><div class="card"><p class="hint" style="text-align:right;margin:0 0 8px">صوّر حصة تدريبية لأي فريق وأذعها مباشرة: شعار النادي يرفرف في جهة وشعار التطبيق في الجهة الأخرى.</p><button class="btn" id="trOpen" style="width:100%">🎥 بدء حصة تدريبية مباشرة</button></div><h2>📊 ملصق الترتيب المعتمد</h2><div class="card">${chips()}<select id="us" class="f">${Array.from({length:isSenior()?30:22},(_,i)=>`<option value="${i+1}" ${i+1===(up||lastRound())?'selected':''}>بعد الجولة ${i+1}</option>`).join('')}</select><label>🎯 تظليل فريق في الملصق (اختياري)</label><select id="hlT" class="f"><option value="">— بدون تظليل —</option>${Object.keys(T).map(i=>`<option value="${i}" ${String(HL.team)===i?'selected':''}>${esc(T[i])}</option>`).join('')}</select><div class="swatches">${HLC.map(c=>`<button type="button" class="sw" data-hc="${c}" style="background:${c}" aria-label="لون" aria-pressed="${HL.color===c}"></button>`).join('')}<input type="color" id="hlC" value="${HL.color}" aria-label="لون مخصص"></div><button class="btn" id="adminPoster" style="width:100%;margin-top:8px">إنشاء الملصق</button><button class="btn" id="adminVideo" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#156834,#1f9a4f);color:#fff">🎬 إنشاء فيديو الملصق</button>${isSenior()?'<button class="btn" id="adminSrVideo" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#0a2a4e,#1f86c8);color:#fff">🏛️ فيديو الأكابر الشامل (تصميم جديد)</button>':''}<button class=\"btn\" id=\"adminPv\" style=\"width:100%;margin-top:8px;background:linear-gradient(135deg,#7a1f3d,#c0392b);color:#fff\">🎙️ فيديو المقدّم (مباراة بمباراة · تحكم بالوقت)</button></div>${bkCard()}${rulesCard()}<h2>🧰 أدوات</h2><div class="card"><button class="btn" id="mig" style="width:100%;margin-bottom:8px">🔒 نقل التشكيلات القديمة إلى مساحة خاصة</button><button class="btn alt" id="seed" style="width:100%">استيراد نتائج الجولات 1-3 السابقة</button><button class="btn" id="seedS" style="width:100%;margin-top:8px">⚽ استيراد نتائج الأكابر (الجولات 1-7)</button><button class="btn" id="shImp" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#0f5132,#198754);color:#fff">📥 استيراد ورقة مباراة: U15 · الجولة 6 (الوفاق – مولودية قوراية)</button><label class="btn" for="shPdf" style="display:block;width:100%;box-sizing:border-box;margin-top:8px;text-align:center;cursor:pointer;background:linear-gradient(135deg,#7c2d12,#c2410c);color:#fff">📄 رفع ورقة مباراة PDF — قراءة واستيراد تلقائي</label><input type="file" id="shPdf" accept="application/pdf,.pdf" multiple style="display:none"></div>`;
  }
 
   if(adminSec === 'act'){
@@ -6305,11 +6305,195 @@ window.SHEET_IMPORTS=[{
      starters:[[1,'MOSTEFAOUI ABDELGHANI','26W42J1825','g'],[2,'OULD BOUAMAMA IMAD EDDINE','26W42J1546'],[3,'BENKHALED SOHEYB','26W42J1539'],[4,'BOUHADDI MOHAMED REDHA','26W42J2178'],[5,'MAMOU MOUHSSIN','26W42J1548'],[6,'KHOUAS ILIES','26W42J1549'],[7,'ACHOURI ABDERRAHIM','26W42J1535','c'],[8,'DJELLILAHINE FAROUK','26W42J1534'],[9,'KHADRI OKBA','26W42J1541'],[10,'KHIAT ALA EDDINE','26W42J1540'],[11,'IKHADRIOUENE NADJIB','26W42J1547']],
      bench:[[12,'BOUDEBZA HOUSSAM','26W42J1553'],[13,'FODIL CHERIF MOHAMED SABRI','26W42J2179'],[14,'KHERZANE HAITHEM','26W42J1542'],[15,'MAMOU IHSSEN','26W42J1545'],[16,'DJELLALI MOHAMED ABDELMOUINE','26W42J1554'],[17,'IHALOUINE OUAHID','26W42J1538'],[18,'KHADRI MEHDI','26W42J1543'],[19,'OULD MAMMAR OUSSAMA','26W42J1550'],[20,'DJELLILAHINE ABDELHAMID','26W42J2106']],
      subs:[['HT','BOUDEBZA HOUSSAM','BENKHALED SOHEYB'],['HT','KHERZANE HAITHEM','KHOUAS ILIES'],['HT','MAMOU IHSSEN','OULD BOUAMAMA IMAD EDDINE'],[48,'DJELLALI MOHAMED ABDELMOUINE','KHADRI OKBA'],[48,'KHADRI MEHDI','DJELLILAHINE FAROUK']],
-     staff:[['MERROUCHE DJAMEL EDDINE','26W42E0057','coach','مدرب رئيسي'],['SAADI SAMI','26W42D0040','admin','كاتب الفئات الشبانية']]}
+     staff:[['MERROUCHE DJAMEL EDDINE','26W42E0057','coach','مدرب رئيسي'],['SAADI SAMI','26W42D0040','admin','مسؤول الفئات الشبانية']]}
  }
 }];
 const SH_AR={"MESKI ABDELHAK": "مسكي عبد الحق", "AMROUCHE MOHAMED": "عمروش محمد", "YAMNAINE KAIS ABDELMOUIN": "يمناين قيس عبد المعين", "BELAIDI ABDELHAFED": "بلعيدي عبد الحفيظ", "RIAD ZAKARIA": "رياض زكرياء", "ABIDAT MOHAMED AKRAM": "عبيدات محمد أكرم", "RIAD ANIS": "رياض أنيس", "YAHIAOUI MAHDI": "يحياوي مهدي", "MOUSSAOUI YAHIA": "موساوي يحيى", "SLIMANI LOUAY ABDEL MOUNAIM": "سليماني لؤي عبد المنعم", "AMOURA MOHAMED-DHAYA-EDDINE": "عمورة محمد ضياء الدين", "HAMMOUNI WAIL": "حموني وائل", "HASSAINE IYAD": "حساين إياد", "BELAIDI DJELLOUL- CHEMS- EDDINE": "بلعيدي جلول شمس الدين", "SEDDAOUI FARES": "سداوي فارس", "ZIBOUCHE AHMED SOHAIB": "زيبوش أحمد صهيب", "BENHADDOUCHE HICHAM": "بن حدوش هشام", "ABDELLAOUI BADREDDINE": "عبد اللاوي بدر الدين", "CHAMI MOHAMMED DHIA EDDINE": "شامي محمد ضياء الدين", "ZIBOUCHE YACINE": "زيبوش ياسين", "MOSTEFAOUI ABDELGHANI": "مصطفاوي عبد الغني", "OULD BOUAMAMA IMAD EDDINE": "ولد بوعمامة عماد الدين", "BENKHALED SOHEYB": "بن خالد صهيب", "BOUHADDI MOHAMED REDHA": "بوحدي محمد رضا", "MAMOU MOUHSSIN": "مامو محسن", "KHOUAS ILIES": "خواص إلياس", "ACHOURI ABDERRAHIM": "عاشوري عبد الرحيم", "DJELLILAHINE FAROUK": "جليلاحين فاروق", "KHADRI OKBA": "خضري عقبة", "KHIAT ALA EDDINE": "خياط علاء الدين", "IKHADRIOUENE NADJIB": "إخضريوان نجيب", "BOUDEBZA HOUSSAM": "بودبزة حسام", "FODIL CHERIF MOHAMED SABRI": "فضيل شريف محمد صبري", "KHERZANE HAITHEM": "خرزان هيثم", "MAMOU IHSSEN": "مامو إحسان", "DJELLALI MOHAMED ABDELMOUINE": "جلالي محمد عبد المعين", "IHALOUINE OUAHID": "إحالوين وحيد", "KHADRI MEHDI": "خضري مهدي", "OULD MAMMAR OUSSAMA": "ولد معمر أسامة", "DJELLILAHINE ABDELHAMID": "جليلاحين عبد الحميد", "CHERFAOUI ZAKI": "شرفاوي زكي", "MERROUCHE DJAMEL EDDINE": "مروش جمال الدين", "SAADI SAMI": "سعدي سامي", "BENKHOUCHA Bilal": "بن خوشة بلال"};
 const shCanon=s=>nrm(s).toLowerCase().replace(/[^\p{L}\p{N}\s]/gu,' ').split(/\s+/).filter(Boolean).sort().join(' ');
+/* ===== قراءة أوراق المباريات (PDF) تلقائياً: النواة (تحليل النص، التعريب، التحقق) ===== */
+const SH_CODES=Object.assign({ESM:5,MRG:7},(()=>{try{return JSON.parse(localStorage.getItem('shCodes')||'{}')}catch(e){return{}}})());
+const SH_TOK={MESKI:'مسكي',AMROUCHE:'عمروش',YAMNAINE:'يمناين',BELAIDI:'بلعيدي',ABIDAT:'عبيدات',MOUSSAOUI:'موساوي',SLIMANI:'سليماني',AMOURA:'عمورة',HAMMOUNI:'حموني',HASSAINE:'حساين',SEDDAOUI:'سداوي',ZIBOUCHE:'زيبوش',BENHADDOUCHE:'بن حدوش',ABDELLAOUI:'عبد اللاوي',CHAMI:'شامي',MOSTEFAOUI:'مصطفاوي',BOUAMAMA:'بوعمامة',BENKHALED:'بن خالد',BOUHADDI:'بوحدي',MAMOU:'مامو',MOUHSSIN:'محسن',KHOUAS:'خواص',ACHOURI:'عاشوري',DJELLILAHINE:'جليلاحين',KHADRI:'خضري',KHIAT:'خياط',IKHADRIOUENE:'إخضريوان',BOUDEBZA:'بودبزة',FODIL:'فضيل',CHERIF:'شريف',SABRI:'صبري',KHERZANE:'خرزان',IHSSEN:'إحسان',DJELLALI:'جلالي',IHALOUINE:'إحالوين',OUAHID:'وحيد',MAMMAR:'معمر',CHERFAOUI:'شرفاوي',MERROUCHE:'مروش',SAADI:'سعدي',YAHIAOUI:'يحياوي',BENKHOUCHA:'بن خوشة',ABDELHAK:'عبد الحق',
+MOHAMED:'محمد',MOHAMMED:'محمد',MOHAMAD:'محمد',MOUHAMED:'محمد',MOHAMMAD:'محمد',AHMED:'أحمد',AHMAD:'أحمد',ALI:'علي',OMAR:'عمر',OTHMANE:'عثمان',OSMAN:'عثمان',YOUCEF:'يوسف',YOUSSEF:'يوسف',YOUSEF:'يوسف',YACINE:'ياسين',YASSINE:'ياسين',ISLAM:'إسلام',ANIS:'أنيس',AMINE:'أمين',ZAKARIA:'زكرياء',ZAKARIYA:'زكرياء',ZAKI:'زكي',KARIM:'كريم',RACHID:'رشيد',SAMIR:'سمير',SAMI:'سامي',WAIL:'وائل',FARES:'فارس',FAROUK:'فاروق',OKBA:'عقبة',HICHAM:'هشام',HOUSSAM:'حسام',HAITHEM:'هيثم',HAYTHEM:'هيثم',ILIES:'إلياس',ILYES:'إلياس',ELIAS:'إلياس',IYAD:'إياد',NADJIB:'نجيب',NADJIM:'نجيم',MEHDI:'مهدي',MAHDI:'مهدي',OUSSAMA:'أسامة',OSSAMA:'أسامة',REDHA:'رضا',RIDHA:'رضا',SOHEYB:'صهيب',SOHAIB:'صهيب',SOUHAIB:'صهيب',AKRAM:'أكرم',LOUAY:'لؤي',KAIS:'قيس',KAYS:'قيس',DHIA:'ضياء',DHAYA:'ضياء',CHEMS:'شمس',DJELLOUL:'جلول',HASSAN:'حسن',HASSEN:'حسن',HOCINE:'حسين',HOUSSEIN:'حسين',IBRAHIM:'إبراهيم',ISMAIL:'إسماعيل',ISSAM:'عصام',HAMZA:'حمزة',BILAL:'بلال',RAYAN:'ريان',RAYANE:'ريان',RIAD:'رياض',AYMEN:'أيمن',AYMAN:'أيمن',ADEM:'آدم',ADAM:'آدم',NADIR:'نذير',NASSIM:'نسيم',NOUR:'نور',SALIM:'سليم',SALAH:'صلاح',TAREK:'طارق',YAHIA:'يحيى',YOUNES:'يونس',YOUNESS:'يونس',WALID:'وليد',WASSIM:'وسيم',ADLENE:'عدلان',DJAMEL:'جمال',BADR:'بدر',SEIF:'سيف',SAIF:'سيف',SIDALI:'سيد علي',TAHAR:'الطاهر',MOURAD:'مراد',MOUSSA:'موسى',MALIK:'مالك',NABIL:'نبيل',FAYCAL:'فيصل',FAYSAL:'فيصل',FOUAD:'فؤاد',HAKIM:'حكيم',HAMID:'حميد',HAMZA:'حمزة',KHALED:'خالد',KHALIL:'خليل',LAKHDAR:'لخضر',LOTFI:'لطفي',MAHMOUD:'محمود',MANSOUR:'منصور',MOSTAFA:'مصطفى',MUSTAPHA:'مصطفى',NACER:'ناصر',NOURDINE:'نور الدين',RABAH:'رابح',RAMZI:'رمزي',RIDA:'رضا',SAID:'سعيد',SALAHEDDINE:'صلاح الدين',SOFIANE:'سفيان',SOUFIANE:'سفيان',TOUFIK:'توفيق',YAZID:'يزيد',YOUB:'أيوب',AYOUB:'أيوب',ZINEDDINE:'زين الدين',IMAD:'عماد',ILHEM:'إلهام',HOUDA:'هدى',BEN:'بن',BENT:'بنت',OULD:'ولد',BOU:'بو',DJEMAA:'جمعة',MABROUK:'مبروك',BRAHIM:'إبراهيم',BACHIR:'بشير',AISSA:'عيسى',AISSAM:'عيسام',IDIR:'إدير',LYES:'إلياس',MASSINISSA:'ماسينيسا',MOUNIR:'منير',AMIR:'أمير',AMIRA:'أميرة',SIDAHMED:'سيد أحمد',BENALI:'بن علي',BENAMAR:'بن عمار'};
+const SH_DIV={HAK:'الحق',HAFED:'الحفيظ',HAFID:'الحفيظ',HAMID:'الحميد',KADER:'القادر',KADIR:'القادر',RAHMANE:'الرحمن',RAHMAN:'الرحمن',RAHIM:'الرحيم',MOUIN:'المعين',MOUNAIM:'المنعم',MOUNIM:'المنعم',GHANI:'الغني',LATIF:'اللطيف',KARIM:'الكريم',NACER:'الناصر',NASSER:'الناصر',SALAM:'السلام',AZIZ:'العزيز',WAHAB:'الوهاب',MALEK:'المالك',BASSET:'الباسط',BAKI:'الباقي',JALIL:'الجليل',DJALIL:'الجليل',MADJID:'المجيد',MAJID:'المجيد',MOUMEN:'المؤمن',MOUMENE:'المؤمن',RAOUF:'الرؤوف',ALLAH:'الله',LAH:'الله',FETTAH:'الفتاح',HADI:'الهادي',SAMAD:'الصمد',SAMED:'الصمد',HALIM:'الحليم',HAKIM:'الحكيم',WAHID:'الواحد',DJABBAR:'الجبار',RAZAK:'الرزاق',RAZZAK:'الرزاق',SATTAR:'الستار',SAMIE:'السميع',BASSIR:'البصير',MOUTALEB:'المطلب',NOUR:'النور',SADEK:'الصادق',WADOUD:'الودود',GHAFOUR:'الغفور',FATAH:'الفتاح',BARI:'الباري',MOUHSSIN:'المحسن',MOHSSEN:'المحسن'};
+const SH_PH={kh:'خ',gh:'غ',dj:'ج',ch:'ش',sh:'ش',th:'ث',ou:'و',ai:'اي',ay:'اي',ei:'ي',ee:'ي',ss:'س',tt:'ت',dd:'د',ll:'ل',mm:'م',nn:'ن',rr:'ر',bb:'ب',ff:'ف',zz:'ز',ck:'ك',qu:'ك'};
+const SH_PH1={a:'ا',e:'',i:'ي',o:'و',u:'و',y:'ي',b:'ب',c:'ك',d:'د',f:'ف',g:'غ',h:'ه',j:'ج',k:'ك',l:'ل',m:'م',n:'ن',p:'ب',q:'ق',r:'ر',s:'س',t:'ت',v:'ف',w:'و',x:'كس',z:'ز'};
+function shPhon(tok){const t=String(tok).toLowerCase().replace(/[^a-z]/g,'');let o='',i=0;while(i<t.length){const d=t.substr(i,2);if(SH_PH[d]!==undefined){o+=SH_PH[d];i+=2;continue}const c=t[i];if(c==='a'&&i>0&&'aeiouy'.includes(t[i-1])){i++;continue}if(c==='c'&&'ei'.includes(t[i+1]||''))o+='س';else o+=SH_PH1[c]||'';i++}return o||tok}
+function shAbd(T){for(const p of ['ABDEL','ABDER','ABDES','ABDEN','ABDE','ABD']){if(T.length>p.length&&T.startsWith(p)){const r=T.slice(p.length);if(SH_DIV[r])return'عبد '+SH_DIV[r]}}return null}
+function shTranslit(name){
+ if(SH_AR[name])return{ar:SH_AR[name],unk:[]};
+ const toks=String(name).replace(/[-_.]+/g,' ').replace(/\s+/g,' ').trim().split(' ').filter(Boolean),out=[],unk=[];
+ for(let i=0;i<toks.length;i++){
+  const T=toks[i].toUpperCase();
+  if(/^ABD(EL|ER|ES|EN|E)?$/.test(T)&&toks[i+1]){const nx=toks[i+1].toUpperCase(),v=SH_DIV[nx]||SH_TOK[nx];out.push('عبد '+(v||shPhon(nx)));if(!v)unk.push(toks[i+1]);i++;continue}
+  if((T==='EL'||T==='AL')&&toks[i+1]){const nx=toks[i+1].toUpperCase(),v=SH_TOK[nx];out.push('ال'+(v||shPhon(nx)));if(!v)unk.push(toks[i+1]);i++;continue}
+  if(SH_TOK[T]){out.push(SH_TOK[T]);continue}
+  const d=shAbd(T);if(d){out.push(d);continue}
+  if(/^(EDDINE|EDINE|EDDIN|ELDINE)$/.test(T)){out.push('الدين');continue}
+  const m=/^(.{2,})(EDDINE|EDINE|EDDIN|ELDINE)$/.exec(T);
+  if(m&&SH_TOK[m[1]]){out.push(SH_TOK[m[1]]+' الدين');continue}
+  out.push(shPhon(T));unk.push(toks[i])}
+ return{ar:out.join(' '),unk}}
+/* مطابقة تقريبية مع أسماء قائمة النادي (تتسامح مع اختلاف الكتابة) */
+function shLev(a,b){const m=a.length,n=b.length;if(!m)return n;if(!n)return m;let p=[...Array(n+1).keys()];for(let i=1;i<=m;i++){const c=[i];for(let j=1;j<=n;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c}return p[n]}
+function shSim(a,b){const A=shCanon(a).split(' ').filter(Boolean),B=shCanon(b).split(' ').filter(Boolean);if(!A.length||!B.length)return 0;const sc=(X,Y)=>X.reduce((s,x)=>s+Math.max(...Y.map(y=>1-shLev(x,y)/Math.max(x.length,y.length))),0)/X.length;return Math.min(sc(A,B),sc(B,A))}
+function shBest(list,nm){let b=null,s1=0,s2=0;for(const e of list){const v=shSim(nm,e);if(v>s1){s2=s1;s1=v;b=e}else if(v>s2)s2=v}return(b&&s1>=0.78&&s1-s2>=0.04)?b:null}
+
+/* ---------- 1) من عناصر النص إلى أسطر ومقاطع ---------- */
+function shSegs(items){const out=[];items.slice().sort((a,b)=>a.x-b.x).forEach(it=>{const t=it.str;if(!t||!t.trim())return;const l=out[out.length-1];if(l&&it.x-l.x2<8){l.str+=(it.x-l.x2>1.2?' ':'')+t;l.x2=Math.max(l.x2,it.x2)}else out.push({str:t,x:it.x,x2:it.x2})});return out.map(o=>({str:o.str.normalize('NFKC').replace(/[\u202a-\u202e\u200e\u200f]/g,'').replace(/\s+/g,' ').trim(),x:o.x,x2:o.x2})).filter(o=>o.str)}
+function shLines(page){const its=page.items.filter(i=>i.str&&i.str.trim()).sort((a,b)=>a.y-b.y||a.x-b.x),rows=[];its.forEach(it=>{const r=rows[rows.length-1];if(r&&Math.abs(it.y-r.y)<=3.2)r.items.push(it);else rows.push({y:it.y,items:[it]})});const mid=page.width/2;return rows.map(r=>{const segs=shSegs(r.items);return{y:r.y,segs,L:segs.filter(s=>(s.x+s.x2)/2<mid),R:segs.filter(s=>(s.x+s.x2)/2>=mid),text:segs.map(s=>s.str).join(' ')}}).filter(l=>l.segs.length)}
+const SH_LIC=/^\d{2}[A-Z]\d{2}[A-Z]\d{3,6}$/i,SH_MIN=/^(\d{1,3})(?:\s*\+\s*\d+)?\s*['’′´`]$/,SH_HT=/mi-?\s?temps/i;
+const shClean=s=>String(s).replace(/\s+/g,' ').trim();
+function shPlayerRow(segs){const li=segs.findIndex(s=>SH_LIC.test(s.str.replace(/\s/g,'')));if(li<0)return null;const lic=segs[li].str.replace(/\s/g,'').toUpperCase();let flags='';const out=[];segs.slice(li+1).forEach(s=>{if(/^[GC]( ?[GC])?$/.test(s.str))flags+=s.str.replace(/\s/g,'').toLowerCase();else out.push(s)});let num='';for(let i=out.length-1;i>=0;i--){if(/^\d{1,3}$/.test(out[i].str)){num=out[i].str;out.splice(i,1);break}}return{lic,name:shClean(out.map(s=>s.str).join(' ')),num,flags}}
+function shStaffRow(segs){const li=segs.findIndex(s=>SH_LIC.test(s.str.replace(/\s/g,'')));if(li<0)return null;const rest=segs.slice(li+1);if(!rest.length)return null;const fn=rest.length>1?rest[rest.length-1].str:'',nm=rest.length>1?rest.slice(0,-1):rest;return{lic:segs[li].str.replace(/\s/g,'').toUpperCase(),name:shClean(nm.map(s=>s.str).join(' ')),fn}}
+function shFields(segs){const f={label:'',num:'',name:'',min:null,type:'',raw:segs.map(s=>s.str).join(' ')},nm=[],ty=[];segs.forEach(s=>{const mm=SH_MIN.exec(s.str);if(SH_HT.test(s.str))f.label=s.str;else if(mm){f.min=+mm[1];f.label=s.str}else if(/^\d{1,3}$/.test(s.str)&&!f.num)f.num=s.str;else if(f.min!==null&&!f.num)ty.push(s.str);else nm.push(s.str)});f.name=shClean(nm.join(' '));f.type=shClean(ty.join(' '));return f}
+function shRoleOf(fn){const n=String(fn).normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+ if(/entraineur|coach/.test(n)){if(/adjoint|assist/.test(n))return['coach','مدرب مساعد'];if(/gardien/.test(n))return['coach','مدرب حراس المرمى'];if(/physique|prepar/.test(n))return['coach','مدرب بدني'];return['coach','مدرب رئيسي']}
+ if(/kine|soigneur|medecin|docteur/.test(n))return['coach','معالج'];
+ if(/president/.test(n))return['admin','رئيس النادي'];if(/secretaire/.test(n))return[ 'admin',/jeune/.test(n)?'مسؤول الفئات الشبانية':'الأمين العام'];if(/tresor/.test(n))return['admin','أمين المال'];if(/jeune/.test(n))return['admin','مسؤول الفئات الشبانية'];
+ return['admin',shClean(fn)||'مكلف بالتنظيم']}
+
+/* بعض ملفات PDF تخزّن العربية بترتيب بصري معكوس: أكتشف ذلك وأصحّحه */
+function shFixAr(s){if(!/[\u0600-\u06FF]/.test(s))return s;const W=s.split(' ').filter(Boolean),f=W.filter(w=>w.startsWith('ال')).length+W.filter(w=>w.length>2&&w.endsWith('ة')).length,r=W.filter(w=>w.length>2&&w.endsWith('لا')).length+W.filter(w=>w.length>2&&w.startsWith('ة')).length;return r>f?[...s].reverse().join(''):s}
+/* ---------- 2) تحليل ورقة المباراة ---------- */
+function shParse(pages){
+ const warn=[],lines=[];pages.forEach(p=>shLines(p).forEach(l=>lines.push(l)));
+ if(lines.length<8)throw new Error('لا توجد طبقة نصية في الملف (قد يكون صورة ممسوحة ضوئياً) — القراءة التلقائية تعمل مع ملفات PDF الصادرة من منصة الاتحاد');
+ const nz=s=>String(s).normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[\u202a-\u202e]/g,'').toLowerCase().trim();
+ const HD=[['tit',/^titulaires?$/],['sub',/^remplacants?$/],['stf',/^staff$/],['chg',/^changements?$/],['crd',/^cartons?$/],['but',/^buts?$/],['rap',/^ra?pp?ort de match$/]];
+ const bins={tit:[],sub:[],stf:[],chg:[],crd:[],but:[],rap:[]};let st=null;const head=[];
+ lines.forEach(l=>{const h=HD.find(x=>x[1].test(nz(l.text)));if(h){st=h[0];return}if(!st){head.push(l);return}if(/^\d+\s*\/\s*\d+$/.test(l.text))return;if(/licence/i.test(l.text)&&/nom/i.test(l.text)&&!SH_LIC.test(l.text.split(' ')[0]))return;bins[st].push(l)});
+ if(!bins.tit.length)throw new Error('هذا الملف ليس ورقة مباراة بصيغة الاتحاد (لم أجد قسم «Titulaires»)');
+ const ht=head.map(l=>l.text).join('\n'),R={warn};
+ R.cat=((/Cat[eé]gorie\s*:\s*([A-Za-z0-9]+)/i.exec(ht)||/Comp[eé]tition\s*:\s*([A-Za-z0-9]+)/i.exec(ht)||[])[1]||'').toUpperCase();
+ let m=/(\d+)\s*(?:[eèé]me|[eèé]re|er|e)?\s*journ[eé]e/i.exec(ht)||/Tour\s*:\s*(\d+)/i.exec(ht);R.round=m?+m[1]:0;
+ m=/(\d{4})-(\d{2})-(\d{2})(?:\s+(\d{1,2}:\d{2}))?/.exec(ht);if(m){R.date=m[1]+'-'+m[2]+'-'+m[3];R.time=m[4]||''}else{m=/(\d{2})\/(\d{2})\/(\d{4})(?:\s+(\d{1,2}:\d{2}))?/.exec(ht);if(m){R.date=m[3]+'-'+m[2]+'-'+m[1];R.time=m[4]||''}else R.date=''}
+ m=/Coup d['’]envoi\s*(\d{1,2}:\d{2})/i.exec(ht);if(m)R.time=m[1];R.time=R.time||'';
+ const rl=head.find(l=>/^\s*Arbitre\s*:/i.test(l.text));R.ref=rl?shClean(rl.L.map(s=>s.str).join(' ').replace(/^.*?Arbitre\s*:\s*/i,'')):'';
+ const sl=head.find(l=>/^\s*Stade\s*:/i.test(l.text));R.stad=sl?shClean(sl.L.map(s=>s.str).join(' ').replace(/^.*?Stade\s*:\s*/i,'')):'';
+ const si=head.findIndex(l=>/^\s*\d+\s*-\s*\d+\s*$/.test(l.text));
+ if(si<0)throw new Error('لم أجد نتيجة المباراة في الورقة (قد لا تكون المباراة قد لُعبت)');
+ m=/(\d+)\s*-\s*(\d+)/.exec(head[si].text);R.sh=+m[1];R.sa=+m[2];
+ const cl=[head[si+1],head[si+2],head[si-1],head[si-2]].find(l=>l&&l.L.length&&l.R.length&&!/:/.test(l.text));
+ R.codes={h:cl?shClean(cl.L.map(s=>s.str).join(' ')):'',a:cl?shClean(cl.R.map(s=>s.str).join(' ')):''};
+ if(!R.codes.h||!R.codes.a)warn.push('لم أتعرّف على رمزَي الفريقين في الورقة');
+ R.sides={};
+ ['L','R'].forEach(sd=>{
+  const S={starters:[],bench:[],staff:[],subs:[],goals:[],cards:{raw:[],y:[],r:[],none:false}};
+  const pl=(bin,arr)=>bins[bin].forEach(l=>{const r=shPlayerRow(l[sd]);if(r&&r.name)arr.push([r.num,r.name,r.lic,r.flags])});
+  pl('tit',S.starters);pl('sub',S.bench);
+  bins.stf.forEach(l=>{const r=shStaffRow(l[sd]);if(r&&r.name){const[k,role]=shRoleOf(r.fn);S.staff.push([r.name,r.lic,k,role,r.fn])}});
+  /* التبديلات: كل سطرين متتاليين = (الداخل ثم الخارج) والدقيقة على أحدهما */
+  const cs=bins.chg.map(l=>shFields(l[sd])).filter(f=>f.num||f.name);
+  for(let i=0;i+1<cs.length;i+=2){const a=cs[i],b=cs[i+1],lb=a.label||b.label;let mn=SH_HT.test(lb)?'HT':(SH_MIN.exec(lb)?+SH_MIN.exec(lb)[1]:'');if(mn==='')warn.push('تبديل بلا دقيقة واضحة: '+a.name+' / '+b.name);S.subs.push([mn,a.name,b.name,a.num,b.num])}
+  if(cs.length%2)warn.push('عدد أسطر التبديلات فردي في أحد الفريقين — راجع قسم «Changements»');
+  /* الأهداف والبطاقات: سطر (رقم+اسم) ثم سطر (دقيقة+نوع) */
+  const pairs=(bin)=>{const out=[];let cur=null;bins[bin].forEach(l=>{const f=shFields(l[sd]);if(!f.raw)return;if(f.min!==null){if(cur&&cur.min===null){cur.min=f.min;cur.type=f.type}else if(f.name){out.push({num:f.num,name:f.name,min:f.min,type:f.type})}}else if(f.name){cur={num:f.num,name:f.name,min:null,type:''};out.push(cur)}});return out};
+  pairs('but').forEach(g=>{const own=/csc|contre|own|propre/i.test(g.type);if(own)warn.push('هدف في مرماه (CSC) للاعب '+g.name+' — لم يُنقل تلقائياً، أضفه يدوياً');else S.goals.push([g.name,g.min,/penal/i.test(g.type)?1:0,g.num])});
+  if(bins.crd.some(l=>/aucun/i.test(l[sd].map(s=>s.str).join(' '))))S.cards.none=true;
+  else pairs('crd').forEach(c=>{const ty=c.type.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase();if(/rouge|red|expuls/.test(ty))S.cards.r.push([c.name,c.min]);else if(/jaune|yellow|avert/.test(ty))S.cards.y.push([c.name,c.min]);else{S.cards.raw.push(c.name+' '+c.min+"' "+c.type);warn.push('بطاقة غير محدّدة النوع: '+c.name+' ('+c.min+"') — لم تُنقل، أدخلها يدوياً")}});
+  R.sides[sd]=S});
+ R.report=shFixAr(shClean(bins.rap.map(l=>l.text).join(' ')));
+ return R}
+
+/* ---------- 3) ربط الفريقين بالجدول وتجميع الصيغة النهائية ---------- */
+function shFixture(r,t){const Y=window.R_YOUTH;if(!Y||!r)return null;const row=Y[(r-1)%11];if(!row)return null;const p=row[1].map(x=>r>11?[x[1],x[0]]:[x[0],x[1]]).find(x=>x[0]==t||x[1]==t);return p||null}
+function shTeamId(code){if(!code)return null;const u=String(code).toUpperCase().trim();if(SH_CODES[u])return SH_CODES[u];const T=window.T_YOUTH||{};let b=null,bs=0;for(const id in T){const v=shSim(code,T[id]);if(v>bs){bs=v;b=+id}}return bs>=0.8?b:null}
+function shFinalize(R,over){
+ const warn=R.warn.slice(),ids={h:(over&&over.h)||shTeamId(R.codes.h),a:(over&&over.a)||shTeamId(R.codes.a)};
+ if(!ids.h&&ids.a){const f=shFixture(R.round,ids.a);if(f){ids.h=f[0]==ids.a?f[1]:f[0]}}
+ if(!ids.a&&ids.h){const f=shFixture(R.round,ids.h);if(f){ids.a=f[0]==ids.h?f[1]:f[0]}}
+ const out=Object.assign({},R,{warn,ids,needCodes:!(ids.h&&ids.a)});
+ if(out.needCodes)return out;
+ let sh=R.sh,sa=R.sa,Ls=R.sides.L,Rs=R.sides.R,h=ids.h,a=ids.a;
+ const fx=shFixture(R.round,h);
+ if(!fx||!(fx.includes(+h)&&fx.includes(+a)))warn.push('هذه المواجهة ليست في جدول الجولة '+R.round+' حسب التطبيق — تحقق من رقم الجولة');
+ else if(fx[0]!=h){warn.push('الجدول يجعل المضيف الفريق الثاني — بدّلتُ الجهتين ليطابق الجدول');[h,a]=[a,h];[sh,sa]=[sa,sh];[Ls,Rs]=[Rs,Ls]}
+ const T0=(S0,t)=>({starters:S0.starters,bench:S0.bench,subs:S0.subs.map(u=>[u[0],u[1],u[2],u[3],u[4]]),staff:S0.staff.map(s=>[s[0],s[1],s[2],s[3]]),addRoster:t!=5});
+ /* تصحيح اتجاه التبديل إن كان الداخل ليس في البدلاء */
+ [Ls,Rs].forEach(S0=>S0.subs.forEach(u=>{const bn=new Set(S0.bench.map(p=>shCanon(p[1]))),sn=new Set(S0.starters.map(p=>shCanon(p[1])));if(!bn.has(shCanon(u[1]))&&bn.has(shCanon(u[2]))&&sn.has(shCanon(u[1]))){[u[1],u[2]]=[u[2],u[1]];[u[3],u[4]]=[u[4],u[3]]}}));
+ const cards={yh:Ls.cards.y,rh:Ls.cards.r,ya:Rs.cards.y,ra:Rs.cards.r};
+ out.cat=R.cat;out.home=h;out.away=a;out.sh=sh;out.sa=sa;out.id=R.cat+'-'+R.round+'-'+h+'-'+a;
+ out.goals={h:Ls.goals.map(g=>[g[0],g[1],g[2]]),a:Rs.goals.map(g=>[g[0],g[1],g[2]])};out.cards=cards;
+ out.teams={};out.teams[h]=T0(Ls,h);out.teams[a]=T0(Rs,a);out.sidesF={h:Ls,a:Rs};
+ out.warn=warn.concat(shAnalyze(out));return out}
+
+/* ---------- 4) تحليل منطقي للبيانات (تناقضات الورقة) ---------- */
+function shAnalyze(X){const w=[],AR=n=>(shTranslit(n).ar),TN=window.T_YOUTH||{};
+ [['h',X.home],['a',X.away]].forEach(([sd,t])=>{const T0=X.teams[t],tn=TN[t]||('فريق '+t),all=T0.starters.concat(T0.bench),has=n=>all.some(p=>shCanon(p[1])===shCanon(n));
+  if(T0.starters.length!==11)w.push(tn+': عدد الأساسيين '+T0.starters.length+' (المفروض 11)');
+  if(!T0.starters.some(p=>/g/.test(p[3])))w.push(tn+': لا حارس مرمى بين الأساسيين');
+  const nums=all.map(p=>p[0]).filter(Boolean),dup=nums.filter((n,i)=>nums.indexOf(n)!==i);if(dup.length)w.push(tn+': أرقام قمصان مكرّرة: '+[...new Set(dup)].join('، '));
+  const sc=sd==='h'?X.sh:X.sa,gl=X.goals[sd].length;if(gl!==sc)w.push(tn+': عدد الأهداف المذكورة ('+gl+') لا يساوي النتيجة ('+sc+') — قد يكون بينها هدف في مرماه');
+  const entered=new Set(T0.subs.map(u=>shCanon(u[1]))),benchN=new Set(T0.bench.map(p=>shCanon(p[1])));
+  T0.subs.forEach(u=>{if(!has(u[1]))w.push(tn+': اللاعب الداخل «'+AR(u[1])+'» غير مذكور في التشكيلة');if(!has(u[2]))w.push(tn+': اللاعب الخارج «'+AR(u[2])+'» غير مذكور في التشكيلة');else if(benchN.has(shCanon(u[2]))&&!T0.subs.some(v=>shCanon(v[1])===shCanon(u[2])&&(v[0]==='HT'?0:+v[0]||0)<=(u[0]==='HT'?0:+u[0]||0)&&v!==u))w.push(tn+': «'+AR(u[2])+'» مدرج في البدلاء ثم يخرج من الملعب دون دخول مسجّل قبله')});
+  X.goals[sd].forEach(g=>{if(!has(g[0]))w.push(tn+': الهدّاف «'+AR(g[0])+'» غير مذكور في التشكيلة');else if(benchN.has(shCanon(g[0]))&&!entered.has(shCanon(g[0])))w.push(tn+': «'+AR(g[0])+'» سجّل هدفاً (د'+g[1]+') وهو في البدلاء دون تبديل دخول مسجّل')})});
+ if(!X.date)w.push('لا يوجد تاريخ في الورقة');
+ return w}
+
+/* ===== رفع ورقة PDF: قراءة تلقائية ثم مراجعة سريعة ثم استيراد ===== */
+let shPdfLib=null,shPend=[];
+async function shLoadPdfJs(){
+ if(shPdfLib)return shPdfLib;
+ const B='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+ if(!window.pdfjsLib)await new Promise((res,rej)=>{const s=document.createElement('script');s.src=B+'pdf.min.js';s.onload=res;s.onerror=()=>rej(new Error('تعذّر تحميل مكتبة قراءة PDF — تحقق من الاتصال بالإنترنت'));document.head.appendChild(s)});
+ const lib=window.pdfjsLib;
+ try{const r=await fetch(B+'pdf.worker.min.js'),b=await r.blob();lib.GlobalWorkerOptions.workerSrc=URL.createObjectURL(b)}catch(e){lib.GlobalWorkerOptions.workerSrc=B+'pdf.worker.min.js'}
+ return shPdfLib=lib}
+async function shReadPdf(file){
+ const lib=await shLoadPdfJs(),pdf=await lib.getDocument({data:await file.arrayBuffer()}).promise,pages=[];
+ for(let n=1;n<=pdf.numPages;n++){const pg=await pdf.getPage(n),vp=pg.getViewport({scale:1}),tc=await pg.getTextContent();
+  pages.push({width:vp.width,items:tc.items.filter(i=>typeof i.str==='string'&&i.transform).map(i=>({str:i.str,x:i.transform[4],x2:i.transform[4]+(i.width||0),y:vp.height-i.transform[5]}))})}
+ return shParse(pages)}
+async function shHandleFiles(files){
+ if(!me||me.role!=='admin'||!isSuper())return toast('⛔ استيراد أوراق المباريات للمشرف العام فقط');
+ const fs=[...files].filter(f=>/pdf/i.test(f.type)||/\.pdf$/i.test(f.name));if(!fs.length)return toast('اختر ملف PDF لورقة المباراة');
+ toast('⏳ جاري قراءة '+fs.length+' ملف…');shPend=[];
+ for(const f of fs){try{const R=await shReadPdf(f);shPend.push({file:f.name,R,over:{},X:shFinalize(R)})}catch(e){console.error('shRead',e);shPend.push({file:f.name,err:e.message||String(e)})}}
+ shReview()}
+/* أسماء تحتاج مراجعة: لا هي في القاموس ولا في قائمة النادي */
+function shNameCheck(X){
+ const out=[],seen=new Set(),add=(lat,t)=>{if(!lat||seen.has(lat))return;seen.add(lat);if(SH_AR[lat])return;const tr=shTranslit(lat),nl=((RO[t]||{})[X.cat]||[]).map(e=>typeof e==='string'?e:(e&&e.name)||'').filter(Boolean);
+  if(nl.some(e=>shCanon(e)===shCanon(tr.ar))||shBest(nl,tr.ar))return;
+  if(tr.unk.length)out.push({lat,ar:tr.ar,unk:tr.unk});else SH_AR[lat]=tr.ar};
+ Object.keys(X.teams).forEach(t=>{const T0=X.teams[t];T0.starters.concat(T0.bench).forEach(p=>add(p[1],t));T0.staff.forEach(s=>add(s[0],t))});add(X.ref,0);return out}
+function shReview(){
+ let d=document.getElementById('shRev');
+ if(!d){d=document.createElement('dialog');d.id='shRev';d.style.cssText='max-width:560px;width:94%;padding:16px 18px;border-radius:18px;border:1.5px solid var(--ln);box-shadow:0 20px 50px rgba(0,0,0,.35);font-family:inherit;text-align:right;max-height:88vh;overflow:auto';document.body.appendChild(d)}
+ const TN=window.T_YOUTH||{};let nOk=0;
+ const cards=shPend.map((p,i)=>{
+  if(p.err)return`<div style="border:1.5px solid #fecaca;background:#fef2f2;border-radius:12px;padding:10px;margin:0 0 10px"><b>📄 ${esc(p.file)}</b><div style="color:#b91c1c;margin-top:4px">⛔ ${esc(p.err)}</div></div>`;
+  const X=p.X,R=p.R,lbl=(c,sel)=>`<label style="display:block;margin:6px 0 2px"><small>الرمز «${esc(c)}» في الورقة ← أي فريق؟</small><select class="f" data-shc="${i}|${sel}"><option value="">— اختر الفريق —</option>${Object.keys(TN).map(id=>`<option value="${id}">${esc(TN[id])}</option>`).join('')}</select></label>`;
+  if(X.needCodes)return`<div style="border:1.5px solid #fde68a;background:#fffbeb;border-radius:12px;padding:10px;margin:0 0 10px"><b>📄 ${esc(p.file)}</b><div style="margin-top:4px">${esc(R.cat)} · الجولة ${R.round} · ${esc(R.codes.h)} ${R.sh} - ${R.sa} ${esc(R.codes.a)}</div><div style="color:#92400e;margin-top:4px">لم أتعرّف على رمز الفريق في الورقة، اختره مرة واحدة وسأتذكره:</div>${!X.ids.h?lbl(R.codes.h,'h'):''}${!X.ids.a?lbl(R.codes.a,'a'):''}</div>`;
+  nOk++;const T5=X.teams,h=X.home,a=X.away,ns=shNameCheck(X),cnt=t=>T5[t].starters.length+' + '+T5[t].bench.length,
+   gl=X.goals.h.length+X.goals.a.length,cd=X.cards.yh.length+X.cards.ya.length,cr=X.cards.rh.length+X.cards.ra.length,sb=T5[h].subs.length+T5[a].subs.length,ex=S[(X.cat==='U15'?'':X.cat+'|')+X.round+':'+h+'-'+a];
+  return`<div style="border:1.5px solid var(--ln);border-radius:12px;padding:10px;margin:0 0 10px;background:#f8fafc"><b>📄 ${esc(p.file)}</b>
+   <div style="margin-top:6px;font-weight:700">🏆 ${esc(X.cat)} · الجولة ${X.round}: ${esc(TN[h])} <span style="color:#0f5132">${X.sh} - ${X.sa}</span> ${esc(TN[a])}</div>
+   <div style="color:#475569;font-size:13px;margin-top:2px">📅 ${esc(X.date||'—')} ${esc(X.time||'')} · ⚖️ ${esc(X.ref?shTranslit(X.ref).ar:'—')}</div>
+   <div style="color:#475569;font-size:13px;margin-top:2px">👥 تشكيلة ${cnt(h)} / ${cnt(a)} · 🔁 ${sb} تبديلات · ⚽ ${gl} أهداف · 🟨 ${cd} · 🟥 ${cr} · 🧑‍💼 طاقم ${T5[h].staff.length+T5[a].staff.length}${X.report?' · 📝 تقرير':''}</div>
+   ${ex&&ex.sh!==undefined&&ex.sh!==''?`<div style="color:#92400e;font-size:13px;margin-top:4px">ℹ️ المباراة مسجّلة سابقاً (${ex.sh} - ${ex.sa}) وستُستبدل بياناتها.</div>`:''}
+   ${X.warn.length?`<div style="margin-top:8px;border-radius:10px;background:#fffbeb;border:1px solid #fde68a;padding:8px;font-size:13px"><b>⚠️ ملاحظات على الورقة (${X.warn.length})</b>${X.warn.map(w=>`<div style="margin-top:3px">• ${esc(w)}</div>`).join('')}</div>`:'<div style="color:#166534;font-size:13px;margin-top:6px">✅ لا تناقضات في الورقة</div>'}
+   ${ns.length?`<details open style="margin-top:8px"><summary style="cursor:pointer;font-weight:700">✏️ أسماء بحاجة لمراجعتك (${ns.length}) — عرّبتُها آلياً</summary>${ns.map(n=>`<label style="display:block;margin:6px 0 2px"><small>${esc(n.lat)}</small><input class="f" data-shn="${esc(n.lat)}" value="${esc(n.ar)}" autocomplete="off"></label>`).join('')}</details>`:''}
+  </div>`}).join('');
+ d.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;border-bottom:1px solid var(--ln);padding-bottom:8px"><h3 style="margin:0;font-size:17px;color:#0f2a1c">📄 قراءة ورقة المباراة تلقائياً</h3><button type="button" id="shRevX" style="background:none;border:none;font-size:22px;cursor:pointer;color:#64748b">&times;</button></div>
+  <p class="hint" style="margin:0 0 10px;text-align:right">قرأتُ الملف واستخرجتُ بياناته. راجع الملخص ثم اضغط استيراد: يُكتب كل شيء في التطبيق دفعة واحدة (النتيجة، الهدّافون، التشكيلتان، التبديلات، الطاقم، قائمة لاعبي الضيف).</p>
+  ${cards}
+  <div class="act" style="margin:12px 0 0"><button type="button" class="btn" id="shRevGo" ${nOk?'':'disabled'} style="flex:1;${nOk?'':'opacity:.5'}">✅ استيراد ${nOk||''} ${nOk===1?'ورقة':'أوراق'}</button><button type="button" class="btn alt" id="shRevX2">إغلاق</button></div>`;
+ if(!d.open)d.showModal()}
+document.addEventListener('change',e=>{
+ const t=e.target;if(!t)return;
+ if(t.id==='shPdf'){const arr=[...t.files];t.value='';shHandleFiles(arr);return}
+ if(t.dataset&&t.dataset.shc){const[i,sd]=t.dataset.shc.split('|'),p=shPend[+i];if(!p||!t.value)return;p.over[sd]=+t.value;p.X=shFinalize(p.R,p.over);shReview()}});
+document.addEventListener('click',async e=>{
+ const b=e.target.closest&&e.target.closest('#shRevGo,#shRevX,#shRevX2');if(!b)return;
+ const d=document.getElementById('shRev');
+ if(b.id!=='shRevGo'){d.close();return}
+ if(!isSuper())return toast('⛔ للمشرف العام فقط');
+ d.querySelectorAll('[data-shn]').forEach(i=>{const v=i.value.trim();if(v)SH_AR[i.dataset.shn]=v});
+ const L=shPend.filter(p=>p.X&&!p.X.needCodes).map(p=>p.X);if(!L.length)return;
+ shPend.forEach(p=>{if(p.X&&!p.X.needCodes&&p.over){['h','a'].forEach(sd=>{if(p.over[sd]){SH_CODES[String(p.R.codes[sd]).toUpperCase()]=p.over[sd]}})}});
+ try{const o={};Object.keys(SH_CODES).forEach(k=>{if(k!=='ESM'&&k!=='MRG')o[k]=SH_CODES[k]});localStorage.setItem('shCodes',JSON.stringify(o))}catch(e){}
+ d.close();await runSheetImport(L)});
+
 function shRosterSeed(t,c){const out=[],seen=new Set();(window.SHEET_IMPORTS||[]).forEach(x=>{if(x.cat!==c)return;const T0=x.teams[t];if(!T0||!T0.addRoster)return;T0.starters.concat(T0.bench).forEach(p=>{const ar=SH_AR[p[1]]||p[1],k=shCanon(ar);if(!seen.has(k)){seen.add(k);out.push(ar)}})});return out}
 async function importSheets(){
  if(!me||me.role!=='admin'||!isSuper())return toast('⛔ للمشرف العام فقط');
@@ -6317,17 +6501,20 @@ async function importSheets(){
  const TN=window.T_YOUTH||{};
  const desc=L.map(x=>x.cat+' · الجولة '+x.round+': '+TN[x.home]+' '+x.sh+' - '+x.sa+' '+TN[x.away]).join('\n');
  if(!confirm('استيراد ورقة المباراة (النتيجة والهدافون والتشكيلتان والتبديلات والطاقم وأسماء اللاعبين)؟\n\n'+desc+'\n\nإن كانت المباراة مسجّلة فستُستبدل نتيجتها وتشكيلتاها بما في الورقة.'))return;
+ await runSheetImport(L)
+}
+async function runSheetImport(L){
  let ok=0,matched=0,total=0,fail=[];
  for(const x of L){try{
   const k=(x.cat==='U15'?'':x.cat+'|')+x.round+':'+x.home+'-'+x.away,kid=k.replace('|','_');
   const names=t=>((RO[t]||{})[x.cat]||[]).map(e=>typeof e==='string'?e:(e&&e.name)||'').filter(Boolean);
-  const fix=(t,nm)=>{const ar=SH_AR[nm]||nm,c1=shCanon(nm),c2=shCanon(ar),h=names(t).find(e=>{const c=shCanon(e);return c===c1||c===c2});return h||ar};
+  const fix=(t,nm)=>{const ar=SH_AR[nm]||shTranslit(nm).ar,c1=shCanon(nm),c2=shCanon(ar),nl=names(t),h=nl.find(e=>{const c=shCanon(e);return c===c1||c===c2})||shBest(nl,ar);return h||ar};
   /* 1) أسماء لاعبي الفريق الضيف في قائمة النادي (دون حذف الموجود) */
   for(const t of Object.keys(x.teams)){const T0=x.teams[t];if(!T0.addRoster)continue;
    const pls=T0.starters.concat(T0.bench),lat=new Set(pls.map(p=>shCanon(p[1])));
    /* تُستبدل الأسماء اللاتينية المستوردة سابقاً بالأسماء العربية (دون المساس بغيرها) */
    const cur=((RO[t]||{})[x.cat]||[]).filter(e=>!lat.has(shCanon(typeof e==='string'?e:(e&&e.name)||''))),have=new Set(cur.map(e=>shCanon(typeof e==='string'?e:(e&&e.name)||'')));
-   pls.forEach(p=>{const ar=SH_AR[p[1]]||p[1],c=shCanon(ar);if(!have.has(c)){have.add(c);cur.push(ar)}});
+   pls.forEach(p=>{const ar=SH_AR[p[1]]||shTranslit(p[1]).ar,c=shCanon(ar);if(!have.has(c)&&!shBest(cur.map(e=>typeof e==='string'?e:(e&&e.name)||'').filter(Boolean),ar)){have.add(c);cur.push(ar)}});
    await db.collection('rosters').doc(t+'_'+x.cat).set({teamId:+t,cat:x.cat,roster:cur});
    RO[t]=RO[t]||{};RO[t][x.cat]=cur;RS[t+'_'+x.cat]=JSON.stringify(cur)}
   /* 2) التشكيلات والتبديلات */
@@ -6339,17 +6526,19 @@ async function importSheets(){
    await db.collection('lineups').doc(kid+'_'+t).set({key:k,teamId:+t,home:x.home,away:x.away,data});
    LU[k]=LU[k]||{};LU[k][t]=JSON.parse(JSON.stringify(data));LSS[kid+'_'+t]=JSON.stringify(data);pubSubs(k,t,data);
    /* 3) الطاقم الفني والإداري */
-   for(const m of T0.staff||[])await db.collection('staff').doc('imp_'+m[1]).set({teamId:+t,name:SH_AR[m[0]]||m[0],kind:m[2],role:m[3],cat:m[2]==='coach'?x.cat:'',phone:'',img:'',order:Date.now()})}
+   for(const m of T0.staff||[])await db.collection('staff').doc('imp_'+m[1]).set({teamId:+t,name:SH_AR[m[0]]||shTranslit(m[0]).ar,kind:m[2],role:m[3],cat:m[2]==='coach'?x.cat:'',phone:'',img:'',order:Date.now()})}
   /* 4) النتيجة والهدافون (لا إنذارات في الورقة) */
   const gl=(t,arr)=>arr.map(g=>fix(t,g[0])+' '+g[1]+"'").join(', ');
   const pens={h:x.goals.h.filter(g=>g[2]).map(g=>g[1]),a:x.goals.a.filter(g=>g[2]).map(g=>g[1])};
-  const d=Object.assign({},S[k]||{},{sh:x.sh,sa:x.sa,date:x.date,time:x.time,ref:SH_AR[x.ref]||x.ref,gh:gl(x.home,x.goals.h),ga:gl(x.away,x.goals.a),cyh:'',crh:'',cya:'',cra:'',report:x.report,pens,sheet:x.id,status:'confirmed',confirmedBy:'admin'});
-  delete d._hid;delete d.pp;delete d.ex;
+  const d=Object.assign({},S[k]||{},{sh:x.sh,sa:x.sa,date:x.date,time:x.time,ref:x.ref?(SH_AR[x.ref]||shTranslit(x.ref).ar):'',gh:gl(x.home,x.goals.h),ga:gl(x.away,x.goals.a),cyh:gl(x.home,(x.cards||{}).yh||[]),crh:gl(x.home,(x.cards||{}).rh||[]),cya:gl(x.away,(x.cards||{}).ya||[]),cra:gl(x.away,(x.cards||{}).ra||[]),report:x.report,pens,sheet:x.id,status:'confirmed',confirmedBy:'admin'});
+  if(x.stad)d.stad=x.stad;delete d._hid;delete d.pp;delete d.ex;
   await put(k,x.home,x.away,d);ok++
  }catch(e){console.error('importSheets',e);fail.push(x.cat+' ج'+x.round+' ('+(e.code||e.message)+')')}}
  draw();
- toast(fail.length?('⚠️ تعذّر استيراد: '+fail.join(' · ')):('✅ استُوردت ورقة المباراة — '+matched+' من '+total+' لاعباً من الوفاق طابقوا قائمة النادي'))
+ toast(fail.length?('⚠️ تعذّر استيراد: '+fail.join(' · ')):('✅ تمّ الاستيراد — '+matched+' من '+total+' لاعباً من الوفاق طابقوا قائمة النادي'));
+ return{ok,fail}
 }
+
 async function migrateLineups(){
  if(!confirm('سيتم نقل كل تشكيلات المباريات القديمة من النتائج العامة إلى مجموعة خاصة بكل نادٍ، ثم حذفها من النتائج العامة. متابعة؟'))return;
  try{
